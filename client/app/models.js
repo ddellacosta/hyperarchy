@@ -7,3 +7,4 @@
 //= require "models/election_visit"
 //= require "models/ranking"
 //= require "models/candidate_comment"
+//= require "models/election_comment"
