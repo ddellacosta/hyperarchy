@@ -42,6 +42,32 @@ _.constructor("Views.ElectionOverview", View.Template, {
       });
 
       div({'class': "grid4"}, function() {
+        div({'class': "columnHeader"}, function() {
+          text("Comments");
+        });
+        subview('electionCommentsList', Views.SortedList, {
+          rootAttributes: { id: "electionComments", 'class': "electionComments" },
+          buildElement: function(electionComment) {
+            return Views.CandidateCommentLi.toView({candidateComment: electionComment});
+          }
+        });
+
+        div({'class': "createElectionCommentForm"}, function() {
+          textarea().ref('createElectionCommentTextarea');
+          div({'class': "clear"});
+
+          button({'class': "createElectionCommentButton"}, "Make a Comment")
+            .ref('createElectionCommentButton')
+            .click('createElectionComment');
+
+          div({'class': "loading", style: "display: none;"}).ref("createElectionCommentSpinner");
+          div({'class': "clear"});
+        }).ref('createElectionCommentForm');
+
+        div({'class': "clear"});
+      });
+
+      div({'class': "grid4"}, function() {
         subview('candidatesList', Views.CandidatesList);
       });
 
@@ -49,7 +75,7 @@ _.constructor("Views.ElectionOverview", View.Template, {
         subview('rankedCandidatesList', Views.RankedCandidatesList);
       });
 
-      div({'class': "grid4"}, function() {
+      div({'class': "grid4", style: "display: none;"}, function() {
         div({id: "createCandidateForm", style: "display: none;"}, function() {
           div({'class': "columnHeader"}, function() {
             div({'class': "small cancelX"})
@@ -187,7 +213,8 @@ _.constructor("Views.ElectionOverview", View.Template, {
         this.candidatesList.election(election);
         this.rankedCandidatesList.election(election);
         this.votesList.election(election);
-
+        
+        this.electionCommentsList.relation(election.comments());
 //        this.populateSubNavigationBar();
       }
     },
@@ -377,6 +404,25 @@ _.constructor("Views.ElectionOverview", View.Template, {
             this.createCandidateDetailsTextarea.attr('disabled', false);
             this.candidateCreationDisabled = false;
           }));
+        }, this);
+    },
+
+    createElectionComment: function(elt, e) {
+      this.createElectionCommentTextarea.blur();
+      e.preventDefault();
+      if (this.commentCreationDisabled) return;
+
+      var body = this.createElectionCommentTextarea.val();
+      if (body === "") return;
+      this.createElectionCommentTextarea.val("");
+      this.createElectionCommentTextarea.keyup();
+      this.commentCreationDisabled = true;
+
+      this.createElectionCommentSpinner.show();
+      this.election().comments().create({body: body})
+        .onSuccess(function() {
+          this.createElectionCommentSpinner.hide();
+          this.commentCreationDisabled = false;
         }, this);
     },
 
