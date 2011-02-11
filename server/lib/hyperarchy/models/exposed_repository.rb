@@ -45,6 +45,10 @@ module Models
       candidates.join_through(CandidateComment)
     end
 
+    expose :election_comments do
+      elections.join_through(ElectionComment)
+    end
+
     def subscribe(*args)
       # subscribe is disabled for now in favor of the custom SubscriptionManager
       raise Monarch::Unauthorized
