@@ -7,10 +7,10 @@ class Membership < Monarch::Model::Record
   column :last_visited, :datetime
   column :notify_of_new_elections, :string, :default => "daily"
   column :notify_of_new_candidates, :string, :default => "daily"
-  column :notify_of_new_comments_on_own_candidates, :string, :default => "hourly"
+  column :notify_of_new_comments_on_own_candidates,    :string, :default => "hourly"
   column :notify_of_new_comments_on_ranked_candidates, :string, :default => "hourly"
-  column :notify_of_new_comments_on_own_elections, :string, :default => "hourly"
-  column :notify_of_new_comments_on_voted_elections, :string, :default => "hourly"
+  column :notify_of_new_comments_on_own_elections,     :string, :default => "hourly"
+  column :notify_of_new_comments_on_voted_elections,   :string, :default => "hourly"
   column :created_at, :datetime
   column :updated_at, :datetime
 
@@ -146,7 +146,7 @@ class Membership < Monarch::Model::Record
   end
 
   def wants_voted_election_comment_notifications?(period)
-    notify_of_new_comments_on_voted_election == period
+    notify_of_new_comments_on_voted_elections == period
   end
 
   def wants_own_election_comment_notifications?(period)
@@ -183,6 +183,23 @@ class Membership < Monarch::Model::Record
       join_through(CandidateComment).
       where(CandidateComment[:created_at] > (last_alerted_or_visited_at(period))).
       where(CandidateComment[:creator_id].neq(user_id))
+  end
+
+  def new_comments_on_voted_elections_in_period(period)
+    user.votes.
+      join_to(organization.elections).
+      where(Election[:creator_id].neq(user_id)).
+      join_through(ElectionComment).
+      where(ElectionComment[:created_at] > (last_alerted_or_visited_at(period))).
+      where(ElectionComment[:creator_id].neq(user_id))
+  end
+
+  def new_comments_on_own_elections_in_period(period)
+    organization.elections.
+      where(Election[:creator_id].eq(user_id)).
+      join_through(ElectionComment).
+      where(ElectionComment[:created_at] > (last_alerted_or_visited_at(period))).
+      where(ElectionComment[:creator_id].neq(user_id))
   end
 
   protected

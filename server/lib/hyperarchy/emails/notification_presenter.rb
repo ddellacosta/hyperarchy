@@ -121,7 +121,9 @@ module Hyperarchy
           when Candidate
             add_new_candidate(item)
           when CandidateComment
-            add_new_comment(item)
+            add_new_candidate_comment(item)
+          when ElectionComment
+            add_new_election_comment(item)
           else
             raise "No notification mechanism implemented for item: #{item.inspect}"
         end
@@ -142,13 +144,25 @@ module Hyperarchy
 
         if membership.wants_own_candidate_comment_notifications?(period)
           membership.new_comments_on_own_candidates_in_period(period).each do |comment|
-            add_new_comment(comment)
+            add_new_candidate_comment(comment)
           end
         end
 
         if membership.wants_ranked_candidate_comment_notifications?(period)
           membership.new_comments_on_ranked_candidates_in_period(period).each do |comment|
-            add_new_comment(comment)
+            add_new_candidate_comment(comment)
+          end
+        end
+
+        if membership.wants_own_election_comment_notifications?(period)
+          membership.new_comments_on_own_elections_in_period(period).each do |comment|
+            add_new_election_comment(comment)
+          end
+        end
+
+        if membership.wants_voted_election_comment_notifications?(period)
+          membership.new_comments_on_voted_elections_in_period(period).each do |comment|
+            add_new_election_comment(comment)
           end
         end
       end
@@ -165,11 +179,18 @@ module Hyperarchy
         election_presenters_by_election[election].add_new_candidate(candidate)
       end
 
-      def add_new_comment(comment)
+      def add_new_candidate_comment(comment)
         self.new_comment_count += 1
         election = comment.election
         build_election_presenter_if_needed(election)
-        election_presenters_by_election[election].add_new_comment(comment)
+        election_presenters_by_election[election].add_new_candidate_comment(comment)
+      end
+
+      def add_new_election_comment(comment)
+        self.new_comment_count += 1
+        election = comment.election
+        build_election_presenter_if_needed(election)
+        election_presenters_by_election[election].add_new_election_comment(comment)
       end
 
       def build_election_presenter_if_needed(election)
@@ -199,14 +220,14 @@ module Hyperarchy
     end
 
     class ElectionPresenter
-      attr_reader :election, :election_is_new
+      attr_reader :election, :election_is_new, :new_comments
       attr_reader :candidate_presenters_by_candidate
       delegate :score, :to => :election
 
       def initialize(election, election_is_new)
         @election, @election_is_new = election, election_is_new
-
         @candidate_presenters_by_candidate = {}
+        @new_comments = []
 
         # show all candidates of a new election
         if election_is_new
@@ -221,10 +242,14 @@ module Hyperarchy
         candidate_presenters_by_candidate[candidate] = CandidatePresenter.new(candidate, true)
       end
 
-      def add_new_comment(comment)
+      def add_new_candidate_comment(comment)
         candidate = comment.candidate
         build_candidate_presenter_if_needed(candidate)
         candidate_presenters_by_candidate[candidate].add_new_comment(comment)
+      end
+
+      def add_new_election_comment(comment)
+        new_comments.push(comment)
       end
 
       def build_candidate_presenter_if_needed(candidate)
@@ -245,6 +270,9 @@ module Hyperarchy
           presenter.add_lines(lines)
         end
         lines.push("--------------------", "")
+        new_comments.each do |comment|
+          lines.push("#{comment.body} -- #{comment.creator.full_name}", "")
+        end
       end
     end
 

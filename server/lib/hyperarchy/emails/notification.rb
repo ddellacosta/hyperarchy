@@ -52,6 +52,18 @@ module Hyperarchy
               end
             end
           end
+
+          unless presenter.new_comments.empty?
+            div :style => "padding: 8px; padding-top: 0px;" do
+              div :style => "padding: 8px; background: white; color: black; border: 2px solid #ddd; font-size: 13px;" do
+                div "Comments", :style => "margin-bottom: 16px; font-weight: bold;"
+                presenter.new_comments.each do |comment|
+                  comment_section(comment)
+                end
+              end
+            end
+          end
+
         end
       end
 
