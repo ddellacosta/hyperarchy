@@ -16,6 +16,7 @@ _.constructor("Election", Model.Record, {
       this.hasMany('candidates', {orderBy: 'position asc'});
       this.hasMany('votes', {orderBy: 'updatedAt desc'});
       this.hasMany('electionVisits');
+      this.hasMany('comments', {constructorName: 'ElectionComment'});
       this.relatesToMany('voters', function() {
         return this.votes().joinThrough(User);
       });
@@ -91,11 +92,13 @@ _.constructor("Election", Model.Record, {
     if (this.commentFetchFuture) {
       return this.commentFetchFuture;
     } else {
-      return this.commentFetchFuture =
+      return this.commentFetchFuture = Server.fetch([
         this.candidates()
           .joinThrough(CandidateComment)
-          .join(User).on(CandidateComment.creatorId.eq(User.id))
-          .fetch();
+          .join(User).on(CandidateComment.creatorId.eq(User.id)),
+        this.comments()
+          .join(User).on(ElectionComment.creatorId.eq(User.id))
+      ]);
     }
   },
 
