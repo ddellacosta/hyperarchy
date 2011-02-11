@@ -9,6 +9,8 @@ class Membership < Monarch::Model::Record
   column :notify_of_new_candidates, :string, :default => "daily"
   column :notify_of_new_comments_on_own_candidates, :string, :default => "hourly"
   column :notify_of_new_comments_on_ranked_candidates, :string, :default => "hourly"
+  column :notify_of_new_comments_on_own_elections, :string, :default => "hourly"
+  column :notify_of_new_comments_on_voted_elections, :string, :default => "hourly"
   column :created_at, :datetime
   column :updated_at, :datetime
 
@@ -141,6 +143,14 @@ class Membership < Monarch::Model::Record
 
   def wants_own_candidate_comment_notifications?(period)
     notify_of_new_comments_on_own_candidates == period
+  end
+
+  def wants_voted_election_comment_notifications?(period)
+    notify_of_new_comments_on_voted_election == period
+  end
+
+  def wants_own_election_comment_notifications?(period)
+    notify_of_new_comments_on_own_elections == period
   end
 
   def new_elections_in_period(period)
