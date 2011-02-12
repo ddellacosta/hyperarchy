@@ -41,41 +41,37 @@ _.constructor("Views.ElectionOverview", View.Template, {
         div({'class': "clear"});
       });
 
-      div({'class': "grid4"}, function() {
+      div({'class': "grid3"}, function() {
         div({'class': "columnHeader"}, function() {
           text("Comments");
         });
         subview('electionCommentsList', Views.SortedList, {
-          rootAttributes: { id: "electionComments", 'class': "electionComments" },
+          rootAttributes: { id: "electionCommentsList", 'class': "electionCommentsList" },
           buildElement: function(electionComment) {
             return Views.CandidateCommentLi.toView({candidateComment: electionComment});
           }
         });
-
-        div({'class': "createElectionCommentForm"}, function() {
+        div({'class': "createCommentForm"}, function() {
           textarea().ref('createElectionCommentTextarea');
           div({'class': "clear"});
-
-          button({'class': "createElectionCommentButton"}, "Make a Comment")
+          button({'class': "createCommentButton"}, "Make a Comment")
             .ref('createElectionCommentButton')
             .click('createElectionComment');
-
           div({'class': "loading", style: "display: none;"}).ref("createElectionCommentSpinner");
           div({'class': "clear"});
         }).ref('createElectionCommentForm');
-
         div({'class': "clear"});
       });
 
-      div({'class': "grid4"}, function() {
+      div({'class': "grid3"}, function() {
         subview('candidatesList', Views.CandidatesList);
       });
 
-      div({'class': "grid4"}, function() {
+      div({'class': "grid3"}, function() {
         subview('rankedCandidatesList', Views.RankedCandidatesList);
       });
 
-      div({'class': "grid4", style: "display: none;"}, function() {
+      div({'class': "grid3"}, function() {
         div({id: "createCandidateForm", style: "display: none;"}, function() {
           div({'class': "columnHeader"}, function() {
             div({'class': "small cancelX"})
