@@ -269,10 +269,10 @@ module Hyperarchy
         candidate_presenters.each do |presenter|
           presenter.add_lines(lines)
         end
-        lines.push("--------------------", "")
         new_comments.each do |comment|
           lines.push("#{comment.body} -- #{comment.creator.full_name}", "")
         end
+        lines.push("--------------------", "")
       end
     end
 
