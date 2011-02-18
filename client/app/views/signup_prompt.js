@@ -67,7 +67,10 @@ _.constructor("Views.SignupPrompt", View.Template, {
       this.signupForm.show();
       this.loginForm.hide();
       this.find('input[type="text"]').val("")
-      if (this.future) this.future.triggerFailure();
+      if (this.future) {
+        this.future.triggerFailure();
+        delete this.future;
+      } 
     },
 
     toggleForms: function() {
@@ -77,6 +80,14 @@ _.constructor("Views.SignupPrompt", View.Template, {
       this.find('input[type="text"]').val("")
       this.find("input:visible:first").focus();
       return false;
+    },
+
+    showLoginForm: function() {
+      this.errorsDiv.hide();
+      this.signupForm.hide();
+      this.loginForm.show();
+      this.find('input[type="text"]').val("")
+      this.find("input:visible:first").focus();
     },
 
     submitSignupForm: function() {
@@ -98,8 +109,10 @@ _.constructor("Views.SignupPrompt", View.Template, {
 
     userEstablished: function(data) {
       Application.currentUserIdEstablished(data.current_user_id)
-      this.future.triggerSuccess();
-      delete this.future;
+      if (this.future) {
+        this.future.triggerSuccess();
+        delete this.future;
+      }
       this.hide();
     },
 
