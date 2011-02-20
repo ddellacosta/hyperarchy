@@ -826,19 +826,19 @@ button {
   .candidateTooltip .tooltipDetailsContainer.marginBottom {
     margin-bottom: 10px; }
 
-.candidateCommentsList li, .electionCommentsList li {
+.candidateCommentsList li {
   margin-bottom: 10px; }
-  .candidateCommentsList li:last-child, .electionCommentsList li:last-child {
+  .candidateCommentsList li:last-child {
     margin-bottom: 0px; }
-  .candidateCommentsList li .commentHeader, .electionCommentsList li .commentHeader {
+  .candidateCommentsList li .commentHeader {
     border-bottom: 1px solid #eee;
     margin-bottom: 4px; }
-    .candidateCommentsList li .commentHeader .commentCreator, .electionCommentsList li .commentHeader .commentCreator {
+    .candidateCommentsList li .commentHeader .commentCreator {
       font-style: italic;
       margin-right: 10px;
       display: inline;
       color: #888; }
-    .candidateCommentsList li .commentHeader .commentCreatedAt, .electionCommentsList li .commentHeader .commentCreatedAt {
+    .candidateCommentsList li .commentHeader .commentCreatedAt {
       margin-top: 2px;
       clear: both;
       font-style: italic;
@@ -846,7 +846,7 @@ button {
       display: inline;
       color: #888;
       float: right; }
-  .candidateCommentsList li .commentBody, .electionCommentsList li .commentBody {
+  .candidateCommentsList li .commentBody {
     display: inline-block; }
 
 #home #header, #learn_more #header {
