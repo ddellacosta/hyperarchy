@@ -240,6 +240,7 @@ _.constructor("Views.ElectionOverview", View.Template, {
         this.candidatesList.election(election);
         this.rankedCandidatesList.election(election);
         this.votesList.election(election);
+        this.electionCommentsList.relation(election.comments());
       }
     },
 
