@@ -48,6 +48,28 @@ _.constructor("Views.EmailPreferences", View.Template, {
           option({value: "never"}, "Never");
         });
       });
+      div({'class': "emailPreference"}, function() {
+        label("Email me about new comments on questions I raised: ");
+        select({name: "notifyOfNewCommentsOnOwnElections"}, function() {
+          option({value: "immediately"}, "Immediately");
+          option({value: "every5"}, "Every 5 Minutes");
+          option({value: "hourly"}, "Hourly");
+          option({value: "daily"}, "Daily");
+          option({value: "weekly"}, "Weekly");
+          option({value: "never"}, "Never");
+        });
+      });
+      div({'class': "emailPreference"}, function() {
+        label("Email me about new comments on questions I have voted on: ");
+        select({name: "notifyOfNewCommentsOnVotedElections"}, function() {
+          option({value: "immediately"}, "Immediately");
+          option({value: "every5"}, "Every 5 Minutes");
+          option({value: "hourly"}, "Hourly");
+          option({value: "daily"}, "Daily");
+          option({value: "weekly"}, "Weekly");
+          option({value: "never"}, "Never");
+        });
+      });
     });
   }},
 
