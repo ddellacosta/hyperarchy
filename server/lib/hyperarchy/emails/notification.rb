@@ -10,7 +10,7 @@ module Hyperarchy
               notification_presenter.membership_presenters.each do |membership_presenter|
                 membership_section(membership_presenter)
               end
-              div :style => "margin-top: 20px; width: 550px;" do
+              div :style => "margin: 20px 0; width: 550px;" do
                 rawtext "To change the frequency of these notifications or unsubscribe entirely, "
                 a "visit your account preferences page", :href => "https://#{HTTP_HOST}/#view=account", :style => "color: #000094; white-space: nowrap;"
                 text "."
@@ -24,9 +24,11 @@ module Hyperarchy
         if num_membership_presenters > 1
           h1 "#{presenter.organization.name}", :style => "font-size: 22px;"
         end
-        h2 presenter.headline
-        presenter.election_presenters.each do |election_presenter|
-          election_section(election_presenter)
+        h2   presenter.headline
+        div :style => "max-width: 500px;" do
+          presenter.election_presenters.each do |election_presenter|
+            election_section(election_presenter)
+          end
         end
       end
 
@@ -36,30 +38,25 @@ module Hyperarchy
 
         color = presenter.election_is_new ? "black" : "#888"
 
-        div :style => "background: #eee; border: 1px solid #DDD; margin-bottom: 10px; max-width: 500px; color: #{color};" do
-          div :style => "margin: 8px;" do
-            a "View Question", :href => election.full_url, :style => "float: right; padding: 5px 15px; background: white; margin-left: 10px; color: #000094;"
-            div election.body, :style => "padding: 0px; padding-top: 5px;"
-            div :style => "clear: both;"
-          end
+        div :style => "border: 2px solid #ccc; margin-bottom: 10px; padding: 8px; background: #ddd;" do
+          a "View Question", :href => election.full_url, :style => "float: right; padding: 5px 15px; background: #f3f3f3; margin-left: 10px; color: #000094; border: 2px solid #ccc;"
+          div election.body, :style => "padding: 0px; padding-top: 5px;"
+          div :style => "clear: both;"
 
           unless presenter.candidate_presenters.empty?
-            div :style => "max-height: 400px; overflow-y: auto; padding: 0px 8px; margin-top: 8px;" do
-              div :style => "margin-top: 8px;" do
-                presenter.candidate_presenters.each do |candidate_presenter|
-                  candidate_section(candidate_presenter)
-                end
+            div "Answers:", :style => "color: #888; font-weight: bold; margin: 8px 0;"
+            div :style => "border: 2px solid #ccc; max-height: 400px; overflow-y: auto; margin: 8px 0; background: #f3f3f3;" do
+              presenter.candidate_presenters.each do |candidate_presenter|
+                candidate_section(candidate_presenter)
               end
             end
           end
 
           unless presenter.new_comments.empty?
-            div :style => "padding: 8px; padding-top: 0px;" do
-              div :style => "padding: 8px; background: white; color: black; border: 2px solid #ddd; font-size: 13px;" do
-                div "Comments", :style => "margin-bottom: 16px; font-weight: bold;"
-                presenter.new_comments.each do |comment|
-                  comment_section(comment)
-                end
+            div "Comments:", :style => "color: #888; font-weight: bold; margin: 8px 0;"
+            div :style => "border: 2px solid #ccc; max-height: 400px; overflow-y: auto; background: #f3f3f3;" do
+              presenter.new_comments.each do |comment|
+                comment_section(comment)
               end
             end
           end
@@ -71,18 +68,16 @@ module Hyperarchy
         candidate = presenter.candidate
         color = presenter.candidate_is_new ? "black" : "#888"
 
-        div :style => "margin-bottom: 8px; background: white; color: #{color};" do
-          div candidate.body, :style => "float: left; padding: 8px; margin-bottom: -8px;"
-          div raw("&mdash;#{candidate.creator.full_name}"), :style => "white-space: nowrap; float: right; font-style: italic; color: #777; padding: 8px;"
+        div :style => "border-bottom: 1px solid #ccc; padding: 8px; padding-bottom: 0;" do
+          div candidate.body, :style => "float: left; margin-bottom: 8px;"
+          div raw("&mdash;#{candidate.creator.full_name}"), :style => "white-space: nowrap; float: right; font-style: italic; color: #777; margin-bottom: 8px;"
           div :style => "clear: both;"
 
           unless presenter.new_comments.empty?
-            div :style => "padding: 8px; padding-top: 0px;" do
-              div :style => "padding: 8px; background: white; color: black; border: 2px solid #ddd; font-size: 13px;" do
-                div "Comments", :style => "margin-bottom: 16px; font-weight: bold;"
-                presenter.new_comments.each do |comment|
-                  comment_section(comment)
-                end
+            div "Comments:", :style => "color: #888; font-weight: bold; margin: 8px 0;"
+            div :style => "border: 2px solid #ddd; max-height: 400px; overflow-y: auto; background: white; margin-bottom: 8px;" do
+              presenter.new_comments.each do |comment|
+                comment_section(comment)
               end
             end
           end
@@ -90,12 +85,10 @@ module Hyperarchy
       end
 
       def comment_section(comment)
-        div do
-          div :style => "color: #777; border-bottom: 1px solid #f0f0f0; margin-bottom: 4px;" do
-            div comment.creator.full_name, :style => "font-style: italic;"
-          end
-
-          div comment.body, :style => "margin-bottom: 16px;"
+        div :style => "border-bottom: 1px solid #ccc; padding: 8px; padding-bottom: 0;" do
+          div comment.body, :style => "float: left; margin-bottom: 8px;"
+          div raw("&mdash;#{comment.creator.full_name}"), :style => "white-space: nowrap; float: right; font-style: italic; color: #777; margin-bottom: 8px;"
+          div :style => "clear: both;"
         end
       end
 
