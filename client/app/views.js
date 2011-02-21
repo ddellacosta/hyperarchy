@@ -26,3 +26,5 @@
 //= require "views/members"
 //= require "views/new_election"
 //= require "views/candidate_comment_li"
+
+//= require "views/tree"

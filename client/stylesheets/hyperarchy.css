@@ -1911,3 +1911,14 @@ body.legal {
   left: 50%;
   margin-left: -40px;
   margin-top: -40px; }
+
+#app #tree {
+  padding: 0;
+  margin: 0;
+  clear: both;
+  overflow-y: hidden; }
+  #app #tree .column {
+    display: inline-block;
+    height: 100%;
+    width: 45%;
+    border: 1px solid black; }

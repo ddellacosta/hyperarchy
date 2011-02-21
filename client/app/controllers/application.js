@@ -9,7 +9,8 @@ _.constructor("Controllers.Application", {
       elections: Views.ElectionOverview.toView(),
       members: Views.Members.toView(),
       account: Views.Account.toView(),
-      newElection: Views.NewElection.toView()
+      newElection: Views.NewElection.toView(),
+      tree: Views.Tree.toView()
     };
 
     this.userSwitchNode = new Monarch.SubscriptionNode();
