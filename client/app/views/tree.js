@@ -26,7 +26,7 @@ _.constructor("Views.Tree", View.Template, {
     },
 
     navigate: function(state) {
-      this.parseHash(state);
+      this.parseState(state);
       this.fetchLeftRecord();
       this.fetchRightRelations();
 
@@ -35,18 +35,17 @@ _.constructor("Views.Tree", View.Template, {
     },
 
     fetchLeftRecord: function() {
-      this.leftConstructor.findOrFetch(this.leftId).
+      this.leftTable.findOrFetch(this.leftId).
         onSuccess(function(record) {
           this.leftRecord(record);
         }, this);
     },
 
     fetchRightRelations: function() {
-      var childConstructors = this.viewableTables[this.leftConstructorName].children;
-      _(childConstructors).each(function(childConstructor) {
-        var relation = this.leftConstructor.where({id: this.leftId}).joinThrough(childConstructor);
+      _(this.childTables[this.leftTableName]).each(function(childTable) {
+        var relation = this.leftTable.where({id: this.leftId}).joinThrough(childTable);
         relation.fetch().onSuccess(function() {
-          if (childConstructor === this.rightConstructor) {
+          if (childTable === this.rightTable) {
             this.rightRelation(relation);
           }
         }, this);
@@ -74,38 +73,37 @@ _.constructor("Views.Tree", View.Template, {
       this.rightRelationList.relation(this.rightRelation());
     },
 
-    parseHash: function(state) {
-      this.leftId = parseInt(state.id);
-      this.leftConstructorName  = state.left.toLowerCase();
-      this.rightConstructorName = _(state.right.toLowerCase()).singularize();
-      this.leftConstructor  = this.viewableTables[this.leftConstructorName].constructor;
-      this.rightConstructor = this.viewableTables[this.leftConstructorName].children[this.rightConstructorName];
+    parseState: function(state) {
+      this.leftId  = parseInt(state.leftId);
+      this.rightId = parseInt(state.rightId);
+      this.leftTableName  = _(_((state.left)).camelize()).singularize();
+      this.rightTableName = _(_((state.right)).camelize()).singularize();
+      this.leftTable  = this.leftTables[this.leftTableName];
+      this.rightTable = this.childTables[this.leftTableName][this.rightTableName];
 
-      if (!this.leftConstructor || !this.rightConstructor) {
+      if (!this.leftTable || !this.rightTable) {
         // take some corrective action here
         console.debug("invalid hash fragment");
       }
     },
 
-    viewableTables: {
-      "organization": {
-        "constructor": Organization,
-        "children": {
-          "election": Election
-        }},
+    leftTables: {
+      "Organization": Organization,
+      "Election":     Election,
+      "Candidate":    Candidate
+    },
 
-      "election": {
-        "constructor": Election,
-        "children": {
-          "candidate": Candidate,
-          "comment":   ElectionComment
-        }},
-
-      "candidate": {
-        "constructor": Candidate,
-        "children": {
-          "comment": CandidateComment
-        }}
+    childTables: {
+      "Organization": {
+        "Election": Election
+      },
+      "Election": {
+        "Candidate": Candidate,
+        "Comment":   ElectionComment
+      },
+      "Candidate": {
+        "Comment":   CandidateComment
+      }
     }
   }
 });
