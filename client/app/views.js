@@ -28,3 +28,4 @@
 //= require "views/candidate_comment_li"
 
 //= require "views/tree"
+//= require "views/tree_column"

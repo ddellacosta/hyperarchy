@@ -2,107 +2,97 @@ _.constructor("Views.Tree", View.Template, {
   content: function() { with(this.builder) {
     div({id: "tree"}, function() {
 
-      div({id: "leftColumn", 'class': "column"}, function() {
-        h2().ref("leftColumnTitle");
-      }).ref("leftColumn");
+      subview("column0", Views.TreeColumn);
+      subview("column1", Views.TreeColumn);
+      subview("column2", Views.TreeColumn);
 
-      div({id: "rightColumn", 'class': "column"}, function() {
-        subview('rightRelationList', Views.SortedList, {
-          rootAttributes: {id: "rightRelationList"},
-          buildElement: function(record) {
-            return record.body();
-          }
-        });
-      }).ref("rightColumn");
+      div({style: "clear: both;"});
 
-    });
+    }).ref("tree");
   }},
 
   viewProperties: {
     viewName: 'tree',
 
+    MAXCOLUMNS: 3,
+
+    tablesByName: {
+      root : {
+        organizations: Organization,
+        elections:     Election,
+        candidates:    Candidate
+      },
+      organizations: {
+        elections: Election
+      },
+      elections: {
+        candidates: Candidate,
+        comments:   ElectionComment
+      },
+      candidates: {
+        comments:   CandidateComment
+      }
+    },
+
     initialize: function() {
+      this.tableNames = [];
+      this.relations  = [];
+      this.ids        = [];
       this.subscriptions = new Monarch.SubscriptionBundle();
     },
 
     navigate: function(state) {
-      this.parseState(state);
-      this.fetchLeftRecord();
-      this.fetchRightRelations();
+      this.setRelationsFromUrl(state);
+      this.setCurrentOrganization();
+      this.assignRelationsToColumns();
 
       Application.layout.activateNavigationTab("questionsLink");
       Application.layout.hideSubNavigationContent();
     },
 
-    fetchLeftRecord: function() {
-      this.leftTable.findOrFetch(this.leftId).
-        onSuccess(function(record) {
-          this.leftRecord(record);
+    numColumns: {
+      afterChange: function(numColumns) {
+        if (this.numColumns < 2) {
+          // less than two valid columns given. take some corrective action.
+          console.debug("invalid hash fragment");
+        }
+      }
+    },
+
+    setRelationsFromUrl: function(state) {
+      var tables = [], parentName = "root";
+      for (var i = 0; i < this.MAXCOLUMNS; i++) {
+        this.ids[i]        = parseInt(state["id" + i]);
+        this.tableNames[i] = state["table" + i];
+        tables[i]  = this.tablesByName[parentName][this.tableNames[i]];
+        parentName = this.tableNames[i];
+        if (!tables[i] || !this.ids[i]) break;
+      }
+
+      this.numColumns( _(tables).compact().length );
+      this.relations[0] = tables[0].where({id: this.ids[0]});
+      for (var i = 1; i < this.numColumns(); i++) {
+        this.relations[i] = this.relations[i-1].joinThrough(tables[i]);
+      }
+    },
+
+    assignRelationsToColumns: function() {
+      for (var i = 0; i < this.numColumns; i++) {
+        this["column" + i].state({
+          "tableName": this.tableNames[i],
+          "relation":  this.relations[i],
+          "id":        this.ids[i]
+        });
+      }
+    },
+
+    setCurrentOrganization: function() {
+      if (this.tableNames[0] == "organizations") {
+        Application.currentOrganizationId(this.ids[0]);
+      } else {
+        this.relations[0].fetch().onSuccess(function() {
+          Application.currentOrganizationId(this.relations[0].first().organizationId());
         }, this);
-    },
-
-    fetchRightRelations: function() {
-      _(this.childTables[this.leftTableName]).each(function(childTable) {
-        var relation = this.leftTable.where({id: this.leftId}).joinThrough(childTable);
-        relation.fetch().onSuccess(function() {
-          if (childTable === this.rightTable) {
-            this.rightRelation(relation);
-          }
-        }, this);
-      }, this);
-    },
-
-    leftRecord: {
-      afterChange: function(record) {
-        Application.currentOrganizationId(record.organizationId());
-        this.populateLeftColumn();
-      }
-    },
-
-    rightRelation: {
-      afterChange: function() {
-        this.populateRightColumn();
-      }
-    },
-
-    populateLeftColumn: function() {
-      this.leftColumnTitle.bindHtml(this.leftRecord(), "body");
-    },
-
-    populateRightColumn: function() {
-      this.rightRelationList.relation(this.rightRelation());
-    },
-
-    parseState: function(state) {
-      this.leftId  = parseInt(state.leftId);
-      this.rightId = parseInt(state.rightId);
-      this.leftTableName  = _(_((state.left)).camelize()).singularize();
-      this.rightTableName = _(_((state.right)).camelize()).singularize();
-      this.leftTable  = this.leftTables[this.leftTableName];
-      this.rightTable = this.childTables[this.leftTableName][this.rightTableName];
-
-      if (!this.leftTable || !this.rightTable) {
-        // take some corrective action here
-        console.debug("invalid hash fragment");
-      }
-    },
-
-    leftTables: {
-      "Organization": Organization,
-      "Election":     Election,
-      "Candidate":    Candidate
-    },
-
-    childTables: {
-      "Organization": {
-        "Election": Election
-      },
-      "Election": {
-        "Candidate": Candidate,
-        "Comment":   ElectionComment
-      },
-      "Candidate": {
-        "Comment":   CandidateComment
       }
     }
   }
