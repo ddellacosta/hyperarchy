@@ -1918,7 +1918,6 @@ body.legal {
   clear: both;
   overflow-y: hidden; }
   #app #tree .column {
-    display: inline-block;
-    height: 100%;
-    width: 45%;
+    float: left;
+    height: 99%;
     border: 1px solid black; }

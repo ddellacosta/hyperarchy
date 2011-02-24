@@ -6,11 +6,9 @@
     overflow-y: hidden;
 
     .column {
-      display: inline-block;
-      height: 100%;
-      width: 45%;
-
-      border: 1px solid black; 
+      float: left;
+      height: 99%;
+      border: 1px solid black;
     }
   }
 }

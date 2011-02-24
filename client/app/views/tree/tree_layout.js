@@ -38,16 +38,16 @@ _.constructor("Views.Tree.Layout", View.Template, {
         if (!tables[i] || !this.ids[i]) break;
       }
 
-      this.numColumns( _(tables).compact().length );
+      this.numColumns(_(tables).compact().length);
       this.relations[0] = tables[0].where({id: this.ids[0]});
       for (var i = 1; i < this.numColumns(); i++) {
-        this.relations[i] = this.relations[i-1].joinThrough(tables[i]).where({id: this.ids[i]});
+        this.relations[i] = this.relations[i-1].where({id: this.ids[i-1]}).joinThrough(tables[i]);
       }
     },
 
     assignRelationsToColumns: function() {
-      for (var i = 0; i < this.numColumns; i++) {
-        this["column" + i].state({
+      for (var i = 0; i < this.numColumns(); i++) {
+        this.columns[i].state({
           "tableName": this.tableNames[i],
           "relation":  this.relations[i],
           "id":        this.ids[i]
@@ -68,11 +68,26 @@ _.constructor("Views.Tree.Layout", View.Template, {
 
     numColumns: {
       afterChange: function(numColumns) {
-        if (this.numColumns < 2) {
+        if (numColumns < 2) {
           // less than two valid columns given. take some corrective action.
           console.debug("invalid hash fragment");
         }
+        this.showOrHideColumns();
+        this.resizeColumns();
       }
+    },
+
+    showOrHideColumns: function() {
+      for (var i = 0; i < this.MAXCOLUMNS; i++) {
+        if (i < this.numColumns())  this.columns[i].show();
+        if (i >= this.numColumns()) this.columns[i].hide();
+      }
+    },
+
+    resizeColumns: function() {
+      _(this.columns).each(function(column) {
+        $(column.columnDiv).width((99 / this.numColumns()) + "%");
+      }, this);
     },
 
     tablesByName: {
