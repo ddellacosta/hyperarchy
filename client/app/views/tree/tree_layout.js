@@ -9,11 +9,11 @@ _.constructor("Views.Tree.Layout", View.Template, {
     viewName: 'tree',
 
     initialize: function() {
-      this.MAXCOLUMNS = 3;
+      this.MAXCOLUMNS = 4;
       this.columns    = [];
       this.tableNames = [];
       this.relations  = [];
-      this.ids        = [];
+      this.recordIds  = [];
       for (var i = 0; i < this.MAXCOLUMNS; i++) {
         this.append(this.columns[i] = Views.Tree.Column.toView());
       }
@@ -31,33 +31,32 @@ _.constructor("Views.Tree.Layout", View.Template, {
     getRelationsFromUrl: function(state) {
       var tables = [], parentName = "root";
       for (var i = 0; i < this.MAXCOLUMNS; i++) {
-        this.ids[i]        = parseInt(state["id" + (i+1)]);
         this.tableNames[i] = state["table" + (i+1)];
+        this.recordIds[i]  = parseInt(state["id" + (i+1)]);
         tables[i]  = this.tablesByName[parentName][this.tableNames[i]];
         parentName = this.tableNames[i];
-        if (!tables[i] || !this.ids[i]) break;
+        if (!tables[i] || !this.recordIds[i]) break;
       }
-
       this.numColumns(_(tables).compact().length);
-      this.relations[0] = tables[0].where({id: this.ids[0]});
+      this.relations[0] = tables[0].where({id: this.recordIds[0]});
       for (var i = 1; i < this.numColumns(); i++) {
-        this.relations[i] = this.relations[i-1].where({id: this.ids[i-1]}).joinThrough(tables[i]);
+        this.relations[i] = this.relations[i-1].where({id: this.recordIds[i-1]}).joinThrough(tables[i]);
       }
     },
 
     assignRelationsToColumns: function() {
       for (var i = 0; i < this.numColumns(); i++) {
         this.columns[i].state({
-          "tableName": this.tableNames[i],
-          "relation":  this.relations[i],
-          "id":        this.ids[i]
+          tableName: this.tableNames[i],
+          relation:  this.relations[i],
+          recordId:  this.recordIds[i]
         });
       }
     },
 
     setCurrentOrganization: function() {
       if (this.tableNames[0] == "organizations") {
-        Application.currentOrganizationId(this.ids[0]);
+        Application.currentOrganizationId(this.recordIds[0]);
       } else {
         this.relations[0].fetch().onSuccess(function() {
           Application.currentOrganizationId(
@@ -72,21 +71,15 @@ _.constructor("Views.Tree.Layout", View.Template, {
           // less than two valid columns given. take some corrective action.
           console.debug("invalid hash fragment");
         }
-        this.showOrHideColumns();
-        this.resizeColumns();
+        this.arrangeColumns();
       }
     },
 
-    showOrHideColumns: function() {
-      for (var i = 0; i < this.MAXCOLUMNS; i++) {
-        if (i < this.numColumns())  this.columns[i].show();
-        if (i >= this.numColumns()) this.columns[i].hide();
-      }
-    },
-
-    resizeColumns: function() {
-      _(this.columns).each(function(column) {
-        $(column.columnDiv).width((99 / this.numColumns()) + "%");
+    arrangeColumns: function() {
+      _(this.columns).each(function(column, i) {
+        column.body.width((98 / this.numColumns()) + "%");
+        if (i < this.numColumns()) column.show();
+        else column.hide();
       }, this);
     },
 
@@ -107,6 +100,5 @@ _.constructor("Views.Tree.Layout", View.Template, {
         comments:   CandidateComment
       }
     }
-
   }
 });

@@ -8,7 +8,11 @@
     .column {
       float: left;
       height: 99%;
-      border: 1px solid black;
+      margin: 0 1px;
+      border-left:  1px solid $gray;
+      border-right: 1px solid $gray;
+
+      overflow: hidden;
     }
   }
 }

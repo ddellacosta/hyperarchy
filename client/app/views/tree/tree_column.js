@@ -2,7 +2,7 @@ _.constructor("Views.Tree.Column", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "column"}, function() {
 
-    }).ref("columnDiv");
+    }).ref("body");
   }},
 
   viewProperties: {
@@ -14,33 +14,30 @@ _.constructor("Views.Tree.Column", View.Template, {
 //        candidates:    Views.Tree.CandidatesList.toView(),
 //        comments:      Views.Tree.CommentsList.toView(),
 //        votes:         Views.Tree.VotesList.toView(),
-        default:       Views.SortedList.toView({
-          buildElement: function(record) {
-            return $("<li>" + record.id() + " " + record.body() + "</li>");
-          }
-        })
+        default:       Views.Tree.RecordList.toView()
       };
-
       _(this.views).each(function(view) {
-        this.columnDiv.append(view);
+        view.hide();
+        this.body.append(view);
       }, this);
     },
 
     state: {
       afterChange: function(state) {
-        state.relation.fetch().onSuccess(function() {
-          var view = this.views[state.tableName] || this.views.default;
-          view.relation(state.relation);
-          this.switchToView(view);
-        }, this);
+        var view = this.views[state.tableName] || this.views.default; // temporary default
+        this.currentView(view);
+        view.relation(state.relation);
+        view.recordId(state.recordId)
       }
     },
 
-    switchToView: function(view) {
-      _(this.views).each(function(view) {
-        view.hide();
-      });
-      view.show();
+    currentView: {
+      afterChange: function(currentView) {
+        _(this.views).each(function(view) {
+          view.hide();
+        });
+        currentView.show();
+      }
     }
   }
 });
