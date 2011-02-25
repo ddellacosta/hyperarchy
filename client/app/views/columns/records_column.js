@@ -1,11 +1,11 @@
-_.constructor("Views.Tree.RecordList", View.Template, {
+_.constructor("Views.Columns.RecordsColumn", View.Template, {
   content: function() { with(this.builder) {
-    div({style: "display: none;"}, function() {
+    div({'class': "recordColumn", style: "display: none;"}, function() {
       div({'class': "columnHeader"}, "Records");
 
       subview('list', Views.SortedList, {
         buildElement: function(record) {
-          return Views.Tree.RecordLi.toView({record: record});
+          return Views.Columns.RecordLi.toView({record: record});
         }
       });
 
@@ -18,19 +18,10 @@ _.constructor("Views.Tree.RecordList", View.Template, {
       this.subscriptions = new Monarch.SubscriptionBundle;
     },
 
-    relation: {
-      afterChange: function(relation) {
+    state: {
+      afterChange: function(state) {
 
         // decide what additional relations to fetch.
-
-        relation.fetch().onSuccess(function() {
-          this.list.relation(this.relation());
-        }, this );
-      }
-    },
-
-    recordId: {
-      afterChange: function() {
 
       }
     },
@@ -38,7 +29,6 @@ _.constructor("Views.Tree.RecordList", View.Template, {
     empty: function() {
       this.candidatesList.empty();
     },
-
 
     afterShow: function() {
       this.adjustHeight();
@@ -51,6 +41,10 @@ _.constructor("Views.Tree.RecordList", View.Template, {
         at: 'center center',
         of: this.rankedCandidatesList
       });
+    },
+
+    organizationId: function() {
+      return 1;
     }
   }
 });

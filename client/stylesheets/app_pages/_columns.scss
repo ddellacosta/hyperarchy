@@ -1,5 +1,5 @@
 #app {
-  #tree {
+  #columns {
     padding: 0;
     margin: 0;
     clear: both;
@@ -13,6 +13,10 @@
       border-right: 1px solid $gray;
 
       overflow: hidden;
+    }
+
+    .recordLi {
+      border-top: 1px solid $gray;
     }
   }
 }

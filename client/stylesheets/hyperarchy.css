@@ -1912,15 +1912,17 @@ body.legal {
   margin-left: -40px;
   margin-top: -40px; }
 
-#app #tree {
+#app #columns {
   padding: 0;
   margin: 0;
   clear: both;
   overflow-y: hidden; }
-  #app #tree .column {
+  #app #columns .column {
     float: left;
     height: 99%;
     margin: 0 1px;
     border-left: 1px solid #6b6b6b;
     border-right: 1px solid #6b6b6b;
     overflow: hidden; }
+  #app #columns .recordLi {
+    border-top: 1px solid #6b6b6b; }

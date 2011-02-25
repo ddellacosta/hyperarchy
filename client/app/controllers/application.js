@@ -11,7 +11,7 @@ _.constructor("Controllers.Application", {
       account: Views.Account.toView(),
       newElection: Views.NewElection.toView(),
 
-      tree: Views.Tree.Layout.toView()
+      columns: Views.ColumnsList.toView()
     };
 
     this.userSwitchNode = new Monarch.SubscriptionNode();

@@ -1,6 +1,6 @@
-_.constructor("Views.Tree.RecordLi", View.Template, {
+_.constructor("Views.Columns.RecordLi", View.Template, {
   content: function() { with(this.builder) {
-    li(function() {
+    li({'class': "recordLi"}, function() {
       div({'class': "topArea"}, function() {
         div({'class': "expandArrow"})
           .ref('expandArrow')
@@ -10,15 +10,24 @@ _.constructor("Views.Tree.RecordLi", View.Template, {
       });
 
       div({'class': "expandedArea", style: "display: none;"}, function() {
-        div("Links Here")
+        a("Comments").ref("commentsLink");
       }).ref("expandedArea");
-   });
+    });
   }},
 
   viewProperties: {
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
-      this.body.html(this.record.body());
+      this.body.html(this.record.id() + " " + this.record.body());
+      var record = this.record;
+
+      this.commentsLink.click(function() {
+        Application.views.columns.scrollRight({
+          parentTableName: this.state().tableName,
+          parentId:        this.state().selectedId,
+          tableName:       "comments"
+        });
+      });
     },
 
     afterRemove: function() {
