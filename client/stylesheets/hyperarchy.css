@@ -1309,11 +1309,7 @@ body.legal {
   #app #mainContent #scrollingArea {
     background: white;
     overflow-y: auto;
-    height: 100%;
-    padding-top: 20px;
-    padding-bottom: 10px; }
-    #app #mainContent #scrollingArea h2, #app #mainContent #scrollingArea .headerContainer {
-      margin-bottom: 20px; }
+    height: 100%; }
 #app #feedback {
   background: white;
   height: 300px;
@@ -1915,14 +1911,26 @@ body.legal {
 #app #columns {
   padding: 0;
   margin: 0;
-  clear: both;
-  overflow-y: hidden; }
+  overflow: hidden; }
   #app #columns .column {
     float: left;
     height: 99%;
-    margin: 0 1px;
+    margin: 0 0;
     border-left: 1px solid #6b6b6b;
-    border-right: 1px solid #6b6b6b;
-    overflow: hidden; }
-  #app #columns .recordLi {
-    border-top: 1px solid #6b6b6b; }
+    border-right: 1px solid #6b6b6b; }
+    #app #columns .column .columnHeader {
+      height: 8%;
+      padding: 0 10px;
+      border-bottom: 1px solid #6b6b6b; }
+    #app #columns .column .election, #app #columns .column .candidate, #app #columns .column .comment {
+      border-bottom: 1px solid #6b6b6b; }
+    #app #columns .column .selected {
+      background-color: #ffffee; }
+  #app #columns .candidates .candidatesList {
+    float: left;
+    width: 50%;
+    height: 92%;
+    overflow-y: scroll; }
+  #app #columns .elections .electionsList {
+    height: 100%;
+    overflow-y: scroll; }

@@ -2,21 +2,47 @@
   #columns {
     padding: 0;
     margin: 0;
-    clear: both;
-    overflow-y: hidden;
+    overflow: hidden;
 
     .column {
       float: left;
       height: 99%;
-      margin: 0 1px;
-      border-left:  1px solid $gray;
+      margin: 0 0;
+      border-left: 1px solid $gray;
       border-right: 1px solid $gray;
 
-      overflow: hidden;
+      .columnHeader {
+        height: 8%;
+        padding: 0 10px;
+        border-bottom: 1px solid $gray;
+      }
+
+      .election, .candidate, .comment {
+        border-bottom: 1px solid $gray;
+      }
+
+      .selected {
+        background-color: #ffffee;
+      }
     }
 
-    .recordLi {
-      border-top: 1px solid $gray;
+
+    .candidates {
+
+      .candidatesList {
+        float: left;
+        width: 50%;
+        height: 92%;
+        overflow-y: scroll;
+      }
+    }
+
+    .elections {
+
+      .electionsList {
+        height: 100%;
+        overflow-y: scroll;
+      }
     }
   }
 }

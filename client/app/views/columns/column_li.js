@@ -1,44 +1,75 @@
-_.constructor("Views.ColumnLi", View.Template, {
-  content: function() { with(this.builder) {
-    li({'class': "column"}).ref("body");
-  }},
+_.constructor("Views.Columns.ColumnLi", View.Template, {
+  content: function() {
+    this.builder.tag("li", {'class': "column"}).ref("body");
+  },
 
   viewProperties: {
 
     initialize: function() {
       this.views = {
-//        organizations: Views.Columns.OrganizationsColumn.toView(),
-//        elections:     Views.Columns.ElectionsColumn.toView(),
-//        candidates:    Views.Columns.CandidatesColumn.toView(),
-//        comments:      Views.Columns.CommentsColumn.toView(),
-//        votes:         Views.Columns.VotesColumn.toView(),
-        default:       Views.Columns.RecordsColumn.toView()
+        organizations: Views.Columns.Organizations.toView({containingColumn: this}),
+        votes:         Views.Columns.Votes.toView({containingColumn: this}),
+        elections:     Views.Columns.Elections.toView({containingColumn: this}),
+        candidates:    Views.Columns.Candidates.toView({containingColumn: this}),
+        comments:      Views.Columns.Comments.toView({containingColumn: this})
       };
+
       _(this.views).each(function(view) {
         view.hide();
-        this.body.append(view);
+        view.appendTo(this.body);
       }, this);
     },
 
     state: {
       afterChange: function(columnState) {
-        var view = this.views[columnState.tableName] || this.views.default; // temporary default
-        view.state(columnState);
-        this.currentView(view);
+        if (!columnState) return;
+        var viewName = columnState.tableName;
+        this.switchToView(viewName);
+        this.currentView.state(columnState);
       }
     },
 
-    currentView: {
-      afterChange: function(currentView) {
-        _(this.views).each(function(view) {
-          view.hide();
-        });
-        currentView.show();
+    getViewNameFromColumnState: function(state) {
+      return state.tableName;
+    },
+
+    setNextColumnState: function(state) {
+      var position = this.position();
+      var lastPosition = this.containingList.numVisibleColumns() - 1;
+      if (position === lastPosition) {
+        this.containingList.scrollRight(state);
+      } else {
+        this.containingList.setColumnState(position + 1, state);
       }
     },
 
-    relativeWidth: function() {
-      return this.currentView().RELATIVE_WIDTH || 1;
+    setPreviousColumnState: function(state) {
+      var position = this.position();
+      if (position === 0) {
+        this.containingList.scrollLeft(state);
+      } else {
+        this.containingList.setColumnState(position - 1, state);
+      }
+    },
+
+    handleInvalidColumnState: function() {
+      console.debug("invalid url hash");
+      // redirect somewhere
+    },
+
+    switchToView: function(viewName) {
+      if (! this.views[viewName]) {
+        this.handleInvalidColumnState();
+      }
+      _(this.views).each(function(view, name) {
+        if (name === viewName) view.show();
+        else                   view.hide();
+      });
+      this.currentView = this.views[viewName];
+    },
+
+    position: {
+      afterChange: function() {}
     }
   }
 });

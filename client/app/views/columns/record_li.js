@@ -1,37 +1,48 @@
 _.constructor("Views.Columns.RecordLi", View.Template, {
-  content: function() { with(this.builder) {
-    li({'class': "recordLi"}, function() {
-      div({'class': "topArea"}, function() {
-        div({'class': "expandArrow"})
-          .ref('expandArrow')
-          .click('expandOrContract');
-        div({'class': "loading", style: "display: none;"}).ref('loadingIcon');
-        div({'class': "body"}).ref('body');
-      });
+  content: function(params) {with(this.builder) {
+    var record         = params.record;
+    var rootAttributes = template.rootAttributes || {};
 
-      div({'class': "expandedArea", style: "display: none;"}, function() {
-        a("Comments").ref("commentsLink");
+    li(rootAttributes, function() {
+
+      div({'class': "expandArrow"}).
+        ref("expandArrow").
+        click('expandOrContract');
+      div({'class': "body"}).ref("body");
+      div({'class': "creator"}).ref("creator");
+      div({'class': "createdAt"}).ref("createdAt");
+
+      div({style: "display: none;", 'class': "expandedAreaSpacer"}).ref('expandedAreaSpacer');
+
+      div({style: "display: none;"}, function() {
+        template.expandedContent();
+
+        ul({'class': "links"}, function() {
+          _(template.childTableNames).each(function(childTableName) {
+            li(function() { a(function() {
+              span({'class': "linkNumber"}).ref(childTableName + "Number");
+              span(_.humanize(childTableName));
+            })}).
+              ref(childTableName + "Link").
+              click("showChildTableInNextColumn", childTableName);
+          }, this);
+        }).ref("linksList");
+
       }).ref("expandedArea");
     });
   }},
 
   viewProperties: {
+
     initialize: function() {
-      this.subscriptions = new Monarch.SubscriptionBundle;
-      this.body.html(this.record.id() + " " + this.record.body());
-      var record = this.record;
+      this.body.bindHtml(this.record, "body");
 
-      this.commentsLink.click(function() {
-        Application.views.columns.scrollRight({
-          parentTableName: this.state().tableName,
-          parentId:        this.state().selectedId,
-          tableName:       "comments"
-        });
-      });
-    },
-
-    afterRemove: function() {
-      this.subscriptions.destroy();
+      User.findOrFetch(this.record.creatorId())
+        .onSuccess(function(creator) {
+          this.creator.html(htmlEscape(creator.fullName()));
+          this.createdAt.html(this.record.formattedCreatedAt());
+          this.show();
+        }, this);
     },
 
     expandOrContract: function() {
@@ -46,30 +57,28 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
       if (this.expanded) return;
       this.expanded = true;
       this.expandArrow.addClass('expanded');
-      this.expandedArea.show();
+      this.addClass("expanded")
+      this.expandedArea.slideDown(20, function() {
+
+      });
     },
 
     contract: function() {
       if (!this.expanded) return;
       this.expanded = false;
-      this.expandArrow.removeClass('expanded');
-      this.expandedArea.hide();
+      this.expandedArea.slideUp(20, this.bind(function() {
+        this.expandArrow.removeClass('expanded');
+        this.removeClass("expanded");
+      }));
     },
 
-    destroyRecord: function() {
-      this.startLoading();
-      this.record.destroy()
-        .onSuccess(function() {
-          this.stopLoading();
-        }, this);
-    },
-
-    startLoading: function() {
-      this.loadingIcon.show();
-    },
-
-    stopLoading: function() {
-      this.loadingIcon.hide();
+    showChildTableInNextColumn: function(childTableName) {
+      var state = {
+        tableName: childTableName,
+        parentTableName: this.template.tableName,
+        parentRecordId: this.record.id()
+      };
+      this.containingColumn.setNextColumnState(state);
     }
   }
 });

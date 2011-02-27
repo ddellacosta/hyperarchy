@@ -42,6 +42,10 @@ _.constructor("Candidate", Model.Record, {
     return this.election().organization();
   },
 
+  organizationId: function() {
+    return this.election().organizationId;
+  },
+
   formattedCreatedAt: function() {
     return $.PHPDate("M j, Y @ g:ia", this.createdAt());
   }

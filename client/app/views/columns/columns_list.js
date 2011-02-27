@@ -1,108 +1,125 @@
-_.constructor("Views.ColumnsList", View.Template, {
-  content: function() { with(this.builder) {
-    ol({id: "columns"}).ref("body");
-  }},
+_.constructor("Views.Columns.ColumnsList", View.Template, {
+  content: function() {
+    this.builder.tag("ol", {id: "columns"}).ref("body");
+  },
 
   viewProperties: {
-    viewName: 'columns',
+    viewName:    'columns',
+    defaultView:  true,
+
+    MAX_VISIBLE_COLUMNS:   3,
+    MIN_INVISIBLE_COLUMNS: 3,
 
     initialize: function() {
-      this.columns = [];
+      this.visibleColumns   = [];
+      this.invisibleColumns = [];
       this.numColumns = this.MAX_VISIBLE_COLUMNS + this.MIN_INVISIBLE_COLUMNS;
       for (var i = 0; i < this.numColumns; i++) {
-        this.append(this.columns[i] = Views.ColumnLi.toView());
+        this.invisibleColumns[i] = Views.Columns.ColumnLi.toView();
+        this.invisibleColumns[i].containingList = this;
       }
     },
 
     navigate: function(state) {
       if (this.nextStateIsAlreadySetUp) {
         this.nextStateIsAlreadySetUp = false;
-      } else {
-        var columnStates = this.getColumnStatesFromUrlState(state);
-        this.numVisibleColumns(columnStates.length);
-        _(this.visibleColumns()).each(function(column, i) {
-          column.state(columnStates[i]);
-        }, this);
-        this.arrangeColumns();
+        return;
       }
+      var columnStates = this.getColumnStatesFromUrlState(state);
+      this.numVisibleColumns(columnStates.length);
+      _(this.visibleColumns).each(function(column, i) {
+        column.state(columnStates[i]);
+      }, this);
+      this.arrangeColumns();
+      this.setCurrentOrganizationId();
 
-      Application.currentOrganizationId(this.columns[0].currentView().organizationId());
       Application.layout.activateNavigationTab("questionsLink");
       Application.layout.hideSubNavigationContent();
     },
 
     getColumnStatesFromUrlState: function(state) {
       var columnStates = [];
-      var selectedRecordId, tableName, parentRecordId, parentTableName = "root";
+      var recordId, tableName, parentRecordId, parentTableName;
       for (var i = 0; i < this.MAX_VISIBLE_COLUMNS; i++) {
-        tableName        = state["col" + (i+1)];
-        selectedRecordId = parseInt(state["id" + (i+1)]);
-        if (! _(this.tableNamesByParentName[parentTableName]).include(tableName)) break;
-        if (i == 0 && !selectedRecordId) break;
-        if (i >  0 && !parentRecordId)   break;
-
+        tableName       = state["col" + (i+1)];
+        parentTableName = state["col" + i];
+        recordId        = parseInt(state["id" + (i+1)]);
+        parentRecordId  = parseInt(state["id" + i]);
+        if (!tableName || !(recordId || (parentTableName && parentRecordId))) break;
         columnStates[i] = {
           tableName:       tableName,
           parentTableName: parentTableName,
-          selectedId:      selectedRecordId,
-          parentId:        parentRecordId
+          recordId:        recordId,
+          parentRecordId:  parentRecordId
         };
-
-        parentRecordId  = selectedRecordId;
-        parentTableName = tableName;
       }
       return columnStates;
     },
 
     getUrlStateFromColumnStates: function() {
-      state = {};
-      _(this.visibleColumns()).each(function(column, i) {
-        state["col" + (i+1)] = column.state().tableName;
-        state["id" + (i+1)] = column.state().selectedId;
+      var urlState = {};
+      _(this.visibleColumns).each(function(column, i) {
+        urlState["col" + (i+1)]         = column.state().tableName;
+        if (i > 0) urlState["id" + (i)] = column.state().parentRecordId;
       });
-      return state;
+      return urlState;
     },
 
     scrollLeft: function(columnState) {
-      var newFirstColumn = this.columns.pop();
-      this.columns.unshift(newFirstColumn);
-      newFirstColumn.detach();
+      var newFirstColumn  = this.invisibleColumns.pop();
+      var oldLastColumn = this.visibleColumns.pop();
+
+      this.visibleColumns.unshift(newFirstColumn);
+      this.invisibleColumns.unshift(oldLastColumn);
+      newFirstColumn.css({marginLeft: "-1000px"});
       newFirstColumn.prependTo(this.body);
-      if (columnState) {
-        this.setIndividualColumnState(0, columnState);
-      }
+      newFirstColumn.animate({
+        marginLeft: 0
+      }, 500, function() {
+        oldLastColumn.detach();
+      });
+
+      if (columnState) this.setColumnState(0, columnState);
     },
 
     scrollRight: function(columnState) {
-      var newLastColumn = this.columns.shift();
-      this.columns.push(newLastColumn);
-      newLastColumn.detach();
+      var newLastColumn  = this.invisibleColumns.shift();
+      var oldFirstColumn = this.visibleColumns.shift();
+
+      this.visibleColumns.push(newLastColumn);
+      this.invisibleColumns.push(oldFirstColumn);
       newLastColumn.appendTo(this.body);
-      if (columnState) {
-        var lastColumnNum = this.numVisibleColumns() - 1;
-        this.setIndividualColumnState(lastColumnNum, columnState);
-      }
+      oldFirstColumn.animate({
+        marginLeft: "-1000px"
+      }, 500, this.bind(function() {
+        oldFirstColumn.css({marginLeft: 0})
+        oldFirstColumn.detach();
+        this.arrangeColumns();
+      }));
+      if (columnState) this.setColumnState(this.numVisibleColumns() - 1, columnState);
     },
 
-    setIndividualColumnState: function(columnNumber, columnState) {
-      this.columns[columnNumber].state(columnState);
+    setColumnState: function(position, columnState) {
+      this.visibleColumns[position].state(columnState);
       this.arrangeColumns();
       this.nextStateIsAlreadySetUp = true;
       $.bbq.pushState(this.getUrlStateFromColumnStates());
     },
 
     arrangeColumns: function() {
-      var totalRelativeWidth = _(this.visibleColumns()).reduce(0, function(sum, column) {
-         return sum + column.relativeWidth();
+      var relativeWidths = [], totalRelativeWidth = 0;
+      _(this.visibleColumns).each(function(column, i) {
+        relativeWidths[i] = column.currentView.relativeWidth;
+        totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
       });
-      _(this.visibleColumns()).each(function(column) {
-        column.body.width((column.relativeWidth() / totalRelativeWidth * 99.0) + "%");
-        column.show();
+      _(this.visibleColumns).each(function(column, i) {
+        column.body.width((relativeWidths[i] / totalRelativeWidth * 98.0) + "%");
+        column.position(i);
       });
+    },
 
-      _(this.invisibleColumns()).each(function(column) {
-        column.hide();
-      });
+    setCurrentOrganizationId: function() {
+      _(this.visibleColumns).first().currentView.setCurrentOrganizationId();
     },
 
     numVisibleColumns: {
@@ -110,41 +127,21 @@ _.constructor("Views.ColumnsList", View.Template, {
         if (numVisibleColumns < 1) {
           // take some corrective action
           console.debug("invalid hash");
+          return;
+        }
+        var diff = numVisibleColumns - this.visibleColumns.length;
+        if (diff > 0) {
+          _(diff).times(function() {
+            this.visibleColumns.push(this.invisibleColumns.shift());
+            _(this.visibleColumns).last().appendTo(this.body);
+          }, this);
+        } else if (diff < 0) {
+          _(Math.abs(diff)).times(function() {
+            this.invisibleColumns.unshift(this.visibleColumns.pop())
+            _(this.invisibleColumns).first().detach();
+          }, this);
         }
       }
-    },
-
-    visibleColumns: function() {
-      return this.columns.slice(0, this.numVisibleColumns());
-    },
-
-    invisibleColumns: function() {
-      return this.columns.slice(this.numVisibleColumns());
-    },
-
-    // constants
-
-    MAX_VISIBLE_COLUMNS:   3,
-    MIN_INVISIBLE_COLUMNS: 2,
-
-    tableNamesByParentName: {
-      root: [
-        "organizations",
-        "elections",
-        "candidates"
-      ],
-      organizations: [
-        "elections"
-      ],
-      elections: [
-        "candidates",
-        "comments"
-      ],
-      candidates: [
-        "comments"
-      ],
-      electionComments:  [],
-      candidateComments: []
     }
   }
 });
