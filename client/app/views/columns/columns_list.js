@@ -25,13 +25,12 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         this.nextStateIsAlreadySetUp = false;
         return;
       }
-      var columnStates = this.getColumnStatesFromUrlState(state);
-      this.numVisibleColumns(columnStates.length);
+      var newColumnStates = this.getColumnStatesFromUrlState(state);
+      this.numVisibleColumns(newColumnStates.length);
       _(this.visibleColumns).each(function(column, i) {
-        column.state(columnStates[i]);
+        column.state(newColumnStates[i]);
       }, this);
-      this.arrangeColumns();
-      this.setCurrentOrganizationId();
+      this.formatColumns();
 
       Application.layout.activateNavigationTab("questionsLink");
       Application.layout.hideSubNavigationContent();
@@ -59,54 +58,80 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
     getUrlStateFromColumnStates: function() {
       var urlState = {};
       _(this.visibleColumns).each(function(column, i) {
-        urlState["col" + (i+1)]         = column.state().tableName;
-        if (i > 0) urlState["id" + (i)] = column.state().parentRecordId;
+        var state = column.state();
+        if (state.tableName)       urlState["col" + (i+1)] = state.tableName;
+        if (state.parentTableName) urlState["col" + i]     = state.parentTableName;
+        if (state.recordId)        urlState["id" + (i+1)]  = state.recordId;
+        if (state.parentRecordId)  urlState["id" + i]      = state.parentRecordId;
       });
       return urlState;
     },
 
-    scrollLeft: function(columnState) {
-      var newFirstColumn  = this.invisibleColumns.pop();
-      var oldLastColumn = this.visibleColumns.pop();
-
+    scrollLeft: function() {
+      var newFirstColumn = this.invisibleColumns.pop();
+      var oldLastColumn  = this.visibleColumns.pop();
       this.visibleColumns.unshift(newFirstColumn);
       this.invisibleColumns.unshift(oldLastColumn);
-      newFirstColumn.css({marginLeft: "-1000px"});
-      newFirstColumn.prependTo(this.body);
-      newFirstColumn.animate({
-        marginLeft: 0
-      }, 500, function() {
-        oldLastColumn.detach();
-      });
+      this.formatColumns();
 
-      if (columnState) this.setColumnState(0, columnState);
+      newFirstColumn.css({
+        marginLeft: (-1.2 * newFirstColumn.width())
+      });
+      newFirstColumn.prependTo(this.body);
+      this.defer(function() {
+        newFirstColumn.animate({
+          marginLeft: 0
+        }, 'slow', function() {
+          oldLastColumn.detach();
+        });
+      });
     },
 
-    scrollRight: function(columnState) {
+    scrollRight: function() {
       var newLastColumn  = this.invisibleColumns.shift();
       var oldFirstColumn = this.visibleColumns.shift();
-
       this.visibleColumns.push(newLastColumn);
       this.invisibleColumns.push(oldFirstColumn);
+      this.formatColumns();
+
       newLastColumn.appendTo(this.body);
-      oldFirstColumn.animate({
-        marginLeft: "-1000px"
-      }, 500, this.bind(function() {
-        oldFirstColumn.css({marginLeft: 0})
-        oldFirstColumn.detach();
-        this.arrangeColumns();
-      }));
-      if (columnState) this.setColumnState(this.numVisibleColumns() - 1, columnState);
+      this.defer(function() {
+        oldFirstColumn.animate({
+          marginLeft: (-1.2 * oldFirstColumn.width())
+        }, 'slow', this.bind(function() {
+          oldFirstColumn.css({marginLeft: 0});
+          oldFirstColumn.detach();
+        }));
+      });
     },
 
-    setColumnState: function(position, columnState) {
-      this.visibleColumns[position].state(columnState);
-      this.arrangeColumns();
+    setColumnState: function(column, columnState) {
+      column.state(columnState);
       this.nextStateIsAlreadySetUp = true;
       $.bbq.pushState(this.getUrlStateFromColumnStates());
     },
 
-    arrangeColumns: function() {
+    scrollLeftAndSetLeftColumnState: function(columnState) {
+      var newFirstColumn = _(this.invisibleColumns).last();
+      newFirstColumn.state(columnState);
+      this.defer(function() {
+        this.scrollLeft();
+        this.nextStateIsAlreadySetUp = true;
+        $.bbq.pushState(this.getUrlStateFromColumnStates());
+      });
+    },
+
+    scrollRightAndSetRightColumnState: function(columnState) {
+      var newLastColumn = _(this.invisibleColumns).first();
+      newLastColumn.state(columnState);
+      this.defer(function() {
+        this.scrollRight();
+        this.nextStateIsAlreadySetUp = true;
+        $.bbq.pushState(this.getUrlStateFromColumnStates());
+      });
+    },
+
+    formatColumns: function() {
       var relativeWidths = [], totalRelativeWidth = 0;
       _(this.visibleColumns).each(function(column, i) {
         relativeWidths[i] = column.currentView.relativeWidth;
@@ -114,12 +139,10 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       });
       _(this.visibleColumns).each(function(column, i) {
         column.body.width((relativeWidths[i] / totalRelativeWidth * 98.0) + "%");
-        column.position(i);
+        column.columnNumber(i);
+        column.removeClass("first");
       });
-    },
-
-    setCurrentOrganizationId: function() {
-      _(this.visibleColumns).first().currentView.setCurrentOrganizationId();
+      this.visibleColumns[0].addClass("first");
     },
 
     numVisibleColumns: {

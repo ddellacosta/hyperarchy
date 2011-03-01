@@ -30,24 +30,39 @@ _.constructor("Views.Columns.Candidates", View.Template, {
     },
 
     state: {
-      afterChange: function(state) {
+      afterChange: function(state, oldState) {
+        this.selectedRecordId(state.recordId);
+        if (oldState &&
+           (state.parentRecordId  === oldState.parentRecordId) &&
+           (state.parentTableName === oldState.parentTableName)) return;
+
         this.startLoading();
-        var candidateRelation, relationsToFetch;
-        if (state.parentRecordId) {
-          candidateRelation = Election.where({id: state.parentRecordId}).joinThrough(Candidate);
-        } else {
-          candidateRelation = Candidate.where({id: state.recordId});
+        try {
+          var candidateRelation;
+          if (state.parentRecordId) {
+            candidateRelation = Election.where({id: state.parentRecordId}).joinThrough(Candidate);
+          } else {
+            candidateRelation = Candidate.where({id: state.recordId});
+          }
+          var relationsToFetch = [
+            candidateRelation,
+            candidateRelation.joinThrough(Election),
+            candidateRelation.joinThrough(Ranking),
+            candidateRelation.join(User).on(Candidate.creatorId.eq(User.id))
+          ];
+        } catch (error) {
+          this.containingColumn.handleInvalidColumnState();
         }
-        relationsToFetch = [
-          candidateRelation,
-          candidateRelation.joinThrough(Election),
-          candidateRelation.joinThrough(Ranking),
-          candidateRelation.join(User).on(Candidate.creatorId.eq(User.id))
-        ];
         Server.fetch(relationsToFetch).onSuccess(function() {
           this.candidatesList.relation(candidateRelation);
           this.stopLoading();
         }, this);
+      }
+    },
+
+    selectedRecordId: {
+      afterChange: function(id) {
+
       }
     },
 

@@ -15,7 +15,7 @@ _.constructor("Views.Columns.Elections", View.Template, {
         }
       });
 
-      div({'class': "loading"}).ref("loading");
+      div({'class': "loading fetching"}).ref("loading");
     }).ref("body");
   }},
 
@@ -28,25 +28,41 @@ _.constructor("Views.Columns.Elections", View.Template, {
     },
 
     state: {
-      afterChange: function(state) {
+      afterChange: function(state, oldState) {
+        this.selectedRecordId(state.recordId);
+        if (oldState &&
+           (state.parentRecordId  === oldState.parentRecordId) &&
+           (state.parentTableName === oldState.parentTableName)) return;
+
         this.startLoading();
-        var electionRelation, relationsToFetch;
-        if (state.parentRecordId) {
-          electionRelation = Organization.where({id: state.parentRecordId}).joinThrough(Election);
-        } else {
-          electionRelation = Election.where({id: state.recordId});
+        try {
+          var electionRelation;
+          if (state.parentRecordId) {
+            electionRelation = Organization.where({id: state.parentRecordId}).joinThrough(Election);
+          } else {
+            electionRelation = Election.where({id: state.recordId});
+          }
+          var relationsToFetch = [
+            electionRelation,
+            electionRelation.joinThrough(Candidate),
+            electionRelation.joinThrough(ElectionComment),
+            electionRelation.joinThrough(Vote),
+            electionRelation.join(User).on(Election.creatorId.eq(User.id))
+          ];
+        } catch (relation) {
+          this.containingColumn.handleInvalidColumnState();
         }
-        relationsToFetch = [
-          electionRelation,
-          electionRelation.joinThrough(Candidate),
-          electionRelation.joinThrough(ElectionComment),
-          electionRelation.joinThrough(Vote),
-          electionRelation.join(User).on(Election.creatorId.eq(User.id))
-        ];
         Server.fetch(relationsToFetch).onSuccess(function() {
           this.electionsList.relation(electionRelation);
+          if (this.containingColumn.columnNumber() == 0) this.setCurrentOrganizationId();
           this.stopLoading();
         }, this);
+      }
+    },
+
+    selectedRecordId: {
+      afterChange: function(id) {
+
       }
     },
 
@@ -61,7 +77,9 @@ _.constructor("Views.Columns.Elections", View.Template, {
     },
 
     setCurrentOrganizationId: function() {
-      Application.currentOrganizationId(1); // temporary fix
+//      var id = this.relation().first().organizationId();
+//      Application.currentOrganizationId(id);
+      Application.currentOrganizationId(1);
     }
   }
 });

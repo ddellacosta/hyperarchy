@@ -74,9 +74,9 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
 
     showChildTableInNextColumn: function(childTableName) {
       var state = {
-        tableName: childTableName,
+        tableName:       childTableName,
         parentTableName: this.template.tableName,
-        parentRecordId: this.record.id()
+        parentRecordId:  this.record.id()
       };
       this.containingColumn.setNextColumnState(state);
     }

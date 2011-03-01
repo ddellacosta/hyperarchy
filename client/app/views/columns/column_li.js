@@ -34,21 +34,22 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
     },
 
     setNextColumnState: function(state) {
-      var position = this.position();
-      var lastPosition = this.containingList.numVisibleColumns() - 1;
-      if (position === lastPosition) {
-        this.containingList.scrollRight(state);
+      var columnNumber     = this.columnNumber();
+      var lastColumnNumber = this.containingList.numVisibleColumns() - 1;
+      if (columnNumber === lastColumnNumber) {
+        this.containingList.scrollRightAndSetRightColumnState(state);
       } else {
-        this.containingList.setColumnState(position + 1, state);
+        var nextColumn = this.containingList.visibleColumns[columnNumber + 1];
+        this.containingList.setColumnState(nextColumn, state);
       }
     },
 
     setPreviousColumnState: function(state) {
-      var position = this.position();
-      if (position === 0) {
+      var columnNumber = this.columnNumber();
+      if (columnNumber === 0) {
         this.containingList.scrollLeft(state);
       } else {
-        this.containingList.setColumnState(position - 1, state);
+        this.containingList.setColumnState(columnNumber - 1, state);
       }
     },
 
@@ -58,17 +59,15 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
     },
 
     switchToView: function(viewName) {
-      if (! this.views[viewName]) {
-        this.handleInvalidColumnState();
-      }
+      if (! this.views[viewName]) this.handleInvalidColumnState();
       _(this.views).each(function(view, name) {
         if (name === viewName) view.show();
-        else                   view.hide();
+        else view.hide();
       });
       this.currentView = this.views[viewName];
     },
 
-    position: {
+    columnNumber: {
       afterChange: function() {}
     }
   }

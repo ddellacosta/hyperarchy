@@ -28,22 +28,32 @@ _.constructor("Views.Columns.Comments", View.Template, {
     },
 
     state: {
-      afterChange: function(state) {
+      afterChange: function(state, oldState) {
+        this.selectedRecordId(state.recordId);
+        if (oldState &&
+           (state.parentRecordId  === oldState.parentRecordId) &&
+           (state.parentTableName === oldState.parentTableName)) return;
+
         this.startLoading();
-        var commentRelation, relationsToFetch, parentTable, commentTable;
-        if (state.parentTableName === "elections")  {
-          parentTable = Election;
-          commentTable = ElectionComment;
+        try {
+          var commentRelation, parentConstructor, commentConstructor;
+          if (state.parentTableName === "elections")  {
+            parentConstructor  = Election;
+            commentConstructor = ElectionComment;
+          }
+          if (state.parentTableName === "candidates")  {
+            parentConstructor  = Candidate;
+            commentConstructor = CandidateComment;
+          }
+          commentRelation = parentConstructor.where({id: state.parentRecordId}).
+                              joinThrough(commentConstructor);
+          var relationsToFetch = [
+            commentRelation,
+            commentRelation.join(User).on(commentConstructor.creatorId.eq(User.id))
+          ];
+        } catch (error) {
+          this.containingColumn.handleInvalidColumnState();
         }
-        if (state.parentTableName === "candidates")  {
-          parentTable = Candidate;
-          commentTable = CandidateComment;
-        }
-        commentRelation = parentTable.where({id: state.parentRecordId}).joinThrough(commentTable);
-        relationsToFetch = [
-          commentRelation,
-          commentRelation.join(User).on(commentTable.creatorId.eq(User.id))
-        ];
         Server.fetch(relationsToFetch).onSuccess(function() {
           this.commentsList.relation(commentRelation);
           this.stopLoading();
@@ -51,16 +61,10 @@ _.constructor("Views.Columns.Comments", View.Template, {
       }
     },
 
-    afterShow: function() {
-      this.adjustHeight();
-    },
+    selectedRecordId: {
+      afterChange: function(id) {
 
-    adjustHeight: function() {
-      this.loading.position({
-        my: 'center center',
-        at: 'center center',
-        of: this.commentsList
-      });
+      }
     },
 
     startLoading: function() {
