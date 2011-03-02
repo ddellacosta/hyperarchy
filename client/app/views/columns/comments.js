@@ -1,5 +1,5 @@
 _.constructor("Views.Columns.Comments", View.Template, {
-  content: function(params) { with(this.builder) {
+  content: function() { with(this.builder) {
     div({'class': "comments", style: "display: none;"}, function() {
       div({'class': "columnHeader"}, function() {
         h2("Comments");
@@ -8,13 +8,10 @@ _.constructor("Views.Columns.Comments", View.Template, {
       subview('commentsList', Views.SortedList, {
         rootAttributes: {'class': "commentsList"},
         buildElement: function(comment) {
-          return Views.Columns.CommentLi.toView({
-            record: comment,
-            containingColumn: params.containingColumn
-          });
+          return Views.Columns.CommentLi.toView({record: comment});
         }
       });
-
+      
       div({'class': "loading"}).ref("loading");
     });
   }},
@@ -25,6 +22,12 @@ _.constructor("Views.Columns.Comments", View.Template, {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
+      this.commentsList.buildElement = this.bind(function(comment) {
+        return Views.Columns.CommentLi.toView({
+          record: comment,
+          containingView: this
+        });
+      });
     },
 
     state: {
@@ -51,13 +54,14 @@ _.constructor("Views.Columns.Comments", View.Template, {
             commentRelation,
             commentRelation.join(User).on(commentConstructor.creatorId.eq(User.id))
           ];
-        } catch (error) {
+          Server.fetch(relationsToFetch).onSuccess(function() {
+            if (this.containingColumn.isFirst()) this.setCurrentOrganizationId();
+            this.commentsList.relation(commentRelation);
+            this.stopLoading();
+          }, this);
+        } catch (badCombinationOfTableNamesAndIds) {
           this.containingColumn.handleInvalidColumnState();
         }
-        Server.fetch(relationsToFetch).onSuccess(function() {
-          this.commentsList.relation(commentRelation);
-          this.stopLoading();
-        }, this);
       }
     },
 

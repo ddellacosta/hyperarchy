@@ -1,5 +1,5 @@
 _.constructor("Views.Columns.Elections", View.Template, {
-  content: function(params) { with(this.builder) {
+  content: function() { with(this.builder) {
     div({'class': "elections", style: "display: none;"}, function() {
       div({'class': "columnHeader"}, function() {
         h2("Questions");
@@ -8,12 +8,14 @@ _.constructor("Views.Columns.Elections", View.Template, {
       subview('electionsList', Views.SortedList, {
         rootAttributes: {'class': "electionsList"},
         buildElement: function(election) {
-          return Views.Columns.ElectionLi.toView({
-            record: election,
-            containingColumn: params.containingColumn
-          });
+          return Views.Columns.ElectionLi.toView({record: election});
         }
       });
+
+      div(function() {
+        div({'class': "expandedArea"}).ref("expandedArea");
+      }).ref("secondSubColumn");
+
 
       div({'class': "loading fetching"}).ref("loading");
     }).ref("body");
@@ -25,6 +27,13 @@ _.constructor("Views.Columns.Elections", View.Template, {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
+
+      this.electionsList.buildElement = this.bind(function(election) {
+        return Views.Columns.ElectionLi.toView({
+          record: election,
+          containingView: this
+        });
+      });
     },
 
     state: {
@@ -38,25 +47,22 @@ _.constructor("Views.Columns.Elections", View.Template, {
         try {
           var electionRelation;
           if (state.parentRecordId) {
-            electionRelation = Organization.where({id: state.parentRecordId}).joinThrough(Election);
+            electionRelation = Election.where({organizationId: state.parentRecordId});
           } else {
             electionRelation = Election.where({id: state.recordId});
           }
           var relationsToFetch = [
             electionRelation,
-            electionRelation.joinThrough(Candidate),
-            electionRelation.joinThrough(ElectionComment),
-            electionRelation.joinThrough(Vote),
             electionRelation.join(User).on(Election.creatorId.eq(User.id))
           ];
-        } catch (relation) {
+          Server.fetch(relationsToFetch).onSuccess(function() {
+            if (this.containingColumn.isFirst()) this.setCurrentOrganizationId(electionRelation);
+            this.electionsList.relation(electionRelation);
+            this.stopLoading();
+          }, this);
+        } catch (badCombinationOfTableNamesAndIds) {
           this.containingColumn.handleInvalidColumnState();
         }
-        Server.fetch(relationsToFetch).onSuccess(function() {
-          this.electionsList.relation(electionRelation);
-          if (this.containingColumn.columnNumber() == 0) this.setCurrentOrganizationId();
-          this.stopLoading();
-        }, this);
       }
     },
 
@@ -76,10 +82,9 @@ _.constructor("Views.Columns.Elections", View.Template, {
       this.electionsList.children().show();
     },
 
-    setCurrentOrganizationId: function() {
-//      var id = this.relation().first().organizationId();
-//      Application.currentOrganizationId(id);
-      Application.currentOrganizationId(1);
+    setCurrentOrganizationId: function(electionRelation) {
+      var id = electionRelation.first().organizationId();
+      Application.currentOrganizationId(id);
     }
   }
 });

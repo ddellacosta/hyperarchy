@@ -37,6 +37,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
     initialize: function() {
       this.body.bindHtml(this.record, "body");
 
+
       User.findOrFetch(this.record.creatorId())
         .onSuccess(function(creator) {
           this.creator.html(htmlEscape(creator.fullName()));
@@ -78,7 +79,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
         parentTableName: this.template.tableName,
         parentRecordId:  this.record.id()
       };
-      this.containingColumn.setNextColumnState(state);
+      this.containingView.containingColumn.setNextColumnState(state);
     }
   }
 });

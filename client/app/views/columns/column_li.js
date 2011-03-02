@@ -7,16 +7,17 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
 
     initialize: function() {
       this.views = {
-        organizations: Views.Columns.Organizations.toView({containingColumn: this}),
-        votes:         Views.Columns.Votes.toView({containingColumn: this}),
-        elections:     Views.Columns.Elections.toView({containingColumn: this}),
-        candidates:    Views.Columns.Candidates.toView({containingColumn: this}),
-        comments:      Views.Columns.Comments.toView({containingColumn: this})
+        organizations: Views.Columns.Organizations.toView(),
+        votes:         Views.Columns.Votes.toView(),
+        elections:     Views.Columns.Elections.toView(),
+        candidates:    Views.Columns.Candidates.toView(),
+        comments:      Views.Columns.Comments.toView()
       };
 
       _(this.views).each(function(view) {
         view.hide();
         view.appendTo(this.body);
+        view.containingColumn = this;
       }, this);
     },
 
@@ -69,6 +70,10 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
 
     columnNumber: {
       afterChange: function() {}
+    },
+
+    isFirst: function() {
+      return (this.columnNumber() === 0);
     }
   }
 });
