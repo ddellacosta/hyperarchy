@@ -2,52 +2,130 @@
   #columns {
     padding: 0;
     margin: 0;
-    overflow: hidden;
+    height: 100%;
+    overflow-y: hidden;
+    @include noSelect;
 
     .column {
-      position: relative;
       float: left;
-      height: 99%;
+      height: 99.9%;
       margin: 0 0;
+
       border-left: 1px solid $gray;
 
       &.first {
         border-left: none;
       }
+    }
 
+    .columnView {
       .columnHeader {
         height: 8%;
         padding: 0 10px;
-        border-bottom: 1px solid $gray;
+        border-bottom: 2px solid gray;
+
+        h2 {
+          margin: 5px 0;
+        }
       }
 
-      .election, .candidate, .comment {
-        border-bottom: 1px solid $gray;
+      .electionsList, .candidatesList, .commentsList {
+        float: left;
+        height: 92%;
+        overflow-y: scroll;
       }
+    }
 
-      .selected {
+    .recordLi {
+      padding: 5px;
+      font-size: 15px;
+      border-bottom: 1px solid $gray;
+
+      &.selected {
         background-color: #ffffee;
       }
-    }
 
-
-
-    .candidates {
-
-      .candidatesList {
-        float: left;
-        width: 50%;
-        height: 92%;
-        overflow-y: scroll;
+      .body {
+        cursor: pointer;
       }
 
+      .creatorInfo {
+        margin: 5px 0;
+
+        .avatar {
+          float: left;
+          margin-right: 5px;
+        }
+
+        .details {
+          padding-top: 2px;
+
+          .name {
+            font-size: 15px;
+            margin-bottom: 2px;
+          }
+
+          .date {
+            color: #999999;
+            font-size: 12px;
+          }
+        }
+      }
+
+
     }
+  }
+}
+
+
+#app {
+  #columns {
+
+    .candidates {
+      @extend .columnView;
+
+      .candidatesList {
+        width: 50%;
+      }
+
+      .candidate {
+        @extend .recordLi;
+      }
+    }
+  }
+}
+
+
+#app {
+  #columns {
 
     .elections {
+      @extend .columnView;
 
       .electionsList {
-        height: 92%;
-        overflow-y: scroll;
+        width: 100%;
+      }
+
+      .election {
+        @extend .recordLi;
+      }
+    }
+  }
+}
+
+
+#app {
+  #columns {
+
+    .comments {
+      @extend .columnView;
+
+      .commentsList {
+        width: 100%;
+      }
+
+      .comment {
+        @extend .recordLi;
       }
     }
   }

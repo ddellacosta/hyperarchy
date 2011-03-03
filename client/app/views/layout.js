@@ -94,7 +94,7 @@ _.constructor("Views.Layout", View.Template, {
         div({id: "subNavigationBar"}).ref("subNavigationBar");
 
         div({'id': "scrollingArea"}, function() {
-          div({'class': "container12"}, function() {
+          div(function() {
           }).ref('body');
         }).ref('scrollingArea');
       }).ref('mainContentArea');

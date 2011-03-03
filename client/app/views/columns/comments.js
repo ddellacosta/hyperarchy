@@ -39,20 +39,19 @@ _.constructor("Views.Columns.Comments", View.Template, {
 
         this.startLoading();
         try {
-          var commentRelation, parentConstructor, commentConstructor;
+          var commentRelation, relationsToFetch, constructor, parentConstructor;
           if (state.parentTableName === "elections")  {
+            constructor = ElectionComment;
             parentConstructor  = Election;
-            commentConstructor = ElectionComment;
           }
           if (state.parentTableName === "candidates")  {
+            constructor = CandidateComment;
             parentConstructor  = Candidate;
-            commentConstructor = CandidateComment;
           }
-          commentRelation = parentConstructor.where({id: state.parentRecordId}).
-                              joinThrough(commentConstructor);
-          var relationsToFetch = [
+          commentRelation = parentConstructor.where({id: state.parentRecordId}).joinThrough(constructor);
+          relationsToFetch = [
             commentRelation,
-            commentRelation.join(User).on(commentConstructor.creatorId.eq(User.id))
+            commentRelation.join(User).on(constructor.creatorId.eq(User.id))
           ];
           Server.fetch(relationsToFetch).onSuccess(function() {
             if (this.containingColumn.isFirst()) this.setCurrentOrganizationId();

@@ -14,7 +14,9 @@ _.constructor("Views.Columns.Candidates", View.Template, {
 
       div(function() {
         div({'class': "expandedArea"}).ref("expandedArea");
-        subview('rankedCandidatesList', Views.Columns.RankedCandidatesList);
+        subview('rankedCandidatesList', Views.Columns.RankedCandidatesList, {
+          rootAttributes: {'class': "candidatesList"}
+        });
       }).ref("secondSubColumn");
 
       div({'class': "loading"}).ref("loading");
@@ -101,7 +103,6 @@ _.constructor("Views.Columns.Candidates", View.Template, {
     setCurrentOrganizationId: function(candidateRelation) {
       var id = candidateRelation.first().election().organizationId();
       Application.currentOrganizationId(id);
-//      Application.currentOrganizationId(1);
     }
   }
 });

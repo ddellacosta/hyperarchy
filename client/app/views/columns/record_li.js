@@ -5,17 +5,22 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
 
     li(rootAttributes, function() {
 
-      div({'class': "expandArrow"}).
-        ref("expandArrow").
-        click('expandOrContract');
-      div({'class': "body"}).ref("body");
-      div({'class': "creator"}).ref("creator");
-      div({'class': "createdAt"}).ref("createdAt");
+//      div({'class': "expandArrow"}).ref("expandArrow");
+      div({'class': "body"}).ref("body").click('expandOrContract');
 
       div({style: "display: none;", 'class': "expandedAreaSpacer"}).ref('expandedAreaSpacer');
 
       div({style: "display: none;"}, function() {
         template.expandedContent();
+
+        div({'class': "creatorInfo"}, function() {
+          subview('creatorAvatar', Views.Avatar, { size: 40 });
+          div({'class': "details"}, function() {
+            div({'class': "name"}, "").ref('creatorName');
+            div({'class': "date"}, "").ref('createdAt');
+          });
+          div({'class': "clear"});
+        });
 
         ul({'class': "links"}, function() {
           _(template.childTableNames).each(function(childTableName) {
@@ -29,7 +34,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
         }).ref("linksList");
 
       }).ref("expandedArea");
-    });
+    }).ref("li");
   }},
 
   viewProperties: {
@@ -37,10 +42,10 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
     initialize: function() {
       this.body.bindHtml(this.record, "body");
 
-
       User.findOrFetch(this.record.creatorId())
         .onSuccess(function(creator) {
-          this.creator.html(htmlEscape(creator.fullName()));
+          this.creatorAvatar.user(creator);
+          this.creatorName.html(htmlEscape(creator.fullName()));
           this.createdAt.html(this.record.formattedCreatedAt());
           this.show();
         }, this);
@@ -57,7 +62,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
     expand: function() {
       if (this.expanded) return;
       this.expanded = true;
-      this.expandArrow.addClass('expanded');
+//      this.expandArrow.addClass('expanded');
       this.addClass("expanded")
       this.expandedArea.slideDown(20, function() {
 
@@ -68,7 +73,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
       if (!this.expanded) return;
       this.expanded = false;
       this.expandedArea.slideUp(20, this.bind(function() {
-        this.expandArrow.removeClass('expanded');
+//        this.expandArrow.removeClass('expanded');
         this.removeClass("expanded");
       }));
     },

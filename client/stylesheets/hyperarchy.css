@@ -1308,7 +1308,7 @@ body.legal {
           background-image: url(/images/undo_12x12_light.png); }
   #app #mainContent #scrollingArea {
     background: white;
-    overflow-y: auto;
+    overflow: hidden;
     height: 100%; }
 #app #feedback {
   background: white;
@@ -1911,28 +1911,54 @@ body.legal {
 #app #columns {
   padding: 0;
   margin: 0;
-  overflow: hidden; }
+  height: 100%;
+  overflow-y: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none; }
   #app #columns .column {
-    position: relative;
     float: left;
-    height: 99%;
+    height: 99.9%;
     margin: 0 0;
     border-left: 1px solid #6b6b6b; }
     #app #columns .column.first {
       border-left: none; }
-    #app #columns .column .columnHeader {
-      height: 8%;
-      padding: 0 10px;
-      border-bottom: 1px solid #6b6b6b; }
-    #app #columns .column .election, #app #columns .column .candidate, #app #columns .column .comment {
-      border-bottom: 1px solid #6b6b6b; }
-    #app #columns .column .selected {
-      background-color: #ffffee; }
-  #app #columns .candidates .candidatesList {
+  #app #columns .columnView .columnHeader, #app #columns .candidates .columnHeader, #app #columns .elections .columnHeader, #app #columns .comments .columnHeader {
+    height: 8%;
+    padding: 0 10px;
+    border-bottom: 2px solid gray; }
+    #app #columns .columnView .columnHeader h2, #app #columns .candidates .columnHeader h2, #app #columns .elections .columnHeader h2, #app #columns .comments .columnHeader h2 {
+      margin: 5px 0; }
+  #app #columns .columnView .electionsList, #app #columns .candidates .electionsList, #app #columns .elections .electionsList, #app #columns .comments .electionsList, #app #columns .columnView .candidatesList, #app #columns .candidates .candidatesList, #app #columns .elections .candidatesList, #app #columns .comments .candidatesList, #app #columns .columnView .commentsList, #app #columns .candidates .commentsList, #app #columns .elections .commentsList, #app #columns .comments .commentsList {
     float: left;
-    width: 50%;
     height: 92%;
     overflow-y: scroll; }
-  #app #columns .elections .electionsList {
-    height: 92%;
-    overflow-y: scroll; }
+  #app #columns .recordLi, #app #columns .candidates .candidate, #app #columns .elections .election, #app #columns .comments .comment {
+    padding: 5px;
+    font-size: 15px;
+    border-bottom: 1px solid #6b6b6b; }
+    #app #columns .recordLi.selected, #app #columns .candidates .selected.candidate, #app #columns .elections .selected.election, #app #columns .comments .selected.comment {
+      background-color: #ffffee; }
+    #app #columns .recordLi .body, #app #columns .candidates .candidate .body, #app #columns .elections .election .body, #app #columns .comments .comment .body {
+      cursor: pointer; }
+    #app #columns .recordLi .creatorInfo, #app #columns .candidates .candidate .creatorInfo, #app #columns .elections .election .creatorInfo, #app #columns .comments .comment .creatorInfo {
+      margin: 5px 0; }
+      #app #columns .recordLi .creatorInfo .avatar, #app #columns .candidates .candidate .creatorInfo .avatar, #app #columns .elections .election .creatorInfo .avatar, #app #columns .comments .comment .creatorInfo .avatar {
+        float: left;
+        margin-right: 5px; }
+      #app #columns .recordLi .creatorInfo .details, #app #columns .candidates .candidate .creatorInfo .details, #app #columns .elections .election .creatorInfo .details, #app #columns .comments .comment .creatorInfo .details {
+        padding-top: 2px; }
+        #app #columns .recordLi .creatorInfo .details .name, #app #columns .candidates .candidate .creatorInfo .details .name, #app #columns .elections .election .creatorInfo .details .name, #app #columns .comments .comment .creatorInfo .details .name {
+          font-size: 15px;
+          margin-bottom: 2px; }
+        #app #columns .recordLi .creatorInfo .details .date, #app #columns .candidates .candidate .creatorInfo .details .date, #app #columns .elections .election .creatorInfo .details .date, #app #columns .comments .comment .creatorInfo .details .date {
+          color: #999999;
+          font-size: 12px; }
+
+#app #columns .candidates .candidatesList {
+  width: 50%; }
+
+#app #columns .elections .electionsList {
+  width: 100%; }
+
+#app #columns .comments .commentsList {
+  width: 100%; }

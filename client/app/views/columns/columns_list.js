@@ -140,7 +140,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
       });
       _(this.visibleColumns).each(function(column, i) {
-        column.body.width((relativeWidths[i] / totalRelativeWidth * 98.0) + "%");
+        column.body.width((99.99 * relativeWidths[i] / totalRelativeWidth) + "%");
         column.removeClass("first");
       });
       this.visibleColumns[0].addClass("first");
@@ -153,17 +153,15 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
           return;
         }
         var numColumnsToAdd = numVisibleColumns - this.visibleColumns.length;
-        if (numColumnsToAdd > 0) {
-          _(numColumnsToAdd).times(function() {
+        _(numColumnsToAdd).times(function() {
+          if (numColumnsToAdd > 0) {
             this.visibleColumns.push(this.invisibleColumns.shift());
             _(this.visibleColumns).last().appendTo(this.body);
-          }, this);
-        } else {
-          _(-1 * numColumnsToAdd).times(function() {
+          } else {
             _(this.visibleColumns).last().detach();
             this.invisibleColumns.unshift(this.visibleColumns.pop())
-          }, this);
-        }
+          }
+        }, this);
         this.renumberColumns();
       }
     },
