@@ -24,12 +24,13 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
 
         ul({'class': "links"}, function() {
           _(template.childTableNames).each(function(childTableName) {
-            li(function() { a(function() {
-              span({'class': "linkNumber"}).ref(childTableName + "Number");
-              span(_.humanize(childTableName));
-            })}).
-              ref(childTableName + "Link").
-              click("showChildTableInNextColumn", childTableName);
+            li({'class': "link"}, function() {
+              a(function() {
+                span({'class': "linkNumber"}).ref(childTableName + "Number");
+                span(_.humanize(childTableName));
+              })
+            }).ref(childTableName + "Link").
+               click("showChildTableInNextColumn", childTableName);
           }, this);
         }).ref("linksList");
 

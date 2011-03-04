@@ -1,24 +1,23 @@
 _.constructor("Views.Columns.Elections", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "elections", style: "display: none;"}, function() {
+
       div({'class': "columnHeader"}, function() {
         h2("Questions");
       });
 
-      subview('electionsList', Views.SortedList, {
-        rootAttributes: {'class': "electionsList"},
-        buildElement: function(election) {
-          return Views.Columns.ElectionLi.toView({record: election});
-        }
-      });
+      div({'class': "columnBody"}, function() {
+        subview('electionsList', Views.SortedList, {
+          rootAttributes: {'class': "electionsList"},
+          buildElement: function(election) {
+            return Views.Columns.ElectionLi.toView({record: election});
+          }
+        });
 
-      div(function() {
-        div({'class': "expandedArea"}).ref("expandedArea");
-      }).ref("secondSubColumn");
+        div({'class': "loading fetching"}).ref("loading");
+      }).ref("body");
 
-
-      div({'class': "loading fetching"}).ref("loading");
-    }).ref("body");
+    });
   }},
 
   viewProperties: {

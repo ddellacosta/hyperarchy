@@ -1909,35 +1909,49 @@ body.legal {
   margin-top: -40px; }
 
 #app #columns {
-  padding: 0;
-  margin: 0;
   height: 100%;
-  overflow-y: hidden;
+  overflow: hidden;
   -webkit-user-select: none;
-  -moz-user-select: none; }
+  -moz-user-select: none;
+  background-color: #eee; }
   #app #columns .column {
+    height: 100%;
     float: left;
-    height: 99.9%;
-    margin: 0 0;
-    border-left: 1px solid #6b6b6b; }
-    #app #columns .column.first {
-      border-left: none; }
+    padding: 0 2%;
+    margin-right: 0.5%;
+    background-color: white;
+    -moz-box-shadow: #c8c7c7 0px 1px 3px;
+    -webkit-box-shadow: #c8c7c7 0px 1px 3px;
+    border: 1px solid #ddd; }
+    #app #columns .column.last {
+      margin-right: 0;
+      border-right: none;
+      float: right; }
   #app #columns .columnView .columnHeader, #app #columns .candidates .columnHeader, #app #columns .elections .columnHeader, #app #columns .comments .columnHeader {
-    height: 8%;
-    padding: 0 10px;
-    border-bottom: 2px solid gray; }
+    width: 100%;
+    height: 8%; }
     #app #columns .columnView .columnHeader h2, #app #columns .candidates .columnHeader h2, #app #columns .elections .columnHeader h2, #app #columns .comments .columnHeader h2 {
       margin: 5px 0; }
-  #app #columns .columnView .electionsList, #app #columns .candidates .electionsList, #app #columns .elections .electionsList, #app #columns .comments .electionsList, #app #columns .columnView .candidatesList, #app #columns .candidates .candidatesList, #app #columns .elections .candidatesList, #app #columns .comments .candidatesList, #app #columns .columnView .commentsList, #app #columns .candidates .commentsList, #app #columns .elections .commentsList, #app #columns .comments .commentsList {
-    float: left;
-    height: 92%;
-    overflow-y: scroll; }
+  #app #columns .columnView .columnBody, #app #columns .candidates .columnBody, #app #columns .elections .columnBody, #app #columns .comments .columnBody {
+    width: 100%;
+    height: 88%; }
+    #app #columns .columnView .columnBody .columnList, #app #columns .candidates .columnBody .columnList, #app #columns .elections .columnBody .columnList, #app #columns .comments .columnBody .columnList, #app #columns .columnView .columnBody .candidates .candidatesList, #app #columns .candidates .columnView .columnBody .candidatesList, #app #columns .candidates .columnBody .candidatesList, #app #columns .elections .columnBody .candidates .candidatesList, #app #columns .candidates .elections .columnBody .candidatesList, #app #columns .comments .columnBody .candidates .candidatesList, #app #columns .candidates .comments .columnBody .candidatesList, #app #columns .columnView .columnBody .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .columnView .columnBody .goodCandidatesList, #app #columns .candidates .columnBody .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .columnBody .goodCandidatesList, #app #columns .elections .columnBody .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .elections .columnBody .goodCandidatesList, #app #columns .comments .columnBody .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .comments .columnBody .goodCandidatesList, #app #columns .columnView .columnBody .candidates .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .columnView .columnBody .badCandidatesList, #app #columns .candidates .columnBody .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .columnBody .badCandidatesList, #app #columns .elections .columnBody .candidates .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .elections .columnBody .badCandidatesList, #app #columns .comments .columnBody .candidates .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .comments .columnBody .badCandidatesList, #app #columns .columnView .columnBody .elections .electionsList, #app #columns .elections .columnView .columnBody .electionsList, #app #columns .candidates .columnBody .elections .electionsList, #app #columns .elections .candidates .columnBody .electionsList, #app #columns .elections .columnBody .electionsList, #app #columns .comments .columnBody .elections .electionsList, #app #columns .elections .comments .columnBody .electionsList, #app #columns .columnView .columnBody .comments .commentsList, #app #columns .comments .columnView .columnBody .commentsList, #app #columns .candidates .columnBody .comments .commentsList, #app #columns .comments .candidates .columnBody .commentsList, #app #columns .elections .columnBody .comments .commentsList, #app #columns .comments .elections .columnBody .commentsList, #app #columns .comments .columnBody .commentsList {
+      float: left;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: #f2f2f2;
+      -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
+      -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
+      border: 1px solid #ddd; }
   #app #columns .recordLi, #app #columns .candidates .candidate, #app #columns .elections .election, #app #columns .comments .comment {
     padding: 5px;
     font-size: 15px;
-    border-bottom: 1px solid #6b6b6b; }
-    #app #columns .recordLi.selected, #app #columns .candidates .selected.candidate, #app #columns .elections .selected.election, #app #columns .comments .selected.comment {
-      background-color: #ffffee; }
+    border-bottom: 1px solid #ddd;
+    background-color: white;
+    -moz-box-shadow: #c8c7c7 0px 1px 3px;
+    -webkit-box-shadow: #c8c7c7 0px 1px 3px; }
+    #app #columns .recordLi .body:hover, #app #columns .candidates .candidate .body:hover, #app #columns .elections .election .body:hover, #app #columns .comments .comment .body:hover {
+      text-decoration: underline; }
     #app #columns .recordLi .body, #app #columns .candidates .candidate .body, #app #columns .elections .election .body, #app #columns .comments .comment .body {
       cursor: pointer; }
     #app #columns .recordLi .creatorInfo, #app #columns .candidates .candidate .creatorInfo, #app #columns .elections .election .creatorInfo, #app #columns .comments .comment .creatorInfo {
@@ -1955,10 +1969,40 @@ body.legal {
           font-size: 12px; }
 
 #app #columns .candidates .candidatesList {
-  width: 50%; }
+  width: 49%;
+  height: 100%; }
+#app #columns .candidates .rankedCandidatesList {
+  width: 49%;
+  height: 100%;
+  float: right; }
+  #app #columns .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .badCandidatesList {
+    width: 100%;
+    height: 46%; }
+  #app #columns .candidates .rankedCandidatesList .dragTargetExplanation {
+    margin-top: 60px;
+    text-align: center; }
+  #app #columns .candidates .rankedCandidatesList .separator {
+    width: 100%;
+    height: 8%;
+    clear: both;
+    text-align: center;
+    cursor: default; }
+    #app #columns .candidates .rankedCandidatesList .separator .up {
+      display: inline-block;
+      background: url("/images/arrow_up_black.png");
+      background-repeat: no-repeat;
+      padding: 5px 20px; }
+    #app #columns .candidates .rankedCandidatesList .separator .down {
+      display: inline-block;
+      background: url("/images/arrow_down_black.png");
+      background-repeat: no-repeat;
+      background-position: right;
+      padding: 5px 20px; }
 
 #app #columns .elections .electionsList {
-  width: 100%; }
+  width: 100%;
+  height: 100%; }
 
 #app #columns .comments .commentsList {
-  width: 100%; }
+  width: 100%;
+  height: 100%; }

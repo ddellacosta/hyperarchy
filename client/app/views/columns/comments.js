@@ -5,14 +5,17 @@ _.constructor("Views.Columns.Comments", View.Template, {
         h2("Comments");
       });
 
-      subview('commentsList', Views.SortedList, {
-        rootAttributes: {'class': "commentsList"},
-        buildElement: function(comment) {
-          return Views.Columns.CommentLi.toView({record: comment});
-        }
+      div({'class': "columnBody"}, function() {
+        subview('commentsList', Views.SortedList, {
+          rootAttributes: {'class': "commentsList"},
+          buildElement: function(comment) {
+            return Views.Columns.CommentLi.toView({record: comment});
+          }
+        });
+
+        div({'class': "loading"}).ref("loading");
       });
       
-      div({'class': "loading"}).ref("loading");
     });
   }},
 

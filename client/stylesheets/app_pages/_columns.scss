@@ -1,48 +1,72 @@
 #app {
   #columns {
-    padding: 0;
-    margin: 0;
     height: 100%;
-    overflow-y: hidden;
+    overflow: hidden;
+
     @include noSelect;
+    background-color: #eee;
 
     .column {
+      height: 100%;
       float: left;
-      height: 99.9%;
-      margin: 0 0;
+      padding: 0 2%;
+      margin-right: 0.5%;
 
-      border-left: 1px solid $gray;
+      background-color: white;
+      -moz-box-shadow: #c8c7c7 0px 1px 3px;
+      -webkit-box-shadow: #c8c7c7 0px 1px 3px;
+      border: 1px solid #ddd;
 
-      &.first {
-        border-left: none;
+      &.last {
+        margin-right: 0;
+        border-right: none;
+        float: right;
       }
     }
 
     .columnView {
+
       .columnHeader {
+        width: 100%;
         height: 8%;
-        padding: 0 10px;
-        border-bottom: 2px solid gray;
 
         h2 {
           margin: 5px 0;
         }
       }
 
-      .electionsList, .candidatesList, .commentsList {
-        float: left;
-        height: 92%;
-        overflow-y: scroll;
+      .columnBody {
+        width: 100%;
+        height: 88%;
+
+        .columnList {
+          float: left;
+          overflow-x: hidden;
+          overflow-y: auto;
+
+          background-color: $lightGray;
+          -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
+          -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
+          border: 1px solid #ddd;
+        }
       }
     }
 
     .recordLi {
       padding: 5px;
       font-size: 15px;
-      border-bottom: 1px solid $gray;
+
+      border-bottom: 1px solid #ddd;
+      background-color: white;
+      -moz-box-shadow: #c8c7c7 0px 1px 3px;
+      -webkit-box-shadow: #c8c7c7 0px 1px 3px;
+
+      .body:hover {
+        text-decoration: underline;
+      }
 
       &.selected {
-        background-color: #ffffee;
+
       }
 
       .body {
@@ -71,8 +95,6 @@
           }
         }
       }
-
-
     }
   }
 }
@@ -85,7 +107,49 @@
       @extend .columnView;
 
       .candidatesList {
-        width: 50%;
+        @extend .columnList;
+        width: 49%;
+        height: 100%;
+      }
+
+      .rankedCandidatesList {
+        width: 49%;
+        height: 100%;
+        float: right;
+
+        .goodCandidatesList, .badCandidatesList {
+          @extend .columnList;
+          width: 100%;
+          height: 46%;
+        }
+
+        .dragTargetExplanation {
+          margin-top: 60px;
+          text-align: center;
+        }
+
+        .separator {
+          width: 100%;
+          height: 8%;
+          clear: both;
+          text-align: center;
+          cursor: default;
+
+          .up {
+            display: inline-block;
+            background: url("/images/arrow_up_black.png");
+            background-repeat: no-repeat;
+            padding: 5px 20px;
+          }
+
+          .down {
+            display: inline-block;
+            background: url("/images/arrow_down_black.png");
+            background-repeat: no-repeat;
+            background-position: right;
+            padding: 5px 20px;
+          }
+        }
       }
 
       .candidate {
@@ -103,7 +167,9 @@
       @extend .columnView;
 
       .electionsList {
+        @extend .columnList;
         width: 100%;
+        height: 100%;
       }
 
       .election {
@@ -121,7 +187,9 @@
       @extend .columnView;
 
       .commentsList {
+        @extend .columnList;
         width: 100%;
+        height: 100%;
       }
 
       .comment {

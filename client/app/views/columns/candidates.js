@@ -5,22 +5,21 @@ _.constructor("Views.Columns.Candidates", View.Template, {
         h2("Answers");
       });
 
-      subview('candidatesList', Views.SortedList, {
-        rootAttributes: {'class': "candidatesList"},
-        buildElement: function(candidate) {
-          return Views.Columns.CandidateLi.toView({record: candidate});
-        }
-      });
+      div({'class': "columnBody"}, function() {
 
-      div(function() {
-        div({'class': "expandedArea"}).ref("expandedArea");
-        subview('rankedCandidatesList', Views.Columns.RankedCandidatesList, {
+        subview('candidatesList', Views.SortedList, {
           rootAttributes: {'class': "candidatesList"}
+          // buildElement function set upon initialize
         });
-      }).ref("secondSubColumn");
 
-      div({'class': "loading"}).ref("loading");
-    }).ref("body");
+        subview('rankedCandidatesList', Views.Columns.RankedCandidatesList, {
+          rootAttributes: {'class': "candidatesList ranked"}
+        });
+
+        div({'class': "clear"});
+        div({'class': "loading"}).ref("loading");
+      }).ref("body");
+    });
   }},
 
   viewProperties: {
@@ -74,30 +73,16 @@ _.constructor("Views.Columns.Candidates", View.Template, {
       }
     },
 
-    afterShow: function() {
-      this.adjustHeight();
-    },
-
-    adjustHeight: function() {
-      this.loading.position({
-        my: 'center center',
-        at: 'center center',
-        of: this.candidatesList
-      });
-      this.rankedCandidatesList.adjustHeight();
-    },
-
     startLoading: function() {
       this.candidatesList.children().hide();
-      this.rankedCandidatesList.children().hide();
+//      this.rankedCandidatesList.children().hide();
       this.loading.show();
     },
 
     stopLoading: function() {
       this.loading.hide();
-      this.candidatesList.children().show();
+//      this.candidatesList.children().show();
       this.rankedCandidatesList.children().show();
-      this.adjustHeight();
     },
 
     setCurrentOrganizationId: function(candidateRelation) {
