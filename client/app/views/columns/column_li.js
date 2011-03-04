@@ -1,6 +1,6 @@
 _.constructor("Views.Columns.ColumnLi", View.Template, {
   content: function() {
-    this.builder.tag("li", {'class': "column"}).ref("body");
+    this.builder.tag("li", {'class': "column"});
   },
 
   viewProperties: {
@@ -16,7 +16,7 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
 
       _(this.views).each(function(view) {
         view.hide();
-        view.appendTo(this.body);
+        view.appendTo(this);
         view.containingColumn = this;
       }, this);
     },

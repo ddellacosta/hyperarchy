@@ -1,6 +1,6 @@
 _.constructor("Views.Columns.ColumnsList", View.Template, {
   content: function() {
-    this.builder.tag("ol", {id: "columns"}).ref("body");
+    this.builder.tag("ol", {id: "columns"});
   },
 
   viewProperties: {
@@ -8,7 +8,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
     defaultView:  true,
 
     MAX_VISIBLE_COLUMNS:   3,
-    MIN_INVISIBLE_COLUMNS: 3,
+    MIN_INVISIBLE_COLUMNS: 2,
 
     initialize: function() {
       this.visibleColumns   = [];
@@ -60,9 +60,9 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       _(this.visibleColumns).each(function(column, i) {
         var state = column.state();
         if (state.tableName)       urlState["col" + (i+1)] = state.tableName;
-        if (state.parentTableName) urlState["col" + i]     = state.parentTableName;
         if (state.recordId)        urlState["id" + (i+1)]  = state.recordId;
-        if (state.parentRecordId)  urlState["id" + i]      = state.parentRecordId;
+        if (i > 0 && state.parentTableName) urlState["col" + i] = state.parentTableName;
+        if (i > 0 && state.parentRecordId)  urlState["id" + i]  = state.parentRecordId;
       });
       return urlState;
     },
@@ -73,18 +73,13 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.visibleColumns.unshift(newFirstColumn);
       this.invisibleColumns.unshift(oldLastColumn);
       this.renumberColumns();
-      this.formatColumns();
 
-      newFirstColumn.css({
-        marginLeft: (-1.2 * newFirstColumn.width())
-      });
-      newFirstColumn.prependTo(this.body);
+      newFirstColumn.prependTo(this);
+      newFirstColumn.show(this);
+      this.formatColumns();
       this.defer(function() {
-        newFirstColumn.animate({
-          marginLeft: 0
-        }, 'slow', function() {
-          oldLastColumn.detach();
-        });
+//        oldLastColumn.hide();
+        oldLastColumn.detach();
       });
     },
 
@@ -94,16 +89,13 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.visibleColumns.push(newLastColumn);
       this.invisibleColumns.push(oldFirstColumn);
       this.renumberColumns();
+      
+      newLastColumn.appendTo(this);
+      newLastColumn.show();
       this.formatColumns();
-
-      newLastColumn.appendTo(this.body);
       this.defer(function() {
-        oldFirstColumn.animate({
-          marginLeft: (-1.2 * oldFirstColumn.width())
-        }, 'slow', this.bind(function() {
-          oldFirstColumn.css({marginLeft: 0});
-          oldFirstColumn.detach();
-        }));
+//        oldFirstColumn.hide();
+        oldFirstColumn.detach();
       });
     },
 
@@ -139,11 +131,17 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         relativeWidths[i] = column.currentView.relativeWidth;
         totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
       });
+
+      var marginPercent  = (this.numVisibleColumns() - 1) *  0.5; // hard-coded to match css
+      var paddingPercent = (this.numVisibleColumns() * 2) *  2.0; // hard-coded to match css
+      var spacingPercent = marginPercent + paddingPercent;
       _(this.visibleColumns).each(function(column, i) {
-        column.body.width((99.99 * relativeWidths[i] / totalRelativeWidth) + "%");
+        column.width(((99.5 - spacingPercent) * relativeWidths[i] / totalRelativeWidth) + "%");
         column.removeClass("first");
+        column.removeClass("last");
       });
-      this.visibleColumns[0].addClass("first");
+      _(this.visibleColumns).first().addClass("first");
+      _(this.visibleColumns).last().addClass("last");
     },
 
     numVisibleColumns: {
@@ -153,10 +151,10 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
           return;
         }
         var numColumnsToAdd = numVisibleColumns - this.visibleColumns.length;
-        _(numColumnsToAdd).times(function() {
+        _(Math.abs(numColumnsToAdd)).times(function() {
           if (numColumnsToAdd > 0) {
             this.visibleColumns.push(this.invisibleColumns.shift());
-            _(this.visibleColumns).last().appendTo(this.body);
+            _(this.visibleColumns).last().appendTo(this);
           } else {
             _(this.visibleColumns).last().detach();
             this.invisibleColumns.unshift(this.visibleColumns.pop())
