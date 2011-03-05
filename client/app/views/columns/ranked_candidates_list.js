@@ -1,7 +1,7 @@
 _.constructor("Views.Columns.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
-    div({'class': "rankedCandidatesList"}, function() {
-      ol({'class': "goodCandidatesList"}, function() {
+    div({'class': "rankedCandidatesLists"}, function() {
+      ol({'class': "columnList"}, function() {
         div({'class': "dragTargetExplanation"}, function() {
           raw("Drag answers you <em>like</em> here, <br /> with the best at the top.")
         }).ref('goodCandidatesExplanation');
@@ -12,7 +12,7 @@ _.constructor("Views.Columns.RankedCandidatesList", View.Template, {
         div({'class': "down"}, "bad ideas");
       }).ref('separator');
 
-      ol({'class': "badCandidatesList"}, function() {
+      ol({'class': "columnList"}, function() {
         div({'class': "dragTargetExplanation"}, function() {
           raw("Drag answers you <em>dislike</em> here, <br /> with the worst at the bottom.")
         }).ref('badCandidatesExplanation');

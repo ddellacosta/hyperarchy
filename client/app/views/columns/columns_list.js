@@ -44,7 +44,8 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         parentTableName = state["col" + i];
         recordId        = parseInt(state["id" + (i+1)]);
         parentRecordId  = parseInt(state["id" + i]);
-        if (! (tableName && (recordId || (parentTableName && parentRecordId)))) break;
+        if (! tableName) break;
+        if (!recordId && !(parentTableName && parentRecordId)) break;
         columnStates[i] = {
           tableName:       tableName,
           parentTableName: parentTableName,
@@ -59,10 +60,12 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       var urlState = {};
       _(this.visibleColumns).each(function(column, i) {
         var state = column.state();
-        if (state.tableName)       urlState["col" + (i+1)] = state.tableName;
-        if (state.recordId)        urlState["id" + (i+1)]  = state.recordId;
-        if (i > 0 && state.parentTableName) urlState["col" + i] = state.parentTableName;
-        if (i > 0 && state.parentRecordId)  urlState["id" + i]  = state.parentRecordId;
+        if (state.tableName) urlState["col" + (i+1)] = state.tableName;
+        if (state.recordId)  urlState["id" + (i+1)]  = state.recordId;
+        if (i > 0) {
+          if (state.parentTableName) urlState["col" + i] = state.parentTableName;
+          if (state.parentRecordId)  urlState["id" + i]  = state.parentRecordId;
+        }
       });
       return urlState;
     },
@@ -75,10 +78,8 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.renumberColumns();
 
       newFirstColumn.prependTo(this);
-      newFirstColumn.show(this);
       this.formatColumns();
       this.defer(function() {
-//        oldLastColumn.hide();
         oldLastColumn.detach();
       });
     },
@@ -91,10 +92,8 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.renumberColumns();
       
       newLastColumn.appendTo(this);
-      newLastColumn.show();
       this.formatColumns();
       this.defer(function() {
-//        oldFirstColumn.hide();
         oldFirstColumn.detach();
       });
     },
@@ -132,9 +131,10 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
       });
 
-      var marginPercent  = (this.numVisibleColumns() - 1) *  0.5; // hard-coded to match css
-      var paddingPercent = (this.numVisibleColumns() * 2) *  2.0; // hard-coded to match css
+      var marginPercent  = (this.numVisibleColumns() - 1) * 0.5; // hard-coded to match css
+      var paddingPercent = (this.numVisibleColumns() * 2) * 2.0; // hard-coded to match css
       var spacingPercent = marginPercent + paddingPercent;
+
       _(this.visibleColumns).each(function(column, i) {
         column.width(((99.5 - spacingPercent) * relativeWidths[i] / totalRelativeWidth) + "%");
         column.removeClass("first");
@@ -146,10 +146,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
 
     numVisibleColumns: {
       afterChange: function(numVisibleColumns) {
-        if (numVisibleColumns < 1) {
-          console.debug("invalid url hash"); // redirect somewhere
-          return;
-        }
+        if (numVisibleColumns < 1) this.handleInvalidState();
         var numColumnsToAdd = numVisibleColumns - this.visibleColumns.length;
         _(Math.abs(numColumnsToAdd)).times(function() {
           if (numColumnsToAdd > 0) {
@@ -168,6 +165,12 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       _(this.visibleColumns).each(function(column, i) {
         column.columnNumber(i);
       });
+    },
+
+    handleInvalidState: function(invalidState) {
+      console.debug("invalid url hash");
+      console.debug(invalidState);
+      // redirect to some default state
     }
   }
 });

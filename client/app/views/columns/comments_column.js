@@ -1,6 +1,6 @@
 _.constructor("Views.Columns.CommentsColumn", View.Template, {
   content: function() { with(this.builder) {
-    div({'class': "comments", style: "display: none;"}, function() {
+    div({'class': "comments"}, function() {
       div({'class': "columnHeader"}, function() {
         h2("Comments");
       });
@@ -62,7 +62,7 @@ _.constructor("Views.Columns.CommentsColumn", View.Template, {
             this.stopLoading();
           }, this);
         } catch (badCombinationOfTableNamesAndIds) {
-          this.containingColumn.handleInvalidColumnState();
+          this.containingColumn.handleInvalidState();
         }
       }
     },

@@ -1,33 +1,40 @@
 _.constructor("Views.Columns.RecordsColumn", View.Template, {
   content: function() { with(this.builder) {
     var rootAttributes = template.rootAttributes || {};
-
     div(rootAttributes, function() {
       div({'class': "columnHeader"}, function() {
         template.headerContent();
-      });
+      }).ref("header");
 
       div({'class': "columnBody"}, function() {
-
         subview('mainList', Views.SortedList, {
-          rootAttributes: {'class': "recordsList"}
+          rootAttributes: {'class': "columnList"}
           // buildElement function set upon initialize
         });
-
+        template.rightSubColumn();
         div({'class': "clear"});
-        div({'class': "loading"}).ref("loading");
       }).ref("body");
+
+      div({'class': "bigLoading"}).ref("loading");
     });
   }},
 
+  rootAttributes: {},                 // assign in subclasses
+  liConstructor:  null,               // assign in subclasses
+  headerContent: function(state) {},  // implement in subclasses
+  rightSubColumn: function(state) {}, // implement in subclasses
+
   viewProperties: {
 
-    relativeWidth: 2,
+    relativeWidth: 1,                                // assign in subclasses
+    mainRelationForState: function(state) {},        // implement in subclasses
+    additionalRelationsForState: function(state) {}, // implement in subclasses
+    populateBody: function(relation) {},             // implement in subclasses
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
       this.mainList.buildElement = this.bind(function(record) {
-        return template.liConstructor.toView({
+        return this.template.liConstructor.toView({
           record: record,
           containingView: this
         });
@@ -41,51 +48,48 @@ _.constructor("Views.Columns.RecordsColumn", View.Template, {
           (state.parentTableName === oldState.parentTableName));
         if (relationIsTheSame) {
           this.selectedRecordId(state.recordId);
-        } else {
-          this.startLoading();
-          try {
-            var mainRelation = this.mainRelationForState(state);
-            var additionalRelations = this.additionalRelationsForState(state);
-            Server.fetch([mainRelation].concat(additionalRelations)).onSuccess(function() {
-              this.populateLists()
-              if (this.isFirstColumn()) this.setCurrentOrganizationId();
-              this.selectedRecordId(state.recordId);
-              this.stopLoading();
-            });
-          } catch (invalidColumnState) {
-            this.containingColumn.handleInvalidColumnState();
-          }
+          return;
+        }
+
+        this.startLoading();
+        try {
+          var mainRelation = this.mainRelationForState(state);
+          var additionalRelations = this.additionalRelationsForState(state);
+          Server.fetch([mainRelation].concat(additionalRelations)).onSuccess(function() {
+            this.populateBody(mainRelation);
+            if (this.isFirstColumn()) this.setCurrentOrganizationId();
+            this.selectedRecordId(state.recordId);
+            this.stopLoading();
+          }, this);
+        } catch (badColumnState) {
+          this.containingColumn.handleInvalidState(badColumnState);
         }
       }
     },
 
-    populateLists: function() {
-      // implement in subclasses
-    },
-
     selectedRecordId: {
-      afterWrite: function(id) {
-        var selectectedRecord = Candidate.find(id);
-        var selectedLi = this.candidatesList.elementForRecord(selectectedRecord);
+      afterChange: function(id) {
+        if (! id) return;
+        var selectedLi = this.mainList.elementsById[id];
+        if (! selectedLi) return;
+
+        this.mainList.children().removeClass("selected");
+        selectedLi.addClass("selected");
         if (this.isFirstColumn()) {
-          this.candidatesList.children().hide();
+          this.mainList.children().hide();
           selectedLi.show();
         }
-        this.candidatesList.children().removeClass("selected");
-        selectedLi.addClass("selected");
       }
     },
 
     startLoading: function() {
-      this.candidatesList.hide();
-      this.rankedCandidatesList.hide();
+      this.body.hide();
       this.loading.show();
     },
 
     stopLoading: function() {
       this.loading.hide();
-      this.candidatesList.show();
-      this.rankedCandidatesList.show();
+      this.body.show();
     },
 
     setCurrentOrganizationId: function() {

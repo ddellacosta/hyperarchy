@@ -5,11 +5,9 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
 
     li(rootAttributes, function() {
 
-//      div({'class': "expandArrow"}).ref("expandArrow");
       div({'class': "body"}).ref("body").click('expandOrContract');
 
       div({style: "display: none;", 'class': "expandedAreaSpacer"}).ref('expandedAreaSpacer');
-
       div({style: "display: none;"}, function() {
         template.expandedContent();
 
@@ -42,7 +40,6 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
 
     initialize: function() {
       this.body.bindHtml(this.record, "body");
-
       User.findOrFetch(this.record.creatorId())
         .onSuccess(function(creator) {
           this.creatorAvatar.user(creator);
@@ -63,7 +60,6 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
     expand: function() {
       if (this.expanded) return;
       this.expanded = true;
-//      this.expandArrow.addClass('expanded');
       this.addClass("expanded")
       this.expandedArea.slideDown(20, function() {
 
@@ -74,18 +70,18 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
       if (!this.expanded) return;
       this.expanded = false;
       this.expandedArea.slideUp(20, this.bind(function() {
-//        this.expandArrow.removeClass('expanded');
-        this.removeClass("expanded");
+      this.removeClass("expanded");
       }));
     },
 
     showChildTableInNextColumn: function(childTableName) {
-      var state = {
+      var newStateForNextColumn = {
         tableName:       childTableName,
+        recordId:        NaN,
         parentTableName: this.template.tableName,
         parentRecordId:  this.record.id()
       };
-      this.containingView.containingColumn.setNextColumnState(state);
+      this.containingView.containingColumn.setNextColumnState(newStateForNextColumn);
     }
   }
 });

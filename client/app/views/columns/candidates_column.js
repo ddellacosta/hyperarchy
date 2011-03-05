@@ -62,7 +62,7 @@ _.constructor("Views.Columns.CandidatesColumn", View.Template, {
             this.stopLoading();
           }, this);
         } catch (badCombinationOfTableNamesAndIds) {
-          this.containingColumn.handleInvalidColumnState();
+          this.containingColumn.handleInvalidState();
         }
       }
     },

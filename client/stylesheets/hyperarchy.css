@@ -1927,82 +1927,86 @@ body.legal {
       margin-right: 0;
       border-right: none;
       float: right; }
-  #app #columns .columnView .columnHeader, #app #columns .candidates .columnHeader, #app #columns .elections .columnHeader, #app #columns .comments .columnHeader {
+  #app #columns .columnHeader {
     width: 100%;
     height: 8%; }
-    #app #columns .columnView .columnHeader h2, #app #columns .candidates .columnHeader h2, #app #columns .elections .columnHeader h2, #app #columns .comments .columnHeader h2 {
+    #app #columns .columnHeader h2 {
       margin: 5px 0; }
-  #app #columns .columnView .columnBody, #app #columns .candidates .columnBody, #app #columns .elections .columnBody, #app #columns .comments .columnBody {
+  #app #columns .columnBody, #app #columns .bigLoading {
     width: 100%;
     height: 88%; }
-    #app #columns .columnView .columnBody .columnList, #app #columns .candidates .columnBody .columnList, #app #columns .elections .columnBody .columnList, #app #columns .comments .columnBody .columnList, #app #columns .columnView .columnBody .candidates .candidatesList, #app #columns .candidates .columnView .columnBody .candidatesList, #app #columns .candidates .columnBody .candidatesList, #app #columns .elections .columnBody .candidates .candidatesList, #app #columns .candidates .elections .columnBody .candidatesList, #app #columns .comments .columnBody .candidates .candidatesList, #app #columns .candidates .comments .columnBody .candidatesList, #app #columns .columnView .columnBody .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .columnView .columnBody .goodCandidatesList, #app #columns .candidates .columnBody .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .columnBody .goodCandidatesList, #app #columns .elections .columnBody .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .elections .columnBody .goodCandidatesList, #app #columns .comments .columnBody .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .comments .columnBody .goodCandidatesList, #app #columns .columnView .columnBody .candidates .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .columnView .columnBody .badCandidatesList, #app #columns .candidates .columnBody .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .columnBody .badCandidatesList, #app #columns .elections .columnBody .candidates .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .elections .columnBody .badCandidatesList, #app #columns .comments .columnBody .candidates .rankedCandidatesList .badCandidatesList, #app #columns .candidates .rankedCandidatesList .comments .columnBody .badCandidatesList, #app #columns .columnView .columnBody .elections .electionsList, #app #columns .elections .columnView .columnBody .electionsList, #app #columns .candidates .columnBody .elections .electionsList, #app #columns .elections .candidates .columnBody .electionsList, #app #columns .elections .columnBody .electionsList, #app #columns .comments .columnBody .elections .electionsList, #app #columns .elections .comments .columnBody .electionsList, #app #columns .columnView .columnBody .comments .commentsList, #app #columns .comments .columnView .columnBody .commentsList, #app #columns .candidates .columnBody .comments .commentsList, #app #columns .comments .candidates .columnBody .commentsList, #app #columns .elections .columnBody .comments .commentsList, #app #columns .comments .elections .columnBody .commentsList, #app #columns .comments .columnBody .commentsList {
-      float: left;
-      overflow-x: hidden;
-      overflow-y: auto;
-      background-color: #f2f2f2;
-      -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
-      -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
-      border: 1px solid #ddd; }
-  #app #columns .recordLi, #app #columns .candidates .candidate, #app #columns .elections .election, #app #columns .comments .comment {
+  #app #columns .bigLoading {
+    background-position-x: center;
+    background-position-y: 45%; }
+  #app #columns .columnList, #app #columns .electionsList {
+    height: 100%;
+    width: 100%;
+    float: left;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #f2f2f2;
+    -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
+    -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
+    border: 1px solid #ddd; }
+  #app #columns .recordLi, #app #columns .candidate, #app #columns .comment, #app #columns .election {
     padding: 5px;
     font-size: 15px;
     border-bottom: 1px solid #ddd;
     background-color: white;
     -moz-box-shadow: #c8c7c7 0px 1px 3px;
     -webkit-box-shadow: #c8c7c7 0px 1px 3px; }
-    #app #columns .recordLi .body:hover, #app #columns .candidates .candidate .body:hover, #app #columns .elections .election .body:hover, #app #columns .comments .comment .body:hover {
-      text-decoration: underline; }
-    #app #columns .recordLi .body, #app #columns .candidates .candidate .body, #app #columns .elections .election .body, #app #columns .comments .comment .body {
+    #app #columns .recordLi .body, #app #columns .candidate .body, #app #columns .comment .body, #app #columns .election .body {
       cursor: pointer; }
-    #app #columns .recordLi .creatorInfo, #app #columns .candidates .candidate .creatorInfo, #app #columns .elections .election .creatorInfo, #app #columns .comments .comment .creatorInfo {
+    #app #columns .recordLi .body:hover, #app #columns .candidate .body:hover, #app #columns .comment .body:hover, #app #columns .election .body:hover {
+      text-decoration: underline; }
+    #app #columns .recordLi.selected, #app #columns .selected.candidate, #app #columns .selected.comment, #app #columns .selected.election {
+      border-top: 1px solid gray;
+      border-bottom: 1px solid gray;
+      background-color: #ddddff; }
+    #app #columns .recordLi .creatorInfo, #app #columns .candidate .creatorInfo, #app #columns .comment .creatorInfo, #app #columns .election .creatorInfo {
       margin: 5px 0; }
-      #app #columns .recordLi .creatorInfo .avatar, #app #columns .candidates .candidate .creatorInfo .avatar, #app #columns .elections .election .creatorInfo .avatar, #app #columns .comments .comment .creatorInfo .avatar {
+      #app #columns .recordLi .creatorInfo .avatar, #app #columns .candidate .creatorInfo .avatar, #app #columns .comment .creatorInfo .avatar, #app #columns .election .creatorInfo .avatar {
         float: left;
         margin-right: 5px; }
-      #app #columns .recordLi .creatorInfo .details, #app #columns .candidates .candidate .creatorInfo .details, #app #columns .elections .election .creatorInfo .details, #app #columns .comments .comment .creatorInfo .details {
+      #app #columns .recordLi .creatorInfo .details, #app #columns .candidate .creatorInfo .details, #app #columns .comment .creatorInfo .details, #app #columns .election .creatorInfo .details {
         padding-top: 2px; }
-        #app #columns .recordLi .creatorInfo .details .name, #app #columns .candidates .candidate .creatorInfo .details .name, #app #columns .elections .election .creatorInfo .details .name, #app #columns .comments .comment .creatorInfo .details .name {
+        #app #columns .recordLi .creatorInfo .details .name, #app #columns .candidate .creatorInfo .details .name, #app #columns .comment .creatorInfo .details .name, #app #columns .election .creatorInfo .details .name {
           font-size: 15px;
           margin-bottom: 2px; }
-        #app #columns .recordLi .creatorInfo .details .date, #app #columns .candidates .candidate .creatorInfo .details .date, #app #columns .elections .election .creatorInfo .details .date, #app #columns .comments .comment .creatorInfo .details .date {
+        #app #columns .recordLi .creatorInfo .details .date, #app #columns .candidate .creatorInfo .details .date, #app #columns .comment .creatorInfo .details .date, #app #columns .election .creatorInfo .details .date {
           color: #999999;
           font-size: 12px; }
-
-#app #columns .candidates .candidatesList {
-  width: 48%;
-  height: 100%; }
-#app #columns .candidates .rankedCandidatesList {
-  width: 48%;
-  height: 100%;
-  float: right; }
-  #app #columns .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .badCandidatesList {
+  #app #columns .candidates .columnList, #app #columns .candidates .electionsList {
+    width: 48%; }
+  #app #columns .rankedCandidatesLists {
+    width: 48%;
+    height: 100%;
+    float: right; }
+    #app #columns .rankedCandidatesLists .columnList, #app #columns .rankedCandidatesLists .electionsList {
+      width: 100%;
+      height: 46%; }
+    #app #columns .rankedCandidatesLists .dragTargetExplanation {
+      margin-top: 60px;
+      text-align: center; }
+    #app #columns .rankedCandidatesLists .separator {
+      width: 100%;
+      height: 8%;
+      clear: both;
+      text-align: center;
+      cursor: default; }
+      #app #columns .rankedCandidatesLists .separator .up {
+        display: inline-block;
+        background: url("/images/arrow_up_black.png");
+        background-repeat: no-repeat;
+        padding: 5px 10px;
+        padding-left: 20px; }
+      #app #columns .rankedCandidatesLists .separator .down {
+        display: inline-block;
+        background: url("/images/arrow_down_black.png");
+        background-repeat: no-repeat;
+        background-position: right;
+        padding: 5px 10px;
+        padding-right: 20px; }
+  #app #columns .electionsList {
     width: 100%;
-    height: 46%; }
-  #app #columns .candidates .rankedCandidatesList .dragTargetExplanation {
-    margin-top: 60px;
-    text-align: center; }
-  #app #columns .candidates .rankedCandidatesList .separator {
-    width: 100%;
-    height: 8%;
-    clear: both;
-    text-align: center;
-    cursor: default; }
-    #app #columns .candidates .rankedCandidatesList .separator .up {
-      display: inline-block;
-      background: url("/images/arrow_up_black.png");
-      background-repeat: no-repeat;
-      padding: 5px 20px; }
-    #app #columns .candidates .rankedCandidatesList .separator .down {
-      display: inline-block;
-      background: url("/images/arrow_down_black.png");
-      background-repeat: no-repeat;
-      background-position: right;
-      padding: 5px 20px; }
-
-#app #columns .elections .electionsList {
-  width: 100%;
-  height: 100%; }
-
-#app #columns .comments .commentsList {
-  width: 100%;
-  height: 100%; }
+    height: 100%; }
