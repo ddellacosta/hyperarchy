@@ -1932,10 +1932,12 @@ body.legal {
     height: 8%; }
     #app #columns .columnHeader h2 {
       margin: 5px 0; }
-  #app #columns .columnBody, #app #columns .bigLoading {
+  #app #columns .columnBody {
     width: 100%;
     height: 88%; }
   #app #columns .bigLoading {
+    width: 100%;
+    height: 88%;
     background-position-x: center;
     background-position-y: 45%; }
   #app #columns .columnList, #app #columns .electionsList {
@@ -1947,22 +1949,20 @@ body.legal {
     background-color: #f2f2f2;
     -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
     -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
-    border: 1px solid #ddd; }
+    border: 1px solid #ccc; }
   #app #columns .recordLi, #app #columns .candidate, #app #columns .comment, #app #columns .election {
     padding: 5px;
     font-size: 15px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #bbb;
     background-color: white;
     -moz-box-shadow: #c8c7c7 0px 1px 3px;
     -webkit-box-shadow: #c8c7c7 0px 1px 3px; }
-    #app #columns .recordLi .body, #app #columns .candidate .body, #app #columns .comment .body, #app #columns .election .body {
-      cursor: pointer; }
-    #app #columns .recordLi .body:hover, #app #columns .candidate .body:hover, #app #columns .comment .body:hover, #app #columns .election .body:hover {
-      text-decoration: underline; }
     #app #columns .recordLi.selected, #app #columns .selected.candidate, #app #columns .selected.comment, #app #columns .selected.election {
-      border-top: 1px solid gray;
-      border-bottom: 1px solid gray;
       background-color: #ddddff; }
+    #app #columns .recordLi .body, #app #columns .candidate .body, #app #columns .comment .body, #app #columns .election .body {
+      color: black; }
+      #app #columns .recordLi .body:hover, #app #columns .candidate .body:hover, #app #columns .comment .body:hover, #app #columns .election .body:hover {
+        text-decoration: underline; }
     #app #columns .recordLi .creatorInfo, #app #columns .candidate .creatorInfo, #app #columns .comment .creatorInfo, #app #columns .election .creatorInfo {
       margin: 5px 0; }
       #app #columns .recordLi .creatorInfo .avatar, #app #columns .candidate .creatorInfo .avatar, #app #columns .comment .creatorInfo .avatar, #app #columns .election .creatorInfo .avatar {

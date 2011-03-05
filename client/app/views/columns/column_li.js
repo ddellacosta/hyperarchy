@@ -6,34 +6,28 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
   viewProperties: {
 
     initialize: function() {
-      this.views = {
-        organizations: Views.Columns.OrganizationsColumn.toView(),
-        votes:         Views.Columns.VotesColumn.toView(),
-        elections:     Views.Columns.ElectionsColumn.toView(),
-        candidates:    Views.Columns.CandidatesColumn2.toView(),
-        comments:      Views.Columns.CommentsColumn2.toView()
+      this.listings = {
+        organizations: Views.Columns.OrganizationsListing.toView(),
+        votes:         Views.Columns.VotesListing.toView(),
+        elections:     Views.Columns.ElectionsListing.toView(),
+        candidates:    Views.Columns.CandidatesListing.toView(),
+        comments:      Views.Columns.CommentsListing.toView()
       };
 
-      _(this.views).each(function(view) {
-        view.hide();
-        view.appendTo(this);
-        view.containingColumn = this;
+      _(this.listings).each(function(listing) {
+        listing.hide();
+        listing.appendTo(this);
+        listing.containingColumn = this;
       }, this);
     },
 
     state: {
       afterChange: function(columnState, oldState) {
         if (!columnState || _(columnState).isEqual(oldState)) return;
-        var viewName = columnState.tableName;
-        this.switchToView(viewName);
-        this.currentView.state(columnState);
-
-        console.debug(viewName + " change");
+        var listingName = columnState.tableName;
+        this.switchToListing(listingName);
+        this.currentListing.state(columnState);
       }
-    },
-
-    getViewNameFromColumnState: function(state) {
-      return state.tableName;
     },
 
     setNextColumnState: function(newStateForNextColumn) {
@@ -55,13 +49,13 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
       this.containingList.handleInvalidState(invalidState);
     },
 
-    switchToView: function(viewName) {
-      if (! this.views[viewName]) this.handleInvalidState();
-      _(this.views).each(function(view, name) {
-        if (name === viewName) view.show();
-        else view.hide();
+    switchToListing: function(listingName) {
+      if (! this.listings[listingName]) this.handleInvalidState();
+      _(this.listings).each(function(listing, name) {
+        if (name === listingName) listing.show();
+        else listing.hide();
       });
-      this.currentView = this.views[viewName];
+      this.currentListing = this.listings[listingName];
     },
 
     columnNumber: {

@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.OrganizationsColumn", View.Template, {
+_.constructor("Views.Columns.OrganizationsListing", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "organizations"});
   }},

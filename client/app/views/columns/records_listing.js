@@ -19,24 +19,24 @@ _.constructor("Views.Columns.RecordsColumn", View.Template, {
     });
   }},
 
-  rootAttributes: {},                 // assign in subclasses
-  liConstructor:  null,               // assign in subclasses
-  headerContent: function(state) {},  // implement in subclasses
-  rightSubColumn: function(state) {}, // implement in subclasses
+  rootAttributes: {},                 // override
+  liConstructor:  null,               // override
+  headerContent: function(state) {},  // override
+  rightSubColumn: function(state) {}, // override
 
   viewProperties: {
 
-    relativeWidth: 1,                                // assign in subclasses
-    mainRelationForState: function(state) {},        // implement in subclasses
-    additionalRelationsForState: function(state) {}, // implement in subclasses
-    populateBody: function(relation) {},             // implement in subclasses
+    relativeWidth: 1,                                // override
+    mainRelationForState: function(state) {},        // override
+    additionalRelationsForState: function(state) {}, // override
+    populateBody: function(relation) {},             // override
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
       this.mainList.buildElement = this.bind(function(record) {
         return this.template.liConstructor.toView({
           record: record,
-          containingView: this
+          containingListing: this
         });
       });
     },

@@ -127,7 +127,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
     formatColumns: function() {
       var relativeWidths = [], totalRelativeWidth = 0;
       _(this.visibleColumns).each(function(column, i) {
-        relativeWidths[i] = column.currentView.relativeWidth;
+        relativeWidths[i] = column.currentListing.relativeWidth;
         totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
       });
 

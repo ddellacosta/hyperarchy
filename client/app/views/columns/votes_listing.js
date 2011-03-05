@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.VotesColumn", View.Template, {
+_.constructor("Views.Columns.VotesListing", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "votes"});
   }},

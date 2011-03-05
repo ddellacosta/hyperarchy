@@ -8,15 +8,12 @@
 //= require "columns/election_li"
 //= require "columns/comment_li"
 
-//= require "columns/records_column"
-//= require "columns/organizations_column"
-//= require "columns/elections_column"
-//= require "columns/candidates_column"
-//= require "columns/votes_column"
-//= require "columns/comments_column"
-
-//= require "columns/comments_column2"
-//= require "columns/candidates_column2"
+//= require "columns/records_listing"
+//= require "columns/organizations_listing"
+//= require "columns/elections_listing"
+//= require "columns/candidates_listing"
+//= require "columns/votes_listing"
+//= require "columns/comments_listing"
 
 
 

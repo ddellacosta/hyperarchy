@@ -2,7 +2,6 @@
   #columns {
     height: 100%;
     overflow: hidden;
-
     @include noSelect;
     background-color: #eee;
 
@@ -33,12 +32,14 @@
       }
     }
 
-    .columnBody, .bigLoading {
+    .columnBody {
       width: 100%;
       height: 88%;
     }
 
     .bigLoading {
+      width: 100%;
+      height: 88%;
       background-position-x: center;
       background-position-y: 45%;
     }
@@ -53,30 +54,28 @@
       background-color: $lightGray;
       -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
       -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
     }
 
     .recordLi {
       padding: 5px;
       font-size: 15px;
 
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #bbb;
       background-color: white;
       -moz-box-shadow: #c8c7c7 0px 1px 3px;
       -webkit-box-shadow: #c8c7c7 0px 1px 3px;
 
-      .body {
-        cursor: pointer;
-      }
-
-      .body:hover {
-        text-decoration: underline;
-      }
-
       &.selected {
-        border-top:    1px solid gray;
-        border-bottom: 1px solid gray;
         background-color: #ddddff;
+      }
+
+      .body {
+        color: black;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
 
       .creatorInfo {
@@ -153,10 +152,6 @@
 
     .candidate, .comment, .election {
       @extend .recordLi;
-    }
-
-    .elections {
-      @extend .columnView;
     }
 
     .electionsList {

@@ -2,10 +2,9 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
   content: function(params) {with(this.builder) {
     var record         = params.record;
     var rootAttributes = template.rootAttributes || {};
-
     li(rootAttributes, function() {
 
-      div({'class': "body"}).ref("body").click('expandOrContract');
+      a({'class': "body"}).ref("body").click('expandOrContract');
 
       div({style: "display: none;", 'class': "expandedAreaSpacer"}).ref('expandedAreaSpacer');
       div({style: "display: none;"}, function() {
@@ -60,17 +59,16 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
     expand: function() {
       if (this.expanded) return;
       this.expanded = true;
-      this.addClass("expanded")
-      this.expandedArea.slideDown(20, function() {
-
-      });
+      this.expandedArea.slideDown(20, this.bind(function() {
+        this.addClass("expanded")
+      }));
     },
 
     contract: function() {
       if (!this.expanded) return;
       this.expanded = false;
       this.expandedArea.slideUp(20, this.bind(function() {
-      this.removeClass("expanded");
+        this.removeClass("expanded");
       }));
     },
 
@@ -81,7 +79,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
         parentTableName: this.template.tableName,
         parentRecordId:  this.record.id()
       };
-      this.containingView.containingColumn.setNextColumnState(newStateForNextColumn);
+      this.containingListing.containingColumn.setNextColumnState(newStateForNextColumn);
     }
   }
 });
