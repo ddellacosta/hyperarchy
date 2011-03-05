@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.Comments", View.Template, {
+_.constructor("Views.Columns.CommentsColumn", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "comments", style: "display: none;"}, function() {
       div({'class': "columnHeader"}, function() {

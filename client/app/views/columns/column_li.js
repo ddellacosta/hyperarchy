@@ -7,11 +7,11 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
 
     initialize: function() {
       this.views = {
-        organizations: Views.Columns.Organizations.toView(),
-        votes:         Views.Columns.Votes.toView(),
-        elections:     Views.Columns.Elections.toView(),
-        candidates:    Views.Columns.Candidates.toView(),
-        comments:      Views.Columns.Comments.toView()
+        organizations: Views.Columns.OrganizationsColumn.toView(),
+        votes:         Views.Columns.VotesColumn.toView(),
+        elections:     Views.Columns.ElectionsColumn.toView(),
+        candidates:    Views.Columns.CandidatesColumn.toView(),
+        comments:      Views.Columns.CommentsColumn.toView()
       };
 
       _(this.views).each(function(view) {

@@ -1969,10 +1969,10 @@ body.legal {
           font-size: 12px; }
 
 #app #columns .candidates .candidatesList {
-  width: 49%;
+  width: 48%;
   height: 100%; }
 #app #columns .candidates .rankedCandidatesList {
-  width: 49%;
+  width: 48%;
   height: 100%;
   float: right; }
   #app #columns .candidates .rankedCandidatesList .goodCandidatesList, #app #columns .candidates .rankedCandidatesList .badCandidatesList {

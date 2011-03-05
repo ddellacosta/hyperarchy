@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.Candidates", View.Template, {
+_.constructor("Views.Columns.CandidatesColumn", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "candidates", style: "display: none;"}, function() {
       div({'class': "columnHeader"}, function() {
@@ -38,7 +38,6 @@ _.constructor("Views.Columns.Candidates", View.Template, {
 
     state: {
       afterChange: function(state, oldState) {
-        this.selectedRecordId(state.recordId);
         if (oldState &&
            (state.parentRecordId  === oldState.parentRecordId) &&
            (state.parentTableName === oldState.parentTableName)) return;
@@ -57,8 +56,9 @@ _.constructor("Views.Columns.Candidates", View.Template, {
             candidateRelation.join(User).on(Candidate.creatorId.eq(User.id))
           ];
           Server.fetch(relationsToFetch).onSuccess(function() {
-            if (this.containingColumn.isFirst()) this.setCurrentOrganizationId(candidateRelation);
+            if (this.isFirstColumn()) this.setCurrentOrganizationId(candidateRelation);
             this.candidatesList.relation(candidateRelation);
+            this.selectedRecordId(state.recordId);
             this.stopLoading();
           }, this);
         } catch (badCombinationOfTableNamesAndIds) {
@@ -68,26 +68,37 @@ _.constructor("Views.Columns.Candidates", View.Template, {
     },
 
     selectedRecordId: {
-      afterChange: function(id) {
-
+      afterWrite: function(id) {
+        var selectectedRecord = Candidate.find(id);
+        var selectedLi = this.candidatesList.elementForRecord(selectectedRecord);
+        if (this.isFirstColumn()) {
+          this.candidatesList.children().hide();
+          selectedLi.show();
+        }
+        this.candidatesList.children().removeClass("selected");
+        selectedLi.addClass("selected");
       }
     },
 
     startLoading: function() {
-      this.candidatesList.children().hide();
-//      this.rankedCandidatesList.children().hide();
+      this.candidatesList.hide();
+      this.rankedCandidatesList.hide();
       this.loading.show();
     },
 
     stopLoading: function() {
       this.loading.hide();
-//      this.candidatesList.children().show();
-      this.rankedCandidatesList.children().show();
+      this.candidatesList.show();
+      this.rankedCandidatesList.show();
     },
 
     setCurrentOrganizationId: function(candidateRelation) {
       var id = candidateRelation.first().election().organizationId();
       Application.currentOrganizationId(id);
+    },
+
+    isFirstColumn: function() {
+      return this.containingColumn.isFirst();
     }
   }
 });
