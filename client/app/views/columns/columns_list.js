@@ -132,7 +132,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       });
 
       var marginPercent  = (this.numVisibleColumns() - 1) * 0.5; // hard-coded to match css
-      var paddingPercent = (this.numVisibleColumns() * 2) * 2.0; // hard-coded to match css
+      var paddingPercent = (this.numVisibleColumns() * 2) * 1.5; // hard-coded to match css
       var spacingPercent = marginPercent + paddingPercent;
 
       _(this.visibleColumns).each(function(column, i) {

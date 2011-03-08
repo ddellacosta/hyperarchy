@@ -1,0 +1,43 @@
+_.constructor("Views.Columns.UnrankedCandidateLi", Views.Columns.CandidateLi, {
+
+  icons: function() { with(this.builder) {
+    div({'class': "icons"}, function() {
+      div({'class': "rankedIcon", style: "display: none;"}).ref('rankedIcon');
+      div({'class': "loadingIcon", style: "display: none;"}).ref('loadingIcon');
+    });
+  }},
+
+  rootAttributes: {'class': "unranked candidate"},
+
+  viewProperties: {
+    initialize: function($super) {
+      $super();
+      var rankingRelation = this.record.rankingByCurrentUser();
+      if (!rankingRelation.empty()) {
+        this.rankedIcon.show();
+      }
+      rankingRelation.onInsert(function() {
+        this.rankedIcon.show();
+      }, this);
+      rankingRelation.onRemove(function() {
+        this.rankedIcon.hide();
+      }, this);
+
+      this.draggable({
+        connectToSortable: '.goodCandidatesList, .badCandidatesList',
+        revert: 'invalid',
+        revertDuration: 100,
+        helper: this.hitch("createFixedWidthClone"),
+        zIndex: 100,
+        cancel: '.noDrag'
+      }).disableSelection();
+    },
+
+    createFixedWidthClone: function() {
+      var clone = this.clone();
+      clone.width(this.width());
+      clone.height(this.height());
+      return clone;
+    }
+  }
+});

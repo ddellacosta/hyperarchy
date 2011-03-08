@@ -3,13 +3,13 @@ _.constructor("Controllers.Application", {
     this.currentUserId = currentUserId;
     this.body = body || $('body');
     this.views = {
-      addOrganization: Views.AddOrganization.toView(),
-      editOrganization: Views.EditOrganization.toView(),
-      organizations: Views.OrganizationOverview.toView(),
-      elections: Views.ElectionOverview.toView(),
-      members: Views.Members.toView(),
-      account: Views.Account.toView(),
-      newElection: Views.NewElection.toView(),
+//      addOrganization: Views.AddOrganization.toView(),
+//      editOrganization: Views.EditOrganization.toView(),
+//      organizations: Views.OrganizationOverview.toView(),
+//      elections: Views.ElectionOverview.toView(),
+//      members: Views.Members.toView(),
+//      account: Views.Account.toView(),
+//      newElection: Views.NewElection.toView(),
 
       columns: Views.Columns.ColumnsList.toView()
     };

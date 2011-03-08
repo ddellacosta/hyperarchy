@@ -5,6 +5,7 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
     li(rootAttributes, function() {
 
       a({'class': "body"}).ref("body").click('expandOrContract');
+      template.icons();
 
       div({style: "display: none;", 'class': "expandedAreaSpacer"}).ref('expandedAreaSpacer');
       div({style: "display: none;"}, function() {
@@ -21,19 +22,19 @@ _.constructor("Views.Columns.RecordLi", View.Template, {
 
         ul({'class': "links"}, function() {
           _(template.childTableNames).each(function(childTableName) {
-            li({'class': "link"}, function() {
-              a(function() {
-                span({'class': "linkNumber"}).ref(childTableName + "Number");
-                span(_.humanize(childTableName));
-              })
+            a({'class': "link"}, function() {
+              span({'class': "linkNumber"}).ref(childTableName + "Number");
+              span(_.humanize(childTableName));
             }).ref(childTableName + "Link").
                click("showChildTableInNextColumn", childTableName);
           }, this);
         }).ref("linksList");
-
       }).ref("expandedArea");
+
     }).ref("li");
   }},
+
+  icons: function() {},
 
   viewProperties: {
 

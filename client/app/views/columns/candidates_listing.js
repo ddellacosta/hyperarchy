@@ -1,18 +1,19 @@
-_.constructor("Views.Columns.CandidatesListing", Views.Columns.RecordsColumn, {
+_.constructor("Views.Columns.CandidatesListing", Views.Columns.RecordsListing, {
 
-  liConstructor: Views.Columns.CandidateLi,
+  liConstructor: Views.Columns.UnrankedCandidateLi,
 
   headerContent: function() { with(this.builder) {
     h2("Answers");
   }},
 
-  rightSubColumn: function() { with(this.builder) {
-    subview('rankedCandidatesList', Views.Columns.RankedCandidatesList, {
+  additionalBodyContent: function() { with(this.builder) {
+    subview('rankedCandidatesList', Views.Columns.OwnRankedCandidatesList, {
       rootAttributes: {'class': "candidatesList ranked"}
     });
   }},
 
   rootAttributes: {'class': "candidates"},
+  listAttributes: {'class': "candidatesList"},
 
   viewProperties: {
 
@@ -28,15 +29,21 @@ _.constructor("Views.Columns.CandidatesListing", Views.Columns.RecordsColumn, {
 
     additionalRelationsForState: function(state) {
       var candidateRelation = this.mainRelationForState(state);
+      
       return [
         candidateRelation.joinThrough(Election),
-        candidateRelation.joinThrough(Ranking),
-        candidateRelation.join(User).on(Candidate.creatorId.eq(User.id))
+        candidateRelation.join(User).on(Candidate.creatorId.eq(User.id)),
+        candidateRelation.joinThrough(Ranking).where({userId: Application.currentUser().id()})
       ];
     },
 
-    populateBody: function(mainRelation) {
-      this.mainList.relation(mainRelation);
+    mainRelation: {
+      afterChange: function(mainRelation) {
+        this.mainList.relation(mainRelation);
+        var rankingsRelation = mainRelation.joinThrough(Ranking).
+                                 where({userId: Application.currentUser().id()});
+        this.rankedCandidatesList.rankingsRelation(rankingsRelation);
+      }
     }
   }
 });

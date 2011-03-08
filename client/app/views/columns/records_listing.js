@@ -1,17 +1,16 @@
-_.constructor("Views.Columns.RecordsColumn", View.Template, {
+_.constructor("Views.Columns.RecordsListing", View.Template, {
   content: function() { with(this.builder) {
-    var rootAttributes = template.rootAttributes || {};
-    div(rootAttributes, function() {
+    div(function() {
       div({'class': "columnHeader"}, function() {
         template.headerContent();
       }).ref("header");
 
       div({'class': "columnBody"}, function() {
         subview('mainList', Views.SortedList, {
-          rootAttributes: {'class': "columnList"}
+          rootAttributes: template.listAttributes
           // buildElement function set upon initialize
         });
-        template.rightSubColumn();
+        template.additionalBodyContent();
         div({'class': "clear"});
       }).ref("body");
 
@@ -19,17 +18,28 @@ _.constructor("Views.Columns.RecordsColumn", View.Template, {
     });
   }},
 
-  rootAttributes: {},                 // override
-  liConstructor:  null,               // override
-  headerContent: function(state) {},  // override
-  rightSubColumn: function(state) {}, // override
+
+  // override these:
+  headerContent:         function(state) {},
+  additionalBodyContent: function(state) {},
+  liConstructor:  Views.Columns.RecordLi,
+  listAttributes: {'class': "columnList"},
+
 
   viewProperties: {
 
-    relativeWidth: 1,                                // override
-    mainRelationForState: function(state) {},        // override
-    additionalRelationsForState: function(state) {}, // override
-    populateBody: function(relation) {},             // override
+
+    // override these:
+    relativeWidth: 1,
+    mainRelationForState:        function(state) {},
+    additionalRelationsForState: function(state) {},
+    setCurrentOrganizationId:    function() {
+      Application.currentOrganizationId(1);
+    },
+    mainRelation: {
+      afterChange: function(relation) {}
+    },
+
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
@@ -56,7 +66,7 @@ _.constructor("Views.Columns.RecordsColumn", View.Template, {
           var mainRelation = this.mainRelationForState(state);
           var additionalRelations = this.additionalRelationsForState(state);
           Server.fetch([mainRelation].concat(additionalRelations)).onSuccess(function() {
-            this.populateBody(mainRelation);
+            this.mainRelation(mainRelation);
             if (this.isFirstColumn()) this.setCurrentOrganizationId();
             this.selectedRecordId(state.recordId);
             this.stopLoading();
@@ -90,10 +100,6 @@ _.constructor("Views.Columns.RecordsColumn", View.Template, {
     stopLoading: function() {
       this.loading.hide();
       this.body.show();
-    },
-
-    setCurrentOrganizationId: function() {
-      Application.currentOrganizationId(1);
     },
 
     isFirstColumn: function() {

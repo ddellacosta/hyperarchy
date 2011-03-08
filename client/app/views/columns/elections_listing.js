@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.ElectionsListing", Views.Columns.RecordsColumn, {
+_.constructor("Views.Columns.ElectionsListing", Views.Columns.RecordsListing, {
 
   liConstructor: Views.Columns.ElectionLi,
 
@@ -25,8 +25,10 @@ _.constructor("Views.Columns.ElectionsListing", Views.Columns.RecordsColumn, {
       ];
     },
 
-    populateBody: function(mainRelation) {
-      this.mainList.relation(mainRelation);
+    mainRelation: {
+      afterChange: function(mainRelation) {
+        this.mainList.relation(mainRelation);
+      }
     }
   }
 });

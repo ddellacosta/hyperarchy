@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.CommentsListing", Views.Columns.RecordsColumn, {
+_.constructor("Views.Columns.CommentsListing", Views.Columns.RecordsListing, {
 
   liConstructor: Views.Columns.CommentLi,
 
@@ -35,8 +35,10 @@ _.constructor("Views.Columns.CommentsListing", Views.Columns.RecordsColumn, {
       return commentRelation.join(User).on(constructor.creatorId.eq(User.id));
     },
 
-    populateBody: function(mainRelation) {
-      this.mainList.relation(mainRelation);
+    mainRelation: {
+      afterChange: function(mainRelation) {
+        this.mainList.relation(mainRelation);
+      }
     }
   }
 });

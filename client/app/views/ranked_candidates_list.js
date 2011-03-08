@@ -1,6 +1,6 @@
 _.constructor("Views.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
-    div({id: "rankedCandidatesList"}, function() {
+    div({'class': "rankedCandidatesList"}, function() {
       div({'class': "columnHeader"}, function() {
         a({id: "back", href: "#", style: "display: none;"}, "Back")
           .ref('backLink')
