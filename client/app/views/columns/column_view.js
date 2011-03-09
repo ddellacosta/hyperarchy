@@ -1,6 +1,6 @@
-_.constructor("Views.Columns.RecordsListing", View.Template, {
+_.constructor("Views.Columns.ColumnView", View.Template, {
   content: function() { with(this.builder) {
-    div(function() {
+    div(template.rootAttributes, function() {
       div({'class': "columnHeader"}, function() {
         template.headerContent();
       }).ref("header");
@@ -11,23 +11,21 @@ _.constructor("Views.Columns.RecordsListing", View.Template, {
           // buildElement function set upon initialize
         });
         template.additionalBodyContent();
-        div({'class': "clear"});
       }).ref("body");
 
       div({'class': "bigLoading"}).ref("loading");
     });
   }},
 
-
   // override these:
   headerContent:         function(state) {},
   additionalBodyContent: function(state) {},
   liConstructor:  Views.Columns.RecordLi,
   listAttributes: {'class': "columnList"},
+  rootAttributes: {},
 
 
   viewProperties: {
-
 
     // override these:
     relativeWidth: 1,
@@ -40,13 +38,12 @@ _.constructor("Views.Columns.RecordsListing", View.Template, {
       afterChange: function(relation) {}
     },
 
-
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
       this.mainList.buildElement = this.bind(function(record) {
         return this.template.liConstructor.toView({
           record: record,
-          containingListing: this
+          containingView: this
         });
       });
     },
@@ -104,6 +101,10 @@ _.constructor("Views.Columns.RecordsListing", View.Template, {
 
     isFirstColumn: function() {
       return this.containingColumn.isFirst();
+    },
+
+    adjustHeight: function(minHeight) {
+      this.mainList.fillVerticalSpace(20, minHeight - 30);
     }
   }
 });

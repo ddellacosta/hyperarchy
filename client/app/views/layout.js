@@ -1,9 +1,66 @@
 _.constructor("Views.Layout", View.Template, {
   content: function() { with(this.builder) {
     div({id: "application"}, function() {
-      div({id: "notification", style: "display: none"}).ref("notification");
+
+      div({id: "header"}, function() {
+        div({id: "logoWrapper"}, function() {
+          div({id: "logo"}).click('goToLastOrganization');
+        });
+        a({'class': "headerItem", href: "#"}, "Log In")
+          .ref('loginLink')
+          .click("showLoginForm");
+        a({'class': "headerItem dropdownLink", href: "#"}, "Account")
+          .ref('accountMenuLink')
+          .click("toggleAccountMenu");
+        a({'class': "headerItem dropdownLink"}, "Organizations")
+          .ref("organizationsMenuLink")
+          .click("toggleOrganizationsMenu");
+        a({'class': "headerItem", href: "#"}, "Invite")
+          .ref('inviteLink')
+          .click('showInviteForm');
+        a({'class': "headerItem", href: "#"}, "Feedback")
+          .click('showFeedbackForm');
+      });
+
+      div({id: "main"}, function() {
+        div({id: "navBar"}, function() {
+          div({'class': "navBarContent"}, function() {
+            h2({'class': "navBarHeader"})
+              .ref('organizationName')
+              .click('goToOrganization');
+            a({'class': "navBarLink"}, "View Questions")
+              .ref('questionsLink')
+              .click('goToQuestions');
+            a({'class': "navBarLink"}, "Raise a Question")
+              .ref("newElectionLink")
+              .click("goToNewElection");
+            a({'class': "navBarLink"}, "Members")
+              .ref('membersLink')
+              .click("goToMembers");
+            a({'class': "navBarLink"}, "Settings")
+              .ref("editOrganizationLink")
+              .click("goToEditOrganization");
+          }).ref("organizationNavigationBar");
+
+          div({'class': "navBarContent"}, function() {
+            h2({'class': "navBarHeader"}).ref("alternateNavigationBarText");
+            a({'class': "navBarLink rightSide"})
+              .ref("backToLastOrganizationLink")
+              .click("goToLastOrganization");
+          }).ref("alternateNavigationBar");
+        });
+
+        div({id: "subnavStub"}).ref("subNavigationBar");
+
+        div({'id': "content"}, function() {
+        }).ref('content');
+      }).ref('mainContentArea');
+
+      subview("welcomeGuide", Views.WelcomeGuide);
+
       div({id: "darkenBackground", style: "display: none"})
         .ref('darkenBackground');
+      div({id: "notification", style: "display: none"}).ref("notification");
       subview('signupPrompt', Views.SignupPrompt);
       subview('mustBeMemberMessage', Views.MustBeMemberMessage);
       subview('disconnectDialog', Views.DisconnectDialog);
@@ -18,7 +75,6 @@ _.constructor("Views.Layout", View.Template, {
         textarea().ref("feedbackTextarea");
         a({'class': "glossyBlack roundedButton", href: "#"}, "Send Feedback").click('sendFeedback');
       }).ref("feedbackForm");
-
 
       ol({'class': "dropdownMenu"}, function() {
         li(function() {
@@ -38,111 +94,28 @@ _.constructor("Views.Layout", View.Template, {
         }).ref('addOrganizationLi')
       }).ref('organizationsMenu');
 
-
-      div({id: "globalHeader"}, function() {
-        div({id: "logoWrapper"}, function() {
-          div({id: "logo"}).click('goToLastOrganization');
-        });
-        a({'class': "globalHeaderItem", href: "#"}, "Log In")
-          .ref('loginLink')
-          .click("showLoginForm");
-        a({'class': "globalHeaderItem dropdownLink", href: "#"}, "Account")
-          .ref('accountMenuLink')
-          .click("toggleAccountMenu");
-        a({'class': "globalHeaderItem dropdownLink"}, "Organizations")
-          .ref("organizationsMenuLink")
-          .click("toggleOrganizationsMenu");
-        a({'class': "globalHeaderItem", href: "#"}, "Invite")
-          .ref('inviteLink')
-          .click('showInviteForm');
-        a({'class': "globalHeaderItem", href: "#"}, "Feedback")
-          .click('showFeedbackForm');
-
-        div({'class': "clear"});
-      });
-
-      subview("welcomeGuide", Views.WelcomeGuide);
-
-      div({id: "mainContent"}, function() {
-        div({id: "navigationBar"}, function() {
-          div(function() {
-            h2({id: "organizationName"})
-              .ref('organizationName')
-              .click('goToOrganization');
-            a({id: "questionsLink"}, "View Questions")
-              .ref('questionsLink')
-              .click('goToQuestions');
-            a({id: "raise"}, "Raise a Question")
-              .ref("newElectionLink")
-              .click("goToNewElection");
-            a({id: "membersLink"}, "Members")
-              .ref('membersLink')
-              .click("goToMembers");
-            a({id: "organizationSettings"}, "Settings")
-              .ref("editOrganizationLink")
-              .click("goToEditOrganization");
-          }).ref("organizationNavigationBar");
-
-          div(function() {
-            h2().ref("alternateNavigationBarText");
-            a({id: "backToLastOrganization", 'class': "rightSide"})
-              .ref("backToLastOrganizationLink")
-              .click("goToLastOrganization");
-          }).ref("alternateNavigationBar");
-        });
-
-        div({id: "subNavigationBar"}).ref("subNavigationBar");
-
-        div({'id': "scrollingArea"}, function() {
-          div(function() {
-          }).ref('body');
-        }).ref('scrollingArea');
-      }).ref('mainContentArea');
     })
   }},
 
   viewProperties: {
+
+    MIN_HEIGHT: 400,
+
     initialize: function() {
       window.notify = this.hitch('notify');
-      this.currentUserSubscriptions = new Monarch.SubscriptionBundle();
-      this.defer(this.hitch('adjustHeight'));
       $(window).resize(this.hitch('adjustHeight'));
-      
-      this.subNavigationContents = {};
+      this.defer(this.hitch('adjustHeight'));
+
       _.each(this.views, function(view, viewName) {
-        if (view.subNavigationContent) {
-          view.subNavigationContent.hide();
-          this.subNavigationContents[viewName] = view.subNavigationContent.detach();
-          this.subNavigationBar.append(this.subNavigationContents[viewName]);
-        }
         view.hide();
-        this.body.append(view);
+        this.content.append(view);
       }, this);
-      this.hideSubNavigationContent();
+      this.currentUserSubscriptions = new Monarch.SubscriptionBundle();
     },
 
     adjustHeight: function() {
-      this.scrollingArea.fillVerticalSpace(60, 380);
-    },
-
-    zeroScroll: function() {
-      this.scrollingArea.scrollTop(0);
-    },
-
-    onContentScroll: function(fn, context) {
-      if (context) fn = _.bind(fn, context);
-      var scrollingArea = this.scrollingArea;
-      var subscription = {
-        destroy: function() {
-          scrollingArea.unbind('scroll', fn);
-        }
-      };
-      scrollingArea.scroll(fn);
-      return subscription;
-    },
-
-    contentScrollBottom: function() {
-      return this.scrollingArea.scrollTop() + this.scrollingArea.height();
+      this.content.fillVerticalSpace(0, this.MIN_HEIGHT);
+      this.views.columns.adjustHeight(this.MIN_HEIGHT);
     },
 
     organization: {
@@ -197,19 +170,6 @@ _.constructor("Views.Layout", View.Template, {
     activateNavigationTab: function(link) {
       this.organizationNavigationBar.find("a").removeClass('active');
       $(this[link]).addClass('active');
-    },
-
-    showSubNavigationContent: function(viewName) {
-      this.hideSubNavigationContent();
-      if (viewName in this.subNavigationContents) {
-        this.subNavigationBar.css('height', "28px");
-        this.subNavigationContents[viewName].show();
-      }
-    },
-
-    hideSubNavigationContent: function() {
-      _.each(this.subNavigationContents, function(element) {element.hide();});
-      this.subNavigationBar.css('height', "8px");
     },
 
     populateOrganizations: function() {

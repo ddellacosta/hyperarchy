@@ -1,6 +1,6 @@
 _.constructor("Views.Columns.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
-    div({'class': "rankedCandidatesLists"}, function() {
+    div({'class': "rankedCandidatesList"}, function() {
       ol({'class': "goodCandidatesList"}, function() {
         div({'class': "dragTargetExplanation"}, function() {
           raw("Drag answers you <em>like</em> here, <br /> with the best at the top.")
@@ -71,6 +71,11 @@ _.constructor("Views.Columns.RankedCandidatesList", View.Template, {
     findPreviouslyRankedLi: function(candidate) {
       var previouslyRankedLi = this.rankedCandidatesList.find("li.ranked.candidate[candidateId='" + candidate.id() + "']");
       return previouslyRankedLi.length > 0 ? previouslyRankedLi.view() : null;
+    },
+
+    adjustHeight: function() {
+      this.goodCandidatesList.css('height', this.height() / 2 - 15);
+      this.badCandidatesList.css('height', this.height() / 2  - 15);
     }
   }
 });

@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.CommentsListing", Views.Columns.RecordsListing, {
+_.constructor("Views.Columns.Comments", Views.Columns.ColumnView, {
 
   liConstructor: Views.Columns.CommentLi,
 

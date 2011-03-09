@@ -35,8 +35,8 @@ _.constructor("Views.Columns.UnrankedCandidateLi", Views.Columns.CandidateLi, {
 
     createFixedWidthClone: function() {
       var clone = this.clone();
-      clone.width(this.width());
-      clone.height(this.height());
+      clone.css('width', this.width());
+      clone.css('height', this.height());
       return clone;
     }
   }

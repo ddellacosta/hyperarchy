@@ -1,0 +1,66 @@
+$minWidth:  800px;
+$minHeight: 500px;
+
+$blue: #0e40ac;
+$errorBackground: #FFE0E4;
+$lightGray: #F2F2F2;
+$lighterGray: #F4F4F4;
+$gray: #6B6B6B;
+$darkGray: #44464A;
+$black: #0D0D10;
+$backgroundGray: #e6e6e6;
+
+
+@mixin noSelect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+@mixin borderRadius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+}
+
+@mixin borderRadiusTop($radius) {
+  -webkit-border-top-left-radius: $radius;
+  -webkit-border-top-right-radius: $radius;
+  -moz-border-radius-topleft: $radius;
+  -moz-border-radius-topright: $radius;
+}
+
+@mixin dropShadow($size: 6px, $opacity: 0.4) {
+  -moz-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size;
+  -webkit-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size;
+}
+
+@mixin gradient($color, $percent) {
+  background-color: $color;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(lighten($color, $percent)), to($color));
+  background: -moz-linear-gradient(top, lighten($color, $percent), $color);
+}
+
+@mixin glossyColor($color) {
+  background-color: $color;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .44)), color-stop(0.5, rgba(255, 255, 255, .16)), color-stop(0.51, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, .05))), $color;
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, .1) 100%), $color;
+}
+
+@mixin semiGlossyColor($color) {
+  background-color: $color;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .33)), color-stop(0.5, rgba(255, 255, 255, .1)), color-stop(0.51, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, .1))), $color;
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, .33) 0%, rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, .1) 100%), $color;
+}
+
+@mixin yellowFade {
+  background-color: #ffffee;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0.0, #ffffea), color-stop(1.0, #fffffa));
+  background: -moz-linear-gradient(top, #ffffea 0%, #fffffa 100%);
+}
+
+@mixin nonEditableDottedBorder {
+  background: white;
+  border: 1px dashed rgba(200, 200, 200, .55);
+  padding: 5px;
+  overflow-y: auto;
+  color: #333;
+}

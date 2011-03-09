@@ -1,176 +1,161 @@
 #columns {
-  height: 100%;
   overflow: hidden;
   @include noSelect;
-  background-color: #ddd;
+}
 
-  .column {
-    height: 100%;
-    float: left;
-    padding: 0 1.5%;
-    margin-right: 0.5%;
+// shared by all column views
+.column {
+  display: inline-block;
+  float: left;
+  padding: 0 20px;
+  margin-right: 10px;
 
-    background-color: white;
-    -moz-box-shadow: #c8c7c7 0px 1px 3px;
-    -webkit-box-shadow: #c8c7c7 0px 1px 3px;
-    border: 1px solid #ccc;
+  background-color: white;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
 
-    &.last {
-      margin-right: 0;
-      border-right: none;
-      float: right;
+  &.last {
+    margin-right: 0;
+    border-right: none;
+  }
+}
+
+.columnHeader {
+  height: 30px;
+  padding: 5px 0;
+}
+
+.bigLoading {
+  background-position-x: center;
+  background-position-y: 45%;
+}
+
+.columnList {
+  width: 100%;
+  display: inline-block;
+  overflow: auto;
+
+  background-color: $lightGray;
+  -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
+  -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
+  border: 1px solid #aaa;
+  @include borderRadius(5px);
+}
+
+.recordLi {
+  padding: 5px 10px;
+  font-size: 15px;
+
+  border-bottom: 1px solid #bbb;
+  background-color: white;
+
+  &.selected {
+    background-color: #ddddff;
+  }
+
+  .body {
+    color: black;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 
-  // shared by all column views
-  .columnHeader {
-    width: 100%;
-    height: 8%;
+  .creatorInfo {
+    margin: 5px 0;
 
-    h2 {
-      margin: 5px 0;
-    }
-  }
-
-  .columnBody {
-    width: 100%;
-    height: 88%;
-  }
-
-  .bigLoading {
-    width: 100%;
-    height: 88%;
-    background-position-x: center;
-    background-position-y: 45%;
-  }
-
-  .columnList {
-    height: 100%;
-    width: 100%;
-    float: left;
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    background-color: $lightGray;
-    -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
-    -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
-    border: 1px solid #aaa;
-  }
-
-  .recordLi {
-    width: 96%;
-    padding: 5px 2%;
-    font-size: 15px;
-
-    border-bottom: 1px solid #bbb;
-    background-color: white;
-    -moz-box-shadow: #c8c7c7 0px 1px 3px;
-    -webkit-box-shadow: #c8c7c7 0px 1px 3px;
-
-    &.selected {
-      background-color: #ddddff;
+    .avatar {
+      float: left;
+      margin-right: 5px;
     }
 
-    .body {
-      color: black;
+    .details {
+      padding-top: 2px;
 
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .creatorInfo {
-      margin: 5px 0;
-
-      .avatar {
-        float: left;
-        margin-right: 5px;
+      .name {
+        font-size: 15px;
+        margin-bottom: 2px;
       }
 
-      .details {
-        padding-top: 2px;
-
-        .name {
-          font-size: 15px;
-          margin-bottom: 2px;
-        }
-
-        .date {
-          color: #999999;
-          font-size: 12px;
-        }
+      .date {
+        color: #999999;
+        font-size: 12px;
       }
     }
   }
+}
 
 
-  // candidates column listing
-  .candidatesList {
-    @extend .columnList;
-    width: 48.5%;
+// candidates column view
+.candidatesList {
+  @extend .columnList;
+  width: 48%;
+}
+
+.rankedCandidatesList {
+  width: 48%;
+  float: right;
+  display: inline-block;
+}
+
+.goodCandidatesList, .badCandidatesList {
+  @extend .columnList;
+  float: left;
+  clear: both;
+  width: 100%;
+}
+
+.dragTargetExplanation {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.separator {
+  float: left;
+  width: 100%;
+  height: 28px;
+  text-align: center;
+  background: white;
+  clear: both;
+
+  .up {
+    display: inline-block;
+    background: url("/images/arrow_up_black.png");
+    background-repeat: no-repeat;
+    padding: 5px 10px;
+    padding-left: 20px
   }
 
-  .rankedCandidatesLists {
-    width: 48.5%;
-    float: right;
-
-    .goodCandidatesList, .badCandidatesList {
-      @extend .columnList;
-      height: 46%;
-    }
-
-    .dragTargetExplanation {
-      margin-top: 60px;
-      text-align: center;
-    }
-
-    .separator {
-      width: 100%;
-      height: 8%;
-      clear: both;
-      text-align: center;
-      background: white;
-
-      .up {
-        display: inline-block;
-        background: url("/images/arrow_up_black.png");
-        background-repeat: no-repeat;
-        padding: 5px 10px;
-        padding-left: 20px
-      }
-
-      .down {
-        display: inline-block;
-        background: url("/images/arrow_down_black.png");
-        background-repeat: no-repeat;
-        background-position: right;
-        padding: 5px 10px;
-        padding-right: 20px
-      }
-    }
+  .down {
+    display: inline-block;
+    background: url("/images/arrow_down_black.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    padding: 5px 10px;
+    padding-right: 20px
   }
+}
 
-  .candidate {
-    @extend .recordLi;
+.candidate {
+  @extend .recordLi;
 
-    &.ui-draggable-dragging {
-//      border: 1px solid #bbb;
-    }
+  &.ui-draggable-dragging {
+
   }
+}
 
 
-  // comment column listing
-  .comment {
-    @extend .recordLi;
-  }
+// comment column view
+.comment {
+  @extend .recordLi;
+}
 
 
-  // election column listing
-  .electionsList {
-    @extend .columnList;
-  }
+// election column view
+.electionsList {
+  @extend .columnList;
+}
 
-  .election {
-    @extend .recordLi
-  }
+.election {
+  @extend .recordLi
 }

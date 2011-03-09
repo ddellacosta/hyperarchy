@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.ElectionsListing", Views.Columns.RecordsListing, {
+_.constructor("Views.Columns.Elections", Views.Columns.ColumnView, {
 
   liConstructor: Views.Columns.ElectionLi,
 

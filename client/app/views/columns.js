@@ -12,13 +12,9 @@
 //= require "columns/ranked_candidate_li"
 //= require "columns/unranked_candidate_li"
 
-//= require "columns/records_listing"
-//= require "columns/organizations_listing"
-//= require "columns/elections_listing"
-//= require "columns/candidates_listing"
-//= require "columns/votes_listing"
-//= require "columns/comments_listing"
-
-
-
-
+//= require "columns/column_view"
+//= require "columns/organizations"
+//= require "columns/elections"
+//= require "columns/candidates"
+//= require "columns/votes"
+//= require "columns/comments"

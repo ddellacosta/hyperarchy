@@ -18,6 +18,8 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         this.invisibleColumns[i] = Views.Columns.ColumnLi.toView();
         this.invisibleColumns[i].containingList = this;
       }
+
+      $(window).resize(this.hitch('adjustWidth'));
     },
 
     navigate: function(state) {
@@ -31,9 +33,9 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
         column.state(newColumnStates[i]);
       }, this);
       this.formatColumns();
+      this.defer(this.hitch('adjustHeight'));
 
       Application.layout.activateNavigationTab("questionsLink");
-      Application.layout.hideSubNavigationContent();
     },
 
     getColumnStatesFromUrlState: function(state) {
@@ -125,21 +127,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
     },
 
     formatColumns: function() {
-      var relativeWidths = [], totalRelativeWidth = 0;
-      _(this.visibleColumns).each(function(column, i) {
-        relativeWidths[i] = column.currentListing.relativeWidth;
-        totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
-      });
-
-      var marginPercent  = (this.numVisibleColumns() - 1) * 0.5; // hard-coded to match css
-      var paddingPercent = (this.numVisibleColumns() * 2) * 1.5; // hard-coded to match css
-      var spacingPercent = marginPercent + paddingPercent;
-
-      _(this.visibleColumns).each(function(column, i) {
-        column.width(((99.5 - spacingPercent) * relativeWidths[i] / totalRelativeWidth) + "%");
-        column.removeClass("first");
-        column.removeClass("last");
-      });
+      this.adjustWidth();
       _(this.visibleColumns).first().addClass("first");
       _(this.visibleColumns).last().addClass("last");
     },
@@ -171,6 +159,27 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       console.debug("invalid url hash");
       console.debug(invalidState);
       // redirect to some default state
+    },
+
+    adjustWidth: function() {
+      var relativeWidths = [], totalRelativeWidth = 0;
+      _(this.visibleColumns).each(function(column, i) {
+        relativeWidths[i] = column.currentView.relativeWidth;
+        totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
+      });
+      var marginWidth  = (this.numVisibleColumns() - 1) * 10; // hard-coded to match css
+      var paddingWidth = (this.numVisibleColumns() * 2) * 20; // hard-coded to match css
+      var availableWidth = this.width() - marginWidth - paddingWidth;
+      _(this.visibleColumns).each(function(column, i) {
+        column.css('width', (relativeWidths[i] / totalRelativeWidth * availableWidth) - 5);
+      });
+    },
+
+    adjustHeight: function(minHeight) {
+      _(this.visibleColumns).each(function(column) {
+        column.fillVerticalSpace();
+        column.currentView.adjustHeight(minHeight);
+      });
     }
   }
 });

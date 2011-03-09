@@ -13,7 +13,8 @@ module Hyperarchy
     end
 
     def render_page(template, params={})
-      template.new(params).to_s(:prettyprint => true, :helpers => self)
+      "<!DOCTYPE html>\n".concat(
+        template.new(params).to_s(:prettyprint => true, :helpers => self))
     end
 
     def authentication_required

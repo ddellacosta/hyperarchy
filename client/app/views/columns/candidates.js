@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.CandidatesListing", Views.Columns.RecordsListing, {
+_.constructor("Views.Columns.Candidates", Views.Columns.ColumnView, {
 
   liConstructor: Views.Columns.UnrankedCandidateLi,
 
@@ -44,6 +44,12 @@ _.constructor("Views.Columns.CandidatesListing", Views.Columns.RecordsListing, {
                                  where({userId: Application.currentUser().id()});
         this.rankedCandidatesList.rankingsRelation(rankingsRelation);
       }
+    },
+
+    adjustHeight: function(minHeight) {
+      this.mainList.fillVerticalSpace(20, minHeight - 40);
+      this.rankedCandidatesList.fillVerticalSpace(20, minHeight - 40);
+      this.rankedCandidatesList.adjustHeight();
     }
   }
 });
