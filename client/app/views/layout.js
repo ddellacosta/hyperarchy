@@ -99,14 +99,12 @@ _.constructor("Views.Layout", View.Template, {
 
   viewProperties: {
 
-    MIN_HEIGHT: 400,
+    MIN_HEIGHT: 300,
 
     initialize: function() {
       window.notify = this.hitch('notify');
       $(window).resize(this.hitch('adjustHeight'));
-      this.defer(this.hitch('adjustHeight'));
-
-      _.each(this.views, function(view, viewName) {
+      _.each(this.views, function(view) {
         view.hide();
         this.content.append(view);
       }, this);

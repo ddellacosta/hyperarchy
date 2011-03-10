@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.RankedCandidatesList", View.Template, {
+_.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "rankedCandidatesList"}, function() {
       ol({'class': "goodCandidatesList"}, function() {
@@ -39,7 +39,7 @@ _.constructor("Views.Columns.RankedCandidatesList", View.Template, {
 
       this.rankingsRelation().each(function(ranking) {
         var candidate = Candidate.find(ranking.candidateId());
-        var li = Views.Columns.RankedCandidateLi.toView({record: candidate});
+        var li = Views.ColumnLayout.RankedCandidateLi.toView({record: candidate});
         if (ranking.position() > 0) {
           this.goodCandidatesExplanation.hide();
           this.goodCandidatesList.append(li);

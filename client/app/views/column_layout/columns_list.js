@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.ColumnsList", View.Template, {
+_.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
   content: function() {
     this.builder.tag("ol", {id: "columns"});
   },
@@ -15,11 +15,9 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.invisibleColumns = [];
       var totalColumns = this.MAX_VISIBLE_COLUMNS + this.MIN_INVISIBLE_COLUMNS;
       for (var i = 0; i < totalColumns; i++) {
-        this.invisibleColumns[i] = Views.Columns.ColumnLi.toView();
+        this.invisibleColumns[i] = Views.ColumnLayout.ColumnLi.toView();
         this.invisibleColumns[i].containingList = this;
       }
-
-      $(window).resize(this.hitch('adjustWidth'));
     },
 
     navigate: function(state) {
@@ -32,7 +30,8 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       _(this.visibleColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
       }, this);
-      this.formatColumns();
+      this.renumberColumns();
+      this.adjustWidths();
       this.defer(this.hitch('adjustHeight'));
 
       Application.layout.activateNavigationTab("questionsLink");
@@ -72,6 +71,30 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       return urlState;
     },
 
+    numVisibleColumns: {
+      afterChange: function(numVisibleColumns) {
+        if (numVisibleColumns < 1) this.handleInvalidState();
+        var numColumnsToAdd = numVisibleColumns - this.visibleColumns.length;
+        _(Math.abs(numColumnsToAdd)).times(function() {
+          if (numColumnsToAdd > 0) {
+            this.visibleColumns.push(this.invisibleColumns.shift());
+            _(this.visibleColumns).last().appendTo(this);
+          } else {
+            _(this.visibleColumns).last().detach();
+            this.invisibleColumns.unshift(this.visibleColumns.pop())
+          }
+        }, this);
+      }
+    },
+
+    renumberColumns: function() {
+      _(this.visibleColumns).each(function(column, i) {
+        column.columnNumber(i);
+      });
+      _(this.visibleColumns).first().addClass("first");
+      _(this.visibleColumns).last().addClass("last");
+    },
+
     scrollLeft: function() {
       var newFirstColumn = this.invisibleColumns.pop();
       var oldLastColumn  = this.visibleColumns.pop();
@@ -80,7 +103,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.renumberColumns();
 
       newFirstColumn.prependTo(this);
-      this.formatColumns();
+      this.adjustWidths();
       this.defer(function() {
         oldLastColumn.detach();
       });
@@ -94,7 +117,7 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       this.renumberColumns();
       
       newLastColumn.appendTo(this);
-      this.formatColumns();
+      this.adjustWidths();
       this.defer(function() {
         oldFirstColumn.detach();
       });
@@ -126,52 +149,23 @@ _.constructor("Views.Columns.ColumnsList", View.Template, {
       });
     },
 
-    formatColumns: function() {
-      this.adjustWidth();
-      _(this.visibleColumns).first().addClass("first");
-      _(this.visibleColumns).last().addClass("last");
-    },
-
-    numVisibleColumns: {
-      afterChange: function(numVisibleColumns) {
-        if (numVisibleColumns < 1) this.handleInvalidState();
-        var numColumnsToAdd = numVisibleColumns - this.visibleColumns.length;
-        _(Math.abs(numColumnsToAdd)).times(function() {
-          if (numColumnsToAdd > 0) {
-            this.visibleColumns.push(this.invisibleColumns.shift());
-            _(this.visibleColumns).last().appendTo(this);
-          } else {
-            _(this.visibleColumns).last().detach();
-            this.invisibleColumns.unshift(this.visibleColumns.pop())
-          }
-        }, this);
-        this.renumberColumns();
-      }
-    },
-
-    renumberColumns: function() {
-      _(this.visibleColumns).each(function(column, i) {
-        column.columnNumber(i);
-      });
-    },
-
     handleInvalidState: function(invalidState) {
       console.debug("invalid url hash");
       console.debug(invalidState);
       // redirect to some default state
     },
 
-    adjustWidth: function() {
+    adjustWidths: function() {
       var relativeWidths = [], totalRelativeWidth = 0;
       _(this.visibleColumns).each(function(column, i) {
         relativeWidths[i] = column.currentView.relativeWidth;
         totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
       });
-      var marginWidth  = (this.numVisibleColumns() - 1) * 10; // hard-coded to match css
-      var paddingWidth = (this.numVisibleColumns() * 2) * 20; // hard-coded to match css
-      var availableWidth = this.width() - marginWidth - paddingWidth;
+      var marginPercent  = (this.numVisibleColumns() - 1) * 1.0; // hard-coded to match css
+      var paddingPercent = (this.numVisibleColumns() * 2) * 2.0; // hard-coded to match css
+      var availablePercent = 99.0 - marginPercent - paddingPercent;
       _(this.visibleColumns).each(function(column, i) {
-        column.css('width', (relativeWidths[i] / totalRelativeWidth * availableWidth) - 5);
+        column.css('width', (availablePercent * relativeWidths[i] / totalRelativeWidth) + '%');
       });
     },
 

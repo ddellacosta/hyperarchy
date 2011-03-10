@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.ElectionLi", Views.Columns.RecordLi, {
+_.constructor("Views.ColumnLayout.ElectionLi", Views.ColumnLayout.RecordLi, {
   rootAttributes: {'class': "election"},
 
   tableName: "elections",
@@ -8,17 +8,10 @@ _.constructor("Views.Columns.ElectionLi", Views.Columns.RecordLi, {
     "comments"
   ],
 
-  expandedContent: function() {with(this.builder) {
-    div().ref("details");
-  }},
-
-
   viewProperties: {
 
     initialize: function($super) {
       $super();
-//      this.details.bindHtml(this.record, "details");
     }
-
   }
 });

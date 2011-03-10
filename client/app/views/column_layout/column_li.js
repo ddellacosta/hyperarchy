@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.ColumnLi", View.Template, {
+_.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
   content: function() {
     this.builder.tag("li", {'class': "column"});
   },
@@ -7,17 +7,15 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
 
     initialize: function() {
       this.views = {
-        organizations: Views.Columns.Organizations.toView(),
-        votes:         Views.Columns.Votes.toView(),
-        elections:     Views.Columns.Elections.toView(),
-        candidates:    Views.Columns.Candidates.toView(),
-        comments:      Views.Columns.Comments.toView()
+        organizations: Views.ColumnLayout.Organizations.toView(),
+        votes:         Views.ColumnLayout.Votes.toView(),
+        elections:     Views.ColumnLayout.Elections.toView(),
+        candidates:    Views.ColumnLayout.Candidates.toView(),
+        comments:      Views.ColumnLayout.Comments.toView()
       };
 
       _(this.views).each(function(view) {
-        view.hide();
-        view.appendTo(this);
-        view.containingColumn = this;
+        this.append(view.hide());
       }, this);
     },
 
@@ -28,6 +26,13 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
         this.switchToView(viewName);
         this.currentView.state(columnState);
       }
+    },
+
+    switchToView: function(viewName) {
+      this.currentView = this.views[viewName];
+      if (! this.currentView) this.handleInvalidState(this.state());
+      this.children().hide();
+      this.currentView.show();
     },
 
     setNextColumnState: function(newStateForNextColumn) {
@@ -45,25 +50,14 @@ _.constructor("Views.Columns.ColumnLi", View.Template, {
       }
     },
 
-    handleInvalidState: function(invalidState) {
-      this.containingList.handleInvalidState(invalidState);
-    },
-
-    switchToView: function(viewName) {
-      if (! this.views[viewName]) this.handleInvalidState();
-      _(this.views).each(function(view, name) {
-        if (name === viewName) view.show();
-        else view.hide();
-      });
-      this.currentView = this.views[viewName];
-    },
-
     columnNumber: {
-      afterChange: function() {}
+      afterChange: function(columnNumber) {
+        this.currentView.containingColumnNumber(columnNumber);
+      }
     },
 
-    isFirst: function() {
-      return (this.columnNumber() === 0);
+    handleInvalidState: function(state) {
+      this.containingList.handleInvalidState(state);
     }
   }
 });

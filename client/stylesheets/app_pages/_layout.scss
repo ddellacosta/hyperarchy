@@ -1,8 +1,6 @@
 #application {
-  height: 100%;
   @include noSelect;
 }
-
 
 
 // global header section
@@ -133,8 +131,9 @@
 
 // global menus, dialogue boxes
 .dropdownMenu {
-  z-index: 100;
   position: absolute;
+  z-index: 100;
+
   background-color: #efefef;
   border: 1px solid #cccccc;
   border-top: none;
@@ -162,10 +161,10 @@
 }
 
 #feedback {
+  position: absolute;
   background: white;
   height: 300px;
   width: 600px;
-  position: absolute;
   z-index: 100;
   padding: 10px;
 

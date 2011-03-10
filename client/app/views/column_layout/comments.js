@@ -1,16 +1,16 @@
-_.constructor("Views.Columns.Comments", Views.Columns.ColumnView, {
+_.constructor("Views.ColumnLayout.Comments", Views.ColumnLayout.ColumnView, {
 
-  liConstructor: Views.Columns.CommentLi,
+  liConstructor: Views.ColumnLayout.CommentLi,
 
   headerContent: function() { with(this.builder) {
     h2("Comments");
   }},
 
-  rootAttributes: {'class': "comments"},
-
   viewProperties: {
 
-    mainRelationForState: function(state) {
+    relativeWidth: 1,
+
+    getMainRelationFromColumnState: function(state) {
       var constructor, parentConstructor;
       if (state.parentTableName === "elections")  {
         constructor = ElectionComment;
@@ -22,7 +22,7 @@ _.constructor("Views.Columns.Comments", Views.Columns.ColumnView, {
       return parentConstructor.where({id: state.parentRecordId}).joinThrough(constructor);
     },
 
-    additionalRelationsForState: function(state) {
+    getOtherRelationsFromColumnState: function(state) {
       var constructor, parentConstructor, commentRelation;
       if (state.parentTableName === "elections")  {
         constructor = ElectionComment;

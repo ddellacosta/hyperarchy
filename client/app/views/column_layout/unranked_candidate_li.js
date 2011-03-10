@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.UnrankedCandidateLi", Views.Columns.CandidateLi, {
+_.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.CandidateLi, {
 
   icons: function() { with(this.builder) {
     div({'class': "icons"}, function() {
@@ -25,6 +25,7 @@ _.constructor("Views.Columns.UnrankedCandidateLi", Views.Columns.CandidateLi, {
 
       this.draggable({
         connectToSortable: '.goodCandidatesList, .badCandidatesList',
+        containment: this.containingView,
         revert: 'invalid',
         revertDuration: 100,
         helper: this.hitch("createFixedWidthClone"),

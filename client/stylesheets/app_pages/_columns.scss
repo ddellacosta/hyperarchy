@@ -7,10 +7,10 @@
 .column {
   display: inline-block;
   float: left;
-  padding: 0 20px;
-  margin-right: 10px;
+  padding: 0 2.0%;
+  margin-right: 1.0%;
+  overflow: hidden;
 
-  background-color: white;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
 
@@ -20,9 +20,26 @@
   }
 }
 
+.columnView {
+  width: 100%;
+  height: 100%;
+}
+
 .columnHeader {
   height: 30px;
   padding: 5px 0;
+}
+
+.columnLeftContent, .columnRightContent {
+  display: inline-block;
+  float: left;
+  width: 49%;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.columnRightContent {
+  float: right;
 }
 
 .bigLoading {
@@ -39,7 +56,6 @@
   -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
   -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
   border: 1px solid #aaa;
-  @include borderRadius(5px);
 }
 
 .recordLi {
@@ -60,28 +76,24 @@
       text-decoration: underline;
     }
   }
+}
 
-  .creatorInfo {
-    margin: 5px 0;
+.creatorInfo {
+  margin: 5px 0;
 
-    .avatar {
-      float: left;
-      margin-right: 5px;
-    }
+  .avatar {
+    float: left;
+    margin-right: 5px;
+  }
 
-    .details {
-      padding-top: 2px;
+  .creatorName {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
 
-      .name {
-        font-size: 15px;
-        margin-bottom: 2px;
-      }
-
-      .date {
-        color: #999999;
-        font-size: 12px;
-      }
-    }
+  .creationDate {
+    color: #999999;
+    font-size: 12px;
   }
 }
 

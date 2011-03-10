@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.CandidateLi", Views.Columns.RecordLi, {
+_.constructor("Views.ColumnLayout.CandidateLi", Views.ColumnLayout.RecordLi, {
   rootAttributes: {'class': "candidate"},
 
   tableName: "candidates",
@@ -6,9 +6,6 @@ _.constructor("Views.Columns.CandidateLi", Views.Columns.RecordLi, {
   childTableNames: [
     "comments"
   ],
-
-  expandedContent: function() {with(this.builder) {
-  }},
 
   viewProperties: {
 

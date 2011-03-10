@@ -11,7 +11,7 @@ _.constructor("Controllers.Application", {
 //      account: Views.Account.toView(),
 //      newElection: Views.NewElection.toView(),
 
-      columns: Views.Columns.ColumnsList.toView()
+      columns: Views.ColumnLayout.ColumnsList.toView()
     };
 
     this.userSwitchNode = new Monarch.SubscriptionNode();

@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.OwnRankedCandidatesList", Views.Columns.RankedCandidatesList, {
+_.constructor("Views.ColumnLayout.OwnRankedCandidatesList", Views.ColumnLayout.RankedCandidatesList, {
   viewProperties: {
     initialize: function($super) {
       $super();
@@ -19,7 +19,7 @@ _.constructor("Views.Columns.OwnRankedCandidatesList", Views.Columns.RankedCandi
       if (ui.item.hasClass("ranked")) return; // if dragged from the other (good or bad) list
       var candidate = Candidate.find(ui.item.attr('candidateId'));
       var previouslyRankedLi = this.findPreviouslyRankedLi(candidate); // may have already been ranked before
-      var rankedCandidateView = previouslyRankedLi ? previouslyRankedLi.detach() : Views.Columns.RankedCandidateLi.toView({record: candidate});
+      var rankedCandidateView = previouslyRankedLi ? previouslyRankedLi.detach() : Views.ColumnLayout.RankedCandidateLi.toView({record: candidate});
       this.findLi(candidate).replaceWith(rankedCandidateView); // replace the clone of the draggable li with a real view
     },
 

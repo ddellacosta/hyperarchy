@@ -27,4 +27,4 @@
 //= require "views/new_election"
 //= require "views/candidate_comment_li"
 
-//= require "views/columns"
+//= require "views/column_layout"

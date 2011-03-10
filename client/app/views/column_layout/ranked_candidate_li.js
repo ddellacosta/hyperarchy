@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.RankedCandidateLi", Views.Columns.CandidateLi, {
+_.constructor("Views.ColumnLayout.RankedCandidateLi", Views.ColumnLayout.CandidateLi, {
 
   rootAttributes: {'class': "ranked candidate"},
 

@@ -1,4 +1,4 @@
-_.constructor("Views.Columns.CommentLi", Views.Columns.RecordLi, {
+_.constructor("Views.ColumnLayout.CommentLi", Views.ColumnLayout.RecordLi, {
   rootAttributes: {'class': "comment"},
 
   tableName: "comments",
