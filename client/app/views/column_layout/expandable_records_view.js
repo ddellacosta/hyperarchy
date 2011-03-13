@@ -1,0 +1,133 @@
+_.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
+  content: function() {with(this.builder) {
+    div({'class': template.tableName}, function() {
+      div({'class': "columnHeader"}, function() {
+        template.headerContent();
+      }).ref("header");
+      div({'class': "columnBody"}, function() {
+        subview('mainList', Views.ColumnLayout.SortedList, {
+          rootAttributes: {'class': template.tableName+"List"}
+        });
+        subview('detailsArea', template.detailsTemplate);
+        template.additionalBodyContent();
+//        div({'class': "loading"}).ref("loading");
+      }).ref("body");
+    });
+  }},
+
+  // template properties to override:
+  tableName: "records",
+  liTemplate:      Views.ColumnLayout.RecordLi,
+  detailsTemplate: Views.ColumnLayout.RecordDetails,
+  headerContent:         function() {},
+  additionalBodyContent: function() {},
+
+  viewProperties: {
+
+    // view methods to implement:
+    mainRelationToFetch: function(state) {},
+    otherRelationsToFetch: function(state) {},
+    mainRelation: {afterChange: function() {}},
+    setCurrentOrganizationId: function() {},
+
+    // shared view methods:
+    initialize: function() {
+      this.subscriptions = new Monarch.SubscriptionBundle;
+      this.mainList.buildElement = this.bind(function(record) {
+        return this.template.liTemplate.toView({
+          record: record,
+          containingView: this
+        });
+      });
+      this.defer(this.hitch('adjustHeight'));
+    },
+
+    state: {
+      afterChange: function(state, oldState) {
+        var relationIsTheSame = (oldState &&
+          (state.parentRecordId  === oldState.parentRecordId) &&
+          (state.parentTableName === oldState.parentTableName));
+        if (relationIsTheSame) {
+          this.selectedRecordId(state.recordId);
+          return;
+        }
+        var multipleRecordsSpecified = (state.parentTableName && state.parentRecordId);
+        if (multipleRecordsSpecified) {
+          this.showMainListAndDetailsArea();
+        } else {
+          this.showDetailsAreaOnly();
+        }
+
+        this.startLoading();
+        try {
+          var mainRelation   = this.mainRelationToFetch(state);
+          var otherRelations = this.otherRelationsToFetch(mainRelation);
+          var relationsToFetch = [mainRelation].concat(otherRelations);
+          Server.fetch(relationsToFetch).onSuccess(function() {
+            this.mainRelation(mainRelation);
+            this.selectedRecordId(state.recordId);
+            if (this.isInFirstColumn()) this.setCurrentOrganizationId();
+            this.stopLoading();
+          }, this);
+        } catch (badColumnState) {
+          this.containingColumn.handleInvalidState(badColumnState);
+        }
+      }
+    },
+
+    selectedRecordId: {
+      afterChange: function(id) {
+        if (! id) return;
+        var selectedLi = this.mainList.elementsById[id];
+        if (! selectedLi) return;
+
+        this.mainList.children().removeClass("selected");
+        selectedLi.addClass("selected");
+        this.detailsArea.recordId(id);
+      }
+    },
+
+    showMainListAndDetailsArea: function() {
+      this.mainList.removeClass('columnRight columnFull');
+      this.mainList.addClass('columnLeft');
+      this.detailsArea.removeClass('columnLeft columnFull');
+      this.detailsArea.addClass('columnRight');
+      this.body.children().hide();
+      this.mainList.show();
+      this.detailsArea.show();
+    },
+
+    showDetailsAreaOnly: function() {
+      this.detailsArea.removeClass('columnLeft columnRight');
+      this.detailsArea.addClass('columnFull');
+      this.mainList.hide();
+      this.body.children().hide();
+      this.detailsArea.siblings().hide();
+      this.detailsArea.show();
+    },
+
+    adjustHeight: function() {
+      this.body.fillContainingVerticalSpace(20);
+    },
+
+    isInFirstColumn: function() {
+      return (this.containingColumn.number() == 0);
+    },
+
+    startLoading: function() {
+      this.body.children().each(function(i, bodyElement) {
+        if (bodyElement.startLoading) {
+          bodyElement.startLoading();
+        }
+      });
+    },
+
+    stopLoading: function() {
+      this.body.children().each(function(bodyElement) {
+        if (bodyElement.stopLoading) bodyElement.stopLoading();
+      });
+    },
+
+    relativeWidth: 1
+  }
+});

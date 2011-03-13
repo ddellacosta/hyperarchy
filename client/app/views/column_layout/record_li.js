@@ -1,14 +1,15 @@
 _.constructor("Views.ColumnLayout.RecordLi", View.Template, {
   content: function(params) {with(this.builder) {
-    var record         = params.record;
     var rootAttributes = template.rootAttributes || {};
     li(rootAttributes, function() {
-      span({'class': "body"}).ref("body").click('expand');
-      template.icons();
+      a({'class': "body"}).ref("body").click('expand');
+      div({'class': "expandIcon"}).ref("expandIcon");
+      template.additionalIcons();
     }).ref("li");
   }},
 
-  icons: function() {},
+  // template properties to override:
+  additionalIcons: function() {},
 
   viewProperties: {
 
@@ -17,9 +18,8 @@ _.constructor("Views.ColumnLayout.RecordLi", View.Template, {
     },
 
     expand: function() {
-      this.containingView.detailsArea.record(this.record);
-      this.containingView.showDetailsArea();
-      this.addClass("expanded");
+      this.containingView.showMainListAndDetailsArea();
+      this.containingView.selectedRecordId(this.record.id());
     }
   }
 });

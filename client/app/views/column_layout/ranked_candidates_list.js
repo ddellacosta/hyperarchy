@@ -74,8 +74,10 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
     },
 
     adjustHeight: function() {
-      this.goodCandidatesList.css('height', this.height() / 2 - 15);
-      this.badCandidatesList.css('height', this.height() / 2  - 15);
+      this.fillContainingVerticalSpace();
+      var height = (this.height() - 30) / 2.0; // hard-coded for now
+      this.goodCandidatesList.css('height', height);
+      this.badCandidatesList.css('height', height);
     }
   }
 });

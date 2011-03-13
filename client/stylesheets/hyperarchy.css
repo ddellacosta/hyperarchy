@@ -127,7 +127,8 @@ html#app {
 
 body {
   font: 13px/1.3 "Helvetica Neue", Arial, "Liberation Sans", FreeSans, sans-serif;
-  height: 100%; }
+  height: 100%;
+  overflow: hidden; }
 
 textarea {
   line-height: 1.3; }
@@ -563,7 +564,8 @@ body.legal {
 
 #application {
   -webkit-user-select: none;
-  -moz-user-select: none; }
+  -moz-user-select: none;
+  overflow: hidden; }
 
 #header {
   height: 30px;
@@ -1298,89 +1300,89 @@ body.legal {
   margin-top: -40px; }
 
 #columns {
-  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
   -webkit-user-select: none;
   -moz-user-select: none; }
 
 .column {
-  display: inline-block;
-  float: left;
-  padding: 0 2.0%;
-  margin-right: 1.0%;
   overflow: hidden;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc; }
-  .column.last {
-    margin-right: 0;
-    border-right: none; }
+  position: absolute;
+  height: 100%;
+  border-left: 2px solid #ccc;
+  border-right: 2px solid #ccc; }
 
-.columnView {
-  width: 100%;
-  height: 100%; }
+.columnView, .comments, .elections, .candidates {
+  height: 100%;
+  margin: 0 20px; }
 
 .columnHeader {
   height: 30px;
   padding: 5px 0; }
 
-.columnLeftContent, .columnRightContent {
-  display: inline-block;
-  float: left;
-  width: 49%;
-  overflow: hidden;
-  border: 1px solid #ddd; }
+.columnBody {
+  position: relative;
+  width: 100%; }
 
-.columnRightContent {
-  float: right; }
+.columnLeft, .columnRight, .columnFull {
+  height: 100%;
+  position: absolute;
+  overflow-x: hidden; }
 
-.bigLoading {
-  background-position-x: center;
-  background-position-y: 45%; }
+.columnLeft {
+  width: 48%;
+  left: 0; }
 
-.columnList, .candidatesList, .goodCandidatesList, .badCandidatesList, .electionsList {
+.columnRight {
+  width: 48%;
+  left: 52%; }
+
+.columnFull {
   width: 100%;
-  display: inline-block;
-  overflow: auto;
+  left: 0; }
+
+.recordsList, .commentsList, .electionsList, .candidatesList, .rankedCandidatesList {
+  overflow-y: auto;
   background-color: #f2f2f2;
   -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
   -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
   border: 1px solid #aaa; }
 
-.recordLi, .candidate, .comment, .election {
+.recordLi, .comment, .election, .candidate {
   padding: 5px 10px;
   font-size: 15px;
   border-bottom: 1px solid #bbb;
   background-color: white; }
-  .recordLi.selected, .selected.candidate, .selected.comment, .selected.election {
+  .recordLi.selected, .selected.comment, .selected.election, .selected.candidate {
     background-color: #ddddff; }
-  .recordLi .body, .candidate .body, .comment .body, .election .body {
+  .recordLi .body, .comment .body, .election .body, .candidate .body {
     color: black; }
-    .recordLi .body:hover, .candidate .body:hover, .comment .body:hover, .election .body:hover {
-      text-decoration: underline; }
+
+.recordDetails, .candidateDetails {
+  border: 1px solid #ddddff; }
 
 .creatorInfo {
   margin: 5px 0; }
-  .creatorInfo .avatar {
-    float: left;
-    margin-right: 5px; }
-  .creatorInfo .creatorName {
-    font-size: 15px;
-    margin-bottom: 2px; }
-  .creatorInfo .creationDate {
-    color: #999999;
-    font-size: 12px; }
 
-.candidatesList {
-  width: 48%; }
+.avatar {
+  float: left;
+  margin-right: 5px; }
+
+.creatorName {
+  font-size: 15px;
+  margin-bottom: 2px; }
+
+.creationDate {
+  color: #999999;
+  font-size: 12px; }
 
 .rankedCandidatesList {
-  width: 48%;
-  float: right;
-  display: inline-block; }
+  overflow: hidden; }
 
 .goodCandidatesList, .badCandidatesList {
-  float: left;
   clear: both;
-  width: 100%; }
+  overflow-y: auto; }
 
 .dragTargetExplanation {
   margin-top: 60px;
@@ -1392,7 +1394,9 @@ body.legal {
   height: 28px;
   text-align: center;
   background: white;
-  clear: both; }
+  clear: both;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa; }
   .separator .up {
     display: inline-block;
     background: url("/images/arrow_up_black.png");

@@ -99,21 +99,22 @@ _.constructor("Views.Layout", View.Template, {
 
   viewProperties: {
 
-    MIN_HEIGHT: 300,
+    minHeight: 300,
 
     initialize: function() {
-      window.notify = this.hitch('notify');
       $(window).resize(this.hitch('adjustHeight'));
+      this.defer(this.hitch('adjustHeight'));
+      window.notify = this.hitch('notify');
+      this.currentUserSubscriptions = new Monarch.SubscriptionBundle();
+
       _.each(this.views, function(view) {
         view.hide();
         this.content.append(view);
       }, this);
-      this.currentUserSubscriptions = new Monarch.SubscriptionBundle();
     },
 
     adjustHeight: function() {
-      this.content.fillVerticalSpace(0, this.MIN_HEIGHT);
-      this.views.columns.adjustHeight(this.MIN_HEIGHT);
+      this.content.fillVerticalSpace(0);
     },
 
     organization: {
@@ -165,9 +166,9 @@ _.constructor("Views.Layout", View.Template, {
       this.alternateNavigationBar.show();
     },
 
-    activateNavigationTab: function(link) {
+    activateNavigationTab: function(linkName) {
       this.organizationNavigationBar.find("a").removeClass('active');
-      $(this[link]).addClass('active');
+      this[linkName].addClass('active');
     },
 
     populateOrganizations: function() {

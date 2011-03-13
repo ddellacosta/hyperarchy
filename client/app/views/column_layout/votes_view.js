@@ -1,4 +1,4 @@
-_.constructor("Views.ColumnLayout.Votes", View.Template, {
+_.constructor("Views.ColumnLayout.VotesView", View.Template, {
   content: function() { with(this.builder) {
     div({'class': "votes"});
   }},

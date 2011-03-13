@@ -1,5 +1,7 @@
 _.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.CandidateLi, {
 
+  rootAttributes: {'class': "unranked candidate"},
+
   icons: function() { with(this.builder) {
     div({'class': "icons"}, function() {
       div({'class': "rankedIcon", style: "display: none;"}).ref('rankedIcon');
@@ -7,9 +9,8 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.Candi
     });
   }},
 
-  rootAttributes: {'class': "unranked candidate"},
-
   viewProperties: {
+
     initialize: function($super) {
       $super();
       var rankingRelation = this.record.rankingByCurrentUser();
@@ -25,13 +26,12 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.Candi
 
       this.draggable({
         connectToSortable: '.goodCandidatesList, .badCandidatesList',
-        containment: this.containingView,
         revert: 'invalid',
         revertDuration: 100,
+        appendTo: this.containingView,
         helper: this.hitch("createFixedWidthClone"),
-        zIndex: 100,
-        cancel: '.noDrag'
-      }).disableSelection();
+        start:  this.hitch("showRankedList")
+      });
     },
 
     createFixedWidthClone: function() {
@@ -39,6 +39,10 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.Candi
       clone.css('width', this.width());
       clone.css('height', this.height());
       return clone;
+    },
+
+    showRankedList: function() {
+      this.containingView.showMainListAndRankedList();
     }
   }
 });

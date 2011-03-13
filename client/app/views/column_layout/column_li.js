@@ -7,21 +7,21 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
 
     initialize: function() {
       this.views = {
-        organizations: Views.ColumnLayout.Organizations.toView(),
-        votes:         Views.ColumnLayout.Votes.toView(),
-        elections:     Views.ColumnLayout.Elections.toView(),
-        candidates:    Views.ColumnLayout.Candidates.toView(),
-        comments:      Views.ColumnLayout.Comments.toView()
+        organizations: Views.ColumnLayout.OrganizationsView.toView(),
+        votes:         Views.ColumnLayout.VotesView.toView(),
+        elections:     Views.ColumnLayout.ElectionsView.toView(),
+        candidates:    Views.ColumnLayout.CandidatesView.toView(),
+        comments:      Views.ColumnLayout.CommentsView.toView()
       };
-
       _(this.views).each(function(view) {
+        view.containingColumn = this;
         this.append(view.hide());
       }, this);
     },
 
     state: {
-      afterChange: function(columnState, oldState) {
-        if (!columnState || _(columnState).isEqual(oldState)) return;
+      afterChange: function(columnState, oldColumnState) {
+        if (!columnState || _(columnState).isEqual(oldColumnState)) return;
         var viewName = columnState.tableName;
         this.switchToView(viewName);
         this.currentView.state(columnState);
@@ -50,14 +50,12 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }
     },
 
-    columnNumber: {
-      afterChange: function(columnNumber) {
-        this.currentView.containingColumnNumber(columnNumber);
-      }
+    number: {
+      afterChange: function(number) {}
     },
 
-    handleInvalidState: function(state) {
-      this.containingList.handleInvalidState(state);
+    handleInvalidState: function(error) {
+      this.containingList.handleInvalidState(error);
     }
   }
 });

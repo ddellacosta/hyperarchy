@@ -1,57 +1,44 @@
+// containers
 #columns {
-  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width:  100%;
   @include noSelect;
 }
-
-// shared by all column views
 .column {
-  display: inline-block;
-  float: left;
-  padding: 0 2.0%;
-  margin-right: 1.0%;
   overflow: hidden;
-
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-
-  &.last {
-    margin-right: 0;
-    border-right: none;
-  }
-}
-
-.columnView {
-  width: 100%;
+  position: absolute;
   height: 100%;
+  border-left: 2px solid #ccc;
+  border-right: 2px solid #ccc;
 }
 
+
+// inherited by multiple column views
+.columnView {
+  height: 100%;
+  margin: 0 20px;
+}
 .columnHeader {
   height: 30px;
   padding: 5px 0;
 }
-
-.columnLeftContent, .columnRightContent {
-  display: inline-block;
-  float: left;
-  width: 49%;
-  overflow: hidden;
-  border: 1px solid #ddd;
-}
-
-.columnRightContent {
-  float: right;
-}
-
-.bigLoading {
-  background-position-x: center;
-  background-position-y: 45%;
-}
-
-.columnList {
+.columnBody {
+  position: relative;
   width: 100%;
-  display: inline-block;
-  overflow: auto;
+}
+.columnLeft, .columnRight, .columnFull {
+  height: 100%;
+  position: absolute;
+  overflow-x: hidden;
+}
+.columnLeft  {width: 48%; left: 0}
+.columnRight {width: 48%; left: 52%;}
+.columnFull  {width: 100%; left: 0}
 
+
+.recordsList {
+  overflow-y: auto;
   background-color: $lightGray;
   -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
   -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
@@ -61,7 +48,6 @@
 .recordLi {
   padding: 5px 10px;
   font-size: 15px;
-
   border-bottom: 1px solid #bbb;
   background-color: white;
 
@@ -71,57 +57,79 @@
 
   .body {
     color: black;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 }
 
+.recordDetails {
+  border: 1px solid #ddddff;
+}
 .creatorInfo {
   margin: 5px 0;
+}
+.avatar {
+  float: left;
+  margin-right: 5px;
+}
+.creatorName {
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+.creationDate {
+  color: #999999;
+  font-size: 12px;
+}
 
-  .avatar {
-    float: left;
-    margin-right: 5px;
-  }
 
-  .creatorName {
-    font-size: 15px;
-    margin-bottom: 2px;
-  }
+// comment column view
+.comments {
+  @extend .columnView;
+}
+.commentsList {
+  @extend .recordsList;
+}
+.comment {
+  @extend .recordLi;
+}
 
-  .creationDate {
-    color: #999999;
-    font-size: 12px;
-  }
+
+// election column view
+.elections {
+  @extend .columnView;
+}
+.electionsList {
+  @extend .recordsList;
+}
+.electionDetails {
+  @extend .detailsArea;
+}
+.election {
+  @extend .recordLi
 }
 
 
 // candidates column view
+.candidates {
+  @extend .columnView;
+}
 .candidatesList {
-  @extend .columnList;
-  width: 48%;
+  @extend .recordsList;
+}
+.candidateDetails {
+  @extend .recordDetails;
 }
 
 .rankedCandidatesList {
-  width: 48%;
-  float: right;
-  display: inline-block;
+  @extend .recordsList;
+  overflow: hidden;
 }
-
 .goodCandidatesList, .badCandidatesList {
-  @extend .columnList;
-  float: left;
   clear: both;
-  width: 100%;
+  overflow-y: auto;
 }
-
 .dragTargetExplanation {
   margin-top: 60px;
   text-align: center;
 }
-
 .separator {
   float: left;
   width: 100%;
@@ -129,6 +137,8 @@
   text-align: center;
   background: white;
   clear: both;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
 
   .up {
     display: inline-block;
@@ -137,7 +147,6 @@
     padding: 5px 10px;
     padding-left: 20px
   }
-
   .down {
     display: inline-block;
     background: url("/images/arrow_down_black.png");
@@ -154,20 +163,4 @@
   &.ui-draggable-dragging {
 
   }
-}
-
-
-// comment column view
-.comment {
-  @extend .recordLi;
-}
-
-
-// election column view
-.electionsList {
-  @extend .columnList;
-}
-
-.election {
-  @extend .recordLi
 }
