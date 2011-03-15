@@ -1,21 +1,15 @@
 _.constructor("Views.ColumnLayout.CandidateDetails", Views.ColumnLayout.RecordDetails, {
 
   tableName: "candidates",
-  childLinks: [
-    {tableName: "comments",
-     informalName: "Comments"}
-  ],
 
-  viewProperties: {
+  recordConstructor: Candidate,
 
-    recordConstructor: Candidate,
+  childNames: {
+    comments:   "Comments"
+  },
 
-    childRelationsToFetch: function(record) {
-      return [
-        CandidateComment.where({candidateId: this.recordId()})
-      ]
-    },
+  childRelations: function(candidateId) { return {
+    comments:   CandidateComment.where({candidateId: candidateId})
+  }}
 
-    populateChildLinks: function() {}
-  }
 });

@@ -15,22 +15,23 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.Candi
       $super();
       var rankingRelation = this.record.rankingByCurrentUser();
       if (!rankingRelation.empty()) {
-        this.rankedIcon.show();
+//        this.rankedIcon.show();
       }
       rankingRelation.onInsert(function() {
-        this.rankedIcon.show();
+//        this.rankedIcon.show();
       }, this);
       rankingRelation.onRemove(function() {
-        this.rankedIcon.hide();
+//        this.rankedIcon.hide();
       }, this);
 
       this.draggable({
         connectToSortable: '.goodCandidatesList, .badCandidatesList',
+        helper: this.hitch("createFixedWidthClone"),
+        start:  this.hitch("showRankedList"),
+        appendTo: this.containingView,
         revert: 'invalid',
         revertDuration: 100,
-        appendTo: this.containingView,
-        helper: this.hitch("createFixedWidthClone"),
-        start:  this.hitch("showRankedList")
+        distance: 5
       });
     },
 
@@ -38,11 +39,13 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", Views.ColumnLayout.Candi
       var clone = this.clone();
       clone.css('width', this.width());
       clone.css('height', this.height());
+      clone.removeClass('selected');
       return clone;
     },
 
     showRankedList: function() {
       this.containingView.showMainListAndRankedList();
+      this.draggable('option', "connectToSortable", '.goodCandidatesList, .badCandidatesList')
     }
   }
 });

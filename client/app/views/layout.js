@@ -50,31 +50,10 @@ _.constructor("Views.Layout", View.Template, {
           }).ref("alternateNavigationBar");
         });
 
-        div({id: "subnavStub"}).ref("subNavigationBar");
-
-        div({'id': "content"}, function() {
-        }).ref('content');
+        div({'id': "content"}).ref('content');
       }).ref('mainContentArea');
 
       subview("welcomeGuide", Views.WelcomeGuide);
-
-      div({id: "darkenBackground", style: "display: none"})
-        .ref('darkenBackground');
-      div({id: "notification", style: "display: none"}).ref("notification");
-      subview('signupPrompt', Views.SignupPrompt);
-      subview('mustBeMemberMessage', Views.MustBeMemberMessage);
-      subview('disconnectDialog', Views.DisconnectDialog);
-      subview('inviteForm', Views.Invite);
-      div({id: "feedback", style: "display: none", 'class': "dropShadow"}, function() {
-        div({'class': "rightCancelX"}).click('hideFeedbackForm');
-        div({id: "thanks", 'class': "largeFont"}, function() {
-          text("Thanks for taking the time to talk to us! Feel free to get in touch with us via email at ");
-          a({href: "mailto:admin@hyperarchy.com"}, "admin@hyperarchy.com");
-          text(".")
-        });
-        textarea().ref("feedbackTextarea");
-        a({'class': "glossyBlack roundedButton", href: "#"}, "Send Feedback").click('sendFeedback');
-      }).ref("feedbackForm");
 
       ol({'class': "dropdownMenu"}, function() {
         li(function() {
@@ -94,12 +73,27 @@ _.constructor("Views.Layout", View.Template, {
         }).ref('addOrganizationLi')
       }).ref('organizationsMenu');
 
+      div({id: "darkenBackground", style: "display: none"}).ref('darkenBackground');
+      div({id: "notification", style: "display: none"}).ref("notification");
+      subview('signupPrompt', Views.SignupPrompt);
+      subview('mustBeMemberMessage', Views.MustBeMemberMessage);
+      subview('disconnectDialog', Views.DisconnectDialog);
+      subview('inviteForm', Views.Invite);
+      div({id: "feedback", style: "display: none", 'class': "dropShadow"}, function() {
+        div({'class': "rightCancelX"}).click('hideFeedbackForm');
+        div({id: "thanks", 'class': "largeFont"}, function() {
+          text("Thanks for taking the time to talk to us! Feel free to get in touch with us via email at ");
+          a({href: "mailto:admin@hyperarchy.com"}, "admin@hyperarchy.com");
+          text(".")
+        });
+        textarea().ref("feedbackTextarea");
+        a({'class': "glossyBlack roundedButton", href: "#"}, "Send Feedback").click('sendFeedback');
+      }).ref("feedbackForm");
+
     })
   }},
 
   viewProperties: {
-
-    minHeight: 300,
 
     initialize: function() {
       $(window).resize(this.hitch('adjustHeight'));
@@ -114,7 +108,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     adjustHeight: function() {
-      this.content.fillVerticalSpace(0);
+      this.content.fillVerticalSpace();
     },
 
     organization: {

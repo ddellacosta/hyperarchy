@@ -7,8 +7,8 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
 
     initialize: function() {
       this.views = {
-        organizations: Views.ColumnLayout.OrganizationsView.toView(),
-        votes:         Views.ColumnLayout.VotesView.toView(),
+//        organizations: Views.ColumnLayout.OrganizationsView.toView(),
+//        votes:         Views.ColumnLayout.VotesView.toView(),
         elections:     Views.ColumnLayout.ElectionsView.toView(),
         candidates:    Views.ColumnLayout.CandidatesView.toView(),
         comments:      Views.ColumnLayout.CommentsView.toView()
@@ -40,7 +40,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       newStateForThisColumn.recordId = newStateForNextColumn.parentRecordId;
       this.state(newStateForThisColumn);
 
-      var columnNumber     = this.columnNumber();
+      var columnNumber     = this.number();
       var lastColumnNumber = this.containingList.numVisibleColumns() - 1;
       if (columnNumber === lastColumnNumber) {
         this.containingList.scrollRightAndSetRightColumnState(newStateForNextColumn);

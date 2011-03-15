@@ -9,10 +9,16 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
   }},
 
   additionalBodyContent: function() {with(this.builder) {
-    subview('rankedList', Views.ColumnLayout.OwnRankedCandidatesList);
+    subview('rankedList', Views.ColumnLayout.OwnRankedCandidatesList, {});
   }},
 
   viewProperties: {
+
+    initialize: function($super) {
+      $super();
+      this.rankedList.containingView = this;
+      this.rankedList.setupSortable();
+    },
 
     relativeWidth: 2,
 
@@ -37,11 +43,12 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
         this.mainList.relation(candidatesRelation);
         var rankingsRelation = candidatesRelation.joinThrough(Ranking).
                                where({userId: Application.currentUser().id()});
-        this.rankedList.rankingsRelation(rankingsRelation);
+        this.rankedList.rankingsRelation(rankingsRelation.orderBy(Ranking.position.desc()));
       }
     },
 
     showMainListAndRankedList: function() {
+      this.header.show();
       this.mainList.removeClass('columnRight columnFull');
       this.mainList.addClass('columnLeft');
       this.rankedList.removeClass('columnLeft columnFull');

@@ -631,8 +631,8 @@ body.legal {
     -webkit-border-top-right-radius: 4px;
     -moz-border-radius-topleft: 4px;
     -moz-border-radius-topright: 4px;
-    -moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 4px;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 4px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
     background-color: #5a5d62; }
   .navBarLink.rightSide {
     float: right;
@@ -699,6 +699,15 @@ body.legal {
   .dropdownMenu li:last-child a {
     margin-bottom: 0; }
 
+#darkenBackground {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99; }
+
 #feedback {
   position: absolute;
   background: white;
@@ -716,16 +725,6 @@ body.legal {
     resize: none; }
   #feedback a.roundedButton {
     float: right; }
-
-#darkenBackground {
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-  height: 100%;
-  width: 100%;
-  background-repeat: repeat;
-  position: fixed;
-  top: 0px;
-  left: 0px; }
 
 #mustBeMemberMessage h1 {
   margin-bottom: 10px; }
@@ -1024,7 +1023,7 @@ body.legal {
   #app #electionOverview .bigLoading {
     position: absolute; }
   #app #electionOverview ol.candidates {
-    background-color: #f2f2f2;
+    background-color: #f1f1f1;
     -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
     -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
     overflow-x: hidden;
@@ -1301,8 +1300,8 @@ body.legal {
 
 #columns {
   position: relative;
-  height: 100%;
   width: 100%;
+  height: 100%;
   -webkit-user-select: none;
   -moz-user-select: none; }
 
@@ -1310,16 +1309,16 @@ body.legal {
   overflow: hidden;
   position: absolute;
   height: 100%;
-  border-left: 2px solid #ccc;
-  border-right: 2px solid #ccc; }
+  border-right: 8px ridge #ddd; }
 
 .columnView, .comments, .elections, .candidates {
   height: 100%;
-  margin: 0 20px; }
+  margin: 0 20px;
+  margin-left: 28px;
+  padding-top: 10px; }
 
 .columnHeader {
-  height: 30px;
-  padding: 5px 0; }
+  height: 30px; }
 
 .columnBody {
   position: relative;
@@ -1331,12 +1330,12 @@ body.legal {
   overflow-x: hidden; }
 
 .columnLeft {
-  width: 48%;
+  width: 49%;
   left: 0; }
 
 .columnRight {
-  width: 48%;
-  left: 52%; }
+  width: 49%;
+  left: 51%; }
 
 .columnFull {
   width: 100%;
@@ -1344,30 +1343,38 @@ body.legal {
 
 .recordsList, .commentsList, .electionsList, .candidatesList, .rankedCandidatesList {
   overflow-y: auto;
-  background-color: #f2f2f2;
-  -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
-  -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
-  border: 1px solid #aaa; }
+  background-color: #f1f1f1;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset; }
 
 .recordLi, .comment, .election, .candidate {
   padding: 5px 10px;
   font-size: 15px;
-  border-bottom: 1px solid #bbb;
-  background-color: white; }
+  border: 1px solid #ccc;
+  border-top: none;
+  background-color: white;
+  -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px; }
   .recordLi.selected, .selected.comment, .selected.election, .selected.candidate {
     background-color: #ddddff; }
   .recordLi .body, .comment .body, .election .body, .candidate .body {
     color: black; }
 
 .recordDetails, .candidateDetails {
-  border: 1px solid #ddddff; }
+  border: 1px solid #ccc; }
+
+.detailsContainer {
+  padding: 10px; }
 
 .creatorInfo {
   margin: 5px 0; }
 
 .avatar {
   float: left;
-  margin-right: 5px; }
+  margin-right: 5px;
+  background-image: url("/images/mystery_man.jpeg"); }
 
 .creatorName {
   font-size: 15px;
@@ -1377,36 +1384,56 @@ body.legal {
   color: #999999;
   font-size: 12px; }
 
+.childLinks {
+  margin-top: 20px; }
+
+.childLinkContainer {
+  padding: 5px 10px;
+  margin: 5px 0;
+  background-color: #f4f4f4; }
+  .childLinkContainer.selected {
+    background-color: #ddddff; }
+
+.childLink {
+  color: black;
+  font-size: 15px; }
+
 .rankedCandidatesList {
   overflow: hidden; }
 
 .goodCandidatesList, .badCandidatesList {
+  position: relative;
   clear: both;
   overflow-y: auto; }
 
 .dragTargetExplanation {
-  margin-top: 60px;
-  text-align: center; }
+  position: absolute;
+  top: 40%;
+  text-align: center;
+  width: 100%; }
 
 .separator {
-  float: left;
   width: 100%;
   height: 28px;
   text-align: center;
-  background: white;
   clear: both;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa; }
-  .separator .up {
+  background-color: #f1f1f1;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#f1f1f1));
+  background: -moz-linear-gradient(top, white, #f1f1f1);
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
+  border: 1px solid #ccc;
+  border-left: 1px solid #f1f1f1;
+  border-right: 1px solid #f1f1f1; }
+  .separator .up, .separator .down {
     display: inline-block;
-    background: url("/images/arrow_up_black.png");
-    background-repeat: no-repeat;
     padding: 5px 10px;
+    background-repeat: no-repeat; }
+  .separator .up {
+    background-image: url("/images/arrow_up_black.png");
+    background-position: left;
     padding-left: 20px; }
   .separator .down {
-    display: inline-block;
-    background: url("/images/arrow_down_black.png");
-    background-repeat: no-repeat;
+    background-image: url("/images/arrow_down_black.png");
     background-position: right;
-    padding: 5px 10px;
     padding-right: 20px; }

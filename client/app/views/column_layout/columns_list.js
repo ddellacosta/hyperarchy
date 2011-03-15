@@ -19,7 +19,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         this.invisibleColumns[i].containingList = this;
       }
       $(window).resize(this.hitch('adjustHeight'));
-      this.defer(this.hitch('adjustHeight'));
     },
 
     navigate: function(state) {
@@ -176,6 +175,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       _(this.visibleColumns).each(function(column) {
         column.currentView.adjustHeight();
       });
+    },
+
+    afterShow: function() {
+      this.defer(this.hitch('adjustHeight'));
     }
   }
 });

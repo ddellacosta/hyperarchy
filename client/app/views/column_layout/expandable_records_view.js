@@ -5,12 +5,11 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         template.headerContent();
       }).ref("header");
       div({'class': "columnBody"}, function() {
-        subview('mainList', Views.ColumnLayout.SortedList, {
+        subview('mainList', Views.SortedList, {
           rootAttributes: {'class': template.tableName+"List"}
         });
         subview('detailsArea', template.detailsTemplate);
         template.additionalBodyContent();
-//        div({'class': "loading"}).ref("loading");
       }).ref("body");
     });
   }},
@@ -39,6 +38,8 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
           containingView: this
         });
       });
+      this.detailsArea.containingView = this;
+
       this.defer(this.hitch('adjustHeight'));
     },
 
@@ -88,6 +89,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     },
 
     showMainListAndDetailsArea: function() {
+      this.header.show();
       this.mainList.removeClass('columnRight columnFull');
       this.mainList.addClass('columnLeft');
       this.detailsArea.removeClass('columnLeft columnFull');
@@ -95,19 +97,18 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
       this.body.children().hide();
       this.mainList.show();
       this.detailsArea.show();
+      this.adjustHeight();
     },
 
     showDetailsAreaOnly: function() {
+      this.header.hide();
       this.detailsArea.removeClass('columnLeft columnRight');
       this.detailsArea.addClass('columnFull');
       this.mainList.hide();
       this.body.children().hide();
       this.detailsArea.siblings().hide();
       this.detailsArea.show();
-    },
-
-    adjustHeight: function() {
-      this.body.fillContainingVerticalSpace(20);
+      this.adjustHeight();
     },
 
     isInFirstColumn: function() {
@@ -120,12 +121,22 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
           bodyElement.startLoading();
         }
       });
+      this.adjustHeight();
     },
 
     stopLoading: function() {
       this.body.children().each(function(bodyElement) {
         if (bodyElement.stopLoading) bodyElement.stopLoading();
       });
+      this.adjustHeight();
+    },
+
+    adjustHeight: function() {
+      this.body.fillContainingVerticalSpace(20);
+    },
+
+    afterShow: function() {
+      this.adjustHeight();
     },
 
     relativeWidth: 1

@@ -161,6 +161,16 @@
   }
 }
 
+#darkenBackground {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 99;
+}
+
 #feedback {
   position: absolute;
   background: white;
@@ -182,17 +192,6 @@
   a.roundedButton {
     float: right;
   }
-}
-
-#darkenBackground {
-  background-color: rgba(0, 0, 0, .5);
-  z-index: 99;
-  height: 100%;
-  width: 100%;
-  background-repeat: repeat;
-  position: fixed;
-  top: 0px;
-  left: 0px;
 }
 
 #mustBeMemberMessage {

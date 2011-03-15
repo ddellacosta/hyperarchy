@@ -3,7 +3,7 @@ $minHeight: 500px;
 
 $blue: #0e40ac;
 $errorBackground: #FFE0E4;
-$lightGray: #F2F2F2;
+$lightGray: #F1F1F1;
 $lighterGray: #F4F4F4;
 $gray: #6B6B6B;
 $darkGray: #44464A;
@@ -28,12 +28,17 @@ $backgroundGray: #e6e6e6;
   -moz-border-radius-topright: $radius;
 }
 
-@mixin dropShadow($size: 6px, $opacity: 0.4) {
+@mixin dropShadow($size: 6px, $opacity: 0.3) {
   -moz-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size;
   -webkit-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size;
 }
 
-@mixin gradient($color, $percent) {
+@mixin innerShadow($size: 6px, $opacity: 0.3) {
+  -moz-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size inset;
+  -webkit-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size inset;
+}
+
+@mixin gradient($color, $percent: 10%) {
   background-color: $color;
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(lighten($color, $percent)), to($color));
   background: -moz-linear-gradient(top, lighten($color, $percent), $color);

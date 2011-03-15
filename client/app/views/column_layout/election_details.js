@@ -1,29 +1,19 @@
 _.constructor("Views.ColumnLayout.ElectionDetails", Views.ColumnLayout.RecordDetails, {
 
   tableName: "elections",
-  childLinks: [
-    {tableName: "candidates",
-     informalName: "Answers"},
-    {tableName: "comments",
-     informalName: "Comments"},
-    {tableName: "votes",
-     informalName: "Votes"}
-  ],
 
-  viewProperties: {
+  recordConstructor: Election,
 
-    recordConstructor: Election,
+  childNames: {
+    candidates: "Answers",
+    comments:   "Comments",
+    votes:      "Votes"
+  },
 
-    childRelationsToFetch: function(record) {
-      return [
-        Candidate.where({electionId: this.recordId()}),
-        ElectionComment.where({electionId: this.recordId()}),
-        Vote.where({electionId: this.recordId()})
-      ]
-    },
+  childRelations: function(electionId) { return {
+    candidates: Candidate.where({electionId: electionId}),
+    comments:   ElectionComment.where({electionId: electionId}),
+    votes:      Vote.where({electionId: electionId})
+  }}
 
-    populateChildLinks: function() {
-
-    }
-  }
 });

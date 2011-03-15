@@ -1,16 +1,15 @@
 // containers
 #columns {
   position: relative;
-  height: 100%;
   width:  100%;
+  height: 100%;
   @include noSelect;
 }
 .column {
   overflow: hidden;
   position: absolute;
   height: 100%;
-  border-left: 2px solid #ccc;
-  border-right: 2px solid #ccc;
+  border-right: 8px ridge #ddd;
 }
 
 
@@ -18,10 +17,11 @@
 .columnView {
   height: 100%;
   margin: 0 20px;
+  margin-left: 28px;
+  padding-top: 10px;
 }
 .columnHeader {
   height: 30px;
-  padding: 5px 0;
 }
 .columnBody {
   position: relative;
@@ -32,24 +32,26 @@
   position: absolute;
   overflow-x: hidden;
 }
-.columnLeft  {width: 48%; left: 0}
-.columnRight {width: 48%; left: 52%;}
+.columnLeft  {width: 49%; left: 0}
+.columnRight {width: 49%; left: 51%;}
 .columnFull  {width: 100%; left: 0}
 
 
 .recordsList {
   overflow-y: auto;
   background-color: $lightGray;
-  -moz-box-shadow: #c8c7c7 0px 0px 5px inset;
-  -webkit-box-shadow: #c8c7c7 0px 0px 5px inset;
-  border: 1px solid #aaa;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  @include innerShadow(5px, 0.25);
 }
 
 .recordLi {
   padding: 5px 10px;
   font-size: 15px;
-  border-bottom: 1px solid #bbb;
+  border: 1px solid #ccc;
+  border-top: none;
   background-color: white;
+  @include dropShadow(3px, 0.25);
 
   &.selected {
     background-color: #ddddff;
@@ -61,7 +63,10 @@
 }
 
 .recordDetails {
-  border: 1px solid #ddddff;
+  border: 1px solid #ccc;
+}
+.detailsContainer {
+  padding: 10px;
 }
 .creatorInfo {
   margin: 5px 0;
@@ -69,6 +74,7 @@
 .avatar {
   float: left;
   margin-right: 5px;
+  background-image: url("/images/mystery_man.jpeg");
 }
 .creatorName {
   font-size: 15px;
@@ -77,6 +83,22 @@
 .creationDate {
   color: #999999;
   font-size: 12px;
+}
+.childLinks {
+  margin-top: 20px;
+}
+.childLinkContainer {
+  padding: 5px 10px;
+  margin: 5px 0;
+  background-color: $lighterGray;
+
+  &.selected {
+    background-color: #ddddff;
+  }
+}
+.childLink {
+  color: black;
+  font-size: 15px;
 }
 
 
@@ -123,36 +145,42 @@
   overflow: hidden;
 }
 .goodCandidatesList, .badCandidatesList {
+  position: relative;
   clear: both;
   overflow-y: auto;
 }
 .dragTargetExplanation {
-  margin-top: 60px;
+  position: absolute;
+  top: 40%;
   text-align: center;
+  width: 100%;
 }
 .separator {
-  float: left;
   width: 100%;
   height: 28px;
   text-align: center;
-  background: white;
   clear: both;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
+
+  @include gradient($lightGray);
+  @include dropShadow(4px, 0.2);
+  border: 1px solid #ccc;
+  border-left: 1px solid $lightGray;
+  border-right: 1px solid $lightGray;
+
+  .up, .down {
+    display: inline-block;
+    padding: 5px 10px;
+    background-repeat: no-repeat;
+  }
 
   .up {
-    display: inline-block;
-    background: url("/images/arrow_up_black.png");
-    background-repeat: no-repeat;
-    padding: 5px 10px;
+    background-image: url("/images/arrow_up_black.png");
+    background-position: left;
     padding-left: 20px
   }
   .down {
-    display: inline-block;
-    background: url("/images/arrow_down_black.png");
-    background-repeat: no-repeat;
+    background-image: url("/images/arrow_down_black.png");
     background-position: right;
-    padding: 5px 10px;
     padding-right: 20px
   }
 }
@@ -162,5 +190,13 @@
 
   &.ui-draggable-dragging {
 
+  }
+
+  &.ranked {
+//    background-color: blue;
+  }
+
+  &.unranked {
+//    background-color: red;
   }
 }
