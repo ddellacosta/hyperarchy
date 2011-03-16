@@ -3,8 +3,7 @@ _.constructor("Views.ColumnLayout.RecordLi", View.Template, {
     var rootAttributes = template.rootAttributes || {};
     li(rootAttributes, function() {
       a({'class': "body"}).ref("body").click('expand');
-      div({'class': "expandIcon"}).ref("expandIcon");
-      template.additionalIcons();
+      template.icons();
     }).ref("li");
   }},
 

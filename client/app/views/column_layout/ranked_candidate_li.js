@@ -3,9 +3,12 @@ _.constructor("Views.ColumnLayout.RankedCandidateLi", Views.ColumnLayout.Candida
   rootAttributes: {'class': "ranked candidate"},
 
   icons: function() { with(this.builder) {
-    div({'class': "candidateIcon unrankCandidate", style: "display: none;"})
-      .ref('destroyRankingButton')
-      .click('destroyRanking');
+    div({'class': "liIcons"}, function() {
+      div({'class': "unrankCandidate", style: "display: none;"})
+        .ref('destroyRankingButton')
+        .click('destroyRanking');
+      div({'class': "loadingIcon", style: "display: none;"}).ref("loadingIcon");
+    });
   }},
 
   viewProperties: {
@@ -49,13 +52,13 @@ _.constructor("Views.ColumnLayout.RankedCandidateLi", Views.ColumnLayout.Candida
     },
 
     startLoading: function() {
-//      this.destroyRankingButton.hide();
-//      this.loadingIcon.show();
+      this.destroyRankingButton.hide();
+      this.loadingIcon.show();
     },
 
     stopLoading: function() {
-//      this.loadingIcon.hide();
-//      this.destroyRankingButton.show();
+      this.loadingIcon.hide();
+      this.destroyRankingButton.show();
     }
   }
 });
