@@ -5,9 +5,12 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         template.headerContent();
       }).ref("header");
       div({'class': "columnBody"}, function() {
-        subview('mainList', Views.SortedList, {
-          rootAttributes: {'class': template.tableName+"List"}
-        });
+        div({'class': "listContainer"}, function() {
+          subview('mainList', Views.SortedList, {
+            rootAttributes: {'class': template.tableName+"List"}
+          });
+          div({'class': "listLoading"}).ref("mainLoading");
+        }).ref("mainListContainer");
         subview('detailsArea', template.detailsTemplate);
         template.additionalBodyContent();
       }).ref("body");
@@ -39,7 +42,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         });
       });
       this.detailsArea.containingView = this;
-
       this.defer(this.hitch('adjustHeight'));
     },
 
@@ -81,7 +83,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         if (! id) return;
         var selectedLi = this.mainList.elementsById[id];
         if (! selectedLi) return;
-
         this.mainList.children().removeClass("selected");
         selectedLi.addClass("selected");
         this.detailsArea.recordId(id);
@@ -90,12 +91,12 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
 
     showMainListAndDetailsArea: function() {
       this.header.show();
-      this.mainList.removeClass('columnRight columnFull');
-      this.mainList.addClass('columnLeft');
+      this.mainListContainer.removeClass('columnRight columnFull');
+      this.mainListContainer.addClass('columnLeft');
       this.detailsArea.removeClass('columnLeft columnFull');
       this.detailsArea.addClass('columnRight');
       this.body.children().hide();
-      this.mainList.show();
+      this.mainListContainer.show();
       this.detailsArea.show();
       this.adjustHeight();
     },
@@ -116,18 +117,16 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     },
 
     startLoading: function() {
-      this.body.children().each(function(i, bodyElement) {
-        if (bodyElement.startLoading) {
-          bodyElement.startLoading();
-        }
-      });
+      this.mainList.hide();
+      this.mainLoading.show();
+      this.detailsArea.startLoading();
       this.adjustHeight();
     },
 
     stopLoading: function() {
-      this.body.children().each(function(bodyElement) {
-        if (bodyElement.stopLoading) bodyElement.stopLoading();
-      });
+      this.mainLoading.hide();
+      this.mainList.show();
+      this.detailsArea.stopLoading();
       this.adjustHeight();
     },
 

@@ -1,7 +1,5 @@
-_.constructor("Views.ColumnLayout.CommentLi", Views.ColumnLayout.RecordLi, {
-  rootAttributes: {'class': "comment"},
-
-  viewProperties: {
-
-  }
+_.constructor("Views.ColumnLayout.CommentLi", View.Template, {
+  content: function() {with(this.builder) {
+    div();
+  }}
 });

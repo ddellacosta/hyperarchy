@@ -1,7 +1,7 @@
 _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
   content: function() {with(this.builder) {
-    div({'class': _.singularize(template.tableName)+"Details"}, function() {
-      div({'class': "detailsContainer"}, function() {
+    div({'class': "detailsContainer"}, function() {
+      div({'class': _.singularize(template.tableName) + "Details"}, function() {
 
         h2({'class': "body"}).ref("body");
         div({'class': "details"}).ref("details");
@@ -24,7 +24,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
             });
           }, this);
         }).ref("childLinksList");
-
       });
     });
   }},
@@ -120,6 +119,14 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         var article = _(informalName).singularize()[0].match(/[aeiou]/) ? "an " : "a ";
         linkText.html("Add " + article + _(informalName).singularize());
       }
+    },
+
+    startLoading: function() {
+
+    },
+
+    stopLoading: function() {
+
     }
   }
 });

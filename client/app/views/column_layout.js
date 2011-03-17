@@ -1,7 +1,6 @@
 //= require "column_layout/columns_list"
 //= require "column_layout/column_li"
 
-//= require "column_layout/record_li"
 //= require "column_layout/election_li"
 //= require "column_layout/candidate_li"
 //= require "column_layout/ranked_candidate_li"

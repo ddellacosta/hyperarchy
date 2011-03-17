@@ -1,23 +1,28 @@
 _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
-    div({'class': "rankedCandidatesList"}, function() {
-      ol({'class': "goodCandidatesList"}, function() {
-        span({'class': "dragTargetExplanation", style: "display: none;"}, function() {
-          raw("Drag answers you <em>like</em> here, <br /> with the best at the top.");
-        }).ref('goodCandidatesExplanation');
-      }).ref("goodCandidatesList");
-      div({'class': "separator"}, function() {
-        div({'class': "up"}, "good ideas");
-        div({'class': "down"}, "bad ideas");
-      }).ref('separator');
+    div({'class': "listContainer"}, function() {
+      ol({'class': "rankedCandidatesList"}, function() {
 
-      ol({'class': "badCandidatesList"}, function() {
-        span({'class': "dragTargetExplanation", style: "display: none;"}, function() {
-          raw("Drag answers you <em>dislike</em> here, <br /> with the worst at the bottom.");
-        }).ref('badCandidatesExplanation');
-      }).ref('badCandidatesList');
+        li({'class': "dragTarget"}, function() {
+          template.dragTargetContent()
+        }).ref('goodCandidatesDragTarget');
+
+        li({'class': "separator"}, function() {
+          div({'class': "up"}, "good ideas");
+          div({'class': "down"}, "bad ideas");
+        }).ref('separator');
+
+        li({'class': "dragTarget"}, function() {
+          template.dragTargetContent()
+        }).ref('badCandidatesDragTarget');
+
+      }).ref('rankedCandidatesList');
+      div({'class': "listLoading", style: "display: none"}).ref('loading');
     });
   }},
+
+  // the user's own ranked candidates list has explanations
+  dragTargetContent: function() {},
 
   viewProperties: {
 
@@ -35,93 +40,114 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
     populateRankings: function() {
       this.empty();
       this.rankingsRelation().each(function(ranking) {
-        var candidate = Candidate.find(ranking.candidateId());
-        var li = Views.ColumnLayout.RankedCandidateLi.toView({record: candidate});
-        var list = (ranking.position() > 0) ? this.goodCandidatesList : this.badCandidatesList;
-        list.append(li);
+        var li = Views.ColumnLayout.RankedCandidateLi.toView({record: ranking.candidate()});
+        li.stopLoading();
+        if (ranking.position() > 0) {
+          this.goodCandidatesDragTarget.hide();
+          this.separator.before(li);
+        } else {
+          this.badCandidatesDragTarget.hide();
+          this.rankedCandidatesList.append(li);
+        }
       }, this);
     },
 
     subscribeToRankingsChanges: function() {
       var rankings = this.rankingsRelation();
+      this.subscriptions.add(rankings.onRemove(function(ranking) {
+        this.findLi(ranking.candidate()).remove();
+        this.showOrHideDragTargets();
+      }, this));
       this.subscriptions.add(rankings.onInsert(function(ranking, index) {
         this.insertRankedCandidateLi(ranking, index);
       }, this));
       this.subscriptions.add(rankings.onUpdate(function(ranking, changes, index) {
         this.insertRankedCandidateLi(ranking, index);
       }, this));
-      this.subscriptions.add(rankings.onRemove(function(ranking) {
-        this.findLi(ranking.candidate()).remove();
-      }, this));
     },
 
     insertRankedCandidateLi: function(ranking, index) {
-      var li = this.findOrCreateRankedCandidateLi(ranking.candidate()).detach();
-      var containingList, nextLi;
-      if (ranking.position() > 0) {
-        nextLi = this.goodCandidatesList.find('li.candidate').eq(index);
-        containingList = this.goodCandidatesList;
+      var li = this.findOrCreateRankedLi(ranking.candidate()).detach();
+      if (ranking.position() < 0) index++; // to skip the separator element
+      var precedes = this.rankedCandidatesList.children("li.candidate,li.separator").eq(index);
+      if (precedes.length > 0) {
+        precedes.before(li);
       } else {
-        nextLi = this.find("li.candidate").eq(index);
-        containingList = this.badCandidatesList;
+        this.rankedCandidatesList.append(li);
       }
-      if (nextLi.length > 0) li.insertBefore(nextLi);
-      else                   li.appendTo(containingList);
       li.stopLoading();
-      this.showOrHideDragTargetExplanations();
+      this.showOrHideDragTargets();
     },
 
-    findOrCreateRankedCandidateLi: function(candidate) {
-      return this.findPreviouslyRankedLi(candidate) ||
-             Views.ColumnLayout.RankedCandidateLi.toView({record: candidate});
+    findOrCreateRankedLi: function(candidate) {
+      return this.findRankedLi(candidate) ||
+        Views.ColumnLayout.RankedCandidateLi.toView({record: candidate});
     },
 
-    findPreviouslyRankedLi: function(candidate) {
-      var li = this.find("li.ranked[candidateId='" + candidate.id() + "']");
-      return li.length > 0 ? li.view() : null;
+    findRankedLi: function(candidate) {
+      var previouslyRankedLi = this.rankedCandidatesList.find("li.ranked.candidate[candidateId='" + candidate.id() + "']");
+      return previouslyRankedLi.length > 0 ? previouslyRankedLi.view() : null;
     },
 
     findLi: function(candidate) {
-      var li = this.find("li[candidateId='" + candidate.id() + "']");
+      var li = this.rankedCandidatesList.find("li[candidateId='" + candidate.id() + "']");
       return li.view() ? li.view() : li;
     },
 
-    showOrHideDragTargetExplanations: function() {
-      if (this.hasPositiveRankings()) {
-        this.goodCandidatesExplanation.hide();
-      } else {
-        this.goodCandidatesExplanation.show();
-      }
-      if (this.hasNegativeRankings()) {
-        this.badCandidatesExplanation.hide();
-      } else {
-        this.badCandidatesExplanation.show();
-      }
-    },
-
-    hasPositiveRankings: function() {
-      return this.goodCandidatesList.find('.candidate').length > 0;
-    },
-
-    hasNegativeRankings: function() {
-      return this.badCandidatesList.find('.candidate').length > 0;
-    },
-
     empty: function() {
-      this.goodCandidatesList.find('li.candidate').remove();
-      this.badCandidatesList.find('li.candidate').remove();
-      this.defer(this.hitch('showOrHideDragTargetExplanations'));
+      this.rankedCandidatesList.find("li.candidate").each(function() {
+        $(this).view().remove();
+      });
+      this.find('.dragTarget').show();
+      this.adjustHeight();
     },
 
     adjustHeight: function() {
-      this.fillContainingVerticalSpace();
-      var height = (this.height() - 28) / 2;
-      this.goodCandidatesList.css('height', height);
-      this.badCandidatesList.css('height', height);
+      var dragTargetHeight = (this.height() - this.separator.outerHeight()) / 2;
+      this.goodCandidatesDragTarget.height(dragTargetHeight);
+      this.badCandidatesDragTarget.height(dragTargetHeight);
+    },
+
+    fadeIn: function($super) {
+      $super();
+      this.adjustHeight();
     },
 
     afterShow: function() {
       this.adjustHeight();
+    },
+
+    showOrHideDragTargets: function() {
+      if (this.hasPositiveRankings()) {
+        this.goodCandidatesDragTarget.hide();
+      } else {
+        this.goodCandidatesDragTarget.show();
+      }
+      if (this.hasNegativeRankings()) {
+        this.badCandidatesDragTarget.hide();
+      } else {
+        this.badCandidatesDragTarget.show();
+      }
+      this.adjustHeight();
+    },
+
+    hasPositiveRankings: function() {
+      return this.separator.prevAll('.candidate').length > 0;
+    },
+
+    hasNegativeRankings: function() {
+      return this.separator.nextAll('.candidate').length > 0;
+    },
+
+    startLoading: function() {
+      this.empty();
+      this.rankedCandidatesList.children().hide();
+      this.loading.show();
+    },
+
+    stopLoading: function() {
+      this.loading.hide();
+      this.rankedCandidatesList.children().show();
     }
   }
 });

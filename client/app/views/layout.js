@@ -2,7 +2,7 @@ _.constructor("Views.Layout", View.Template, {
   content: function() { with(this.builder) {
     div({id: "application"}, function() {
 
-      div({id: "header"}, function() {
+      div({id: "globalHeader"}, function() {
         div({id: "logoWrapper"}, function() {
           div({id: "logo"}).click('goToLastOrganization');
         });

@@ -49,12 +49,12 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
 
     showMainListAndRankedList: function() {
       this.header.show();
-      this.mainList.removeClass('columnRight columnFull');
-      this.mainList.addClass('columnLeft');
+      this.mainListContainer.removeClass('columnRight columnFull');
+      this.mainListContainer.addClass('columnLeft');
       this.rankedList.removeClass('columnLeft columnFull');
       this.rankedList.addClass('columnRight');
       this.body.children().hide();
-      this.mainList.show();
+      this.mainListContainer.show();
       this.rankedList.show();
     },
 

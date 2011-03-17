@@ -1,22 +1,28 @@
-_.constructor("Views.ColumnLayout.RankedCandidateLi", Views.ColumnLayout.CandidateLi, {
-
-  rootAttributes: {'class': "ranked candidate"},
-
-  icons: function() { with(this.builder) {
-    div({'class': "liIcons"}, function() {
-      div({'class': "unrankCandidate", style: "display: none;"})
-        .ref('destroyRankingButton')
-        .click('destroyRanking');
-      div({'class': "loadingIcon", style: "display: none;"}).ref("loadingIcon");
-    });
+_.constructor("Views.ColumnLayout.RankedCandidateLi", View.Template, {
+  content: function() {with(this.builder) {
+    li({'class': "ranked candidate"}, function() {
+      span({'class': "liBody"}).ref("body").click('expand');
+      div({'class': "loadingIcon liIcon", style: "display: none;"}).ref('loadingIcon');
+      div({'class': "unrankIcon liIcon", style: "display: none;"}).
+        ref('unrankIcon').
+        click('unrankCandidate');
+    }).ref("li");
   }},
 
   viewProperties: {
-    initialize: function($super) {
-      $super();
-      if (!this.record) this.record = this.ranking.candidate();
-      if (!this.ranking) this.ranking = this.record.rankingByCurrentUser().first();
-      if (this.ranking) this.rankingPosition = this.ranking.position();
+
+    initialize: function() {
+      this.candidate = this.candidate || this.record;
+      this.attr("candidateId", this.record.id());
+      this.populateContent();
+
+      if (!this.candidate) this.candidate = this.ranking.candidate();
+      if (!this.ranking)   this.ranking   = this.candidate.rankingByCurrentUser().first();
+      if (this.ranking)    this.rankingPosition = this.ranking.position();
+    },
+
+    populateContent: function() {
+      this.body.bindHtml(this.record, "body");
     },
 
     handleUpdate: function() {
@@ -31,34 +37,34 @@ _.constructor("Views.ColumnLayout.RankedCandidateLi", Views.ColumnLayout.Candida
     },
 
     determineRankingPosition: function() {
-      var positivelyRanked = this.parent().hasClass('goodCandidatesList');
-      var successor = this.prevAll('.candidate:first').view();
-      var predecessor = this.nextAll('.candidate:first').view();
+      var belowSeparator = this.prevAll('.separator').length > 0;
+      var successor = this.prevAll('.candidate:first, .separator').view();
+      var predecessor = this.nextAll('.candidate:first, .separator').view();
       var successorPosition = successor ? successor.rankingPosition : null;
       var predecessorPosition = predecessor ? predecessor.rankingPosition : null;
-      if (positivelyRanked) {
-        if (!predecessorPosition) predecessorPosition = 0;
-        if (!successorPosition) successorPosition = predecessorPosition + 128;
-      } else {
+      if (belowSeparator) {
         if (!successorPosition) successorPosition = 0;
         if (!predecessorPosition) predecessorPosition = successorPosition - 128;
+      } else {
+        if (!predecessorPosition) predecessorPosition = 0;
+        if (!successorPosition) successorPosition = predecessorPosition + 128;
       }
       return (predecessorPosition + successorPosition) / 2;
     },
 
-    destroyRanking: function() {
+    unrankCandidate: function() {
       this.startLoading();
       this.ranking.destroy();
     },
 
     startLoading: function() {
-      this.destroyRankingButton.hide();
+      this.unrankIcon.hide();
       this.loadingIcon.show();
     },
 
     stopLoading: function() {
       this.loadingIcon.hide();
-      this.destroyRankingButton.show();
+      this.unrankIcon.show();
     }
   }
 });
