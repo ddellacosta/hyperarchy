@@ -5,9 +5,10 @@
 
 
 // global header section
-#header {
+#globalHeader {
+  width: 96%;
+  margin: 0 auto;
   height: 30px;
-  padding: 0 30px;
   min-width:  $minWidth;
 }
 
@@ -38,30 +39,32 @@
 
 // main content section
 #main {
-  width: 100%;
+  width: 96%;
+  margin: 0 auto;
   min-width: $minWidth;
+  overflow: hidden;
+  @include borderRadiusTop(6px);
+  @include dropShadow(6px, 0.4);
 }
 
 #navBar {
   height: 45px;
   width: 100%;
   overflow: hidden;
-
   @include gradient($darkGray, 10%);
   border-bottom: solid 5px lighten(lighten($darkGray, 3%), 6%);
   color: white;
 }
 
 .navBarContent {
-  height: 100%;
-  padding: 0 30px;
+  margin: 5px 30px;
+  margin-bottom: 0;
 }
 
 .navBarHeader {
   display: inline-block;
-  margin-top: 5px;
-  margin-right: 24px;
   font-size: 24px;
+  margin-right: 24px;
   letter-spacing: 1.2;
   cursor: pointer;
 }
@@ -74,7 +77,7 @@
   font-size: 18px;
 
   &.active {
-    padding-bottom: 12px;
+    padding-bottom: 20px;
     @include borderRadiusTop(4px);
     @include dropShadow(4px);
     background-color: lighten(lighten($darkGray, 3%), 6%);
@@ -88,37 +91,6 @@
   }
 
   &#backToLastOrganization {
-    background-image: url(/images/undo_12x12_light.png);
-  }
-}
-
-#subNavBar {
-  width: 100%;
-  height: 5px;
-  position: relative;
-  z-index: 20;
-  overflow: hidden;
-
-  @include noSelect;
-  @include gradient(lighten($darkGray, 3%), 6%);
-  border-bottom: solid 1px darken($darkGray, 5%);
-  color: $lighterGray;
-  font-size: 14px;
-}
-
-.subNavBarContent {
-  padding: 5px 20px;
-  overflow: hidden;
-}
-
-.subNavBarLink {
-  color: lighten($gray, 25%);
-  padding: 0 12px;
-
-  &#back {
-    padding-left: 20px;
-    background-repeat: no-repeat;
-    background-position: 3px;
     background-image: url(/images/undo_12x12_light.png);
   }
 }

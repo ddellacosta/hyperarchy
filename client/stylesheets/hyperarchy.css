@@ -162,15 +162,6 @@ h2 {
 .clickable {
   cursor: pointer; }
 
-.loading {
-  background-repeat: no-repeat;
-  background-image: url(/images/loading_arrows_light.gif);
-  background-position: 2px 2px;
-  width: 20px;
-  height: 20px; }
-  .loading.inactive {
-    background: none; }
-
 .bigLoading {
   background-repeat: no-repeat;
   background-image: url(/images/loading_arrows_large_white_bg.gif);
@@ -179,6 +170,7 @@ h2 {
   .bigLoading.matchesBodyBackground {
     background-image: url(/images/loading_arrows_large_e6e6e6_bg.gif); }
   .bigLoading.grayBackground {
+    background-image: url(/images/loading_arrows_large_e6e6e6_bg.gif);
     background-image: url(/images/loading_arrows_large_gray_bg.gif); }
 
 #notification {
@@ -567,9 +559,10 @@ body.legal {
   -moz-user-select: none;
   overflow: hidden; }
 
-#header {
+#globalHeader {
+  width: 96%;
+  margin: 0 auto;
   height: 30px;
-  padding: 0 30px;
   min-width: 800px; }
 
 .headerItem {
@@ -594,8 +587,16 @@ body.legal {
   cursor: pointer; }
 
 #main {
-  width: 100%;
-  min-width: 800px; }
+  width: 96%;
+  margin: 0 auto;
+  min-width: 800px;
+  overflow: hidden;
+  -webkit-border-top-left-radius: 6px;
+  -webkit-border-top-right-radius: 6px;
+  -moz-border-radius-topleft: 6px;
+  -moz-border-radius-topright: 6px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 6px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 6px; }
 
 #navBar {
   height: 45px;
@@ -608,14 +609,13 @@ body.legal {
   color: white; }
 
 .navBarContent {
-  height: 100%;
-  padding: 0 30px; }
+  margin: 5px 30px;
+  margin-bottom: 0; }
 
 .navBarHeader {
   display: inline-block;
-  margin-top: 5px;
-  margin-right: 24px;
   font-size: 24px;
+  margin-right: 24px;
   letter-spacing: 1.2;
   cursor: pointer; }
 
@@ -626,7 +626,7 @@ body.legal {
   color: white;
   font-size: 18px; }
   .navBarLink.active {
-    padding-bottom: 12px;
+    padding-bottom: 20px;
     -webkit-border-top-left-radius: 4px;
     -webkit-border-top-right-radius: 4px;
     -moz-border-radius-topleft: 4px;
@@ -640,34 +640,6 @@ body.legal {
     background-repeat: no-repeat;
     background-position: 3px; }
   .navBarLink#backToLastOrganization {
-    background-image: url(/images/undo_12x12_light.png); }
-
-#subNavBar {
-  width: 100%;
-  height: 5px;
-  position: relative;
-  z-index: 20;
-  overflow: hidden;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  background-color: #4b4e52;
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#5a5d62), to(#4b4e52));
-  background: -moz-linear-gradient(top, #5a5d62, #4b4e52);
-  border-bottom: solid 1px #38393d;
-  color: #f4f4f4;
-  font-size: 14px; }
-
-.subNavBarContent {
-  padding: 5px 20px;
-  overflow: hidden; }
-
-.subNavBarLink {
-  color: #ababab;
-  padding: 0 12px; }
-  .subNavBarLink#back {
-    padding-left: 20px;
-    background-repeat: no-repeat;
-    background-position: 3px;
     background-image: url(/images/undo_12x12_light.png); }
 
 #content {
@@ -1309,16 +1281,16 @@ body.legal {
   overflow: hidden;
   position: absolute;
   height: 100%;
-  border-right: 8px ridge #ddd; }
+  border-right: 8px solid gray; }
 
 .columnView, .comments, .elections, .candidates {
   height: 100%;
-  margin: 0 20px;
-  margin-left: 28px;
+  margin: 0 15px;
+  margin-left: 23px;
   padding-top: 10px; }
 
 .columnHeader {
-  height: 30px; }
+  height: 40px; }
 
 .columnBody {
   position: relative;
@@ -1339,34 +1311,58 @@ body.legal {
 
 .columnFull {
   width: 100%;
-  left: 0; }
+  left: 0;
+  border: none !important; }
+  .columnFull .recordDetails, .columnFull .electionDetails, .columnFull .candidateDetails {
+    padding: 0; }
 
-.recordsList, .commentsList, .electionsList, .candidatesList, .rankedCandidatesList {
-  overflow-y: auto;
+.listContainer {
   background-color: #f1f1f1;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset; }
 
+.recordsList, .commentsList, .electionsList, .candidatesList, .rankedCandidatesList {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto; }
+
 .recordLi, .comment, .election, .candidate {
+  position: relative;
   padding: 5px 10px;
   font-size: 15px;
   border: 1px solid #ccc;
   border-top: none;
   background-color: white;
+  cursor: pointer;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px; }
+  .recordLi:hover, .comment:hover, .election:hover, .candidate:hover {
+    background-color: #f3f3ff; }
   .recordLi.selected, .selected.comment, .selected.election, .selected.candidate {
     background-color: #ddddff; }
-  .recordLi .body, .comment .body, .election .body, .candidate .body {
-    color: black; }
+    .recordLi.selected .liIcon, .selected.comment .liIcon, .selected.election .liIcon, .selected.candidate .liIcon {
+      background-image: url(/images/play_12x16_dark.png) !important; }
 
-.recordDetails, .candidateDetails {
-  border: 1px solid #ccc; }
+.liBody {
+  color: black; }
+
+.liIcon {
+  width: 20px;
+  height: 20px;
+  float: right;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .detailsContainer {
+  border: 1px solid #ccc; }
+
+.recordDetails, .electionDetails, .candidateDetails {
   padding: 10px; }
+  .recordDetails .body, .electionDetails .body, .candidateDetails .body {
+    margin-bottom: 10px; }
 
 .creatorInfo {
   margin: 5px 0; }
@@ -1388,29 +1384,31 @@ body.legal {
   margin-top: 20px; }
 
 .childLinkContainer {
-  padding: 5px 10px;
-  margin: 5px 0;
+  padding: 10px 10px;
+  margin: 10px 0;
   background-color: #f4f4f4; }
   .childLinkContainer.selected {
     background-color: #ddddff; }
 
 .childLink {
   color: black;
-  font-size: 15px; }
+  font-size: 18px; }
 
-.rankedCandidatesList {
-  overflow: hidden; }
+.listLoading {
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(/images/loading_arrows_large_gray_bg.gif); }
 
-.goodCandidatesList, .badCandidatesList {
-  position: relative;
-  clear: both;
-  overflow-y: auto; }
-
-.dragTargetExplanation {
-  position: absolute;
-  top: 40%;
-  text-align: center;
-  width: 100%; }
+.dragTarget {
+  width: 100%;
+  position: relative; }
+  .dragTarget .dragTargetExplanation {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 40%; }
 
 .separator {
   width: 100%;
@@ -1422,9 +1420,8 @@ body.legal {
   background: -moz-linear-gradient(top, white, #f1f1f1);
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
-  border: 1px solid #ccc;
-  border-left: 1px solid #f1f1f1;
-  border-right: 1px solid #f1f1f1; }
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc; }
   .separator .up, .separator .down {
     display: inline-block;
     padding: 5px 10px;
@@ -1437,3 +1434,18 @@ body.legal {
     background-image: url("/images/arrow_down_black.png");
     background-position: right;
     padding-right: 20px; }
+
+.expandIcon, .rankedIcon.expandIcon {
+  background-image: url(/images/play_12x16_light.png); }
+
+.rankedIcon {
+  background-image: url(/images/check_12x10_light.png); }
+
+.unrankIcon {
+  background-image: url(/images/x_11x11_light.png); }
+  .unrankIcon:hover {
+    cursor: pointer;
+    background-image: url(/images/x_11x11_dark.png); }
+
+.loadingIcon {
+  background-image: url(/images/loading_arrows_light.gif); }
