@@ -1,24 +1,26 @@
 // containers
 #columns {
-  position: relative;
   width:  100%;
   height: 100%;
+  position: relative;
   @include noSelect;
 }
 .column {
-  overflow: hidden;
-  position: absolute;
   height: 100%;
-  border-right: 8px solid gray;
-}
+  position: absolute;
+  overflow: hidden;
 
+  &.last .columnView {
+    border: none;
+  }
+}
 
 // inherited by multiple column views
 .columnView {
   height: 100%;
-  margin: 0 15px;
-  margin-left: 23px;
+  padding: 0 15px;
   padding-top: 10px;
+  border-right: 10px ridge $lightGray;
 }
 .columnHeader {
   height: 40px;
@@ -123,18 +125,35 @@
 .childLinks {
   margin-top: 20px;
 }
-.childLinkContainer {
+.childLink {
   padding: 10px 10px;
   margin: 10px 0;
   background-color: $lighterGray;
+  cursor: pointer;
+  font-size: 18px;
+
+  &:hover {
+    background-color: #f3f3ff;
+  }
 
   &.selected {
     background-color: #ddddff;
+
+    .childLinkIcon {
+      background-image: url(/images/play_12x16_dark.png);
+    }
   }
 }
-.childLink {
-  color: black;
-  font-size: 18px;
+.childLinkIcon {
+  width: 20px;
+  height: 20px;
+  float: right;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.expandIcon {
+    background-image: url(/images/play_12x16_light.png);
+  }
 }
 
 
@@ -206,8 +225,10 @@
   height: 28px;
   text-align: center;
   clear: both;
+  color: white;
 
-  @include gradient($lightGray);
+//  @include gradient(#555, 35%);
+  @include glossyColor(#666);
   @include dropShadow(4px, 0.2);
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -219,12 +240,12 @@
   }
 
   .up {
-    background-image: url("/images/arrow_up_black.png");
+    background-image: url("/images/arrow_up_white.png");
     background-position: left;
     padding-left: 20px
   }
   .down {
-    background-image: url("/images/arrow_down_black.png");
+    background-image: url("/images/arrow_down_white.png");
     background-position: right;
     padding-right: 20px
   }

@@ -38,16 +38,18 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     setNextColumnState: function(newStateForNextColumn) {
       var newStateForThisColumn = _.clone(this.state());
       newStateForThisColumn.recordId = newStateForNextColumn.parentRecordId;
-      this.state(newStateForThisColumn);
+      newStateForThisColumn.childTableName = newStateForNextColumn.tableName;
 
       var columnNumber     = this.number();
       var lastColumnNumber = this.containingList.numVisibleColumns() - 1;
       if (columnNumber === lastColumnNumber) {
+        if (this.number() == 1) newStateForThisColumn.parentTableName = null;
         this.containingList.scrollRightAndSetRightColumnState(newStateForNextColumn);
       } else {
         var nextColumn = this.containingList.visibleColumns[columnNumber + 1];
         this.containingList.setColumnState(nextColumn, newStateForNextColumn);
       }
+      this.state(newStateForThisColumn);
     },
 
     number: {

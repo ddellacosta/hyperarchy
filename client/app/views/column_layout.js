@@ -19,5 +19,4 @@
 //= require "column_layout/votes_view"
 
 //= require "column_layout/ranked_candidates_list"
-//= require "column_layout/own_ranked_candidates_list"
 

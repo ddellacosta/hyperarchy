@@ -52,6 +52,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
           (state.parentTableName === oldState.parentTableName));
         if (relationIsTheSame) {
           this.selectedRecordId(state.recordId);
+          this.childTableName(state.childTableName);
           return;
         }
         var multipleRecordsSpecified = (state.parentTableName && state.parentRecordId);
@@ -69,6 +70,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
           Server.fetch(relationsToFetch).onSuccess(function() {
             this.mainRelation(mainRelation);
             this.selectedRecordId(state.recordId);
+            this.childTableName(state.childTableName);
             if (this.isInFirstColumn()) this.setCurrentOrganizationId();
             this.stopLoading();
           }, this);
@@ -86,6 +88,12 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         this.mainList.children().removeClass("selected");
         selectedLi.addClass("selected");
         this.detailsArea.recordId(id);
+      }
+    },
+
+    childTableName: {
+      afterChange: function(childTableName) {
+        this.detailsArea.selectedChildLink(childTableName);
       }
     },
 
@@ -136,8 +144,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
 
     afterShow: function() {
       this.adjustHeight();
-    },
-
-    relativeWidth: 1
+    }
   }
 });

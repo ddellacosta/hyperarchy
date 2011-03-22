@@ -4,7 +4,9 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
       ol({'class': "rankedCandidatesList"}, function() {
 
         li({'class': "dragTarget"}, function() {
-          template.dragTargetContent()
+          span({'class': "dragTargetExplanation"}, function() {
+            raw("Drag answers you <em>like</em> here, <br /> with the best at the top.")
+          });
         }).ref('goodCandidatesDragTarget');
 
         li({'class': "separator"}, function() {
@@ -13,7 +15,9 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
         }).ref('separator');
 
         li({'class': "dragTarget"}, function() {
-          template.dragTargetContent()
+          span({'class': "dragTargetExplanation"}, function() {
+            raw("Drag answers you <em>dislike</em> here, <br /> with the worst at the bottom.")
+          });
         }).ref('badCandidatesDragTarget');
 
       }).ref('rankedCandidatesList');
@@ -34,6 +38,53 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
       afterChange: function(rankingsRelation) {
         this.populateRankings();
         this.subscribeToRankingsChanges();
+      }
+    },
+
+    setupSortable: function() {
+      this.rankedCandidatesList.sortable({
+        tolerance: "pointer",
+        update: this.hitch('handleUpdate'),
+        receive: this.hitch('handleReceive'),
+        sort: this.hitch('handleSort'),
+        helper: 'clone',
+        appendTo: this.containingView
+      });
+
+      var returnFalse = function(e) { return false; };
+      this.separator.mousedown(returnFalse);
+      this.goodCandidatesDragTarget.mousedown(returnFalse);
+      this.badCandidatesDragTarget.mousedown(returnFalse);
+    },
+
+    handleReceive: function(event, ui) {
+      var candidate = Candidate.find(ui.item.attr('candidateId'));
+      var rankedCandidateView = this.findOrCreateRankedLi(candidate).detach(); // may have already been ranked before
+      this.findLi(candidate).replaceWith(rankedCandidateView); // replace the clone of the draggable li with a real view
+    },
+
+    handleUpdate: function(event, ui) {
+      var candidate = Candidate.find(ui.item.attr('candidateId'));
+      var rankedCandidateLi = this.findRankedLi(candidate);
+      Application.currentOrganization().ensureCurrentUserCanParticipate()
+        .onSuccess(function() {
+          this.showOrHideDragTargets();
+          rankedCandidateLi.handleUpdate();
+        }, this)
+        .onFailure(function() {
+          rankedCandidateLi.remove();
+        }, this);
+    },
+
+    handleSort:  function(event, ui) {
+      var placeholder = ui.placeholder;
+      var beforeSeparator = placeholder.nextAll(".separator").length === 1;
+      if (beforeSeparator && this.goodCandidatesDragTarget.is(":visible")) {
+        placeholder.hide();
+      } else if (!beforeSeparator && this.badCandidatesDragTarget.is(":visible")) {
+        placeholder.hide();
+      } else {
+        placeholder.show();
       }
     },
 
@@ -94,6 +145,28 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
       return li.view() ? li.view() : li;
     },
 
+    showOrHideDragTargets: function() {
+      if (this.hasPositiveRankings()) {
+        this.goodCandidatesDragTarget.hide();
+      } else {
+        this.goodCandidatesDragTarget.show();
+      }
+      if (this.hasNegativeRankings()) {
+        this.badCandidatesDragTarget.hide();
+      } else {
+        this.badCandidatesDragTarget.show();
+      }
+      this.adjustHeight();
+    },
+
+    hasPositiveRankings: function() {
+      return this.separator.prevAll('.candidate').length > 0;
+    },
+
+    hasNegativeRankings: function() {
+      return this.separator.nextAll('.candidate').length > 0;
+    },
+
     empty: function() {
       this.rankedCandidatesList.find("li.candidate").each(function() {
         $(this).view().remove();
@@ -117,27 +190,6 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
       this.adjustHeight();
     },
 
-    showOrHideDragTargets: function() {
-      if (this.hasPositiveRankings()) {
-        this.goodCandidatesDragTarget.hide();
-      } else {
-        this.goodCandidatesDragTarget.show();
-      }
-      if (this.hasNegativeRankings()) {
-        this.badCandidatesDragTarget.hide();
-      } else {
-        this.badCandidatesDragTarget.show();
-      }
-      this.adjustHeight();
-    },
-
-    hasPositiveRankings: function() {
-      return this.separator.prevAll('.candidate').length > 0;
-    },
-
-    hasNegativeRankings: function() {
-      return this.separator.nextAll('.candidate').length > 0;
-    },
 
     startLoading: function() {
       this.empty();

@@ -4,6 +4,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
   },
 
   viewProperties: {
+
     viewName:    'columns',
     defaultView:  true,
 
@@ -22,11 +23,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     navigate: function(state) {
-      if (this.nextStateIsAlreadySetUp) {
-        this.nextStateIsAlreadySetUp = false;
-        return;
-      }
       var newColumnStates = this.getColumnStatesFromUrlState(state);
+      if (this.statesAreScrolledLeft(newColumnStates)) this.scrollLeft();
+      else if (this.statesAreScrolledRight(newColumnStates)) this.scrollRight();
+
       this.numVisibleColumns(newColumnStates.length);
       _(this.visibleColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
@@ -39,17 +39,19 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     getColumnStatesFromUrlState: function(state) {
       var columnStates = [];
-      var recordId, tableName, parentRecordId, parentTableName;
+      var tableName, parentTableName, childTableName, recordId, parentRecordId;
       for (var i = 0; i < this.maxVisibleColumns; i++) {
-        tableName       = state["col" + (i+1)];
         parentTableName = state["col" + i];
-        recordId        = parseInt(state["id" + (i+1)]);
+        tableName       = state["col" + (i+1)];
+        childTableName  = state["col" + (i+2)];
         parentRecordId  = parseInt(state["id" + i]);
+        recordId        = parseInt(state["id" + (i+1)]);
         if (! tableName) break;
         if (!recordId && !(parentTableName && parentRecordId)) break;
         columnStates[i] = {
           tableName:       tableName,
           parentTableName: parentTableName,
+          childTableName:  childTableName,
           recordId:        recordId,
           parentRecordId:  parentRecordId
         };
@@ -71,6 +73,15 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       return urlState;
     },
 
+    statesAreScrolledLeft: function(columnStates) {
+      if (columnStates[1])
+      return false;
+    },
+
+    statesAreScrolledRight: function(columnStates) {
+      return false;
+    },
+
     numVisibleColumns: {
       afterChange: function(numVisibleColumns) {
         if (numVisibleColumns < 1) this.handleInvalidState();
@@ -90,6 +101,8 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     renumberColumns: function() {
       _(this.visibleColumns).each(function(column, i) {
         column.number(i);
+        column.removeClass("first");
+        column.removeClass("last");
       });
       _(this.visibleColumns).first().addClass("first");
       _(this.visibleColumns).last().addClass("last");
@@ -125,7 +138,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     setColumnState: function(column, columnState) {
       column.state(columnState);
-      this.nextStateIsAlreadySetUp = true;
       $.bbq.pushState(this.getUrlStateFromColumnStates());
     },
 
@@ -134,7 +146,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       newFirstColumn.state(columnState);
       this.defer(function() {
         this.scrollLeft();
-        this.nextStateIsAlreadySetUp = true;
         $.bbq.pushState(this.getUrlStateFromColumnStates());
       });
     },
@@ -144,7 +155,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       newLastColumn.state(columnState);
       this.defer(function() {
         this.scrollRight();
-        this.nextStateIsAlreadySetUp = true;
         $.bbq.pushState(this.getUrlStateFromColumnStates());
       });
     },
@@ -156,18 +166,14 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustWidths: function() {
-      var relativeWidths = [], totalRelativeWidth = 0.0;
+      var percentWidth, percentLeftPosition = 0.0;
+      var relativeWidth, totalRelativeWidth = 1 + (this.numVisibleColumns() - 1) * 1.61;
       _(this.visibleColumns).each(function(column, i) {
-        relativeWidths[i] = column.currentView.relativeWidth;
-        totalRelativeWidth = totalRelativeWidth + relativeWidths[i];
-      });
-
-      var percentWidth, percentLeft = 0.0;
-      _(this.visibleColumns).each(function(column, i) {
-        percentWidth = (relativeWidths[i] / totalRelativeWidth * 100.0);
+        relativeWidth = i == 0 ? 1 : 1.61;
+        percentWidth = (relativeWidth / totalRelativeWidth * 100.0);
         column.css('width', percentWidth + '%');
-        column.css('left',  percentLeft  + '%');
-        percentLeft += percentWidth;
+        column.css('left',  percentLeftPosition  + '%');
+        percentLeftPosition += percentWidth;
       });
     },
 

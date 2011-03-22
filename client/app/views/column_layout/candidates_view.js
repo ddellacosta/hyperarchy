@@ -9,7 +9,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
   }},
 
   additionalBodyContent: function() {with(this.builder) {
-    subview('rankedList', Views.ColumnLayout.OwnRankedCandidatesList, {});
+    subview('rankedList', Views.ColumnLayout.RankedCandidatesList, {});
   }},
 
   viewProperties: {
@@ -19,8 +19,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
       this.rankedList.containingView = this;
       this.rankedList.setupSortable();
     },
-
-    relativeWidth: 2,
 
     mainRelationToFetch: function(state) {
       if (state.parentRecordId) {

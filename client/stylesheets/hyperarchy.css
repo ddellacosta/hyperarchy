@@ -1271,23 +1271,24 @@ body.legal {
   margin-top: -40px; }
 
 #columns {
-  position: relative;
   width: 100%;
   height: 100%;
+  position: relative;
   -webkit-user-select: none;
   -moz-user-select: none; }
 
 .column {
-  overflow: hidden;
-  position: absolute;
   height: 100%;
-  border-right: 8px solid gray; }
+  position: absolute;
+  overflow: hidden; }
+  .column.last .columnView, .column.last .comments, .column.last .elections, .column.last .candidates {
+    border: none; }
 
 .columnView, .comments, .elections, .candidates {
   height: 100%;
-  margin: 0 15px;
-  margin-left: 23px;
-  padding-top: 10px; }
+  padding: 0 15px;
+  padding-top: 10px;
+  border-right: 10px ridge #f1f1f1; }
 
 .columnHeader {
   height: 40px; }
@@ -1383,16 +1384,27 @@ body.legal {
 .childLinks {
   margin-top: 20px; }
 
-.childLinkContainer {
+.childLink {
   padding: 10px 10px;
   margin: 10px 0;
-  background-color: #f4f4f4; }
-  .childLinkContainer.selected {
-    background-color: #ddddff; }
-
-.childLink {
-  color: black;
+  background-color: #f4f4f4;
+  cursor: pointer;
   font-size: 18px; }
+  .childLink:hover {
+    background-color: #f3f3ff; }
+  .childLink.selected {
+    background-color: #ddddff; }
+    .childLink.selected .childLinkIcon {
+      background-image: url(/images/play_12x16_dark.png); }
+
+.childLinkIcon {
+  width: 20px;
+  height: 20px;
+  float: right;
+  background-repeat: no-repeat;
+  background-position: center center; }
+  .childLinkIcon.expandIcon, .childLinkIcon.rankedIcon.expandIcon {
+    background-image: url(/images/play_12x16_light.png); }
 
 .listLoading {
   height: 100%;
@@ -1415,9 +1427,10 @@ body.legal {
   height: 28px;
   text-align: center;
   clear: both;
-  background-color: #f1f1f1;
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#f1f1f1));
-  background: -moz-linear-gradient(top, white, #f1f1f1);
+  color: white;
+  background-color: #666666;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.44)), color-stop(0.5, rgba(255, 255, 255, 0.16)), color-stop(0.51, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.05))), #666666;
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, 0.1) 100%), #666666;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
   border-top: 1px solid #ccc;
@@ -1427,11 +1440,11 @@ body.legal {
     padding: 5px 10px;
     background-repeat: no-repeat; }
   .separator .up {
-    background-image: url("/images/arrow_up_black.png");
+    background-image: url("/images/arrow_up_white.png");
     background-position: left;
     padding-left: 20px; }
   .separator .down {
-    background-image: url("/images/arrow_down_black.png");
+    background-image: url("/images/arrow_down_white.png");
     background-position: right;
     padding-right: 20px; }
 

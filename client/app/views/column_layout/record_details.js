@@ -14,14 +14,13 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
         ul({'class': "childLinks"}, function() {
           _(template.childNames).each(function(informalName, tableName) {
-            li({'class': "childLinkContainer"}, function() {
-              a({'class': "childLink"}, function() {
-                span().ref(tableName + "LinkNumber");
-                raw(' ');
-                span().ref(tableName + "LinkText");
-              }).ref(tableName + "Link").
-                 click("showChildTableInNextColumn", tableName);
-            });
+            li({'class': "childLink"}, function() {
+              div({'class': "childLinkIcon"}).ref(tableName + "LinkIcon");
+              span().ref(tableName + "LinkNumber");
+              raw(' ');
+              span().ref(tableName + "LinkText");
+            }).ref(tableName + "Link").
+               click("showChildTableInNextColumn", tableName);
           }, this);
         }).ref("childLinksList");
       });
@@ -42,17 +41,26 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     votes:      Vote.where({electionId: recordId})
   }},
 
-
   viewProperties: {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
+
     },
 
     recordId: {
       afterChange: function(id) {
         this.childRelations = this.template.childRelations(id);
         this.record(this.template.recordConstructor.find(id));
+      }
+    },
+
+    selectedChildLink: {
+      afterChange: function(selectedTableName) {
+        _(this.childRelations).each(function(relation, tableName) {
+          this[tableName + 'Link'].removeClass('selected');
+        }, this);
+        this[selectedTableName + 'Link'].addClass('selected');
       }
     },
 
@@ -87,6 +95,14 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     populateChildLinks: function() {
       _(this.childRelations).each(function(relation, tableName) {
         this.updateLinkNumber(tableName);
+        var link     = this[tableName + "Link"];
+        var linkIcon = this[tableName + "LinkIcon"];
+        link.mouseover(function() {
+          linkIcon.addClass('expandIcon');
+        });
+        link.mouseout(function() {
+          linkIcon.removeClass('expandIcon');
+        });
       }, this);
     },
 

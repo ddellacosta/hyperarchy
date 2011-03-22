@@ -1,8 +1,8 @@
 _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
   content: function() {with(this.builder) {
     li({'class': "unranked candidate"}, function() {
-      span({'class': "liBody"}).ref("body");
       div({'class': "liIcon"}).ref('rankedOrExpandIcon');
+      span({'class': "liBody"}).ref("body");
     }).ref("li").click('showDetails');
   }},
 
