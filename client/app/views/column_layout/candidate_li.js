@@ -2,8 +2,8 @@ _.constructor("Views.ColumnLayout.CandidateLi", View.Template, {
   content: function() {with(this.builder) {
     li({'class': "unranked candidate"}, function() {
       a({'class': "body"}).ref("body").click('expand');
-      div({'class': "expandIcon", style: "display: none;"}).ref('expandIcon');
-      div({'class': "rankedIcon", style: "display: none;"}).ref('rankedIcon');
+      div({'class': "expand icon", style: "display: none;"}).ref('expandIcon');
+      div({'class': "ranked icon", style: "display: none;"}).ref('rankedIcon');
     }).ref("li").click('showDetails');
   }},
 

@@ -47,17 +47,17 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
 
     showMainListAndRankedList: function() {
       this.header.show();
-      this.mainListContainer.removeClass('columnRight columnFull');
-      this.mainListContainer.addClass('columnLeft');
-      this.rankedList.removeClass('columnLeft columnFull');
-      this.rankedList.addClass('columnRight');
+      this.mainListContainer.removeClass('right full');
+      this.mainListContainer.addClass('left');
+      this.rankedList.removeClass('left full');
+      this.rankedList.addClass('right');
       this.body.children().hide();
       this.mainListContainer.show();
       this.rankedList.show();
     },
 
     adjustHeight: function() {
-      this.body.fillContainingVerticalSpace(20);
+      this.body.fillContainingVerticalSpace();
       this.rankedList.adjustHeight();
     },
 

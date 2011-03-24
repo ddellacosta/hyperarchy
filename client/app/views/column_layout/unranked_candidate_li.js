@@ -1,8 +1,8 @@
 _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
   content: function() {with(this.builder) {
     li({'class': "unranked candidate"}, function() {
-      div({'class': "liIcon"}).ref('rankedOrExpandIcon');
-      span({'class': "liBody"}).ref("body");
+      div({'class': "icon"}).ref('icon');
+      span({'class': "body"}).ref("body");
     }).ref("li").click('showDetails');
   }},
 
@@ -14,9 +14,6 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
       this.subscriptions = new Monarch.SubscriptionBundle;
       this.setupDraggable();
       this.populateContent();
-
-      this.mouseover(this.hitch('showExpandIcon'));
-      this.mouseout(this.hitch('hideExpandIcon'));
     },
 
     populateContent: function() {
@@ -36,7 +33,7 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
 
     setupDraggable: function() {
       this.draggable({
-        connectToSortable: '.rankedCandidatesList',
+        connectToSortable: '.ranked,.candidatesList > ol',
         revert: 'invalid',
         revertDuration: 100,
         helper: this.hitch("createCloneForDragging"),
@@ -56,19 +53,11 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
     },
 
     showRankedIcon: function() {
-      this.rankedOrExpandIcon.addClass('rankedIcon');
+      this.icon.addClass('ranked');
     },
 
     hideRankedIcon: function() {
-      this.rankedOrExpandIcon.removeClass('rankedIcon');
-    },
-
-    showExpandIcon: function() {
-      this.rankedOrExpandIcon.addClass('expandIcon');
-    },
-
-    hideExpandIcon: function() {
-      this.rankedOrExpandIcon.removeClass('expandIcon');
+      this.icon.removeClass('ranked');
     },
 
     createCloneForDragging: function() {

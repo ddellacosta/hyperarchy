@@ -11,6 +11,12 @@ $black: #0D0D10;
 $backgroundGray: #e6e6e6;
 
 
+@mixin borderBox {
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
+
 @mixin noSelect {
   -webkit-user-select: none;
   -moz-user-select: none;

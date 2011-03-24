@@ -1,29 +1,29 @@
 _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
   content: function() {with(this.builder) {
-    div({'class': "detailsContainer"}, function() {
-      div({'class': _.singularize(template.tableName) + "Details"}, function() {
+    div({'class': _.singularize(template.tableName) + "Details"}, function() {
 
+      div({'class': "main"}, function() {
         h2({'class': "body"}).ref("body");
         div({'class': "details"}).ref("details");
 
-        div({'class': "creatorInfo"}, function() {
-          subview('creatorAvatar', Views.Avatar, { size: 40 });
-          div({'class': "creatorName"}, "").ref('creatorName');
-          div({'class': "creationDate"}, "").ref('createdAt');
+        div({'class': "creator"}, function() {
+          subview('avatar', Views.Avatar, { size: 40 });
+          div({'class': "name"}, "").ref('creatorName');
+          div({'class': "date"}, "").ref('createdAt');
         });
-
-        ul({'class': "childLinks"}, function() {
-          _(template.childNames).each(function(informalName, tableName) {
-            li({'class': "childLink"}, function() {
-              div({'class': "childLinkIcon"}).ref(tableName + "LinkIcon");
-              span().ref(tableName + "LinkNumber");
-              raw(' ');
-              span().ref(tableName + "LinkText");
-            }).ref(tableName + "Link").
-               click("showChildTableInNextColumn", tableName);
-          }, this);
-        }).ref("childLinksList");
       });
+
+      ul({'class': "childLinks"}, function() {
+        _(template.childNames).each(function(informalName, tableName) {
+          li({'class': "childLink"}, function() {
+            div({'class': "icon"}).ref(tableName + "LinkIcon");
+            span().ref(tableName + "LinkNumber");
+            raw(' ');
+            span().ref(tableName + "LinkText");
+          }).ref(tableName + "Link").
+             click("showChildTableInNextColumn", tableName);
+        }, this);
+      }).ref("childLinksList");
     });
   }},
 
@@ -71,7 +71,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
           this.details.bindHtml(this.record, "details");
         }
         var creator = User.find(record.creatorId());
-        this.creatorAvatar.user(creator);
+        this.avatar.user(creator);
         this.creatorName.html(htmlEscape(creator.fullName()));
         this.createdAt.html(record.formattedCreatedAt());
 
@@ -95,14 +95,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     populateChildLinks: function() {
       _(this.childRelations).each(function(relation, tableName) {
         this.updateLinkNumber(tableName);
-        var link     = this[tableName + "Link"];
-        var linkIcon = this[tableName + "LinkIcon"];
-        link.mouseover(function() {
-          linkIcon.addClass('expandIcon');
-        });
-        link.mouseout(function() {
-          linkIcon.removeClass('expandIcon');
-        });
       }, this);
     },
 

@@ -559,35 +559,32 @@ body.legal {
   -moz-user-select: none;
   overflow: hidden; }
 
-#globalHeader {
-  width: 96%;
+#header {
+  width: 94%;
   margin: 0 auto;
   height: 30px;
   min-width: 800px; }
-
-.headerItem {
-  display: inline-block;
-  float: right;
-  margin: 5px 10x;
-  padding: 5px 10px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  background-color: #efefef; }
-
-.dropdownLink {
-  display: inline-block;
-  padding-right: 20px;
-  background-image: url(/images/expand_arrow_blue.png);
-  background-position: right;
-  background-repeat: no-repeat; }
-
-#logoWrapper {
-  float: left;
-  margin: 5px;
-  cursor: pointer; }
+  #header > a {
+    display: inline-block;
+    float: right;
+    margin: 5px 10x;
+    padding: 5px 10px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    background-color: #efefef; }
+  #header > .dropdownLink {
+    display: inline-block;
+    padding-right: 20px;
+    background-image: url(/images/expand_arrow_blue.png);
+    background-position: right;
+    background-repeat: no-repeat; }
+  #header > #logo {
+    float: left;
+    margin: 5px;
+    cursor: pointer; }
 
 #main {
-  width: 96%;
+  width: 94%;
   margin: 0 auto;
   min-width: 800px;
   overflow: hidden;
@@ -598,7 +595,7 @@ body.legal {
   -moz-box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 6px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 6px; }
 
-#navBar {
+#nav {
   height: 45px;
   width: 100%;
   overflow: hidden;
@@ -607,40 +604,37 @@ body.legal {
   background: -moz-linear-gradient(top, #5c5f65, #44464a);
   border-bottom: solid 5px #5a5d62;
   color: white; }
-
-.navBarContent {
-  margin: 5px 30px;
-  margin-bottom: 0; }
-
-.navBarHeader {
-  display: inline-block;
-  font-size: 24px;
-  margin-right: 24px;
-  letter-spacing: 1.2;
-  cursor: pointer; }
-
-.navBarLink {
-  display: inline-block;
-  z-index: 30;
-  padding: 5px 12px;
-  color: white;
-  font-size: 18px; }
-  .navBarLink.active {
-    padding-bottom: 20px;
-    -webkit-border-top-left-radius: 4px;
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-radius-topleft: 4px;
-    -moz-border-radius-topright: 4px;
-    -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
-    background-color: #5a5d62; }
-  .navBarLink.rightSide {
-    float: right;
-    padding-left: 20px;
-    background-repeat: no-repeat;
-    background-position: 3px; }
-  .navBarLink#backToLastOrganization {
-    background-image: url(/images/undo_12x12_light.png); }
+  #nav > div {
+    margin: 5px 30px;
+    margin-bottom: 0; }
+  #nav h2 {
+    display: inline-block;
+    font-size: 24px;
+    margin-right: 24px;
+    letter-spacing: 1.2;
+    cursor: pointer; }
+  #nav a {
+    display: inline-block;
+    z-index: 30;
+    padding: 5px 12px;
+    color: white;
+    font-size: 18px; }
+    #nav a.active {
+      padding-bottom: 20px;
+      -webkit-border-top-left-radius: 4px;
+      -webkit-border-top-right-radius: 4px;
+      -moz-border-radius-topleft: 4px;
+      -moz-border-radius-topright: 4px;
+      -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
+      -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
+      background-color: #5a5d62; }
+    #nav a.right {
+      float: right;
+      padding-left: 20px;
+      background-repeat: no-repeat;
+      background-position: 3px; }
+    #nav a#backToLastOrganization {
+      background-image: url(/images/undo_12x12_light.png); }
 
 #content {
   overflow: hidden;
@@ -1276,147 +1270,141 @@ body.legal {
   position: relative;
   -webkit-user-select: none;
   -moz-user-select: none; }
+  #columns > .column {
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 15px;
+    padding-bottom: 0;
+    border-right: 10px ridge #f1f1f1; }
+    #columns > .column:last-child {
+      border: none; }
+    #columns > .column:first-child {
+      padding: 0; }
 
-.column {
-  height: 100%;
-  position: absolute;
-  overflow: hidden; }
-  .column.last .columnView, .column.last .comments, .column.last .elections, .column.last .candidates {
-    border: none; }
+.columnView, .elections, .candidates, .comments {
+  height: 100%; }
+  .columnView > .header, .elections > .header, .candidates > .header, .comments > .header {
+    height: 40px; }
+  .columnView > .body, .elections > .body, .candidates > .body, .comments > .body {
+    position: relative; }
+    .columnView > .body > .left, .elections > .body > .left, .candidates > .body > .left, .comments > .body > .left, .columnView > .body .right, .elections > .body .right, .candidates > .body .right, .comments > .body .right, .columnView > .body .full, .elections > .body .full, .candidates > .body .full, .comments > .body .full {
+      height: 100%;
+      position: absolute;
+      width: 49%; }
+    .columnView > .body > .left, .elections > .body > .left, .candidates > .body > .left, .comments > .body > .left {
+      left: 0; }
+    .columnView > .body > .right, .elections > .body > .right, .candidates > .body > .right, .comments > .body > .right {
+      left: 51%; }
+    .columnView > .body > .full, .elections > .body > .full, .candidates > .body > .full, .comments > .body > .full {
+      width: 100%;
+      left: 0;
+      border: none !important; }
 
-.columnView, .comments, .elections, .candidates {
-  height: 100%;
-  padding: 0 15px;
-  padding-top: 10px;
-  border-right: 10px ridge #f1f1f1; }
-
-.columnHeader {
-  height: 40px; }
-
-.columnBody {
-  position: relative;
-  width: 100%; }
-
-.columnLeft, .columnRight, .columnFull {
-  height: 100%;
-  position: absolute;
-  overflow-x: hidden; }
-
-.columnLeft {
-  width: 49%;
-  left: 0; }
-
-.columnRight {
-  width: 49%;
-  left: 51%; }
-
-.columnFull {
-  width: 100%;
-  left: 0;
-  border: none !important; }
-  .columnFull .recordDetails, .columnFull .electionDetails, .columnFull .candidateDetails {
-    padding: 0; }
-
-.listContainer {
+.recordsList, .electionsList, .candidatesList, .commentsList {
   background-color: #f1f1f1;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset; }
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px inset;
+  overflow: hidden; }
+  .recordsList > ol, .electionsList > ol, .candidatesList > ol, .commentsList > ol {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; }
+  .recordsList > .loading, .electionsList > .loading, .candidatesList > .loading, .commentsList > .loading {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url(/images/loading_arrows_large_gray_bg.gif); }
 
-.recordsList, .commentsList, .electionsList, .candidatesList, .rankedCandidatesList {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto; }
-
-.recordLi, .comment, .election, .candidate {
-  position: relative;
+.recordLi, .election, .candidate, .comment {
   padding: 5px 10px;
   font-size: 15px;
   border: 1px solid #ccc;
   border-top: none;
   background-color: white;
-  cursor: pointer;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px; }
-  .recordLi:hover, .comment:hover, .election:hover, .candidate:hover {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px;
+  cursor: pointer; }
+  .recordLi > .body, .election > .body, .candidate > .body, .comment > .body {
+    color: black; }
+  .recordLi > .icon, .election > .icon, .candidate > .icon, .comment > .icon {
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-repeat: no-repeat;
+    background-position: center center; }
+    .recordLi > .icon.ranked, .election > .icon.ranked, .candidate > .icon.ranked, .comment > .icon.ranked {
+      background-image: url(/images/check_12x10_light.png); }
+    .recordLi > .icon.loading, .election > .icon.loading, .candidate > .icon.loading, .comment > .icon.loading {
+      background-image: url(/images/loading_arrows_light.gif) !important; }
+    .recordLi > .icon.unrank, .election > .icon.unrank, .candidate > .icon.unrank, .comment > .icon.unrank {
+      background-image: url(/images/x_11x11_light.png) !important; }
+    .recordLi > .icon.unrank:hover, .election > .icon.unrank:hover, .candidate > .icon.unrank:hover, .comment > .icon.unrank:hover {
+      cursor: pointer;
+      background-image: url(/images/x_11x11_dark.png) !important; }
+  .recordLi:hover, .election:hover, .candidate:hover, .comment:hover {
     background-color: #f3f3ff; }
-  .recordLi.selected, .selected.comment, .selected.election, .selected.candidate {
+    .recordLi:hover .icon, .election:hover .icon, .candidate:hover .icon, .comment:hover .icon {
+      background-image: url(/images/play_12x16_light.png); }
+  .recordLi.selected, .selected.election, .selected.candidate, .selected.comment {
     background-color: #ddddff; }
-    .recordLi.selected .liIcon, .selected.comment .liIcon, .selected.election .liIcon, .selected.candidate .liIcon {
+    .recordLi.selected .icon, .selected.election .icon, .selected.candidate .icon, .selected.comment .icon {
       background-image: url(/images/play_12x16_dark.png) !important; }
 
-.liBody {
-  color: black; }
-
-.liIcon {
-  width: 20px;
-  height: 20px;
-  float: right;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.detailsContainer {
+.recordDetails, .electionDetails, .candidateDetails, .commentDetails {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   border: 1px solid #ccc; }
-
-.recordDetails, .electionDetails, .candidateDetails {
-  padding: 10px; }
-  .recordDetails .body, .electionDetails .body, .candidateDetails .body {
-    margin-bottom: 10px; }
-
-.creatorInfo {
-  margin: 5px 0; }
-
-.avatar {
-  float: left;
-  margin-right: 5px;
-  background-image: url("/images/mystery_man.jpeg"); }
-
-.creatorName {
-  font-size: 15px;
-  margin-bottom: 2px; }
-
-.creationDate {
-  color: #999999;
-  font-size: 12px; }
-
-.childLinks {
-  margin-top: 20px; }
-
-.childLink {
-  padding: 10px 10px;
-  margin: 10px 0;
-  background-color: #f4f4f4;
-  cursor: pointer;
-  font-size: 18px; }
-  .childLink:hover {
-    background-color: #f3f3ff; }
-  .childLink.selected {
-    background-color: #ddddff; }
-    .childLink.selected .childLinkIcon {
-      background-image: url(/images/play_12x16_dark.png); }
-
-.childLinkIcon {
-  width: 20px;
-  height: 20px;
-  float: right;
-  background-repeat: no-repeat;
-  background-position: center center; }
-  .childLinkIcon.expandIcon, .childLinkIcon.rankedIcon.expandIcon {
-    background-image: url(/images/play_12x16_light.png); }
-
-.listLoading {
-  height: 100%;
-  width: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-image: url(/images/loading_arrows_large_gray_bg.gif); }
+  .recordDetails > .main, .electionDetails > .main, .candidateDetails > .main, .commentDetails > .main {
+    padding: 15px; }
+    .recordDetails > .main > .body, .electionDetails > .main > .body, .candidateDetails > .main > .body, .commentDetails > .main > .body {
+      margin-bottom: 10px; }
+    .recordDetails > .main > .creator, .electionDetails > .main > .creator, .candidateDetails > .main > .creator, .commentDetails > .main > .creator {
+      margin: 5px 0; }
+      .recordDetails > .main > .creator > .avatar, .electionDetails > .main > .creator > .avatar, .candidateDetails > .main > .creator > .avatar, .commentDetails > .main > .creator > .avatar {
+        float: left;
+        margin-right: 5px;
+        background-image: url("/images/mystery_man.jpeg"); }
+      .recordDetails > .main > .creator > .name, .electionDetails > .main > .creator > .name, .candidateDetails > .main > .creator > .name, .commentDetails > .main > .creator > .name {
+        font-size: 15px;
+        margin-bottom: 2px; }
+      .recordDetails > .main > .creator > .date, .electionDetails > .main > .creator > .date, .candidateDetails > .main > .creator > .date, .commentDetails > .main > .creator > .date {
+        font-size: 12px;
+        color: #999999; }
+  .recordDetails > .childLinks, .electionDetails > .childLinks, .candidateDetails > .childLinks, .commentDetails > .childLinks {
+    margin-left: 10px; }
+    .recordDetails > .childLinks > li, .electionDetails > .childLinks > li, .candidateDetails > .childLinks > li, .commentDetails > .childLinks > li {
+      padding: 10px 10px;
+      margin: 10px 0;
+      background-color: #f4f4f4;
+      cursor: pointer;
+      font-size: 18px; }
+      .recordDetails > .childLinks > li:hover, .electionDetails > .childLinks > li:hover, .candidateDetails > .childLinks > li:hover, .commentDetails > .childLinks > li:hover {
+        background-color: #f3f3ff; }
+        .recordDetails > .childLinks > li:hover .icon, .electionDetails > .childLinks > li:hover .icon, .candidateDetails > .childLinks > li:hover .icon, .commentDetails > .childLinks > li:hover .icon {
+          background-image: url(/images/play_12x16_light.png); }
+      .recordDetails > .childLinks > li.selected, .electionDetails > .childLinks > li.selected, .candidateDetails > .childLinks > li.selected, .commentDetails > .childLinks > li.selected {
+        background-color: #ddddff; }
+        .recordDetails > .childLinks > li.selected .icon, .electionDetails > .childLinks > li.selected .icon, .candidateDetails > .childLinks > li.selected .icon, .commentDetails > .childLinks > li.selected .icon {
+          background-image: url(/images/play_12x16_dark.png); }
+      .recordDetails > .childLinks > li > .icon, .electionDetails > .childLinks > li > .icon, .candidateDetails > .childLinks > li > .icon, .commentDetails > .childLinks > li > .icon {
+        width: 20px;
+        height: 20px;
+        float: right;
+        background-repeat: no-repeat;
+        background-position: center center; }
 
 .dragTarget {
   width: 100%;
   position: relative; }
-  .dragTarget .dragTargetExplanation {
+  .dragTarget > .explanation {
     width: 100%;
     text-align: center;
     position: absolute;
@@ -1427,38 +1415,23 @@ body.legal {
   height: 28px;
   text-align: center;
   clear: both;
-  color: white;
-  background-color: #666666;
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.44)), color-stop(0.5, rgba(255, 255, 255, 0.16)), color-stop(0.51, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.05))), #666666;
-  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, 0.1) 100%), #666666;
+  background-color: #555555;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.44)), color-stop(0.5, rgba(255, 255, 255, 0.16)), color-stop(0.51, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.05))), #555555;
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, 0.1) 100%), #555555;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
   border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc; }
-  .separator .up, .separator .down {
+  border-bottom: 1px solid #ccc;
+  color: white; }
+  .separator > .up, .separator .down {
     display: inline-block;
     padding: 5px 10px;
     background-repeat: no-repeat; }
-  .separator .up {
+  .separator > .up {
     background-image: url("/images/arrow_up_white.png");
     background-position: left;
     padding-left: 20px; }
-  .separator .down {
+  .separator > .down {
     background-image: url("/images/arrow_down_white.png");
     background-position: right;
     padding-right: 20px; }
-
-.expandIcon, .rankedIcon.expandIcon {
-  background-image: url(/images/play_12x16_light.png); }
-
-.rankedIcon {
-  background-image: url(/images/check_12x10_light.png); }
-
-.unrankIcon {
-  background-image: url(/images/x_11x11_light.png); }
-  .unrankIcon:hover {
-    cursor: pointer;
-    background-image: url(/images/x_11x11_dark.png); }
-
-.loadingIcon {
-  background-image: url(/images/loading_arrows_light.gif); }

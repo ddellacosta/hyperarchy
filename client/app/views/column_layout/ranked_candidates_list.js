@@ -1,10 +1,10 @@
 _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
-    div({'class': "listContainer"}, function() {
-      ol({'class': "rankedCandidatesList"}, function() {
+    div({'class': "ranked candidatesList"}, function() {
+      ol(function() {
 
         li({'class': "dragTarget"}, function() {
-          span({'class': "dragTargetExplanation"}, function() {
+          span({'class': "explanation"}, function() {
             raw("Drag answers you <em>like</em> here, <br /> with the best at the top.")
           });
         }).ref('goodCandidatesDragTarget');
@@ -15,13 +15,13 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
         }).ref('separator');
 
         li({'class': "dragTarget"}, function() {
-          span({'class': "dragTargetExplanation"}, function() {
+          span({'class': "explanation"}, function() {
             raw("Drag answers you <em>dislike</em> here, <br /> with the worst at the bottom.")
           });
         }).ref('badCandidatesDragTarget');
 
       }).ref('rankedCandidatesList');
-      div({'class': "listLoading", style: "display: none"}).ref('loading');
+      div({'class': "loading", style: "display: none"}).ref('loading');
     });
   }},
 

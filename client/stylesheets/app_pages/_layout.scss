@@ -4,42 +4,39 @@
 }
 
 
-// global header section
-#globalHeader {
-  width: 96%;
+#header {
+  width: 94%;
   margin: 0 auto;
   height: 30px;
   min-width:  $minWidth;
+
+  > a {
+    display: inline-block;
+    float: right;
+    margin: 5px 10x;
+    padding: 5px 10px;
+    @include borderRadius(3px);
+    background-color: #efefef;
+  }
+
+  > .dropdownLink {
+    display: inline-block;
+    padding-right: 20px;
+    background-image: url(/images/expand_arrow_blue.png);
+    background-position: right;
+    background-repeat: no-repeat;
+  }
+
+  > #logo {
+    float: left;
+    margin: 5px;
+    cursor: pointer;
+  }
 }
 
-.headerItem {
-  display: inline-block;
-  float: right;
-  margin: 5px 10x;
-  padding: 5px 10px;
-  @include borderRadius(3px);
-  background-color: #efefef;
-}
 
-.dropdownLink {
-  display: inline-block;
-  padding-right: 20px;
-  background-image: url(/images/expand_arrow_blue.png);
-  background-position: right;
-  background-repeat: no-repeat;
-}
-
-#logoWrapper {
-  float: left;
-  margin: 5px;
-  cursor: pointer;
-}
-
-
-
-// main content section
 #main {
-  width: 96%;
+  width: 94%;
   margin: 0 auto;
   min-width: $minWidth;
   overflow: hidden;
@@ -47,51 +44,51 @@
   @include dropShadow(6px, 0.4);
 }
 
-#navBar {
+#nav {
   height: 45px;
   width: 100%;
   overflow: hidden;
   @include gradient($darkGray, 10%);
   border-bottom: solid 5px lighten(lighten($darkGray, 3%), 6%);
   color: white;
-}
 
-.navBarContent {
-  margin: 5px 30px;
-  margin-bottom: 0;
-}
-
-.navBarHeader {
-  display: inline-block;
-  font-size: 24px;
-  margin-right: 24px;
-  letter-spacing: 1.2;
-  cursor: pointer;
-}
-
-.navBarLink {
-  display: inline-block;
-  z-index: 30;
-  padding: 5px 12px;
-  color: white;
-  font-size: 18px;
-
-  &.active {
-    padding-bottom: 20px;
-    @include borderRadiusTop(4px);
-    @include dropShadow(4px);
-    background-color: lighten(lighten($darkGray, 3%), 6%);
+  > div {
+    margin: 5px 30px;
+    margin-bottom: 0;
   }
 
-  &.rightSide {
-    float: right;
-    padding-left: 20px;
-    background-repeat: no-repeat;
-    background-position: 3px;
+  h2 {
+    display: inline-block;
+    font-size: 24px;
+    margin-right: 24px;
+    letter-spacing: 1.2;
+    cursor: pointer;
   }
 
-  &#backToLastOrganization {
-    background-image: url(/images/undo_12x12_light.png);
+  a {
+    display: inline-block;
+    z-index: 30;
+    padding: 5px 12px;
+    color: white;
+    font-size: 18px;
+
+    &.active {
+      padding-bottom: 20px;
+      @include borderRadiusTop(4px);
+      @include dropShadow(4px);
+      background-color: lighten(lighten($darkGray, 3%), 6%);
+    }
+
+    &.right {
+      float: right;
+      padding-left: 20px;
+      background-repeat: no-repeat;
+      background-position: 3px;
+    }
+
+    &#backToLastOrganization {
+      background-image: url(/images/undo_12x12_light.png);
+    }
   }
 }
 
@@ -101,8 +98,6 @@
 }
 
 
-
-// global menus, dialogue boxes
 .dropdownMenu {
   position: absolute;
   z-index: 100;

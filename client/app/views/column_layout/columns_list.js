@@ -101,11 +101,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     renumberColumns: function() {
       _(this.visibleColumns).each(function(column, i) {
         column.number(i);
-        column.removeClass("first");
-        column.removeClass("last");
       });
-      _(this.visibleColumns).first().addClass("first");
-      _(this.visibleColumns).last().addClass("last");
     },
 
     scrollLeft: function() {
@@ -166,11 +162,11 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustWidths: function() {
+      var widthFactor = 1.61803399; // width of rest of columns / width of first column
+      var widthNormalization = widthFactor * (this.numVisibleColumns() - 1) + 1;
       var percentWidth, percentLeftPosition = 0.0;
-      var relativeWidth, totalRelativeWidth = 1 + (this.numVisibleColumns() - 1) * 1.61;
       _(this.visibleColumns).each(function(column, i) {
-        relativeWidth = i == 0 ? 1 : 1.61;
-        percentWidth = (relativeWidth / totalRelativeWidth * 100.0);
+        percentWidth = (i === 0 ? 1 : widthFactor) / widthNormalization * 100.0;
         column.css('width', percentWidth + '%');
         column.css('left',  percentLeftPosition  + '%');
         percentLeftPosition += percentWidth;

@@ -8,18 +8,17 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
 
   content: function() {with(this.builder) {
     div({'class': "comments"}, function() {
-      div({'class': "columnHeader"}, function() {
+      div({'class': "header"}, function() {
         h2("Comments");
       }).ref("header");
-      div({'class': "columnBody"}, function() {
+      div({'class': "body"}, function() {
         subview('mainList', Views.SortedList, {
-          rootAttributes: {'class': "commentsList columnLeft"}
+          rootAttributes: {'class': "commentsList left"}
         });
         subview('detailsArea', Views.ColumnLayout.RecordDetails, {
-          rootAttributes: {'class': "commentDetails columnRight"}
+          rootAttributes: {'class': "commentDetails right"}
         });
-        div({'class': "loading left", 'style': "display: none"}).ref("leftLoading");
-        div({'class': "loading right", 'style': "display: none"}).ref("rightLoading");
+        div({'class': "loading", 'style': "display: none"}).ref("loading");
       }).ref("body");
     });
   }},

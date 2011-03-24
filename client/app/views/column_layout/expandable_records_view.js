@@ -1,19 +1,20 @@
 _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
   content: function() {with(this.builder) {
     div({'class': template.tableName}, function() {
-      div({'class': "columnHeader"}, function() {
+
+      div({'class': "header"}, function() {
         template.headerContent();
       }).ref("header");
-      div({'class': "columnBody"}, function() {
-        div({'class': "listContainer"}, function() {
-          subview('mainList', Views.SortedList, {
-            rootAttributes: {'class': template.tableName+"List"}
-          });
-          div({'class': "listLoading"}).ref("mainLoading");
+
+      div({'class': "body"}, function() {
+        div({'class': template.tableName + "List"}, function() {
+          subview('mainList', Views.SortedList);
+          div({'class': "loading"}).ref("mainLoading");
         }).ref("mainListContainer");
         subview('detailsArea', template.detailsTemplate);
         template.additionalBodyContent();
       }).ref("body");
+
     });
   }},
 
@@ -99,10 +100,10 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
 
     showMainListAndDetailsArea: function() {
       this.header.show();
-      this.mainListContainer.removeClass('columnRight columnFull');
-      this.mainListContainer.addClass('columnLeft');
-      this.detailsArea.removeClass('columnLeft columnFull');
-      this.detailsArea.addClass('columnRight');
+      this.mainListContainer.removeClass('right full');
+      this.mainListContainer.addClass('left');
+      this.detailsArea.removeClass('left full');
+      this.detailsArea.addClass('right');
       this.body.children().hide();
       this.mainListContainer.show();
       this.detailsArea.show();
@@ -111,8 +112,8 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
 
     showDetailsAreaOnly: function() {
       this.header.hide();
-      this.detailsArea.removeClass('columnLeft columnRight');
-      this.detailsArea.addClass('columnFull');
+      this.detailsArea.removeClass('left right');
+      this.detailsArea.addClass('full');
       this.mainList.hide();
       this.body.children().hide();
       this.detailsArea.siblings().hide();
@@ -139,7 +140,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     },
 
     adjustHeight: function() {
-      this.body.fillContainingVerticalSpace(20);
+      this.body.fillContainingVerticalSpace();
     },
 
     afterShow: function() {

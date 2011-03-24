@@ -1,8 +1,8 @@
 _.constructor("Views.ColumnLayout.ElectionLi", View.Template, {
   content: function() {with(this.builder) {
     li({'class': "unranked election"}, function() {
-      span({'class': "liBody"}).ref("body").click('expand');
-      div({'class': "expandIcon", style: "display: none;"}).ref('expandIcon');
+      span({'class': "body"}).ref("body").click('expand');
+      div({'class': "expand icon", style: "display: none;"}).ref('expandIcon');
     }).ref("li").click('showDetails');
   }},
 

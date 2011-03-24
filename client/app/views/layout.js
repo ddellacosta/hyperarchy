@@ -2,56 +2,54 @@ _.constructor("Views.Layout", View.Template, {
   content: function() { with(this.builder) {
     div({id: "application"}, function() {
 
-      div({id: "globalHeader"}, function() {
-        div({id: "logoWrapper"}, function() {
-          div({id: "logo"}).click('goToLastOrganization');
-        });
-        a({'class': "headerItem", href: "#"}, "Log In")
+      div({id: "header"}, function() {
+        div({id: "logo"}).click('goToLastOrganization');
+        a("Log In")
           .ref('loginLink')
           .click("showLoginForm");
-        a({'class': "headerItem dropdownLink", href: "#"}, "Account")
+        a({'class': "dropdownLink"}, "Account")
           .ref('accountMenuLink')
           .click("toggleAccountMenu");
-        a({'class': "headerItem dropdownLink"}, "Organizations")
+        a({'class': "dropdownLink"}, "Organizations")
           .ref("organizationsMenuLink")
           .click("toggleOrganizationsMenu");
-        a({'class': "headerItem", href: "#"}, "Invite")
+        a("Invite")
           .ref('inviteLink')
           .click('showInviteForm');
-        a({'class': "headerItem", href: "#"}, "Feedback")
+        a("Feedback")
           .click('showFeedbackForm');
       });
 
       div({id: "main"}, function() {
-        div({id: "navBar"}, function() {
-          div({'class': "navBarContent"}, function() {
-            h2({'class': "navBarHeader"})
+        div({id: "nav"}, function() {
+          div(function() {
+            h2()
               .ref('organizationName')
               .click('goToOrganization');
-            a({'class': "navBarLink"}, "View Questions")
+            a("View Questions")
               .ref('questionsLink')
               .click('goToQuestions');
-            a({'class': "navBarLink"}, "Raise a Question")
+            a("Raise a Question")
               .ref("newElectionLink")
               .click("goToNewElection");
-            a({'class': "navBarLink"}, "Members")
+            a("Members")
               .ref('membersLink')
               .click("goToMembers");
-            a({'class': "navBarLink"}, "Settings")
+            a("Settings")
               .ref("editOrganizationLink")
               .click("goToEditOrganization");
           }).ref("organizationNavigationBar");
 
-          div({'class': "navBarContent"}, function() {
-            h2({'class': "navBarHeader"}).ref("alternateNavigationBarText");
-            a({'class': "navBarLink rightSide"})
+          div(function() {
+            h2().ref("alternateNavigationBarText");
+            a({'class': "right"})
               .ref("backToLastOrganizationLink")
               .click("goToLastOrganization");
           }).ref("alternateNavigationBar");
         });
 
         div({'id': "content"}).ref('content');
-      }).ref('mainContentArea');
+      });
 
       subview("welcomeGuide", Views.WelcomeGuide);
 
@@ -67,6 +65,7 @@ _.constructor("Views.Layout", View.Template, {
           });
         });
       }).ref('accountMenu');
+
       ol({'class': "dropdownMenu"}, function() {
         li(function() {
           a({href: "#"}, "Add Organization...").click('goToAddOrganization');
