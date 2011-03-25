@@ -37,7 +37,7 @@ jQuery.fn.extend({
     if (!field) throw new Error("No field named " + fieldName + " found.");
     this.html(htmlEscape(field.value()));
 
-    var subscription = field.onUpdate(function(newValue) {
+    subscription = field.onUpdate(function(newValue) {
       this.html(htmlEscape(newValue));
     }, this);
     this.data('bindHtmlSubscription', subscription);
