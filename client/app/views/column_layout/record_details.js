@@ -3,19 +3,37 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     div({'class': _.singularize(template.tableName) + "Details"}, function() {
 
       div({'class': "main"}, function() {
-        h2({'class': "body"}).ref("body");
+        div({'class': "body"}).ref("body");
         div({'class': "details"}).ref("details");
+        textarea({'class': "body", style: "display: none;"})
+          .ref('editableBody')
+          .keydown(template.keydownHandler);
+        textarea({'class': "details", style: "display: none;"})
+          .ref('editableDetails')
+          .keydown(template.keydownHandler);
 
         div({'class': "creator"}, function() {
           subview('avatar', Views.Avatar, { size: 40 });
           div({'class': "name"}, "").ref('creatorName');
           div({'class': "date"}, "").ref('createdAt');
         });
+
+        div({'class': "buttons"}, function() {
+          button("Edit", {style: "display: none;"})
+            .ref("editButton")
+            .click("editRecord");
+          button("Cancel", {style: "display: none;"})
+            .ref("cancelButton")
+            .click("cancelEditing");
+          button("Save", {style: "display: none;"})
+            .ref("saveButton")
+            .click("updateRecord");
+        });
       });
 
       ul({'class': "childLinks"}, function() {
         _(template.childNames).each(function(informalName, tableName) {
-          li({'class': "childLink"}, function() {
+          li(function() {
             div({'class': "icon"}).ref(tableName + "LinkIcon");
             span().ref(tableName + "LinkNumber");
             raw(' ');
@@ -26,6 +44,20 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }).ref("childLinksList");
     });
   }},
+
+  keydownHandler: function(view, event) {
+    switch (event.keyCode) {
+      case 27: // escape
+        view.cancelEditing();
+        event.preventDefault();
+        break;
+      case 13: // enter
+        if (event.ctrlKey) break; 
+        view.updateRecord();
+        event.preventDefault();
+        break;
+    }
+  },
 
   // template properties to override:
   tableName: "elections",
@@ -45,7 +77,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
-
     },
 
     recordId: {
@@ -67,9 +98,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     record: {
       afterChange: function(record) {
         this.body.bindHtml(record, "body");
-        if (this.record.details) {
-          this.details.bindHtml(this.record, "details");
-        }
+        this.details.bindHtml(record, "details");
         var creator = User.find(record.creatorId());
         this.avatar.user(creator);
         this.creatorName.html(htmlEscape(creator.fullName()));
@@ -79,6 +108,12 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
           this.populateChildLinks();
           this.subscribeToChildRelationChanges();
         }, this)
+
+        if (record.editableByCurrentUser()) {
+          this.editButton.show();
+        } else {
+          this.editButton.hide();
+        }
       }
     },
 
@@ -128,6 +163,43 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         linkText.html("Add " + article + _(informalName).singularize());
       }
     },
+
+    editRecord: function() {
+      this.body.hide();
+      this.details.hide();
+      this.editButton.hide();
+      this.editableBody.val(this.record().body());
+      if (this.record().details) this.editableDetails.val(this.record().details());
+      this.editableBody.show();
+      this.editableDetails.show();
+      this.cancelButton.show();
+      this.saveButton.show();
+      this.editableDetails.elastic();
+      this.editableBody.elastic();
+      this.editableBody.focus();
+    },
+
+    cancelEditing: function() {
+      this.editableBody.hide();
+      this.editableDetails.hide();
+      this.body.show();
+      this.details.show();
+      this.saveButton.hide();
+      this.cancelButton.hide();
+      this.editButton.show();
+    },
+
+    updateRecord: function() {
+      this.startLoading();
+      this.record().update({
+        body:    this.editableBody.val(),
+        details: this.editableDetails.val()
+      }).onSuccess(function() {
+        this.stopLoading();
+        this.cancelEditing();
+      }, this);
+    },
+
 
     startLoading: function() {
 

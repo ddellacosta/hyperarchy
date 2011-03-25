@@ -1,3 +1,4 @@
+
 $minWidth:  800px;
 $minHeight: 500px;
 
@@ -10,7 +11,7 @@ $darkGray: #44464A;
 $black: #0D0D10;
 $backgroundGray: #e6e6e6;
 
-
+// includes padding and border in the width and height
 @mixin borderBox {
   -moz-box-sizing:    border-box;
   -webkit-box-sizing: border-box;

@@ -65,7 +65,7 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
       clone.css('width', this.width());
       clone.css('height', this.height());
       clone.removeClass('selected');
-      clone.find('.liIcon').remove();
+      clone.find('.icon').remove();
       return clone;
     }
   }

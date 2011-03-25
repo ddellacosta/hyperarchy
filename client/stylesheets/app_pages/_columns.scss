@@ -19,6 +19,8 @@
     &:first-child {
       padding: 0;
     }
+
+
   }
 }
 
@@ -114,14 +116,30 @@
   border: 1px solid #ccc;
 
   > .main {
-    padding: 15px;
+    padding: 10px;
 
     > .body {
-      margin-bottom: 10px;
+      @extend h2;
+      width: 100%;
+      resize: none;
+    }
+
+    > .details {
+      font-size: 15px;
+      width: 100%;
+      margin: 5px 0;
+      resize: none;
+    }
+
+    > .buttons {
+      margin: 10px 0;
+      text-align: right;
     }
 
     > .creator {
       margin: 5px 0;
+      display: inline-block;
+      width: 60%;
 
       > .avatar {
         float: left;
@@ -135,6 +153,15 @@
       > .date {
         font-size: 12px;
         color: #999999;
+      }
+    }
+
+    > .buttons {
+      float: right;
+
+      > button {
+        padding: 5px;
+        margin: 5px;
       }
     }
   }

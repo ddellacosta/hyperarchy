@@ -8,6 +8,11 @@ body {
   overflow: hidden;
 }
 
+.clear {
+  width: 100%;
+  clear: both;
+}
+
 textarea {
   line-height: 1.3;
 }

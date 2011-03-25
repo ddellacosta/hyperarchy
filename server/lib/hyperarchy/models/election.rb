@@ -48,11 +48,11 @@ class Election < Monarch::Model::Record
   alias can_destroy? can_update_or_destroy?
 
   def create_whitelist
-    [:organization_id, :body]
+    [:organization_id, :body, :details]
   end
 
   def update_whitelist
-    [:body]
+    [:body, :details]
   end
 
   def organization_ids
