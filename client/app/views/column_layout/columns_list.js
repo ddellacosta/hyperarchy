@@ -162,7 +162,8 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustWidths: function() {
-      var widthFactor = 1.61803399; // width of rest of columns / width of first column
+      var widthFactor = 2;
+//      var widthFactor = 1.61803399;
       var widthNormalization = widthFactor * (this.numVisibleColumns() - 1) + 1;
       var percentWidth, percentLeftPosition = 0.0;
       _(this.visibleColumns).each(function(column, i) {

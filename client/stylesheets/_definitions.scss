@@ -23,7 +23,7 @@ $backgroundGray: #e6e6e6;
   -moz-user-select: none;
 }
 
-@mixin borderRadius($radius) {
+@mixin borderRadius($radius: 5px) {
   -webkit-border-radius: $radius;
   -moz-border-radius: $radius;
 }

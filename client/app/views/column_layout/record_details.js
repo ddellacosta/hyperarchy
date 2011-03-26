@@ -1,63 +1,4 @@
 _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
-  content: function() {with(this.builder) {
-    div({'class': _.singularize(template.tableName) + "Details"}, function() {
-
-      div({'class': "main"}, function() {
-        div({'class': "body"}).ref("body");
-        div({'class': "details"}).ref("details");
-        textarea({'class': "body", style: "display: none;"})
-          .ref('editableBody')
-          .keydown(template.keydownHandler);
-        textarea({'class': "details", style: "display: none;"})
-          .ref('editableDetails')
-          .keydown(template.keydownHandler);
-
-        div({'class': "creator"}, function() {
-          subview('avatar', Views.Avatar, { size: 40 });
-          div({'class': "name"}, "").ref('creatorName');
-          div({'class': "date"}, "").ref('createdAt');
-        });
-
-        div({'class': "buttons"}, function() {
-          button("Edit", {style: "display: none;"})
-            .ref("editButton")
-            .click("editRecord");
-          button("Cancel", {style: "display: none;"})
-            .ref("cancelButton")
-            .click("cancelEditing");
-          button("Save", {style: "display: none;"})
-            .ref("saveButton")
-            .click("updateRecord");
-        });
-      });
-
-      ul({'class': "childLinks"}, function() {
-        _(template.childNames).each(function(informalName, tableName) {
-          li(function() {
-            div({'class': "icon"}).ref(tableName + "LinkIcon");
-            span().ref(tableName + "LinkNumber");
-            raw(' ');
-            span().ref(tableName + "LinkText");
-          }).ref(tableName + "Link").
-             click("showChildTableInNextColumn", tableName);
-        }, this);
-      }).ref("childLinksList");
-    });
-  }},
-
-  keydownHandler: function(view, event) {
-    switch (event.keyCode) {
-      case 27: // escape
-        view.cancelEditing();
-        event.preventDefault();
-        break;
-      case 13: // enter
-        if (event.ctrlKey) break; 
-        view.updateRecord();
-        event.preventDefault();
-        break;
-    }
-  },
 
   // template properties to override:
   tableName: "elections",
@@ -73,6 +14,79 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     votes:      Vote.where({electionId: recordId})
   }},
 
+
+  // shared properties
+  content: function() {with(this.builder) {
+    div({'class': _.singularize(template.tableName) + "Details"}, function() {
+
+      div({'class': "content"}, function() {
+        p({'class': "body"}).ref("body");
+        div({'class': "details contracted"}, function() {
+          span({'class': ""}).ref("details");
+        }).ref('detailsContainer');
+        span("...", {'class': "ellipsis"}).ref("detailsEllipsis");
+        textarea({'class': "body", style: "display: none;"})
+          .ref('editableBody')
+          .keydown(template.keydownHandler);
+        textarea({'class': "details", style: "display: none;", placeholder: "Further details (optional)"})
+          .ref('editableDetails')
+          .keydown(template.keydownHandler);
+      });
+
+      div({'class': "contentFooter"}, function() {
+        button("More")
+          .ref("expandButton")
+          .click("expandDetails");
+        button("Less", {style: "display: none;"})
+          .ref("contractButton")
+          .click("contractDetails");
+        button("Edit", {style: "display: none;"})
+          .ref("editButton")
+          .click("enableEditing");
+        button("Save", {style: "display: none;"})
+          .ref("saveButton")
+          .click("updateRecord");
+        button("Cancel", {style: "display: none;"})
+          .ref("cancelButton")
+          .click("disableEditing");
+
+        subview('avatar', Views.Avatar, { size: 40 });
+        span({'class': "name"}, "").ref('creatorName');
+        br();
+        span({'class': "date"}, "").ref('createdAt');
+
+        div({'class': "clear"});
+      });
+
+      ul({'class': "childLinks"}, function() {
+        _(template.childNames).each(function(informalName, tableName) {
+          li(function() {
+            div({'class': "icon"}).ref(tableName + "LinkIcon");
+            span().ref(tableName + "LinkNumber");
+            raw(' ');
+            span().ref(tableName + "LinkText");
+          }).ref(tableName + "Link").
+             click("showChildTableInNextColumn", tableName);
+        }, this);
+      }).ref("childLinksList");
+
+    });
+  }},
+
+  keydownHandler: function(view, event) {
+    switch (event.keyCode) {
+      case 27: // escape
+        view.disableEditing();
+        event.preventDefault();
+        break;
+      case 13: // enter
+        if (event.ctrlKey) break;
+        view.updateRecord();
+        event.preventDefault();
+        break;
+    }
+  },
+
   viewProperties: {
 
     initialize: function() {
@@ -81,8 +95,30 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     recordId: {
       afterChange: function(id) {
-        this.childRelations = this.template.childRelations(id);
         this.record(this.template.recordConstructor.find(id));
+        this.childRelations = this.template.childRelations(id);
+        Server.fetch(this.childRelations).onSuccess(function() {
+          this.populateChildLinks();
+          this.subscribeToChildRelationChanges();
+        }, this)
+      }
+    },
+
+    record: {
+      afterChange: function(record) {
+        this.body.bindHtml(record, "body");
+        this.details.bindHtml(record, "details");
+        this.editableBody.val(record.body());
+        this.editableDetails.val(record.details());
+        this.editableDetails.elastic();
+        this.editableBody.elastic();
+        if (record.editableByCurrentUser()) this.editButton.show();
+        this.showOrHideExpandButton();
+
+        var creator = User.find(record.creatorId());
+        this.avatar.user(creator);
+        this.creatorName.html(htmlEscape(creator.fullName()));
+        this.createdAt.html(record.formattedCreatedAt());
       }
     },
 
@@ -92,28 +128,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
           this[tableName + 'Link'].removeClass('selected');
         }, this);
         this[selectedTableName + 'Link'].addClass('selected');
-      }
-    },
-
-    record: {
-      afterChange: function(record) {
-        this.body.bindHtml(record, "body");
-        this.details.bindHtml(record, "details");
-        var creator = User.find(record.creatorId());
-        this.avatar.user(creator);
-        this.creatorName.html(htmlEscape(creator.fullName()));
-        this.createdAt.html(record.formattedCreatedAt());
-
-        Server.fetch(this.childRelations).onSuccess(function() {
-          this.populateChildLinks();
-          this.subscribeToChildRelationChanges();
-        }, this)
-
-        if (record.editableByCurrentUser()) {
-          this.editButton.show();
-        } else {
-          this.editButton.hide();
-        }
       }
     },
 
@@ -164,29 +178,54 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }
     },
 
-    editRecord: function() {
-      this.body.hide();
-      this.details.hide();
-      this.editButton.hide();
-      this.editableBody.val(this.record().body());
-      if (this.record().details) this.editableDetails.val(this.record().details());
-      this.editableBody.show();
-      this.editableDetails.show();
-      this.cancelButton.show();
-      this.saveButton.show();
-      this.editableDetails.elastic();
-      this.editableBody.elastic();
-      this.editableBody.focus();
+    expandDetails: function() {
+      this.detailsContainer.removeClass("contracted");
+      this.expandButton.hide();
+      this.contractButton.show();
+      this.detailsEllipsis.hide();
     },
 
-    cancelEditing: function() {
-      this.editableBody.hide();
-      this.editableDetails.hide();
-      this.body.show();
-      this.details.show();
+    contractDetails: function() {
+      this.detailsContainer.addClass("contracted");
+      this.contractButton.hide();
       this.saveButton.hide();
       this.cancelButton.hide();
       this.editButton.show();
+      this.showOrHideExpandButton();
+    },
+
+    enableEditing: function() {
+      this.editableBody.val(this.record().body());
+      this.editableDetails.val(this.record().details());
+      this.body.hide();
+      this.detailsContainer.hide();
+      this.detailsEllipsis.hide();
+      this.editableBody.show();
+      this.editableDetails.show();
+      this.editButton.hide();
+      this.expandButton.hide();
+      this.contractButton.hide();
+      this.cancelButton.show();
+      this.saveButton.show();
+      this.editableBody.focus();
+    },
+
+    disableEditing: function() {
+      this.editableBody.hide();
+      this.editableDetails.hide();
+      this.body.show();
+      this.detailsContainer.show();
+      this.contractDetails();
+    },
+
+    showOrHideExpandButton: function() {
+      if (this.details.height() > this.detailsContainer.height()) {
+        this.detailsEllipsis.show();
+        this.expandButton.show();
+      } else {
+        this.expandButton.hide();
+        this.detailsEllipsis.hide();
+      }
     },
 
     updateRecord: function() {
@@ -196,10 +235,9 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         details: this.editableDetails.val()
       }).onSuccess(function() {
         this.stopLoading();
-        this.cancelEditing();
+        this.disableEditing();
       }, this);
     },
-
 
     startLoading: function() {
 

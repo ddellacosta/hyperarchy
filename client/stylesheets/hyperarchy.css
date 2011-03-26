@@ -24,10 +24,10 @@ ol,
 li,
 h1,
 h2,
-.recordDetails > .main > .body,
-.electionDetails > .main > .body,
-.candidateDetails > .main > .body,
-.commentDetails > .main > .body,
+.recordDetails > .content > .body,
+.electionDetails > .content > .body,
+.candidateDetails > .content > .body,
+.commentDetails > .content > .body,
 h3,
 h4,
 h5,
@@ -81,10 +81,10 @@ th {
 
 h1,
 h2,
-.recordDetails > .main > .body,
-.electionDetails > .main > .body,
-.candidateDetails > .main > .body,
-.commentDetails > .main > .body,
+.recordDetails > .content > .body,
+.electionDetails > .content > .body,
+.candidateDetails > .content > .body,
+.commentDetails > .content > .body,
 h3,
 h4,
 h5,
@@ -143,7 +143,8 @@ body {
   clear: both; }
 
 textarea {
-  line-height: 1.3; }
+  line-height: 1.3;
+  resize: none; }
 
 a, a:visited {
   color: #0e40ac;
@@ -159,7 +160,7 @@ em {
 h1 {
   font-size: 25px; }
 
-h2, .recordDetails > .main > .body, .electionDetails > .main > .body, .candidateDetails > .main > .body, .commentDetails > .main > .body {
+h2, .recordDetails > .content > .body, .electionDetails > .content > .body, .candidateDetails > .content > .body, .commentDetails > .content > .body {
   font-size: 23px; }
 
 .disabledText {
@@ -347,7 +348,7 @@ h2, .recordDetails > .main > .body, .electionDetails > .main > .body, .candidate
   #learn_more #summary {
     font-size: 18px;
     margin-bottom: 30px; }
-  #learn_more h2, #learn_more .recordDetails > .main > .body, #learn_more .electionDetails > .main > .body, #learn_more .candidateDetails > .main > .body, #learn_more .commentDetails > .main > .body {
+  #learn_more h2, #learn_more .recordDetails > .content > .body, #learn_more .electionDetails > .content > .body, #learn_more .candidateDetails > .content > .body, #learn_more .commentDetails > .content > .body {
     font-weight: bold;
     margin-bottom: 5px; }
   #learn_more .description {
@@ -470,7 +471,7 @@ h2, .recordDetails > .main > .body, .electionDetails > .main > .body, .candidate
     margin-top: 20px; }
     #signup #centeredWrapper #invitationInfo h1 {
       font-size: 28px; }
-    #signup #centeredWrapper #invitationInfo h2, #signup #centeredWrapper #invitationInfo .recordDetails > .main > .body, #signup #centeredWrapper #invitationInfo .electionDetails > .main > .body, #signup #centeredWrapper #invitationInfo .candidateDetails > .main > .body, #signup #centeredWrapper #invitationInfo .commentDetails > .main > .body {
+    #signup #centeredWrapper #invitationInfo h2, #signup #centeredWrapper #invitationInfo .recordDetails > .content > .body, #signup #centeredWrapper #invitationInfo .electionDetails > .content > .body, #signup #centeredWrapper #invitationInfo .candidateDetails > .content > .body, #signup #centeredWrapper #invitationInfo .commentDetails > .content > .body {
       font-size: 22px;
       margin-bottom: 30px; }
     #signup #centeredWrapper #invitationInfo #description {
@@ -542,7 +543,7 @@ body.legal {
     margin-bottom: 10px; }
   body.legal h1 {
     margin-bottom: 20px; }
-  body.legal h2, body.legal .recordDetails > .main > .body, body.legal .electionDetails > .main > .body, body.legal .candidateDetails > .main > .body, body.legal .commentDetails > .main > .body {
+  body.legal h2, body.legal .recordDetails > .content > .body, body.legal .electionDetails > .content > .body, body.legal .candidateDetails > .content > .body, body.legal .commentDetails > .content > .body {
     margin-bottom: 15px; }
   body.legal ol {
     margin-bottom: 10px; }
@@ -572,7 +573,7 @@ body.legal {
   overflow: hidden; }
 
 #header {
-  width: 94%;
+  width: 96%;
   margin: 0 auto;
   height: 30px;
   min-width: 800px; }
@@ -596,7 +597,7 @@ body.legal {
     cursor: pointer; }
 
 #main {
-  width: 94%;
+  width: 96%;
   margin: 0 auto;
   min-width: 800px;
   overflow: hidden;
@@ -619,7 +620,7 @@ body.legal {
   #nav > div {
     margin: 5px 30px;
     margin-bottom: 0; }
-  #nav h2, #nav .recordDetails > .main > .body, #nav .electionDetails > .main > .body, #nav .candidateDetails > .main > .body, #nav .commentDetails > .main > .body {
+  #nav h2, #nav .recordDetails > .content > .body, #nav .electionDetails > .content > .body, #nav .candidateDetails > .content > .body, #nav .commentDetails > .content > .body {
     display: inline-block;
     font-size: 24px;
     margin-right: 24px;
@@ -835,12 +836,12 @@ body.legal {
     #welcomeGuide #currentStep .step {
       padding: 30px;
       background: white; }
-      #welcomeGuide #currentStep .step h2, #welcomeGuide #currentStep .step .recordDetails > .main > .body, #welcomeGuide #currentStep .step .electionDetails > .main > .body, #welcomeGuide #currentStep .step .candidateDetails > .main > .body, #welcomeGuide #currentStep .step .commentDetails > .main > .body {
+      #welcomeGuide #currentStep .step h2, #welcomeGuide #currentStep .step .recordDetails > .content > .body, #welcomeGuide #currentStep .step .electionDetails > .content > .body, #welcomeGuide #currentStep .step .candidateDetails > .content > .body, #welcomeGuide #currentStep .step .commentDetails > .content > .body {
         margin-bottom: 10px; }
       #welcomeGuide #currentStep .step div.stepDescription {
         font-size: 20px; }
 
-#app #organizationOverview h2, #app #organizationOverview .recordDetails > .main > .body, #app #organizationOverview .electionDetails > .main > .body, #app #organizationOverview .candidateDetails > .main > .body, #app #organizationOverview .commentDetails > .main > .body {
+#app #organizationOverview h2, #app #organizationOverview .recordDetails > .content > .body, #app #organizationOverview .electionDetails > .content > .body, #app #organizationOverview .candidateDetails > .content > .body, #app #organizationOverview .commentDetails > .content > .body {
   padding-left: 8px; }
 #app #organizationOverview .election {
   padding: 8px;
@@ -915,7 +916,7 @@ body.legal {
     #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight {
       width: 595px;
       display: inline-block; }
-      #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight h2, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .recordDetails > .main > .body, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .electionDetails > .main > .body, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .candidateDetails > .main > .body, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .commentDetails > .main > .body {
+      #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight h2, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .recordDetails > .content > .body, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .electionDetails > .content > .body, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .candidateDetails > .content > .body, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .commentDetails > .content > .body {
         display: inline;
         margin-right: 5px; }
       #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight textarea.electionBody {
@@ -1256,7 +1257,7 @@ body.legal {
     #app #account .emailPreferences .emailPreference label {
       font-size: 16px; }
 
-#app #newElection h2, #app #newElection .recordDetails > .main > .body, #app #newElection .electionDetails > .main > .body, #app #newElection .candidateDetails > .main > .body, #app #newElection .commentDetails > .main > .body {
+#app #newElection h2, #app #newElection .recordDetails > .content > .body, #app #newElection .electionDetails > .content > .body, #app #newElection .candidateDetails > .content > .body, #app #newElection .commentDetails > .content > .body {
   margin-bottom: 20px; }
 #app #newElection #createElectionLink {
   padding: 6px 20px;
@@ -1289,9 +1290,8 @@ body.legal {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 15px;
-    padding-bottom: 0;
-    border-right: 10px ridge #f1f1f1; }
+    padding: 10px 15px;
+    border-right: 4px solid #aaa; }
     #columns > .column:last-child {
       border: none; }
     #columns > .column:first-child {
@@ -1370,44 +1370,50 @@ body.legal {
       background-image: url(/images/play_12x16_dark.png) !important; }
 
 .recordDetails, .electionDetails, .candidateDetails, .commentDetails {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+  overflow: hidden;
+  overflow-y: auto;
   border: 1px solid #ccc; }
-  .recordDetails > .main, .electionDetails > .main, .candidateDetails > .main, .commentDetails > .main {
-    padding: 10px; }
-    .recordDetails > .main > .body, .electionDetails > .main > .body, .candidateDetails > .main > .body, .commentDetails > .main > .body {
+  .recordDetails > .content, .electionDetails > .content, .candidateDetails > .content, .commentDetails > .content {
+    padding: 15px; }
+    .recordDetails > .content > .body, .electionDetails > .content > .body, .candidateDetails > .content > .body, .commentDetails > .content > .body {
       width: 100%;
-      resize: none; }
-    .recordDetails > .main > .details, .electionDetails > .main > .details, .candidateDetails > .main > .details, .commentDetails > .main > .details {
+      margin-bottom: 5px; }
+    .recordDetails > .content > .details, .electionDetails > .content > .details, .candidateDetails > .content > .details, .commentDetails > .content > .details {
+      font-size: 15px; }
+      .recordDetails > .content > .details.contracted, .electionDetails > .content > .details.contracted, .candidateDetails > .content > .details.contracted, .commentDetails > .content > .details.contracted {
+        overflow: hidden;
+        max-height: 60px; }
+    .recordDetails > .content > .ellipsis, .electionDetails > .content > .ellipsis, .candidateDetails > .content > .ellipsis, .commentDetails > .content > .ellipsis {
+      color: gray; }
+    .recordDetails > .content > textarea, .electionDetails > .content > textarea, .candidateDetails > .content > textarea, .commentDetails > .content > textarea {
+      width: 100%;
+      border: 1px solid #ddd; }
+  .recordDetails > .contentFooter, .electionDetails > .contentFooter, .candidateDetails > .contentFooter, .commentDetails > .contentFooter {
+    padding: 0 15px; }
+    .recordDetails > .contentFooter > .avatar, .electionDetails > .contentFooter > .avatar, .candidateDetails > .contentFooter > .avatar, .commentDetails > .contentFooter > .avatar {
+      float: left;
+      margin-right: 5px;
+      background-image: url("/images/mystery_man.jpeg"); }
+    .recordDetails > .contentFooter > .name, .electionDetails > .contentFooter > .name, .candidateDetails > .contentFooter > .name, .commentDetails > .contentFooter > .name {
       font-size: 15px;
-      width: 100%;
-      margin: 5px 0;
-      resize: none; }
-    .recordDetails > .main > .buttons, .electionDetails > .main > .buttons, .candidateDetails > .main > .buttons, .commentDetails > .main > .buttons {
-      margin: 10px 0;
-      text-align: right; }
-    .recordDetails > .main > .creator, .electionDetails > .main > .creator, .candidateDetails > .main > .creator, .commentDetails > .main > .creator {
-      margin: 5px 0;
-      display: inline-block;
-      width: 60%; }
-      .recordDetails > .main > .creator > .avatar, .electionDetails > .main > .creator > .avatar, .candidateDetails > .main > .creator > .avatar, .commentDetails > .main > .creator > .avatar {
-        float: left;
-        margin-right: 5px;
-        background-image: url("/images/mystery_man.jpeg"); }
-      .recordDetails > .main > .creator > .name, .electionDetails > .main > .creator > .name, .candidateDetails > .main > .creator > .name, .commentDetails > .main > .creator > .name {
-        font-size: 15px;
-        margin-bottom: 2px; }
-      .recordDetails > .main > .creator > .date, .electionDetails > .main > .creator > .date, .candidateDetails > .main > .creator > .date, .commentDetails > .main > .creator > .date {
-        font-size: 12px;
-        color: #999999; }
-    .recordDetails > .main > .buttons, .electionDetails > .main > .buttons, .candidateDetails > .main > .buttons, .commentDetails > .main > .buttons {
-      float: right; }
-      .recordDetails > .main > .buttons > button, .electionDetails > .main > .buttons > button, .candidateDetails > .main > .buttons > button, .commentDetails > .main > .buttons > button {
-        padding: 5px;
-        margin: 5px; }
+      margin-bottom: 2px; }
+    .recordDetails > .contentFooter > .date, .electionDetails > .contentFooter > .date, .candidateDetails > .contentFooter > .date, .commentDetails > .contentFooter > .date {
+      font-size: 12px;
+      color: #999999; }
+    .recordDetails > .contentFooter > button, .electionDetails > .contentFooter > button, .candidateDetails > .contentFooter > button, .commentDetails > .contentFooter > button {
+      float: right;
+      padding: 3px 10px;
+      margin-left: 5px;
+      border: none;
+      background: white;
+      background: #f4f4f4;
+      color: gray; }
+      .recordDetails > .contentFooter > button:hover, .electionDetails > .contentFooter > button:hover, .candidateDetails > .contentFooter > button:hover, .commentDetails > .contentFooter > button:hover {
+        color: black; }
   .recordDetails > .childLinks, .electionDetails > .childLinks, .candidateDetails > .childLinks, .commentDetails > .childLinks {
-    margin-left: 10px; }
+    margin: 15px;
+    margin-right: 0;
+    margin-bottom: 30px; }
     .recordDetails > .childLinks > li, .electionDetails > .childLinks > li, .candidateDetails > .childLinks > li, .commentDetails > .childLinks > li {
       padding: 10px 10px;
       margin: 10px 0;

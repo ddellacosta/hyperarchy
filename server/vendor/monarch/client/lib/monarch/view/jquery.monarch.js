@@ -41,7 +41,6 @@ jQuery.fn.extend({
       this.html(htmlEscape(newValue));
     }, this);
     this.data('bindHtmlSubscription', subscription);
-
     this.attr('htmlIsBound', true);
   },
 
@@ -56,7 +55,8 @@ jQuery.fn.extend({
 
   fillContainingVerticalSpace: function(spaceAtBottom, minHeight) {
     if (!minHeight) minHeight = 0;
-    var height = this.parent().height() - this.position().top - (spaceAtBottom || 0);
+    var height = this.parent().height() + this.parent().position().top - 
+                 this.position().top - (spaceAtBottom || 0);
     if (height < minHeight) height = minHeight;
     this.css('height', height);
   }
