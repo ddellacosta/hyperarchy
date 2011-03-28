@@ -1278,7 +1278,8 @@ body.legal {
 
 #columns {
   height: 100%;
-  position: relative; }
+  position: relative;
+  background: #f6f6f6; }
   #columns > .subnav {
     height: 5px;
     background: #5a5d62; }
@@ -1293,18 +1294,22 @@ body.legal {
       padding: 15px 0; }
       #columns > ol > .column.first {
         padding: 0; }
+        #columns > ol > .column.first > .columnView > .header {
+          display: none; }
         #columns > ol > .column.first > .columnView > .section > .recordDetails {
-          border: none;
-          -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 6px;
-          -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 6px; }
+          border-top: none;
+          border-bottom: none;
+          border-left: none;
+          -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 8px;
+          -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 8px; }
 
 .columnView {
   height: 100%;
   position: relative; }
   .columnView > .header {
-    margin: 10px;
-    margin-top: 0;
-    padding-right: 20px; }
+    margin-right: 20px;
+    padding: 10px;
+    padding-top: 0; }
   .columnView > .section {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1315,6 +1320,8 @@ body.legal {
     padding-right: 20px; }
     .columnView > .section.right {
       left: 50%; }
+    .columnView > .section.full {
+      width: 100%; }
 
 .recordDetails {
   -moz-box-sizing: border-box;
@@ -1324,7 +1331,8 @@ body.legal {
   padding: 15px 20px;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 1px solid #d0d0d0; }
+  border: 1px solid #d0d0d0;
+  background: white; }
   .recordDetails > .body {
     margin-bottom: 5px; }
   .recordDetails > .details {
@@ -1340,7 +1348,7 @@ body.legal {
     width: 100%;
     border: 1px solid #aaa; }
   .recordDetails > .footer {
-    margin: 10px 0; }
+    margin: 15px 0; }
     .recordDetails > .footer > .avatar {
       float: left;
       margin-right: 5px;
@@ -1362,7 +1370,7 @@ body.legal {
       .recordDetails > .footer > button:hover {
         color: black; }
   .recordDetails > .childLinks {
-    margin-bottom: 30px; }
+    margin-bottom: 20px; }
     .recordDetails > .childLinks > li {
       padding: 10px 10px;
       margin: 10px 0;
@@ -1370,7 +1378,7 @@ body.legal {
       cursor: pointer;
       font-size: 18px; }
       .recordDetails > .childLinks > li:hover {
-        background-color: #f3f3ff; }
+        background-color: #f1f1ff; }
         .recordDetails > .childLinks > li:hover .icon {
           background-image: url(/images/play_12x16_light.png); }
       .recordDetails > .childLinks > li.selected {
@@ -1431,7 +1439,7 @@ body.legal {
       cursor: pointer;
       background-image: url(/images/x_11x11_dark.png) !important; }
   .recordLi:hover {
-    background-color: #f3f3ff; }
+    background-color: #f1f1ff; }
     .recordLi:hover .icon {
       background-image: url(/images/play_12x16_light.png); }
   .recordLi.selected {

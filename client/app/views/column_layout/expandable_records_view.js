@@ -47,6 +47,10 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         });
       });
       this.recordDetails.containingView = this;
+
+      this.recordDetails.body.click(this.bind(function() {
+        this.containingColumn.showParent();
+      }));
     },
 
     state: {
@@ -97,9 +101,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     },
 
     showRecordDetails: function() {
-      if (this.isInFirstColumn()) this.header.hide();
-      else this.header.show();
-      
       this.rightSection.children().hide();
       this.recordDetails.show();
       this.adjustHeight();

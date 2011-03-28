@@ -7,18 +7,15 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
   }},
 
   content: function() {with(this.builder) {
-    div({'class': "columnView"}, function() {
+    div({'class': "comments columnView"}, function() {
       div({'class': "header"}, function() {
         h2("Comments");
       }).ref("header");
-      div({'class': "body"}, function() {
-        subview('mainList', Views.SortedList, {
-          rootAttributes: {'class': "commentsList left"}
+      div({'class': "section full"}, function() {
+        div({'class': "recordsList"}, function() {
+          subview('list', Views.SortedList);
+          div({'class': "loading"}).ref("loading");
         });
-        subview('detailsArea', Views.ColumnLayout.RecordDetails, {
-          rootAttributes: {'class': "commentDetails right"}
-        });
-        div({'class': "loading", 'style': "display: none"}).ref("loading");
       }).ref("body");
     });
   }},
@@ -30,7 +27,7 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
-      this.mainList.buildElement = this.bind(function(comment) {
+      this.list.buildElement = this.bind(function(comment) {
         return Views.ColumnLayout.CommentLi.toView({
           record: comment,
           containingView: this
@@ -84,23 +81,22 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
 
     mainRelation: {
       afterChange: function(commentsRelation) {
-        this.mainList.relation(commentsRelation);
+        this.list.relation(commentsRelation);
       }
     },
 
     selectedRecordId: {
       afterChange: function(id) {
         if (! id) return;
-        var selectedLi = this.mainList.elementsById[id];
+        var selectedLi = this.list.elementsById[id];
         if (! selectedLi) return;
-        this.mainList.children().removeClass("selected");
+        this.list.children().removeClass("selected");
         selectedLi.addClass("selected");
-        this.detailsArea.record(this.mainRelation().find(id));
       }
     },
 
     adjustHeight: function() {
-      this.body.fillContainingVerticalSpace(20);
+      this.body.fillContainingVerticalSpace();
     },
 
     setCurrentOrganizationId: function() {
@@ -112,11 +108,14 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
     },
 
     startLoading: function() {
-
+      this.list.hide();
+      this.loading.show();
     },
 
     stopLoading: function() {
-
+      this.loading.hide();
+      this.list.show();
+      this.adjustHeight();
     }
   }
 });

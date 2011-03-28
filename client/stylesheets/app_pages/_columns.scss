@@ -1,8 +1,13 @@
 $borderColor: #d0d0d0;
+$backgroundColor: white;
+$backgroundColor: #f6f6f6;
+$selectedColor: #ddddff;
+$hoverColor: mix($selectedColor, white, 40%);
 
 #columns {
   height: 100%;
   position: relative;
+  background: $backgroundColor;
 
   >.subnav {
     height: 5px;
@@ -11,7 +16,7 @@ $borderColor: #d0d0d0;
 
   >ol {
     position: relative;
-    
+
     >.column {
       @include borderBox;
       height: 100%;
@@ -21,9 +26,16 @@ $borderColor: #d0d0d0;
       &.first {
         padding: 0;
 
-        >.columnView > .section > .recordDetails {
-          border: none;
-          @include dropShadow;
+        >.columnView {
+          > .header {
+            display: none;
+          }
+          >.section > .recordDetails {
+            border-top: none;
+            border-bottom: none;
+            border-left: none;
+            @include dropShadow(8px, .5);
+          }
         }
       }
     }
@@ -36,9 +48,9 @@ $borderColor: #d0d0d0;
   position: relative;
 
   >.header {
-    margin: 10px;
-    margin-top: 0;
-    padding-right: 20px;
+    margin-right: 20px;
+    padding: 10px;
+    padding-top: 0;
   }
 
   >.section {
@@ -48,7 +60,12 @@ $borderColor: #d0d0d0;
     width: 50%;
     padding-right: 20px;
 
-    &.right  {left: 50%;}
+    &.right  {
+      left: 50%;
+    }
+    &.full {
+      width: 100%;
+    }
   }
 }
 
@@ -60,6 +77,7 @@ $borderColor: #d0d0d0;
   overflow-x: hidden;
   overflow-y: auto;
   border: 1px solid $borderColor;
+  background: white;
 
   >.body {
     @extend h2;
@@ -86,7 +104,7 @@ $borderColor: #d0d0d0;
   }
 
   >.footer {
-    margin: 10px 0;
+    margin: 15px 0;
 
     >.avatar {
       float: left;
@@ -119,7 +137,8 @@ $borderColor: #d0d0d0;
   }
 
   >.childLinks {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+//    margin-right: -20px;
 
     >li {
       padding: 10px 10px;
@@ -129,11 +148,11 @@ $borderColor: #d0d0d0;
       font-size: 18px;
 
       &:hover {
-        background-color: #f3f3ff;
+        background-color: $hoverColor;
         .icon {background-image: url(/images/play_12x16_light.png);}
       }
       &.selected {
-        background-color: #ddddff;
+        background-color: $selectedColor;
         .icon {background-image: url(/images/play_12x16_dark.png);}
       }
 
@@ -199,12 +218,12 @@ $borderColor: #d0d0d0;
   }
 
   &:hover {
-    background-color: #f3f3ff;
+    background-color: $hoverColor;
     .icon {background-image: url(/images/play_12x16_light.png);}
   }
 
   &.selected {
-    background-color: #ddddff;
+    background-color: $selectedColor;
     .icon {background-image: url(/images/play_12x16_dark.png) !important;}
   }
 }

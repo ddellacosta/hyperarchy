@@ -22,6 +22,9 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     state: {
       afterChange: function(columnState, oldColumnState) {
         if (!columnState || _(columnState).isEqual(oldColumnState)) return;
+
+        console.debug('doing work');
+
         var viewName = columnState.tableName;
         this.switchToView(viewName);
         this.currentView.state(columnState);
@@ -50,6 +53,10 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         this.containingList.setColumnState(nextColumn, newStateForNextColumn);
       }
       this.state(newStateForThisColumn);
+    },
+
+    showParent: function() {
+      this.containingList.scrollLeft();
     },
 
     handleInvalidState: function(error) {
