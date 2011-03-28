@@ -10,28 +10,30 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     viewName:    'columns',
     defaultView:  true,
 
-    maxVisibleColumns:   2,
-    minInvisibleColumns: 2,
+    maxOnScreenColumns:  3,
+    minOffScreenColumns: 2,
 
     initialize: function() {
-      this.visibleColumns = [];
-      this.invisibleColumns = [];
-      var totalNumColumns = this.maxVisibleColumns + this.minInvisibleColumns;
-      for (var i = 0; i < totalNumColumns; i++) {
-        this.invisibleColumns[i] = Views.ColumnLayout.ColumnLi.toView();
-        this.invisibleColumns[i].containingList = this;
-        this.invisibleColumns[i].appendTo(this.list);
+      this.onScreenColumns = [];
+      this.offScreenLeftColumns = [];
+      this.offScreenRightColumns = [];
+      this.numColumns = this.maxOnScreenColumns + this.minOffScreenColumns;
+      for (var i = 0; i < this.numColumns; i++) {
+        this.offScreenLeftColumns[i] = Views.ColumnLayout.ColumnLi.toView();
+        this.offScreenLeftColumns[i].containingList = this;
+        this.offScreenLeftColumns[i].appendTo(this.list);
       }
-      this.arrangeColumns();
+      this.arrangeOffScreenColumns();
       $(window).resize(this.hitch('adjustHeight'));
     },
 
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
-      this.numVisibleColumns(newColumnStates.length);
-      if (this.statesAreScrolledLeft(newColumnStates))  this.scrollLeft();
-      if (this.statesAreScrolledRight(newColumnStates)) this.scrollRight();
-      _(this.visibleColumns).each(function(column, i) {
+      this.numOnScreenColumns(newColumnStates.length);
+
+      // to do: scroll left or right based on newColumnStates
+
+      _(this.onScreenColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
       }, this);
       this.arrangeColumns('fast');
@@ -42,7 +44,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     getColumnStatesFromUrlState: function(state) {
       var columnStates = [];
       var tableName, parentTableName, childTableName, recordId, parentRecordId;
-      for (var i = 0; i < this.maxVisibleColumns; i++) {
+      for (var i = 0; i < this.maxOnScreenColumns; i++) {
         parentTableName = state["col" + i];
         tableName       = state["col" + (i+1)];
         childTableName  = state["col" + (i+2)];
@@ -63,7 +65,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     getUrlStateFromColumnStates: function() {
       var urlState = {};
-      _(this.visibleColumns).each(function(column, i) {
+      _(this.onScreenColumns).each(function(column, i) {
         var state = column.state();
         if (state.tableName) urlState["col" + (i+1)] = state.tableName;
         if (state.recordId)  urlState["id" + (i+1)]  = state.recordId;
@@ -76,91 +78,102 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     arrangeColumns: function(duration) {
-      if (! duration) duration = 0;
-      var width = 100.0 / (this.numVisibleColumns() - 1/2);
-      var onComplete = this.bind(function() {
-        _(this.invisibleColumns).each(function(column, i) {
-          column.hide();
-          column.removeClass("first");
-        }, this);
-        _(this.visibleColumns).each(function(column, i) {
-          column[(i > 0) ? 'removeClass' : 'addClass']("first");
-        }, this);
-        this.adjustHeight();
-      });
+      this.arrangeOffScreenColumns(duration);
+      this.arrangeOnScreenColumns(duration);
+    },
 
-      // first invisible column is off-screen right. others are off-screen left.
-      var furthestLeft = width * (1/2 - this.invisibleColumns.length);
-      _(this.invisibleColumns).first().
-        animate({
-          width: width + "%",
-          left: 100 + "%"
-        }, duration, onComplete);
-      _(this.invisibleColumns.slice(1)).each(function(column, i) {
-        column.animate({
-          width: width + "%",
-          left: furthestLeft + (i * width) + "%"
-        }, duration)
-      });
-      _(this.visibleColumns).each(function(column, i) {
+    arrangeOnScreenColumns: function(duration) {
+      if (! duration) duration = 0;
+      var width = 100.0 / (this.numOnScreenColumns() - 1/2);
+      _(this.onScreenColumns).each(function(column, i) {
         column.show();
         column.animate({
           width: width + '%',
           left: ((i - 1/2) * width)  + '%'
-        }, duration)
+        }, duration, function() {
+          column[(i > 0) ? 'removeClass' : 'addClass']("first");
+          column.currentView.adjustHeight();
+        });
       }, this);
     },
 
-    numVisibleColumns: {
-      afterChange: function(numVisibleColumns) {
-        if (numVisibleColumns < 1) this.handleInvalidState();
-        var numColumnsToAdd = numVisibleColumns - this.visibleColumns.length;
-        _(Math.abs(numColumnsToAdd)).times(function() {
-          if (numColumnsToAdd > 0) {
-            this.visibleColumns.push(this.invisibleColumns.shift());
-          } else {
-            this.invisibleColumns.unshift(this.visibleColumns.pop())
-          }
-        }, this);
+    arrangeOffScreenColumns: function(duration) {
+      if (! duration) duration = 0;
+      var width = 100.0 / (this.numOnScreenColumns() - 1/2);
+      var furthestLeft = width * (-1/2 - this.offScreenLeftColumns.length);
+      _(this.offScreenRightColumns).each(function(column, i) {
+        column.animate({
+          width: width + "%",
+          left: 100 + (i * width) + "%"
+        }, duration, function() {
+          column.hide();
+          column.removeClass("first");
+        });
+      }, this);
+      _(this.offScreenLeftColumns).each(function(column, i) {
+        column.animate({
+          width: width + "%",
+          left: furthestLeft + (i * width) + "%"
+        }, duration, function() {
+          column.hide();
+          column.removeClass("first");
+        });
+      }, this);
+    },
+
+    numOnScreenColumns: {
+      afterChange: function(numOnScreenColumns) {
+        if (numOnScreenColumns < 1) this.handleInvalidState();
+        var numColumnsToAdd = numOnScreenColumns - this.onScreenColumns.length;
+        if (numColumnsToAdd > 0) {
+          _(numColumnsToAdd).times(function() {
+            var newOnScreenColumn = this.offScreenRightColumns.shift() || this.offScreenLeftColumns.shift();
+            this.onScreenColumns.push(newOnScreenColumn);
+          }, this);
+        } else {
+          _(numColumnsToAdd * -1).times(function() {
+            this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
+          }, this)
+        }
         this.renumberColumns();
       }
     },
 
-    statesAreScrolledLeft: function(columnStates) {
-      return false;
-    },
-
-    statesAreScrolledRight: function(columnStates) {
-      return false;
+    offScreenColumns: function() {
+      return this.offScreenLeftColumns.concat(this.offScreenRightColumns);
     },
 
     renumberColumns: function() {
-      _(this.visibleColumns).each(function(column, i) {
+      _(this.onScreenColumns).each(function(column, i) {
         column.number = i;
       });
-      _(this.invisibleColumns).each(function(column) {
+      _(this.offScreenLeftColumns).each(function(column) {
         column.number = null;
       });
     },
 
     scrollLeft: function() {
-      var newFirstColumn = this.invisibleColumns.pop();
-      var oldLastColumn  = this.visibleColumns.pop();
-      this.visibleColumns.unshift(newFirstColumn);
-      this.invisibleColumns.unshift(oldLastColumn);
+      if (this.offScreenLeftColumns.length === 0) {
+        this.offScreenLeftColumns.unshift(this.offScreenRightColumns.pop());
+        this.arrangeOffScreenColumns();
+      }
 
+      this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
+      this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
       this.renumberColumns();
-      this.visibleColumns[0].addClass("first");
-      this.visibleColumns[1].removeClass("first");
+      this.onScreenColumns[0].addClass("first");
+      this.onScreenColumns[1].removeClass("first");
       this.arrangeColumns('fast');
     },
 
     scrollRight: function() {
-      var newLastColumn  = this.invisibleColumns.shift();
-      var oldFirstColumn = this.visibleColumns.shift();
-      this.visibleColumns.push(newLastColumn);
-      this.invisibleColumns.push(oldFirstColumn);
+      if (this.offScreenRightColumns.length === 0) {
+        this.offScreenRightColumns.push(this.offScreenLeftColumns.shift());
+        this.arrangeOffScreenColumns();
+      }
 
+      this.onScreenColumns.push(this.offScreenRightColumns.shift());
+      this.offScreenLeftColumns.push(this.onScreenColumns.shift());
       this.renumberColumns();
       this.arrangeColumns('fast');
     },
@@ -171,21 +184,21 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     scrollLeftAndSetLeftColumnState: function(columnState) {
-      var newFirstColumn = _(this.invisibleColumns).last();
+      var newFirstColumn = _(this.offScreenLeftColumns).last();
       newFirstColumn.state(columnState);
       this.scrollLeft();
 //      $.bbq.pushState(this.getUrlStateFromColumnStates());
     },
 
     scrollRightAndSetRightColumnState: function(columnState) {
-      var newLastColumn = _(this.invisibleColumns).first();
+      var newLastColumn = _(this.offScreenLeftColumns).first();
       newLastColumn.state(columnState);
       this.scrollRight();
 //      $.bbq.pushState(this.getUrlStateFromColumnStates());
     },
 
     columns: function() {
-      return this.visibleColumns.concat(this.invisibleColumns);
+      return this.onScreenColumns.concat(this.offScreenLeftColumns);
     },
 
     handleInvalidState: function(error) {
@@ -196,7 +209,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     adjustHeight: function() {
       this.list.fillContainingVerticalSpace();
-      _(this.visibleColumns).each(function(column) {
+      _(this.onScreenColumns).each(function(column) {
         column.currentView.adjustHeight();
       });
     },
