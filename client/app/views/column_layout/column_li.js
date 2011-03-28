@@ -49,7 +49,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         var nextColumn = this.containingList.visibleColumns[columnNumber + 1];
         this.containingList.setColumnState(nextColumn, newStateForNextColumn);
       }
-      this.state(newStateForThisColumn);
+//      this.state(newStateForThisColumn);
     },
 
     showParent: function() {
