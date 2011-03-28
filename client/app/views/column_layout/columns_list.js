@@ -84,6 +84,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
             this.invisibleColumns.unshift(this.visibleColumns.pop())
           }
         }, this);
+        this.renumberColumns();
       }
     },
 
@@ -95,22 +96,33 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       return false;
     },
 
-    arrangeColumns: function(animate, complete) {
+    arrangeColumns: function(animate) {
       var width = 100.0 / (this.numVisibleColumns() - 1/2);
       var leftPositions = _(this.visibleColumns).map(function(col, i) {return width * (i - 1/2)});
       var styleMethod = animate ? 'animate' : 'css';
       var duration = 'fast';
 
+      var onComplete = this.bind(function() {
+        _(this.visibleColumns).each(function(column, i) {
+          column.removeClass("first");
+        }, this);
+        _(this.invisibleColumns).each(function(column) {
+          column.removeClass("first");
+          column.detach();
+        });
+        this.visibleColumns[0].addClass("first");
+        this.adjustHeight();
+      });
+
+      this.adjustHeight();
       _(this.visibleColumns).each(function(column, i) {
-        if (! column.number) column.appendTo(this.list);
+        if (! column.parent().length) column.appendTo(this.list);
         column.currentView.adjustHeight();
-        column.show();
         column[styleMethod]({
           width: width + '%',
           left: leftPositions[i]  + '%'
         }, duration);
       }, this);
-
       _(this.invisibleColumns).first()[styleMethod]({
         width: width + "%",
         left: 100 + "%"
@@ -118,23 +130,17 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       _(this.invisibleColumns).last()[styleMethod]({
         width: width + "%",
         left: (-3/2 * width) + "%" 
-      }, duration, complete);
-      if (! animate) this.renumberColumns();
+      }, duration, onComplete);
+      if (! animate) onComplete();
     },
 
     renumberColumns: function() {
       _(this.visibleColumns).each(function(column, i) {
         column.number = i;
-        column.removeClass("first");
       });
       _(this.invisibleColumns).each(function(column) {
-        column.removeClass("first");
         column.number = null;
-//        column.hide();
-        column.detach();
       });
-      this.visibleColumns[0].addClass("first");
-      this.adjustHeight();
     },
 
     scrollLeft: function() {
@@ -143,8 +149,9 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.visibleColumns.unshift(newFirstColumn);
       this.invisibleColumns.unshift(oldLastColumn);
       this.renumberColumns();
-      this.adjustHeight();
-      this.defer(this.hitch('arrangeColumns', true));
+      this.visibleColumns[0].addClass("first");
+      this.visibleColumns[1].removeClass("first");
+      this.arrangeColumns(true);
     },
 
     scrollRight: function() {
@@ -152,8 +159,8 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       var oldFirstColumn = this.visibleColumns.shift();
       this.visibleColumns.push(newLastColumn);
       this.invisibleColumns.push(oldFirstColumn);
-      var completeCallback = this.hitch('renumberColumns');
-      this.arrangeColumns(true, completeCallback);
+      this.renumberColumns();
+      this.arrangeColumns(true);
     },
 
     setColumnState: function(column, columnState) {

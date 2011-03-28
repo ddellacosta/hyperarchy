@@ -22,9 +22,6 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     state: {
       afterChange: function(columnState, oldColumnState) {
         if (!columnState || _(columnState).isEqual(oldColumnState)) return;
-
-        console.debug('doing work');
-
         var viewName = columnState.tableName;
         this.switchToView(viewName);
         this.currentView.state(columnState);
