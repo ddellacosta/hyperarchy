@@ -14,27 +14,25 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     votes:      Vote.where({electionId: recordId})
   }},
 
-
   // shared properties
   content: function() {with(this.builder) {
-    div({'class': _.singularize(template.tableName) + "Details"}, function() {
+    div({'class': _.singularize(template.tableName) + " recordDetails"}, function() {
 
-      div({'class': "content"}, function() {
         p({'class': "body"}).ref("body");
         div({'class': "details contracted"}, function() {
           span({'class': ""}).ref("details");
         }).ref('detailsContainer');
-        span("...", {'class': "ellipsis"}).ref("detailsEllipsis");
+        span("...", {'class': "ellipsis", style: "display: none;"})
+          .ref("detailsEllipsis")
         textarea({'class': "body", style: "display: none;"})
           .ref('editableBody')
           .keydown(template.keydownHandler);
-        textarea({'class': "details", style: "display: none;", placeholder: "Further details (optional)"})
+        textarea({'class': "details", style: "display: none;", placeholder: "Further details"})
           .ref('editableDetails')
           .keydown(template.keydownHandler);
-      });
 
-      div({'class': "contentFooter"}, function() {
-        button("More")
+      div({'class': "footer"}, function() {
+        button("More", {style: "display: none;"})
           .ref("expandButton")
           .click("expandDetails");
         button("Less", {style: "display: none;"})

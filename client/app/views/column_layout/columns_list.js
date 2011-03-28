@@ -1,10 +1,12 @@
 _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
-  content: function() {
-    this.builder.tag("ol", {id: "columns"});
-  },
+  content: function() {with(this.builder) {
+    div({'id': "columns"}, function() {
+      div({'class': "subnav"});
+      ol().ref("list");
+    });
+  }},
 
   viewProperties: {
-
     viewName:    'columns',
     defaultView:  true,
 
@@ -32,7 +34,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         column.state(newColumnStates[i]);
       }, this);
       this.adjustWidths();
-      this.renumberColumns();
 
       Application.layout.activateNavigationTab("questionsLink");
     },
@@ -89,19 +90,21 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         _(Math.abs(numColumnsToAdd)).times(function() {
           if (numColumnsToAdd > 0) {
             this.visibleColumns.push(this.invisibleColumns.shift());
-            _(this.visibleColumns).last().appendTo(this);
+            _(this.visibleColumns).last().appendTo(this.list);
           } else {
             _(this.visibleColumns).last().detach();
             this.invisibleColumns.unshift(this.visibleColumns.pop())
           }
         }, this);
+        this.renumberColumns();
       }
     },
 
     renumberColumns: function() {
       _(this.visibleColumns).each(function(column, i) {
-        column.number(i);
+        column.number = i;
       });
+      this.visibleColumns[0].addClass("first");
     },
 
     scrollLeft: function() {
@@ -111,7 +114,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.invisibleColumns.unshift(oldLastColumn);
       this.renumberColumns();
 
-      newFirstColumn.prependTo(this);
+      newFirstColumn.prependTo(this.list);
       this.adjustWidths();
       this.defer(function() {
         oldLastColumn.detach();
@@ -125,7 +128,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.invisibleColumns.push(oldFirstColumn);
       this.renumberColumns();
       
-      newLastColumn.appendTo(this);
+      newLastColumn.appendTo(this.list);
       this.adjustWidths();
       this.defer(function() {
         oldFirstColumn.detach();
@@ -162,12 +165,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustWidths: function() {
-      var widthFactor = 2;
-//      var widthFactor = 1.61803399;
-      var widthNormalization = widthFactor * (this.numVisibleColumns() - 1) + 1;
-      var percentWidth, percentLeftPosition = 0.0;
+      var widthFraction = 1 / (this.numVisibleColumns() - 1./2);
+      var percentWidth = widthFraction * 100.0;
+      var percentLeftPosition = -1/2 * percentWidth;
       _(this.visibleColumns).each(function(column, i) {
-        percentWidth = (i === 0 ? 1 : widthFactor) / widthNormalization * 100.0;
         column.css('width', percentWidth + '%');
         column.css('left',  percentLeftPosition  + '%');
         percentLeftPosition += percentWidth;
@@ -175,6 +176,8 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustHeight: function() {
+
+      this.list.fillContainingVerticalSpace();
       _(this.visibleColumns).each(function(column) {
         column.currentView.adjustHeight();
       });

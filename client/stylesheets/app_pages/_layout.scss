@@ -1,16 +1,22 @@
+//$appWidth: 100%;
+$appWidth: 96%;
+
 #application {
   @include noSelect;
   overflow: hidden;
+  height: 100%;
 }
 
 
 #header {
-  width: 96%;
+  width: $appWidth;
+  @include borderBox;
+  padding: 0 20px;
   margin: 0 auto;
   height: 30px;
-  min-width:  $minWidth;
+  min-width: $minWidth;
 
-  > a {
+  >a {
     display: inline-block;
     float: right;
     margin: 5px 10x;
@@ -19,7 +25,7 @@
     background-color: #efefef;
   }
 
-  > .dropdownLink {
+  >.dropdownLink {
     display: inline-block;
     padding-right: 20px;
     background-image: url(/images/expand_arrow_blue.png);
@@ -27,7 +33,7 @@
     background-repeat: no-repeat;
   }
 
-  > #logo {
+  >#logo {
     float: left;
     margin: 5px;
     cursor: pointer;
@@ -36,12 +42,12 @@
 
 
 #main {
-  width: 96%;
+  width: $appWidth;
   margin: 0 auto;
   min-width: $minWidth;
   overflow: hidden;
-  @include borderRadiusTop(6px);
   @include dropShadow(6px, 0.4);
+  @include borderRadiusTop(6px);
 }
 
 #nav {
@@ -49,10 +55,9 @@
   width: 100%;
   overflow: hidden;
   @include gradient($darkGray, 10%);
-  border-bottom: solid 5px lighten(lighten($darkGray, 3%), 6%);
   color: white;
 
-  > div {
+  >div {
     margin: 5px 30px;
     margin-bottom: 0;
   }
@@ -76,7 +81,7 @@
       padding-bottom: 20px;
       @include borderRadiusTop(4px);
       @include dropShadow(4px);
-      background-color: lighten(lighten($darkGray, 3%), 6%);
+      background-color: $subNavColor;
     }
 
     &.right {

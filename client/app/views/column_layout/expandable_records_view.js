@@ -1,29 +1,33 @@
 _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
+
   content: function() {with(this.builder) {
-    div({'class': template.tableName}, function() {
-
+    div({'class': template.tableName + " columnView"}, function() {
       div({'class': "header"}, function() {
-        template.headerContent();
+        template.leftHeader();
+        template.rightHeader();
       }).ref("header");
-
-      div({'class': "body"}, function() {
-        div({'class': template.tableName + "List"}, function() {
-          subview('mainList', Views.SortedList);
-          div({'class': "loading"}).ref("mainLoading");
-        }).ref("mainListContainer");
-        subview('detailsArea', template.detailsTemplate);
-        template.additionalBodyContent();
-      }).ref("body");
-
+      div({'class': "section"}, function() {
+        div({'class': "unranked recordsList"}, function() {
+          subview('unrankedList', Views.SortedList);
+          div({'class': "loading"}).ref("loading");
+        });
+        template.additionalLeftContent();
+      }).ref("leftSection");
+      div({'class': "right section"}, function() {
+        subview('recordDetails', template.detailsTemplate);
+        template.additionalRightContent();
+      }).ref("rightSection");
     });
   }},
 
   // template properties to override:
   tableName: "records",
-  liTemplate:      Views.ColumnLayout.RecordLi,
+  liTemplate: Views.ColumnLayout.RecordLi,
   detailsTemplate: Views.ColumnLayout.RecordDetails,
-  headerContent:         function() {},
-  additionalBodyContent: function() {},
+  leftHeader: function() {},
+  rightHeader: function() {},
+  additionalLeftContent: function() {},
+  additionalRightContent: function() {},
 
   viewProperties: {
 
@@ -36,14 +40,13 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     // shared view methods:
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
-      this.mainList.buildElement = this.bind(function(record) {
+      this.unrankedList.buildElement = this.bind(function(record) {
         return this.template.liTemplate.toView({
           record: record,
           containingView: this
         });
       });
-      this.detailsArea.containingView = this;
-      this.defer(this.hitch('adjustHeight'));
+      this.recordDetails.containingView = this;
     },
 
     state: {
@@ -56,12 +59,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
           this.childTableName(state.childTableName);
           return;
         }
-        var multipleRecordsSpecified = (state.parentTableName && state.parentRecordId);
-        if (multipleRecordsSpecified) {
-          this.showMainListAndDetailsArea();
-        } else {
-          this.showDetailsAreaOnly();
-        }
+        this.showRecordDetails();
 
         this.startLoading();
         try {
@@ -84,63 +82,49 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     selectedRecordId: {
       afterChange: function(id) {
         if (! id) return;
-        var selectedLi = this.mainList.elementsById[id];
+        var selectedLi = this.unrankedList.elementsById[id];
         if (! selectedLi) return;
-        this.mainList.children().removeClass("selected");
+        this.unrankedList.children().removeClass("selected");
         selectedLi.addClass("selected");
-        this.detailsArea.recordId(id);
+        this.recordDetails.recordId(id);
       }
     },
 
     childTableName: {
       afterChange: function(childTableName) {
-        this.detailsArea.selectedChildLink(childTableName);
+        this.recordDetails.selectedChildLink(childTableName);
       }
     },
 
-    showMainListAndDetailsArea: function() {
-      this.header.show();
-      this.mainListContainer.removeClass('right full');
-      this.mainListContainer.addClass('left');
-      this.detailsArea.removeClass('left full');
-      this.detailsArea.addClass('right');
-      this.body.children().hide();
-      this.mainListContainer.show();
-      this.detailsArea.show();
-      this.adjustHeight();
-    },
-
-    showDetailsAreaOnly: function() {
-      this.header.hide();
-      this.detailsArea.removeClass('left right');
-      this.detailsArea.addClass('full');
-      this.mainList.hide();
-      this.body.children().hide();
-      this.detailsArea.siblings().hide();
-      this.detailsArea.show();
+    showRecordDetails: function() {
+      if (this.isInFirstColumn()) this.header.hide();
+      else this.header.show();
+      
+      this.rightSection.children().hide();
+      this.recordDetails.show();
       this.adjustHeight();
     },
 
     isInFirstColumn: function() {
-      return (this.containingColumn.number() == 0);
+      return (this.containingColumn.number == 0);
     },
 
     startLoading: function() {
-      this.mainList.hide();
-      this.mainLoading.show();
-      this.detailsArea.startLoading();
-      this.adjustHeight();
+      this.unrankedList.hide();
+      this.loading.show();
+      this.recordDetails.startLoading();
     },
 
     stopLoading: function() {
-      this.mainLoading.hide();
-      this.mainList.show();
-      this.detailsArea.stopLoading();
+      this.loading.hide();
+      this.unrankedList.show();
+      this.recordDetails.stopLoading();
       this.adjustHeight();
     },
 
     adjustHeight: function() {
-      this.body.fillContainingVerticalSpace();
+      this.leftSection.fillContainingVerticalSpace();
+      this.rightSection.fillContainingVerticalSpace();
     },
 
     afterShow: function() {

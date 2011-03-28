@@ -4,7 +4,7 @@ _.constructor("Views.ColumnLayout.ElectionsView", Views.ColumnLayout.ExpandableR
   liTemplate:      Views.ColumnLayout.ElectionLi,
   detailsTemplate: Views.ColumnLayout.ElectionDetails,
 
-  headerContent: function() {with(this.builder) {
+  leftHeader: function() {with(this.builder) {
     h2("Questions");
   }},
 
@@ -26,7 +26,7 @@ _.constructor("Views.ColumnLayout.ElectionsView", Views.ColumnLayout.ExpandableR
 
     mainRelation: {
       afterChange: function(electionsRelation) {
-        this.mainList.relation(electionsRelation);
+        this.unrankedList.relation(electionsRelation);
       }
     },
 

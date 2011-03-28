@@ -1,8 +1,7 @@
 _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
   content: function() { with(this.builder) {
-    div({'class': "ranked candidatesList"}, function() {
+    div({'class': "ranked recordsList"}, function() {
       ol(function() {
-
         li({'class': "dragTarget"}, function() {
           span({'class': "explanation"}, function() {
             raw("Drag answers you <em>like</em> here, <br /> with the best at the top.")
@@ -19,14 +18,10 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
             raw("Drag answers you <em>dislike</em> here, <br /> with the worst at the bottom.")
           });
         }).ref('badCandidatesDragTarget');
-
       }).ref('rankedCandidatesList');
       div({'class': "loading", style: "display: none"}).ref('loading');
     });
   }},
-
-  // the user's own ranked candidates list has explanations
-  dragTargetContent: function() {},
 
   viewProperties: {
 

@@ -2,12 +2,12 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
 
   liConstructor: Views.ColumnLayout.CommentLi,
 
-  headerContent: function() { with(this.builder) {
+  leftHeader: function() { with(this.builder) {
     h2("Comments");
   }},
 
   content: function() {with(this.builder) {
-    div({'class': "comments"}, function() {
+    div({'class': "columnView"}, function() {
       div({'class': "header"}, function() {
         h2("Comments");
       }).ref("header");
@@ -108,7 +108,7 @@ _.constructor("Views.ColumnLayout.CommentsView", View.Template, {
     },
     
     isInFirstColumn: function() {
-      return (this.containingColumn.number() === 0);
+      return (this.containingColumn.number === 0);
     },
 
     startLoading: function() {

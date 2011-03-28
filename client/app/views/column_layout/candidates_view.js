@@ -4,11 +4,11 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
   liTemplate:      Views.ColumnLayout.UnrankedCandidateLi,
   detailsTemplate: Views.ColumnLayout.CandidateDetails,
 
-  headerContent: function() {with(this.builder) {
+  leftHeader: function() {with(this.builder) {
     h2("Answers");
   }},
 
-  additionalBodyContent: function() {with(this.builder) {
+  additionalRightContent: function() {with(this.builder) {
     subview('rankedList', Views.ColumnLayout.RankedCandidatesList, {});
   }},
 
@@ -38,26 +38,21 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
 
     mainRelation: {
       afterChange: function(candidatesRelation) {
-        this.mainList.relation(candidatesRelation);
+        this.unrankedList.relation(candidatesRelation);
         var rankingsRelation = candidatesRelation.joinThrough(Ranking).
                                where({userId: Application.currentUser().id()});
         this.rankedList.rankingsRelation(rankingsRelation.orderBy(Ranking.position.desc()));
       }
     },
 
-    showMainListAndRankedList: function() {
+    showRankedList: function() {
       this.header.show();
-      this.mainListContainer.removeClass('right full');
-      this.mainListContainer.addClass('left');
-      this.rankedList.removeClass('left full');
-      this.rankedList.addClass('right');
-      this.body.children().hide();
-      this.mainListContainer.show();
+      this.rightSection.children().hide();
       this.rankedList.show();
     },
 
-    adjustHeight: function() {
-      this.body.fillContainingVerticalSpace();
+    adjustHeight: function($super) {
+      $super();
       this.rankedList.adjustHeight();
     },
 

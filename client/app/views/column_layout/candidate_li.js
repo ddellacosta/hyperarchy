@@ -44,7 +44,7 @@ _.constructor("Views.ColumnLayout.CandidateLi", View.Template, {
     },
 
     showDetails: function() {
-      this.containingView.showMainListAndDetailsArea();
+      this.containingView.showDetailsArea();
       this.containingView.selectedRecordId(this.record.id());
     },
 

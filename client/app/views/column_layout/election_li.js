@@ -1,6 +1,6 @@
 _.constructor("Views.ColumnLayout.ElectionLi", View.Template, {
   content: function() {with(this.builder) {
-    li({'class': "unranked election"}, function() {
+    li({'class': "election recordLi"}, function() {
       span({'class': "body"}).ref("body").click('expand');
       div({'class': "expand icon", style: "display: none;"}).ref('expandIcon');
     }).ref("li").click('showDetails');
@@ -20,7 +20,7 @@ _.constructor("Views.ColumnLayout.ElectionLi", View.Template, {
     },
 
     showDetails: function() {
-      this.containingView.showMainListAndDetailsArea();
+      this.containingView.showRecordDetails();
       this.containingView.selectedRecordId(this.election.id());
     }
   }

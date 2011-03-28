@@ -9,7 +9,8 @@ $lighterGray: #F4F4F4;
 $gray: #6B6B6B;
 $darkGray: #44464A;
 $black: #0D0D10;
-$backgroundGray: #e6e6e6;
+$backgroundGray: #e4e4e4;
+$subNavColor: lighten(lighten($darkGray, 3%), 6%); 
 
 // includes padding and border in the width and height
 @mixin borderBox {

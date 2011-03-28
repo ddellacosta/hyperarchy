@@ -1,6 +1,6 @@
 _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
   content: function() {with(this.builder) {
-    li({'class': "unranked candidate"}, function() {
+    li({'class': "unranked recordLi"}, function() {
       div({'class': "icon"}).ref('icon');
       span({'class': "body"}).ref("body");
     }).ref("li").click('showDetails');
@@ -33,7 +33,7 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
 
     setupDraggable: function() {
       this.draggable({
-        connectToSortable: '.ranked,.candidatesList > ol',
+        connectToSortable: '.ranked,.recordsList > ol',
         revert: 'invalid',
         revertDuration: 100,
         helper: this.hitch("createCloneForDragging"),
@@ -44,12 +44,12 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
     },
 
     showDetails: function() {
-      this.containingView.showMainListAndDetailsArea();
+      this.containingView.showRecordDetails();
       this.containingView.selectedRecordId(this.candidate.id());
     },
 
     showRankedList: function() {
-      this.containingView.showMainListAndRankedList();
+      this.containingView.showRankedList();
     },
 
     showRankedIcon: function() {

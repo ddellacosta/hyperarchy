@@ -107,7 +107,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     adjustHeight: function() {
-      this.content.fillVerticalSpace();
+      this.content.fillVerticalSpace(20);
     },
 
     organization: {
