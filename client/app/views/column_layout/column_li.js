@@ -58,6 +58,10 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
 
     handleInvalidState: function(error) {
       this.containingList.handleInvalidState(error);
+    },
+
+    adjustHeight: function() {
+      this.currentView.adjustHeight();
     }
   }
 });

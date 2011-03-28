@@ -23,20 +23,17 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         this.offScreenLeftColumns[i].containingList = this;
         this.offScreenLeftColumns[i].appendTo(this.list);
       }
-      this.arrangeOffScreenColumns();
       $(window).resize(this.hitch('adjustHeight'));
     },
 
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
       this.numOnScreenColumns(newColumnStates.length);
-
       // to do: scroll left or right based on newColumnStates
-
       _(this.onScreenColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
       }, this);
-      this.arrangeColumns('fast');
+      this.arrangeColumns();
 
       Application.layout.activateNavigationTab("questionsLink");
     },
@@ -92,7 +89,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           left: ((i - 1/2) * width)  + '%'
         }, duration, function() {
           column[(i > 0) ? 'removeClass' : 'addClass']("first");
-          column.currentView.adjustHeight();
+          column.adjustHeight();
         });
       }, this);
     },
@@ -119,6 +116,32 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           column.removeClass("first");
         });
       }, this);
+    },
+
+    scrollLeft: function() {
+      if (this.offScreenLeftColumns.length === 0) {
+        this.offScreenLeftColumns.unshift(this.offScreenRightColumns.pop());
+        this.arrangeOffScreenColumns();
+      }
+
+      this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
+      this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
+      this.renumberColumns();
+      this.onScreenColumns[0].addClass("first");
+      this.onScreenColumns[1].removeClass("first");
+      this.arrangeColumns('fast');
+    },
+
+    scrollRight: function() {
+      if (this.offScreenRightColumns.length === 0) {
+        this.offScreenRightColumns.push(this.offScreenLeftColumns.shift());
+        this.arrangeOffScreenColumns();
+      }
+
+      this.onScreenColumns.push(this.offScreenRightColumns.shift());
+      this.offScreenLeftColumns.push(this.onScreenColumns.shift());
+      this.renumberColumns();
+      this.arrangeColumns('fast');
     },
 
     numOnScreenColumns: {
@@ -150,32 +173,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       _(this.offScreenLeftColumns).each(function(column) {
         column.number = null;
       });
-    },
-
-    scrollLeft: function() {
-      if (this.offScreenLeftColumns.length === 0) {
-        this.offScreenLeftColumns.unshift(this.offScreenRightColumns.pop());
-        this.arrangeOffScreenColumns();
-      }
-
-      this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
-      this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
-      this.renumberColumns();
-      this.onScreenColumns[0].addClass("first");
-      this.onScreenColumns[1].removeClass("first");
-      this.arrangeColumns('fast');
-    },
-
-    scrollRight: function() {
-      if (this.offScreenRightColumns.length === 0) {
-        this.offScreenRightColumns.push(this.offScreenLeftColumns.shift());
-        this.arrangeOffScreenColumns();
-      }
-
-      this.onScreenColumns.push(this.offScreenRightColumns.shift());
-      this.offScreenLeftColumns.push(this.onScreenColumns.shift());
-      this.renumberColumns();
-      this.arrangeColumns('fast');
     },
 
     setColumnState: function(column, columnState) {
@@ -210,7 +207,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     adjustHeight: function() {
       this.list.fillContainingVerticalSpace();
       _(this.onScreenColumns).each(function(column) {
-        column.currentView.adjustHeight();
+        column.adjustHeight();
       });
     },
 
