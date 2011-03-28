@@ -1,6 +1,6 @@
 $borderColor: #d0d0d0;
 $backgroundColor: white;
-//$backgroundColor: #f6f6f6;
+$backgroundColor: #f6f6f6;
 $selectedColor: #ddddff;
 $hoverColor: mix($selectedColor, white, 40%);
 
@@ -138,7 +138,7 @@ $hoverColor: mix($selectedColor, white, 40%);
 
   >.childLinks {
     margin-bottom: 20px;
-//    margin-right: -20px;
+    margin-right: -20px;
 
     >li {
       padding: 10px 10px;

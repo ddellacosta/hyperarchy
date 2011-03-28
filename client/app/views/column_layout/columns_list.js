@@ -10,17 +10,19 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     viewName:    'columns',
     defaultView:  true,
 
-    maxVisibleColumns:   3,
+    maxVisibleColumns:   2,
     minInvisibleColumns: 2,
 
     initialize: function() {
-      this.visibleColumns   = [];
+      this.visibleColumns = [];
       this.invisibleColumns = [];
       var totalNumColumns = this.maxVisibleColumns + this.minInvisibleColumns;
       for (var i = 0; i < totalNumColumns; i++) {
         this.invisibleColumns[i] = Views.ColumnLayout.ColumnLi.toView();
         this.invisibleColumns[i].containingList = this;
+        this.invisibleColumns[i].appendTo(this.list);
       }
+      this.arrangeColumns();
       $(window).resize(this.hitch('adjustHeight'));
     },
 
@@ -32,7 +34,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       _(this.visibleColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
       }, this);
-      this.arrangeColumns();
+      this.arrangeColumns('fast');
 
       Application.layout.activateNavigationTab("questionsLink");
     },
@@ -73,6 +75,42 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       return urlState;
     },
 
+    arrangeColumns: function(duration) {
+      if (! duration) duration = 0;
+      var width = 100.0 / (this.numVisibleColumns() - 1/2);
+      var onComplete = this.bind(function() {
+        _(this.invisibleColumns).each(function(column, i) {
+          column.hide();
+          column.removeClass("first");
+        }, this);
+        _(this.visibleColumns).each(function(column, i) {
+          column[(i > 0) ? 'removeClass' : 'addClass']("first");
+        }, this);
+        this.adjustHeight();
+      });
+
+      // first invisible column is off-screen right. others are off-screen left.
+      var furthestLeft = width * (1/2 - this.invisibleColumns.length);
+      _(this.invisibleColumns).first().
+        animate({
+          width: width + "%",
+          left: 100 + "%"
+        }, duration, onComplete);
+      _(this.invisibleColumns.slice(1)).each(function(column, i) {
+        column.animate({
+          width: width + "%",
+          left: furthestLeft + (i * width) + "%"
+        }, duration)
+      });
+      _(this.visibleColumns).each(function(column, i) {
+        column.show();
+        column.animate({
+          width: width + '%',
+          left: ((i - 1/2) * width)  + '%'
+        }, duration)
+      }, this);
+    },
+
     numVisibleColumns: {
       afterChange: function(numVisibleColumns) {
         if (numVisibleColumns < 1) this.handleInvalidState();
@@ -96,40 +134,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       return false;
     },
 
-    arrangeColumns: function(duration) {
-      _(this.visibleColumns).each(function(column) {
-        if (column.parent().length === 0) column.appendTo(this.list);
-        column.currentView.adjustHeight();
-      }, this);
-
-      var onComplete = this.bind(function() {
-        _(this.visibleColumns).each(function(column, i) {
-          column.removeClass("first");
-        }, this);
-        _(this.invisibleColumns).each(function(column) {
-          column.removeClass("first");
-          column.detach();
-        });
-        this.visibleColumns[0].addClass("first");
-        this.adjustHeight();
-      });
-
-      var width = 100.0 / (this.numVisibleColumns() - 1/2);
-      if (! duration) duration = 0;
-      _(this.visibleColumns).each(function(column, i) {column.animate({
-        width: width + '%',
-        left: ((i - 1/2) * width)  + '%'
-      }, duration)});
-      _(this.invisibleColumns).first().animate({
-        width: width + "%",
-        left: 100 + "%"
-      }, duration);
-      _(this.invisibleColumns).last().animate({
-        width: width + "%",
-        left: (-3/2 * width) + "%"
-      }, duration, onComplete);
-    },
-
     renumberColumns: function() {
       _(this.visibleColumns).each(function(column, i) {
         column.number = i;
@@ -148,7 +152,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.renumberColumns();
       this.visibleColumns[0].addClass("first");
       this.visibleColumns[1].removeClass("first");
-      this.arrangeColumns(150);
+      this.arrangeColumns('fast');
     },
 
     scrollRight: function() {
@@ -158,7 +162,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.invisibleColumns.push(oldFirstColumn);
 
       this.renumberColumns();
-      this.arrangeColumns(150);
+      this.arrangeColumns('fast');
     },
 
     setColumnState: function(column, columnState) {
@@ -178,6 +182,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       newLastColumn.state(columnState);
       this.scrollRight();
 //      $.bbq.pushState(this.getUrlStateFromColumnStates());
+    },
+
+    columns: function() {
+      return this.visibleColumns.concat(this.invisibleColumns);
     },
 
     handleInvalidState: function(error) {
