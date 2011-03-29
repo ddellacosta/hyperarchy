@@ -1279,7 +1279,7 @@ body.legal {
 #columns {
   height: 100%;
   position: relative;
-  background: #f8f8f8; }
+  background: #f6f6f6; }
   #columns > .subnav {
     height: 5px;
     background: #5a5d62; }
@@ -1300,8 +1300,8 @@ body.legal {
           border-top: none;
           border-bottom: none;
           border-left: none;
-          -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 8px;
-          -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 8px; }
+          -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px;
+          -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px; }
 
 .columnView {
   height: 100%;
@@ -1377,7 +1377,9 @@ body.legal {
       margin: 10px 0;
       background-color: #f4f4f4;
       cursor: pointer;
-      font-size: 18px; }
+      font-size: 18px;
+      border: 1px solid #d0d0d0;
+      border-right: none; }
       .recordDetails > .childLinks > li:hover {
         background-color: #f1f1ff; }
         .recordDetails > .childLinks > li:hover .icon {

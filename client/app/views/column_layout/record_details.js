@@ -63,8 +63,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
             span().ref(tableName + "LinkNumber");
             raw(' ');
             span().ref(tableName + "LinkText");
-          }).ref(tableName + "Link").
-             click("showChildTableInNextColumn", tableName);
+          }).ref(tableName + "Link").click("showChildTable", tableName);
         }, this);
       }).ref("childLinksList");
 
@@ -129,14 +128,8 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }
     },
 
-    showChildTableInNextColumn: function(childTableName) {
-      var newStateForNextColumn = {
-        tableName:       childTableName,
-        recordId:        NaN,
-        parentTableName: this.template.tableName,
-        parentRecordId:  this.record().id()
-      };
-      this.containingView.containingColumn.setNextColumnState(newStateForNextColumn);
+    showChildTable: function(tableName) {
+      this.containingView.containingColumn.pushNextState({tableName: tableName});
     },
 
     populateChildLinks: function() {

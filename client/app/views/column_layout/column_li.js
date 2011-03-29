@@ -19,49 +19,61 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }, this);
     },
 
+    // assigned by containing list, on hash change
     state: {
       afterChange: function(columnState, oldColumnState) {
         if (!columnState || _(columnState).isEqual(oldColumnState)) return;
-        var viewName = columnState.tableName;
-        this.switchToView(viewName);
+        this.currentView = this.views[columnState.tableName];
+        if (! this.currentView) this.handleInvalidState(this.state());
+        this.children().hide();
+        this.currentView.show();
         this.currentView.state(columnState);
       }
     },
 
-    switchToView: function(viewName) {
-      this.currentView = this.views[viewName];
-      if (! this.currentView) this.handleInvalidState(this.state());
-      this.children().hide();
-      this.currentView.show();
+    // activated by child views. trigger hash change
+    pushState: function(state) {
+      var urlState = {};
+      urlState["col" + (this.number + 1)] = state.tableName;
+      urlState["id" + (this.number + 1)] = state.recordId;
+      $.bbq.pushState(urlState);
     },
 
-    setNextColumnState: function(newStateForNextColumn) {
-      var newStateForThisColumn = _.clone(this.state());
-      newStateForThisColumn.recordId = newStateForNextColumn.parentRecordId;
-      newStateForThisColumn.childTableName = newStateForNextColumn.tableName;
-
-      var columnNumber     = this.number;
-      var lastColumnNumber = this.containingList.numOnScreenColumns() - 1;
-      if (columnNumber === lastColumnNumber) {
-        if (this.number == 1) newStateForThisColumn.parentTableName = null;
-        this.containingList.scrollRightAndSetRightColumnState(newStateForNextColumn);
-      } else {
-        var nextColumn = this.containingList.onScreenColumns[columnNumber + 1];
-        this.containingList.setColumnState(nextColumn, newStateForNextColumn);
+    pushNextState: function(state) {
+      if (this.nextColumn()) {
+        this.nextColumn().pushState(state);
+        return;
       }
-//      this.state(newStateForThisColumn);
+      var urlState = {}, currentState = $.bbq.getState();
+      var n = this.containingList.numOnScreenColumns();
+      for (var i = 1; i < n; i++) {
+        urlState["col" + i] = currentState["col" + (i+1)];
+        urlState["id" + i]  = currentState["id" + (i+1)];
+      }
+      if (state.tableName) urlState["col" + n] = state.tableName;
+      if (state.recordId) urlState["id" + n] = state.recordId;
+      $.bbq.pushState(urlState, 2);
     },
 
-    showParent: function() {
-      this.containingList.scrollLeft();
+    pushPreviousState: function(state) {
+      if (this.previousColumn()) {
+        this.previousColumn().pushState(state);
+        return;
+      }
+      var urlState = {}, currentState = $.bbq.getState();
+      var n = this.containingList.numOnScreenColumns();
+      for (var i = n; i > 1; i--) {
+        urlState["col" + i] = currentState["col" + (i-1)];
+        urlState["id" + i]  = currentState["id" + (i-1)];
+      }
+      if (state.tableName) urlState["col" + 1] = state.tableName;
+      if (state.recordId)  urlState["col" + 1] = state.recordId;
+      $.bbq.pushState(urlState, 2);
     },
 
-    handleInvalidState: function(error) {
-      this.containingList.handleInvalidState(error);
-    },
-
-    adjustHeight: function() {
-      this.currentView.adjustHeight();
-    }
+    nextColumn:     function() {return this.containingList.onScreenColumns[this.number + 1]},
+    previousColumn: function() {return this.containingList.onScreenColumns[this.number - 1]},
+    adjustHeight:   function() {this.currentView.adjustHeight()},
+    handleInvalidState: function(error) {this.containingList.handleInvalidState(error)}
   }
 });

@@ -47,23 +47,23 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         });
       });
       this.recordDetails.containingView = this;
-
-      this.recordDetails.body.click(this.bind(function() {
-        this.containingColumn.showParent();
-      }));
     },
 
     state: {
       afterChange: function(state, oldState) {
-        var relationIsTheSame = (oldState &&
-          (state.parentRecordId  === oldState.parentRecordId) &&
-          (state.parentTableName === oldState.parentTableName));
+        if (! oldState) oldState = {};
+        if (! state.parentRecordId)  state.parentRecordId = oldState.parentRecordId;
+        if (! state.parentTableName) state.parentTableName = oldState.parentTableName;
+        if (! state.childTableName)  state.childTableName = oldState.childTableName;
+
+        var relationIsTheSame = (oldState.parentRecordId && oldState.parentTableName) &&
+                                (oldState.parentRecordId === state.parentRecordId) &&
+                                (oldState.parentTableName === state.parentTableName);
         if (relationIsTheSame) {
           this.selectedRecordId(state.recordId);
           this.childTableName(state.childTableName);
           return;
         }
-        this.showRecordDetails();
 
         this.startLoading();
         try {
@@ -91,6 +91,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         this.unrankedList.children().removeClass("selected");
         selectedLi.addClass("selected");
         this.recordDetails.recordId(id);
+        this.showRecordDetails();
       }
     },
 

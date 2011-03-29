@@ -3,7 +3,7 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
     li({'class': "unranked recordLi"}, function() {
       div({'class': "icon"}).ref('icon');
       span({'class': "body"}).ref("body");
-    }).ref("li").click('showDetails');
+    }).ref("li").click('select');
   }},
 
   viewProperties: {
@@ -43,9 +43,10 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
       });
     },
 
-    showDetails: function() {
-      this.containingView.showRecordDetails();
-      this.containingView.selectedRecordId(this.candidate.id());
+    select: function() {
+      this.containingView.containingColumn.pushState({
+        recordId: this.candidate.id()
+      });
     },
 
     showRankedList: function() {

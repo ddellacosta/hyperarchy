@@ -9,34 +9,39 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
   viewProperties: {
     viewName:    'columns',
     defaultView:  true,
-
+    numColumns: 5,
     maxOnScreenColumns:  3,
-    minOffScreenColumns: 2,
 
     initialize: function() {
-      this.onScreenColumns = [];
-      this.offScreenLeftColumns = [];
+      this.onScreenColumns       = [];
+      this.offScreenLeftColumns  = [];
       this.offScreenRightColumns = [];
-      this.numColumns = this.maxOnScreenColumns + this.minOffScreenColumns;
-      for (var i = 0; i < this.numColumns; i++) {
+      for (var i = 0; i < this.numColumns - 1; i++) {
         this.offScreenLeftColumns[i] = Views.ColumnLayout.ColumnLi.toView();
-        this.offScreenLeftColumns[i].containingList = this;
-        this.offScreenLeftColumns[i].appendTo(this.list);
       }
+      this.offScreenRightColumns[0] = Views.ColumnLayout.ColumnLi.toView();
+      _(this.offScreenColumns()).each(function(column) {
+        column.containingList = this;
+        column.appendTo(this.list);
+      }, this);
+
       $(window).resize(this.hitch('adjustHeight'));
     },
 
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
       this.numOnScreenColumns(newColumnStates.length);
-      // to do: scroll left or right based on newColumnStates
+      this.shiftColumnsLeftOrRightToMatch(newColumnStates);
+      this.renumberColumns();
       _(this.onScreenColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
       }, this);
-      this.arrangeColumns();
+      this.arrangeColumns('fast');
 
       Application.layout.activateNavigationTab("questionsLink");
     },
+
+    // --- private ---
 
     getColumnStatesFromUrlState: function(state) {
       var columnStates = [];
@@ -60,28 +65,53 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       return columnStates;
     },
 
-    getUrlStateFromColumnStates: function() {
-      var urlState = {};
-      _(this.onScreenColumns).each(function(column, i) {
-        var state = column.state();
-        if (state.tableName) urlState["col" + (i+1)] = state.tableName;
-        if (state.recordId)  urlState["id" + (i+1)]  = state.recordId;
-        if (i > 0) {
-          if (state.parentTableName) urlState["col" + i] = state.parentTableName;
-          if (state.parentRecordId)  urlState["id" + i]  = state.parentRecordId;
-        }
+    numOnScreenColumns: {
+      afterChange: function(newNumber, oldNumber) {
+        if (newNumber < 1) this.handleInvalidState();
+        var numberToAdd = newNumber - (oldNumber || 0);
+        _(numberToAdd).times(function() {
+          this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
+        }, this);
+        _(numberToAdd * -1).times(function() {
+          this.offScreenLeftColumns.push(this.onScreenColumns.shift());
+        }, this);
+      }
+    },
+
+    shiftColumnsLeftOrRightToMatch: function(newStates) {
+      var state, doesMatch, offset = 0;
+      _(this.onScreenColumns).any(function(column, i) {
+        state = column.state();
+        if (!state) return false;
+        return _(newStates).any(function(newState, j) {
+          doesMatch = newState.tableName === state.tableName && newState.recordId  === state.recordId;
+          if (doesMatch) offset = i - j;
+          return doesMatch;
+        });
       });
-      return urlState;
+
+      if (offset > 0) {
+        _(offset).times(function() {
+          this.offScreenLeftColumns.push(this.onScreenColumns.shift());
+          this.onScreenColumns.push(this.offScreenRightColumns.shift());
+          this.offScreenRightColumns.push(this.offScreenLeftColumns.shift());
+        }, this);
+      }
+      if (offset < 0) {
+        _(offset * -1).times(function() {
+          this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
+          this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
+          this.offScreenLeftColumns.unshift(this.offScreenRightColumns.pop());
+          this.onScreenColumns[0].addClass("first");
+          this.onScreenColumns[1].removeClass("first");
+        }, this);
+      }
     },
 
     arrangeColumns: function(duration) {
-      this.arrangeOffScreenColumns(duration);
-      this.arrangeOnScreenColumns(duration);
-    },
-
-    arrangeOnScreenColumns: function(duration) {
       if (! duration) duration = 0;
       var width = 100.0 / (this.numOnScreenColumns() - 1/2);
+
       _(this.onScreenColumns).each(function(column, i) {
         column.show();
         column.animate({
@@ -92,12 +122,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           column.adjustHeight();
         });
       }, this);
-    },
 
-    arrangeOffScreenColumns: function(duration) {
-      if (! duration) duration = 0;
-      var width = 100.0 / (this.numOnScreenColumns() - 1/2);
-      var furthestLeft = width * (-1/2 - this.offScreenLeftColumns.length);
       _(this.offScreenRightColumns).each(function(column, i) {
         column.animate({
           width: width + "%",
@@ -107,6 +132,8 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           column.removeClass("first");
         });
       }, this);
+
+      var furthestLeft = width * (-1/2 - this.offScreenLeftColumns.length);
       _(this.offScreenLeftColumns).each(function(column, i) {
         column.animate({
           width: width + "%",
@@ -118,84 +145,13 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       }, this);
     },
 
-    scrollLeft: function() {
-      if (this.offScreenLeftColumns.length === 0) {
-        this.offScreenLeftColumns.unshift(this.offScreenRightColumns.pop());
-        this.arrangeOffScreenColumns();
-      }
-
-      this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
-      this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
-      this.renumberColumns();
-      this.onScreenColumns[0].addClass("first");
-      this.onScreenColumns[1].removeClass("first");
-      this.arrangeColumns('fast');
-    },
-
-    scrollRight: function() {
-      if (this.offScreenRightColumns.length === 0) {
-        this.offScreenRightColumns.push(this.offScreenLeftColumns.shift());
-        this.arrangeOffScreenColumns();
-      }
-
-      this.onScreenColumns.push(this.offScreenRightColumns.shift());
-      this.offScreenLeftColumns.push(this.onScreenColumns.shift());
-      this.renumberColumns();
-      this.arrangeColumns('fast');
-    },
-
-    numOnScreenColumns: {
-      afterChange: function(numOnScreenColumns) {
-        if (numOnScreenColumns < 1) this.handleInvalidState();
-        var numColumnsToAdd = numOnScreenColumns - this.onScreenColumns.length;
-        if (numColumnsToAdd > 0) {
-          _(numColumnsToAdd).times(function() {
-            var newOnScreenColumn = this.offScreenRightColumns.shift() || this.offScreenLeftColumns.shift();
-            this.onScreenColumns.push(newOnScreenColumn);
-          }, this);
-        } else {
-          _(numColumnsToAdd * -1).times(function() {
-            this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
-          }, this)
-        }
-        this.renumberColumns();
-      }
+    renumberColumns: function() {
+      _(this.onScreenColumns).each(function(column, i) {column.number = i});
+      _(this.offScreenColumns()).each(function(column) {column.number = null});
     },
 
     offScreenColumns: function() {
       return this.offScreenLeftColumns.concat(this.offScreenRightColumns);
-    },
-
-    renumberColumns: function() {
-      _(this.onScreenColumns).each(function(column, i) {
-        column.number = i;
-      });
-      _(this.offScreenLeftColumns).each(function(column) {
-        column.number = null;
-      });
-    },
-
-    setColumnState: function(column, columnState) {
-      column.state(columnState);
-      $.bbq.pushState(this.getUrlStateFromColumnStates());
-    },
-
-    scrollLeftAndSetLeftColumnState: function(columnState) {
-      var newFirstColumn = _(this.offScreenLeftColumns).last();
-      newFirstColumn.state(columnState);
-      this.scrollLeft();
-//      $.bbq.pushState(this.getUrlStateFromColumnStates());
-    },
-
-    scrollRightAndSetRightColumnState: function(columnState) {
-      var newLastColumn = _(this.offScreenLeftColumns).first();
-      newLastColumn.state(columnState);
-      this.scrollRight();
-//      $.bbq.pushState(this.getUrlStateFromColumnStates());
-    },
-
-    columns: function() {
-      return this.onScreenColumns.concat(this.offScreenLeftColumns);
     },
 
     handleInvalidState: function(error) {
@@ -206,13 +162,9 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     adjustHeight: function() {
       this.list.fillContainingVerticalSpace();
-      _(this.onScreenColumns).each(function(column) {
-        column.adjustHeight();
-      });
+      _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
     },
 
-    afterShow: function() {
-      this.defer(this.hitch('adjustHeight'));
-    }
+    afterShow: function() {this.defer(this.hitch('adjustHeight'));}
   }
 });
