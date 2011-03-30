@@ -9,8 +9,8 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
   viewProperties: {
     viewName:    'columns',
     defaultView:  true,
-    numColumns: 5,
-    maxOnScreenColumns:  3,
+    numColumns: 4,
+    maxOnScreenColumns:  2,
 
     initialize: function() {
       this.onScreenColumns       = [];
@@ -26,17 +26,17 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       }, this);
 
       $(window).resize(this.hitch('adjustHeight'));
+      this.defer(this.hitch('adjustHeight'))
     },
 
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
       this.numOnScreenColumns(newColumnStates.length);
-      this.shiftColumnsIfNeededToMatch(newColumnStates);
-      this.renumberColumns();
+      this.shiftColumnsToMatch(newColumnStates);
       _(this.onScreenColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
       }, this);
-      this.arrangeColumns('fast');
+      if (this.renumberColumns()) this.arrangeColumns('fast');
 
       Application.layout.activateNavigationTab("questionsLink");
     },
@@ -52,7 +52,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         childTableName  = state["col" + (i+2)];
         parentRecordId  = parseInt(state["id" + i]);
         recordId        = parseInt(state["id" + (i+1)]);
-        if (! tableName) break;
+        if (!tableName) break;
         if (!recordId && !(parentTableName && parentRecordId)) break;
         columnStates[i] = {
           tableName:       tableName,
@@ -69,35 +69,30 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       afterChange: function(newNumber, oldNumber) {
         if (newNumber < 1) this.handleInvalidState();
         var numberToAdd = newNumber - (oldNumber || 0);
-        if (numberToAdd > 0) {
-          _(numberToAdd).times(function() {
-            this.onScreenColumns.unshift(this.offScreenLeftColumns.pop())
-          }, this);
-        } else if (numberToAdd < 0) {
-          _(numberToAdd * -1).times(function() {
-            this.offScreenLeftColumns.push(this.onScreenColumns.shift());
-          }, this);
-        }
+        _(numberToAdd).times(function() {
+          this.onScreenColumns.unshift(this.offScreenLeftColumns.pop())
+        }, this);
+        _(numberToAdd * -1).times(function() {
+          this.offScreenLeftColumns.push(this.onScreenColumns.shift());
+        }, this);
       }
     },
 
-    shiftColumnsIfNeededToMatch: function(newStates) {
+    shiftColumnsToMatch: function(newStates) {
       var state, doesMatch, offset;
       _(this.onScreenColumns).any(function(column, i) {
         state = column.state();
         if (!state) return false;
         return _(newStates).any(function(newState, j) {
           doesMatch = newState.tableName === state.tableName && newState.recordId  === state.recordId;
-          if (doesMatch) offset = i - j;
-          return doesMatch;
+          if (doesMatch) {
+            offset = i - j;
+            return true;
+          }
         });
       });
 
-      if (offset) {
-        this.shiftColumns(offset);
-        return true;
-      }
-      return false;
+      if (offset) this.shiftColumns(offset);
     },
 
     shiftColumns: function(offset) {
@@ -113,6 +108,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           this.offScreenRightColumns.unshift(this.onScreenColumns.pop());
           this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
           this.offScreenLeftColumns.unshift(this.offScreenRightColumns.pop());
+          
           this.onScreenColumns[0].addClass("first");
           this.onScreenColumns[1].removeClass("first");
         }, this);
@@ -122,18 +118,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     arrangeColumns: function(duration) {
       if (! duration) duration = 0;
       var width = 100.0 / (this.numOnScreenColumns() - 1/2);
-
-      _(this.onScreenColumns).each(function(column, i) {
-        column.show();
-        column.adjustHeight();
-        column.animate({
-          width: width + '%',
-          left: ((i - 1/2) * width)  + '%'
-        }, duration, function() {
-          column[(i > 0) ? 'removeClass' : 'addClass']("first");
-          column.adjustHeight();
-        });
-      }, this);
 
       _(this.offScreenRightColumns).each(function(column, i) {
         column.animate({
@@ -155,11 +139,29 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           column.removeClass("first");
         });
       }, this);
+
+      _(this.onScreenColumns).each(function(column, i) {
+        column.show();
+        column.animate({
+          width: width + '%',
+          left: ((i - 1/2) * width)  + '%'
+        }, duration, function() {
+          column[(i > 0) ? 'removeClass' : 'addClass']("first");
+          column.adjustHeight();
+        });
+      }, this);
     },
 
     renumberColumns: function() {
-      _(this.onScreenColumns).each(function(column, i) {column.number = i});
-      _(this.offScreenColumns()).each(function(column) {column.number = null});
+      var change = false;
+      _(this.onScreenColumns).each(function(column, i) {
+        if (i !== column.number) change = true;
+        column.number = i;
+      });
+      _(this.offScreenColumns()).each(function(column) {
+        column.number = null
+      });
+      return change;
     },
 
     offScreenColumns: function() {
@@ -173,13 +175,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustHeight: function() {
-      console.debug("adjust height");
-      this.defer(function() {
+      this.defer(this.bind(function() {
         this.list.fillContainingVerticalSpace();
         _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
-      });
-    },
-
-    afterShow: function() {this.defer(this.hitch('adjustHeight'))}
+      }));
+    }
   }
 });

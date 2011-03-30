@@ -1279,7 +1279,7 @@ body.legal {
 #columns {
   height: 100%;
   position: relative;
-  background: white; }
+  background: #f6f6f6; }
   #columns > .subnav {
     height: 5px;
     background: #5a5d62; }
@@ -1438,7 +1438,7 @@ body.legal {
     .recordLi > .icon.loading {
       background-image: url(/images/loading_arrows_light.gif) !important; }
     .recordLi > .icon.unrank {
-      background-image: url(/images/x_11x11_light.png) !important; }
+      background-image: url(/images/x_11x11_light.png); }
     .recordLi > .icon.unrank:hover {
       cursor: pointer;
       background-image: url(/images/x_11x11_dark.png) !important; }

@@ -1,6 +1,6 @@
 $borderColor: #d0d0d0;
 $backgroundColor: white;
-//$backgroundColor: #f6f6f6;
+$backgroundColor: #f6f6f6;
 $selectedColor: #ddddff;
 $hoverColor: mix($selectedColor, white, 40%);
 
@@ -216,7 +216,7 @@ $hoverColor: mix($selectedColor, white, 40%);
 
     &.ranked  {background-image: url(/images/check_12x10_light.png);}
     &.loading {background-image: url(/images/loading_arrows_light.gif) !important;}
-    &.unrank  {background-image: url(/images/x_11x11_light.png) !important;}
+    &.unrank  {background-image: url(/images/x_11x11_light.png) ;}
     &.unrank:hover {
       cursor: pointer;
       background-image: url(/images/x_11x11_dark.png) !important;

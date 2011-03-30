@@ -8,7 +8,6 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     initialize: function() {
       this.views = {
 //        organizations: Views.ColumnLayout.OrganizationsView.toView(),
-//        votes:         Views.ColumnLayout.VotesView.toView(),
         elections:     Views.ColumnLayout.ElectionsView.toView(),
         candidates:    Views.ColumnLayout.CandidatesView.toView(),
         comments:      Views.ColumnLayout.CommentsView.toView()
@@ -19,7 +18,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }, this);
     },
 
-    // assigned by containing list, on hash change
+    // assigned by containing list on hash change
     state: {
       afterChange: function(columnState, oldColumnState) {
         if (!columnState || _(columnState).isEqual(oldColumnState)) return;
@@ -31,7 +30,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }
     },
 
-    // activated by child views. trigger hash change
+    // activated by child views.
     pushState: function(state) {
       var urlState = {};
       urlState["col" + (this.number + 1)] = state.tableName;
