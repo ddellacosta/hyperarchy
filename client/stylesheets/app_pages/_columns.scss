@@ -176,6 +176,7 @@ $hoverColor: mix($selectedColor, white, 40%);
 .recordsList {
   height: 100%;
   width: 100%;
+  position: relative;
   @include borderBox;
   background-color: #f0f0f0;
   border-top:    1px solid $borderColor;

@@ -31,7 +31,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
       this.numOnScreenColumns(newColumnStates.length);
-      this.shiftColumnsLeftOrRightToMatch(newColumnStates);
+      this.shiftColumnsIfNeededToMatch(newColumnStates);
       this.renumberColumns();
       _(this.onScreenColumns).each(function(column, i) {
         column.state(newColumnStates[i]);
@@ -69,17 +69,20 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       afterChange: function(newNumber, oldNumber) {
         if (newNumber < 1) this.handleInvalidState();
         var numberToAdd = newNumber - (oldNumber || 0);
-        _(numberToAdd).times(function() {
-          this.onScreenColumns.unshift(this.offScreenLeftColumns.pop());
-        }, this);
-        _(numberToAdd * -1).times(function() {
-          this.offScreenLeftColumns.push(this.onScreenColumns.shift());
-        }, this);
+        if (numberToAdd > 0) {
+          _(numberToAdd).times(function() {
+            this.onScreenColumns.unshift(this.offScreenLeftColumns.pop())
+          }, this);
+        } else if (numberToAdd < 0) {
+          _(numberToAdd * -1).times(function() {
+            this.offScreenLeftColumns.push(this.onScreenColumns.shift());
+          }, this);
+        }
       }
     },
 
-    shiftColumnsLeftOrRightToMatch: function(newStates) {
-      var state, doesMatch, offset = 0;
+    shiftColumnsIfNeededToMatch: function(newStates) {
+      var state, doesMatch, offset;
       _(this.onScreenColumns).any(function(column, i) {
         state = column.state();
         if (!state) return false;
@@ -90,6 +93,14 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         });
       });
 
+      if (offset) {
+        this.shiftColumns(offset);
+        return true;
+      }
+      return false;
+    },
+
+    shiftColumns: function(offset) {
       if (offset > 0) {
         _(offset).times(function() {
           this.offScreenLeftColumns.push(this.onScreenColumns.shift());
@@ -114,6 +125,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
       _(this.onScreenColumns).each(function(column, i) {
         column.show();
+        column.adjustHeight();
         column.animate({
           width: width + '%',
           left: ((i - 1/2) * width)  + '%'
@@ -133,11 +145,11 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         });
       }, this);
 
-      var furthestLeft = width * (-1/2 - this.offScreenLeftColumns.length);
+      var n = this.offScreenLeftColumns.length;
       _(this.offScreenLeftColumns).each(function(column, i) {
         column.animate({
           width: width + "%",
-          left: furthestLeft + (i * width) + "%"
+          left: ((-1/2 - n + i) * width) + "%"
         }, duration, function() {
           column.hide();
           column.removeClass("first");
@@ -161,10 +173,13 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustHeight: function() {
-      this.list.fillContainingVerticalSpace();
-      _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
+      console.debug("adjust height");
+      this.defer(function() {
+        this.list.fillContainingVerticalSpace();
+        _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
+      });
     },
 
-    afterShow: function() {this.defer(this.hitch('adjustHeight'));}
+    afterShow: function() {this.defer(this.hitch('adjustHeight'))}
   }
 });

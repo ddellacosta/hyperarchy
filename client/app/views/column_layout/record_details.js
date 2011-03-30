@@ -129,7 +129,9 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     },
 
     showChildTable: function(tableName) {
-      this.containingView.containingColumn.pushNextState({tableName: tableName});
+      this.containingView.containingColumn.pushNextState({
+        tableName: tableName
+      });
     },
 
     populateChildLinks: function() {

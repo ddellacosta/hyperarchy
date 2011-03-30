@@ -35,7 +35,9 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     pushState: function(state) {
       var urlState = {};
       urlState["col" + (this.number + 1)] = state.tableName;
-      urlState["id" + (this.number + 1)] = state.recordId;
+      urlState["id"  + (this.number + 1)] = state.recordId;
+      urlState["col" + (this.number)] = state.parentTableName;
+      urlState["id"  + (this.number)] = state.parentRecordId;
       $.bbq.pushState(urlState);
     },
 
@@ -51,7 +53,9 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         urlState["id" + i]  = currentState["id" + (i+1)];
       }
       if (state.tableName) urlState["col" + n] = state.tableName;
-      if (state.recordId) urlState["id" + n] = state.recordId;
+      if (state.recordId)  urlState["id"  + n] = state.recordId;
+      if (state.parentTableName) urlState["col" + (n-1)] = state.parentTableName;
+      if (state.parentRecordId)  urlState["id"  + (n-1)] = state.parentRecordId;
       $.bbq.pushState(urlState, 2);
     },
 
@@ -73,7 +77,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
 
     nextColumn:     function() {return this.containingList.onScreenColumns[this.number + 1]},
     previousColumn: function() {return this.containingList.onScreenColumns[this.number - 1]},
-    adjustHeight:   function() {this.currentView.adjustHeight()},
+    adjustHeight:   function() {if (this.currentView) this.currentView.adjustHeight()},
     handleInvalidState: function(error) {this.containingList.handleInvalidState(error)}
   }
 });
