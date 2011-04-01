@@ -36,6 +36,17 @@ _.constructor("Views.ColumnLayout.CandidatesView", Views.ColumnLayout.Expandable
       ];
     },
 
+    fetchNeededRelations: function(state) {
+      var candidatesRelation;
+      if (state.parentRecordId) candidatesRelation = Candidate.where({electionId: state.parentRecordId})
+      else candidatesRelation = Candidate.where({id: state.recordId});
+      return Server.fetch([
+        candidatesRelation.join(User).on(Candidate.creatorId.eq(User.id)),
+        candidatesRelation.joinThrough(Election),
+        candidatesRelation.joinThrough(Ranking).where({userId: Application.currentUser().id()})
+      ]);
+    },
+
     mainRelation: {
       afterChange: function(candidatesRelation) {
         this.unrankedList.relation(candidatesRelation);

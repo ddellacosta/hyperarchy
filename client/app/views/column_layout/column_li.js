@@ -7,7 +7,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
 
     initialize: function() {
       this.views = {
-//        organizations: Views.ColumnLayout.OrganizationsView.toView(),
+        organizations: Views.ColumnLayout.OrganizationsView.toView(),
         elections:     Views.ColumnLayout.ElectionsView.toView(),
         candidates:    Views.ColumnLayout.CandidatesView.toView(),
         comments:      Views.ColumnLayout.CommentsView.toView()
@@ -18,19 +18,18 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }, this);
     },
 
-    // assigned by containing list on hash change
     state: {
-      afterChange: function(columnState, oldColumnState) {
-        if (!columnState || _(columnState).isEqual(oldColumnState)) return;
-        this.currentView = this.views[columnState.tableName];
+      afterChange: function(state, oldState) {
+        if (! state || _(state).isEqual(oldState)) return;
+        _(state).defaults(oldState);
+        this.currentView = this.views[state.tableName];
         if (! this.currentView) this.handleInvalidState(this.state());
         this.children().hide();
         this.currentView.show();
-        this.currentView.state(columnState);
+        this.currentView.state(state);
       }
     },
 
-    // activated by child views.
     pushState: function(state) {
       var urlState = {};
       urlState["col" + (this.number + 1)] = state.tableName;
@@ -46,7 +45,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         return;
       }
       var urlState = {}, currentState = $.bbq.getState();
-      var n = this.containingList.numOnScreenColumns();
+      var n = this.containingList.onScreenColumns.length;
       for (var i = 1; i < n; i++) {
         urlState["col" + i] = currentState["col" + (i+1)];
         urlState["id" + i]  = currentState["id" + (i+1)];
@@ -64,7 +63,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         return;
       }
       var urlState = {}, currentState = $.bbq.getState();
-      var n = this.containingList.numOnScreenColumns();
+      var n = this.containingList.onScreenColumns.length;
       for (var i = n; i > 1; i--) {
         urlState["col" + i] = currentState["col" + (i-1)];
         urlState["id" + i]  = currentState["id" + (i-1)];
@@ -76,7 +75,11 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
 
     nextColumn:     function() {return this.containingList.onScreenColumns[this.number + 1]},
     previousColumn: function() {return this.containingList.onScreenColumns[this.number - 1]},
-    adjustHeight:   function() {if (this.currentView) this.currentView.adjustHeight()},
-    handleInvalidState: function(error) {this.containingList.handleInvalidState(error)}
+    handleInvalidState: function(error) {this.containingList.handleInvalidState(error)},
+
+    adjustHeight:   function() {
+      console.debug(this.number);
+      if (this.currentView) this.currentView.adjustHeight();
+    }
   }
 });

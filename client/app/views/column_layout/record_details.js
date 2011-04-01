@@ -1,18 +1,19 @@
 _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
   // template properties to override:
-  tableName: "elections",
-  childNames: {
-    candidates: "Answers",
-    comments:   "Comments",
-    votes:      "Votes"
-  },
   recordConstructor: Election,
+  tableName: "elections",
+
   childRelations: function(recordId) { return {
     candidates: Candidate.where({electionId: recordId}),
     comments:   ElectionComment.where({electionId: recordId}),
     votes:      Vote.where({electionId: recordId})
   }},
+  childNames: {
+    candidates: "Answers",
+    comments:   "Comments",
+    votes:      "Votes"
+  },
 
   // shared properties
   content: function() {with(this.builder) {
@@ -91,9 +92,9 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     },
 
     recordId: {
-      afterChange: function(id) {
-        this.record(this.template.recordConstructor.find(id));
-        this.childRelations = this.template.childRelations(id);
+      afterChange: function(recordId) {
+        this.record(this.template.recordConstructor.find(recordId));
+        this.childRelations = this.template.childRelations(recordId);
         Server.fetch(this.childRelations).onSuccess(function() {
           this.populateChildLinks();
           this.subscribeToChildRelationChanges();

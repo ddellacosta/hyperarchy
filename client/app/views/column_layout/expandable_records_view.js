@@ -6,7 +6,7 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
         template.leftHeader();
         template.rightHeader();
       }).ref("header");
-      div({'class': "section"}, function() {
+      div({'class': "left section"}, function() {
         div({'class': "unranked recordsList"}, function() {
           subview('unrankedList', Views.SortedList);
           div({'class': "loading"}).ref("loading");
@@ -37,7 +37,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     mainRelation: {afterChange: function() {}},
     setCurrentOrganizationId: function() {},
 
-    // shared view methods:
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
       this.unrankedList.buildElement = this.bind(function(record) {
@@ -51,14 +50,9 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
 
     state: {
       afterChange: function(state, oldState) {
-        if (! oldState) oldState = {};
-        if (! state.parentRecordId)  state.parentRecordId = oldState.parentRecordId;
-        if (! state.parentTableName) state.parentTableName = oldState.parentTableName;
-        if (! state.childTableName)  state.childTableName = oldState.childTableName;
-
-        var relationIsTheSame = (oldState.parentRecordId && oldState.parentTableName) &&
-                                (oldState.parentRecordId === state.parentRecordId) &&
-                                (oldState.parentTableName === state.parentTableName);
+        var relationIsTheSame = oldState &&
+                                (state.parentRecordId === oldState.parentRecordId) &&
+                                (state.parentTableName === oldState.parentTableName);
         if (relationIsTheSame) {
           this.selectedRecordId(state.recordId);
           this.childTableName(state.childTableName);
@@ -104,7 +98,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     showRecordDetails: function() {
       this.rightSection.children().hide();
       this.recordDetails.show();
-      this.adjustHeight();
     },
 
     isInFirstColumn: function() {
@@ -127,10 +120,6 @@ _.constructor("Views.ColumnLayout.ExpandableRecordsView", View.Template, {
     adjustHeight: function() {
       this.leftSection.fillContainingVerticalSpace();
       this.rightSection.fillContainingVerticalSpace();
-    },
-
-    afterShow: function() {
-      this.adjustHeight();
     }
   }
 });

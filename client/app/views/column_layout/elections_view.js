@@ -24,6 +24,15 @@ _.constructor("Views.ColumnLayout.ElectionsView", Views.ColumnLayout.ExpandableR
       ];
     },
 
+    fetchRelations: function(state) {
+      var electionsRelation;
+      if (state.parentRecordId) electionsRelation = Election.where({organizationId: state.parentRecordId})
+      else electionsRelation = Election.where({id: state.recordId});
+      return Server.fetch([
+        electionsRelation.join(User).on(Election.creatorId.eq(User.id))
+      ]);
+    },
+
     mainRelation: {
       afterChange: function(electionsRelation) {
         this.unrankedList.relation(electionsRelation);
