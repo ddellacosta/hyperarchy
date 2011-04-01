@@ -1294,11 +1294,12 @@ body.legal {
       position: absolute;
       padding: 15px 0; }
       #columns > ol > .column.first {
-        padding-top: 0; }
+        padding: 0; }
         #columns > ol > .column.first > .columnView > .header {
           display: none; }
         #columns > ol > .column.first > .columnView > .section > .recordDetails {
           border-top: none;
+          border-bottom: none;
           border-left: none;
           -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px;
           -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px; }
@@ -1370,7 +1371,7 @@ body.legal {
       .recordDetails > .footer > button:hover {
         color: black; }
   .recordDetails > .childLinks {
-    margin: 20 -9px; }
+    margin: 20px -9px; }
     .recordDetails > .childLinks > li {
       padding: 10px 10px;
       margin: 10px 0;

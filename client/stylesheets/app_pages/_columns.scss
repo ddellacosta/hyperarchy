@@ -24,8 +24,7 @@ $hoverColor: mix($selectedColor, white, 40%);
       padding: 15px 0;
 
       &.first {
-//        padding: 0;
-        padding-top: 0;
+        padding: 0;
 
         >.columnView {
           > .header {
@@ -33,7 +32,7 @@ $hoverColor: mix($selectedColor, white, 40%);
           }
           >.section > .recordDetails {
             border-top: none;
-//            border-bottom: none;
+            border-bottom: none;
             border-left: none;
             @include dropShadow(4px, .5);
           }
@@ -138,7 +137,7 @@ $hoverColor: mix($selectedColor, white, 40%);
   }
 
   >.childLinks {
-    margin: 20 -9px;
+    margin: 20px -9px;
 
     >li {
       padding: 10px 10px;
