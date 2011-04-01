@@ -114,7 +114,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       var duration = 150;
 
       var width = 100.0 / (this.onScreenColumns.length - 1/2);
-      var afterCallback = this.bind(function() {
+      var afterAnimate = this.bind(function() {
         this.list.children('column').removeClass('first');
         this.onScreenColumns[0].addClass("first");
         _(this.offScreenColumns()).each(function(column) {
@@ -134,16 +134,18 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         this.onScreenColumns[0].adjustHeight();
       }
 
-      var n = this.offScreenLeftColumns.length;
+      var numLeft = this.offScreenLeftColumns.length;
+      var lastOn  = this.onScreenColumns.length - 1;
       _(this.offScreenLeftColumns).each(function(column, i) {
-        column.animate({left: ((-1/2 - n + i) * width) + "%"}, duration);
+        column.animate({left: ((-1/2 - numLeft + i) * width) + "%"}, duration);
       }, this);
       _(this.offScreenRightColumns).each(function(column, i) {
         column.animate({left: 100 + (i * width) + "%"}, duration);
       }, this);
       _(this.onScreenColumns).each(function(column, i) {
         column.show();
-        column.animate({left: ((i - 1/2) * width)  + '%'}, duration, (i == 0) ? afterCallback : null);
+        column.animate({left: ((i - 1/2) * width)  + '%'}, duration,
+                       (i === lastOn) ? afterAnimate : null);
       }, this);
     },
 
