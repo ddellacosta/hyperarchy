@@ -173,7 +173,7 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
     adjustHeight: function() {
       var dragTargetHeight = (this.height() - this.separator.outerHeight()) / 2;
       this.goodCandidatesDragTarget.height(dragTargetHeight);
-      this.badCandidatesDragTarget.height(dragTargetHeight);
+      this.badCandidatesDragTarget.fillContainingVerticalSpace(2);
     },
 
     fadeIn: function($super) {

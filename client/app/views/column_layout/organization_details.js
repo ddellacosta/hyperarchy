@@ -1,19 +1,13 @@
-_.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
+_.constructor("Views.ColumnLayout.OrganizationDetails", Views.ColumnLayout.RecordDetails, {
 
-  // template properties to override:
-  recordConstructor: Election,
-  tableName: "elections",
-
-  childRelations: function(recordId) { return {
-    candidates: Candidate.where({electionId: recordId}),
-    comments:   ElectionComment.where({electionId: recordId}),
-    votes:      Vote.where({electionId: recordId})
-  }},
+  tableName: "organizations",
+  recordConstructor: Organization,
   childNames: {
-    candidates: "Answers",
-    comments:   "Comments",
-    votes:      "Votes"
+    elections: "Questions"
   },
+  childRelations: function(organizationId) { return {
+    elections: Election.where({organizationId: organizationId})
+  }},
 
   // shared properties
   content: function() {with(this.builder) {
@@ -21,14 +15,14 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
         p({'class': "body"}).ref("body");
         div({'class': "details contracted"}, function() {
-          span({'class': ""}).ref("details");
+          span().ref("details");
         }).ref('detailsContainer');
         span("...", {'class': "ellipsis", style: "display: none;"})
-          .ref("detailsEllipsis")
+          .ref("detailsEllipsis");
         textarea({'class': "body", style: "display: none;"})
           .ref('editableBody')
           .keydown(template.keydownHandler);
-        textarea({'class': "details", style: "display: none;", placeholder: "Further details"})
+        textarea({'class': "details", style: "display: none;", placeholder: "Description of this organization"})
           .ref('editableDetails')
           .keydown(template.keydownHandler);
 
@@ -48,11 +42,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         button("Cancel", {style: "display: none;"})
           .ref("cancelButton")
           .click("disableEditing");
-
-        subview('avatar', Views.Avatar, { size: 40 });
-        span({'class': "name"}, "").ref('creatorName');
-        br();
-        span({'class': "date"}, "").ref('createdAt');
 
         div({'class': "clear"});
       });
@@ -104,20 +93,15 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     record: {
       afterChange: function(record) {
-        this.body.bindHtml(record, "body");
-        this.details.bindHtml(record, "details");
-        this.editableBody.val(record.body());
-        this.editableDetails.val(record.details());
+        this.body.bindHtml(record, "name");
+        this.details.bindHtml(record, "description");
+        this.editableBody.val(record.name());
+        this.editableDetails.val(record.description());
 
         this.editableDetails.elastic();
         this.editableBody.elastic();
-        if (record.editableByCurrentUser()) this.editButton.show();
+        if (record.currentUserCanEdit()) this.editButton.show();
         this.showOrHideExpandButton();
-
-        var creator = User.find(record.creatorId());
-        this.avatar.user(creator);
-        this.creatorName.html(htmlEscape(creator.fullName()));
-        this.createdAt.html(record.formattedCreatedAt());
       }
     },
 
@@ -190,8 +174,8 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     },
 
     enableEditing: function() {
-      this.editableBody.val(this.record().body());
-      this.editableDetails.val(this.record().details());
+      this.editableBody.val(this.record().name());
+      this.editableDetails.val(this.record().description());
       this.body.hide();
       this.detailsContainer.hide();
       this.detailsEllipsis.hide();
@@ -226,8 +210,8 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     updateRecord: function() {
       this.startLoading();
       this.record().update({
-        body:    this.editableBody.val(),
-        details: this.editableDetails.val()
+        name:    this.editableBody.val(),
+        description: this.editableDetails.val()
       }).onSuccess(function() {
         this.stopLoading();
         this.disableEditing();

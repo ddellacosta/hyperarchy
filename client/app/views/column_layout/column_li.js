@@ -22,8 +22,9 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       afterChange: function(state, oldState) {
         if (! state || _(state).isEqual(oldState)) return;
         _(state).defaults(oldState);
+
         this.currentView = this.views[state.tableName];
-        if (! this.currentView) this.handleInvalidState(this.state());
+        if (! this.currentView) return this.handleInvalidState(this.state())
         this.children().hide();
         this.currentView.show();
         this.currentView.state(state);
@@ -78,7 +79,7 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     handleInvalidState: function(error) {this.containingList.handleInvalidState(error)},
 
     adjustHeight:   function() {
-      console.debug(this.number);
+//      console.debug(this.number);
       if (this.currentView) this.currentView.adjustHeight();
     }
   }

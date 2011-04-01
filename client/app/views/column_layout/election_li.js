@@ -1,9 +1,9 @@
 _.constructor("Views.ColumnLayout.ElectionLi", View.Template, {
   content: function() {with(this.builder) {
-    li({'class': "election recordLi"}, function() {
-      span({'class': "body"}).ref("body").click('expand');
-      div({'class': "expand icon", style: "display: none;"}).ref('expandIcon');
-    }).ref("li").click('showDetails');
+    li({'class': "unranked recordLi"}, function() {
+      div({'class': "icon"}).ref('icon');
+      span({'class': "body"}).ref("body");
+    }).ref("li").click('select');
   }},
 
   viewProperties: {
@@ -19,9 +19,8 @@ _.constructor("Views.ColumnLayout.ElectionLi", View.Template, {
       this.body.bindHtml(this.election, "body");
     },
 
-    showDetails: function() {
-      this.containingView.showRecordDetails();
-      this.containingView.selectedRecordId(this.election.id());
+    select: function() {
+      this.containingView.containingColumn.pushState({recordId: this.election.id()});
     }
   }
 });

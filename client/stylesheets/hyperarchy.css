@@ -1294,12 +1294,11 @@ body.legal {
       position: absolute;
       padding: 15px 0; }
       #columns > ol > .column.first {
-        padding: 0; }
+        padding-top: 0; }
         #columns > ol > .column.first > .columnView > .header {
           display: none; }
         #columns > ol > .column.first > .columnView > .section > .recordDetails {
           border-top: none;
-          border-bottom: none;
           border-left: none;
           -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px;
           -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px; }
@@ -1371,22 +1370,19 @@ body.legal {
       .recordDetails > .footer > button:hover {
         color: black; }
   .recordDetails > .childLinks {
-    margin-bottom: 20px;
-    margin-right: -20px; }
+    margin: 20 -9px; }
     .recordDetails > .childLinks > li {
       padding: 10px 10px;
       margin: 10px 0;
       background-color: #f4f4f4;
       cursor: pointer;
-      font-size: 18px;
-      border: 1px solid #d0d0d0;
-      border-right: none; }
+      font-size: 18px; }
       .recordDetails > .childLinks > li:hover {
-        background-color: #f1f1ff; }
+        background-color: #f1f5ff; }
         .recordDetails > .childLinks > li:hover .icon {
           background-image: url(/images/play_12x16_light.png); }
       .recordDetails > .childLinks > li.selected {
-        background-color: #ddddff; }
+        background-color: #dde6ff; }
         .recordDetails > .childLinks > li.selected .icon {
           background-image: url(/images/play_12x16_dark.png); }
       .recordDetails > .childLinks > li > .icon {
@@ -1408,14 +1404,19 @@ body.legal {
   border-bottom: 1px solid #d0d0d0;
   -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px inset;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px inset;
-  overflow: hidden;
-  overflow-y: auto; }
+  overflow: hidden; }
   .recordsList > .loading {
     height: 100%;
     width: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     background-image: url(/images/loading_arrows_large_gray_bg.gif); }
+  .recordsList > ol {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    position: relative; }
 
 .recordLi {
   padding: 5px 10px;
@@ -1444,11 +1445,11 @@ body.legal {
       cursor: pointer;
       background-image: url(/images/x_11x11_dark.png) !important; }
   .recordLi:hover {
-    background-color: #f1f1ff; }
+    background-color: #f1f5ff; }
     .recordLi:hover .icon {
       background-image: url(/images/play_12x16_light.png); }
   .recordLi.selected {
-    background-color: #ddddff; }
+    background-color: #dde6ff; }
     .recordLi.selected .icon {
       background-image: url(/images/play_12x16_dark.png) !important; }
 

@@ -1,12 +1,12 @@
 _.constructor("Views.ColumnLayout.RankedCandidateLi", View.Template, {
   content: function() {with(this.builder) {
     li({'class': "ranked candidate recordLi"}, function() {
-      span({'class': "body"}).ref("body").click('expand');
+      span({'class': "body"}).ref("body");
       div({'class': "loading icon", style: "display: none;"}).ref('loadingIcon');
       div({'class': "unrank icon", style: "display: none;"}).
         ref('unrankIcon').
         click('unrankCandidate');
-    }).ref("li");
+    });
   }},
 
   viewProperties: {

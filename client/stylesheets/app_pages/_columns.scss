@@ -1,7 +1,7 @@
 $borderColor: #d0d0d0;
 $backgroundColor: white;
 $backgroundColor: #f6f6f6;
-$selectedColor: #ddddff;
+$selectedColor: #DDE6FF;
 $hoverColor: mix($selectedColor, white, 40%);
 
 #columns {
@@ -24,7 +24,8 @@ $hoverColor: mix($selectedColor, white, 40%);
       padding: 15px 0;
 
       &.first {
-        padding: 0;
+//        padding: 0;
+        padding-top: 0;
 
         >.columnView {
           > .header {
@@ -32,11 +33,9 @@ $hoverColor: mix($selectedColor, white, 40%);
           }
           >.section > .recordDetails {
             border-top: none;
-            border-bottom: none;
+//            border-bottom: none;
             border-left: none;
-//            border-width: 4px;
             @include dropShadow(4px, .5);
-//            border-color: $selectedColor;
           }
         }
       }
@@ -139,8 +138,7 @@ $hoverColor: mix($selectedColor, white, 40%);
   }
 
   >.childLinks {
-    margin-bottom: 20px;
-    margin-right: -20px;
+    margin: 20 -9px;
 
     >li {
       padding: 10px 10px;
@@ -148,9 +146,6 @@ $hoverColor: mix($selectedColor, white, 40%);
       background-color: $lighterGray;
       cursor: pointer;
       font-size: 18px;
-
-      border: 1px solid $borderColor;
-      border-right: none;
 
       &:hover {
         background-color: $hoverColor;
@@ -183,7 +178,6 @@ $hoverColor: mix($selectedColor, white, 40%);
   border-bottom: 1px solid $borderColor;
   @include innerShadow(5px, 0.30);
   overflow: hidden;
-  overflow-y: auto;
 
   >.loading {
     height: 100%;
@@ -191,6 +185,14 @@ $hoverColor: mix($selectedColor, white, 40%);
     background-repeat: no-repeat;
     background-position: center center;
     background-image: url(/images/loading_arrows_large_gray_bg.gif);
+  }
+
+  >ol {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    position: relative;
   }
 }
 
