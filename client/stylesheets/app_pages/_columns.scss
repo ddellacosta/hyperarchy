@@ -1,13 +1,11 @@
-$borderColor: #d0d0d0;
-$backgroundColor: white;
-$backgroundColor: #f6f6f6;
+$borderColor: #cacaca;
 $selectedColor: #DDE6FF;
 $hoverColor: mix($selectedColor, white, 40%);
 
 #columns {
   height: 100%;
   position: relative;
-  background: $backgroundColor;
+  overflow: hidden;
 
   >.subnav {
     height: 5px;
@@ -16,25 +14,27 @@ $hoverColor: mix($selectedColor, white, 40%);
 
   >ol {
     position: relative;
+    @include transition(left, 150ms, ease-in-out);
 
     >.column {
       @include borderBox;
       height: 100%;
-      position: absolute;
       padding: 15px 0;
+      position: absolute;
 
       &.first {
         padding: 0;
 
         >.columnView {
-          > .header {
-            display: none;
+          >.header {
+            height: 0;
+            padding: 0;
           }
           >.section > .recordDetails {
             border-top: none;
             border-bottom: none;
             border-left: none;
-            @include dropShadow(4px, .5);
+            @include dropShadow(3px, .5);
           }
         }
       }
@@ -48,9 +48,11 @@ $hoverColor: mix($selectedColor, white, 40%);
   position: relative;
 
   >.header {
+    overflow: hidden;
     margin-right: 20px;
     padding: 10px;
     padding-top: 0;
+    @include transition(height, 150ms, ease-out);
   }
 
   >.section {
@@ -204,6 +206,27 @@ $hoverColor: mix($selectedColor, white, 40%);
   @include dropShadow(3px, 0.25);
   cursor: pointer;
 
+  &.ranked {
+    >.icon.loading {background-image: url(/images/loading_arrows_light.gif) !important;}
+    >.icon.unrank  {background-image: url(/images/x_11x11_light.png) ;}
+    >.icon.unrank:hover {
+      cursor: pointer;
+      background-image: url(/images/x_11x11_dark.png) !important;
+    }
+  }
+
+  &.unranked {
+    >.icon.ranked {background-image: url(/images/check_12x10_light.png);}
+    &:hover {
+      background-color: $hoverColor;
+      .icon {background-image: url(/images/play_12x16_light.png);}
+    }
+    &.selected {
+      background-color: $selectedColor;
+      .icon {background-image: url(/images/play_12x16_dark.png) !important;}
+    }
+  }
+
   >.body {
     color: black;
   }
@@ -214,24 +237,6 @@ $hoverColor: mix($selectedColor, white, 40%);
     float: right;
     background-repeat: no-repeat;
     background-position: center center;
-
-    &.ranked  {background-image: url(/images/check_12x10_light.png);}
-    &.loading {background-image: url(/images/loading_arrows_light.gif) !important;}
-    &.unrank  {background-image: url(/images/x_11x11_light.png) ;}
-    &.unrank:hover {
-      cursor: pointer;
-      background-image: url(/images/x_11x11_dark.png) !important;
-    }
-  }
-
-  &:hover {
-    background-color: $hoverColor;
-    .icon {background-image: url(/images/play_12x16_light.png);}
-  }
-
-  &.selected {
-    background-color: $selectedColor;
-    .icon {background-image: url(/images/play_12x16_dark.png) !important;}
   }
 }
 
@@ -265,7 +270,6 @@ $hoverColor: mix($selectedColor, white, 40%);
     padding: 5px 10px;
     background-repeat: no-repeat;
   }
-
   >.up {
     background-image: url("/images/arrow_up_white.png");
     background-position: left;

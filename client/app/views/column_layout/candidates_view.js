@@ -29,6 +29,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         });
       });
       this.recordDetails.containingView = this;
+      this.recordDetails.hide();
       this.rankedList.containingView = this;
       this.rankedList.setupSortable();
     },

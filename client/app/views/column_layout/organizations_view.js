@@ -2,7 +2,7 @@ _.constructor("Views.ColumnLayout.OrganizationsView", View.Template, {
   content: function() {with(this.builder) {
     div({'class': "organizations columnView"}, function() {
       div({'class': "header"}, function() {
-        h2("Questions");
+        h2("Organizations");
       }).ref("header");
       div({'class': "left section"}, function() {
         div({'class': "unranked recordsList"}, function() {

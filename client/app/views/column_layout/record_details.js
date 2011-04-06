@@ -3,7 +3,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
   // template properties to override:
   recordConstructor: Election,
   tableName: "elections",
-
   childRelations: function(recordId) { return {
     candidates: Candidate.where({electionId: recordId}),
     comments:   ElectionComment.where({electionId: recordId}),
@@ -14,8 +13,8 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     comments:   "Comments",
     votes:      "Votes"
   },
+  //
 
-  // shared properties
   content: function() {with(this.builder) {
     div({'class': _.singularize(template.tableName) + " recordDetails"}, function() {
 
@@ -126,7 +125,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         _(this.childRelations).each(function(relation, tableName) {
           this[tableName + 'Link'].removeClass('selected');
         }, this);
-        this[selectedTableName + 'Link'].addClass('selected');
+//        this[selectedTableName + 'Link'].addClass('selected');
       }
     },
 

@@ -1280,37 +1280,63 @@ body.legal {
 #columns {
   height: 100%;
   position: relative;
-  background: #f6f6f6; }
+  overflow: hidden; }
   #columns > .subnav {
     height: 5px;
     background: #5a5d62; }
   #columns > ol {
-    position: relative; }
+    position: relative;
+    transition-property: left;
+    -webkit-transition-property: left;
+    -moz-transition-property: left;
+    -o-transition-property: left;
+    transition-duration: 150ms;
+    -webkit-transition-duration: 150ms;
+    -moz-transition-duration: 150ms;
+    -o-transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+    -moz-transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out; }
     #columns > ol > .column {
       -moz-box-sizing: border-box;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       height: 100%;
-      position: absolute;
-      padding: 15px 0; }
+      padding: 15px 0;
+      position: absolute; }
       #columns > ol > .column.first {
         padding: 0; }
         #columns > ol > .column.first > .columnView > .header {
-          display: none; }
+          height: 0;
+          padding: 0; }
         #columns > ol > .column.first > .columnView > .section > .recordDetails {
           border-top: none;
           border-bottom: none;
           border-left: none;
-          -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px;
-          -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 4px; }
+          -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px;
+          -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px; }
 
 .columnView {
   height: 100%;
   position: relative; }
   .columnView > .header {
+    overflow: hidden;
     margin-right: 20px;
     padding: 10px;
-    padding-top: 0; }
+    padding-top: 0;
+    transition-property: height;
+    -webkit-transition-property: height;
+    -moz-transition-property: height;
+    -o-transition-property: height;
+    transition-duration: 150ms;
+    -webkit-transition-duration: 150ms;
+    -moz-transition-duration: 150ms;
+    -o-transition-duration: 150ms;
+    transition-timing-function: ease-out;
+    -moz-transition-timing-function: ease-out;
+    -webkit-transition-timing-function: ease-out;
+    -o-transition-timing-function: ease-out; }
   .columnView > .section {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1332,7 +1358,7 @@ body.legal {
   padding: 15px 20px;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 1px solid #d0d0d0;
+  border: 1px solid #cacaca;
   background: white; }
   .recordDetails > .body {
     margin-bottom: 5px; }
@@ -1401,8 +1427,8 @@ body.legal {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   background-color: #f0f0f0;
-  border-top: 1px solid #d0d0d0;
-  border-bottom: 1px solid #d0d0d0;
+  border-top: 1px solid #cacaca;
+  border-bottom: 1px solid #cacaca;
   -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px inset;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px inset;
   overflow: hidden; }
@@ -1422,12 +1448,29 @@ body.legal {
 .recordLi {
   padding: 5px 10px;
   font-size: 15px;
-  border: 1px solid #d0d0d0;
+  border: 1px solid #cacaca;
   border-top: none;
   background-color: white;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 3px;
   cursor: pointer; }
+  .recordLi.ranked > .icon.loading {
+    background-image: url(/images/loading_arrows_light.gif) !important; }
+  .recordLi.ranked > .icon.unrank {
+    background-image: url(/images/x_11x11_light.png); }
+  .recordLi.ranked > .icon.unrank:hover {
+    cursor: pointer;
+    background-image: url(/images/x_11x11_dark.png) !important; }
+  .recordLi.unranked > .icon.ranked {
+    background-image: url(/images/check_12x10_light.png); }
+  .recordLi.unranked:hover {
+    background-color: #f1f5ff; }
+    .recordLi.unranked:hover .icon {
+      background-image: url(/images/play_12x16_light.png); }
+  .recordLi.unranked.selected {
+    background-color: #dde6ff; }
+    .recordLi.unranked.selected .icon {
+      background-image: url(/images/play_12x16_dark.png) !important; }
   .recordLi > .body {
     color: black; }
   .recordLi > .icon {
@@ -1436,23 +1479,6 @@ body.legal {
     float: right;
     background-repeat: no-repeat;
     background-position: center center; }
-    .recordLi > .icon.ranked {
-      background-image: url(/images/check_12x10_light.png); }
-    .recordLi > .icon.loading {
-      background-image: url(/images/loading_arrows_light.gif) !important; }
-    .recordLi > .icon.unrank {
-      background-image: url(/images/x_11x11_light.png); }
-    .recordLi > .icon.unrank:hover {
-      cursor: pointer;
-      background-image: url(/images/x_11x11_dark.png) !important; }
-  .recordLi:hover {
-    background-color: #f1f5ff; }
-    .recordLi:hover .icon {
-      background-image: url(/images/play_12x16_light.png); }
-  .recordLi.selected {
-    background-color: #dde6ff; }
-    .recordLi.selected .icon {
-      background-image: url(/images/play_12x16_dark.png) !important; }
 
 .dragTarget {
   width: 100%;

@@ -36,6 +36,23 @@ $subNavColor: lighten(lighten($darkGray, 3%), 6%);
   -moz-border-radius-topright: $radius;
 }
 
+@mixin transition($property, $duration: 200ms, $timingFunction: ease-out) {
+  transition-property:         $property;
+  -webkit-transition-property: $property;
+  -moz-transition-property:    $property;
+  -o-transition-property:      $property;
+
+  transition-duration:         $duration;
+  -webkit-transition-duration: $duration;
+  -moz-transition-duration:    $duration;
+  -o-transition-duration:      $duration;
+
+  transition-timing-function:         $timingFunction;
+  -moz-transition-timing-function:    $timingFunction;
+  -webkit-transition-timing-function: $timingFunction;
+  -o-transition-timing-function:      $timingFunction;
+}
+
 @mixin dropShadow($size: 6px, $opacity: 0.3) {
   -moz-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size;
   -webkit-box-shadow: rgba(0,0,0, $opacity) 0px 0px $size;

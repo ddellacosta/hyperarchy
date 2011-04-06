@@ -81,6 +81,8 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     adjustHeight:   function() {
 //      console.debug(this.number);
       if (this.currentView) this.currentView.adjustHeight();
-    }
+    },
+
+    afterShow: function() {this.adjustHeight()}
   }
 });

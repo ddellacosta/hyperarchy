@@ -21,6 +21,7 @@ _.constructor("Views.ColumnLayout.ElectionsView", View.Template, {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
+      this.unrankedList.useQueue = true;
       this.unrankedList.buildElement = this.bind(function(record) {
         return Views.ColumnLayout.ElectionLi.toView({
           record: record,
