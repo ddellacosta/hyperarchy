@@ -28,29 +28,36 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.adjustScrollPosition();
 
       $(window).resize(this.hitch('adjustHeight'));
-      this.defer(this.hitch('adjustHeight'));
+      this.defer(function() {
+        this.hitch('adjustHeight');
+        Application.onUserSwitch(function() {$(window).trigger('hashchange')});
+      });
     },
 
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
       this.shiftColumnsToMatch(newColumnStates);
-      _(this.onScreenColumns).each(function(column, i) {
-        column.state(newColumnStates[i]);
-      }, this);
-      this.defer(this.hitch('adjustHeight'));
+      _(this.onScreenColumns).each(function(column, i) {column.state(newColumnStates[i])}, this);
 
+      this.defer(this.hitch('adjustHeight'));
       Application.layout.activateNavigationTab("questionsLink");
+    },
+
+    onUserSwitch: function() {
+      state = $.bbq.getState();
+      this.navigate(state);
     },
 
     getColumnStatesFromUrlState: function(state) {
       var columnStates = [];
       for (var i = 0; i < this.numOnScreenColumns; i++) {
         columnStates[i] = {
-          parentTableName: state["col" + i]     || undefined,
-          parentRecordId:  state["id" + i]      || undefined,
-          tableName:       state["col" + (i+1)] || undefined,
+          parentTableName: state["col" + i],
+          parentRecordId:  state["id" + i],
+          tableName:       state["col" + (i+1)],
           recordId:        state["id" + (i+1)],
-          childTableName:  state["col" + (i+2)]
+          childTableName:  state["col" + (i+2)],
+          userId:          Application.currentUserId
         };
       }
       return columnStates;
@@ -139,7 +146,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustHeight: function() {
-      console.debug('adjusting');
       this.list.fillContainingVerticalSpace();
       _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
     }

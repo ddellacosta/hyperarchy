@@ -13,23 +13,22 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     comments:   "Comments",
     votes:      "Votes"
   },
-  //
 
   content: function() {with(this.builder) {
     div({'class': _.singularize(template.tableName) + " recordDetails"}, function() {
 
-        p({'class': "body"}).ref("body");
-        div({'class': "details contracted"}, function() {
-          span({'class': ""}).ref("details");
-        }).ref('detailsContainer');
-        span("...", {'class': "ellipsis", style: "display: none;"})
-          .ref("detailsEllipsis")
-        textarea({'class': "body", style: "display: none;"})
-          .ref('editableBody')
-          .keydown(template.keydownHandler);
-        textarea({'class': "details", style: "display: none;", placeholder: "Further details"})
-          .ref('editableDetails')
-          .keydown(template.keydownHandler);
+      p({'class': "body"}).ref("body");
+      div({'class': "details contracted"}, function() {
+        span({'class': ""}).ref("details");
+      }).ref('detailsContainer');
+      span("...", {'class': "ellipsis", style: "display: none;"})
+        .ref("detailsEllipsis")
+      textarea({'class': "body", style: "display: none;"})
+        .ref('editableBody')
+        .keydown(template.keydownHandler);
+      textarea({'class': "details", style: "display: none;", placeholder: "Further details"})
+        .ref('editableDetails')
+        .keydown(template.keydownHandler);
 
       div({'class': "footer"}, function() {
         button("More", {style: "display: none;"})
@@ -67,6 +66,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         }, this);
       }).ref("childLinksList");
 
+      div({'class': "loading"}).ref("loading");
     });
   }},
 
@@ -125,7 +125,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         _(this.childRelations).each(function(relation, tableName) {
           this[tableName + 'Link'].removeClass('selected');
         }, this);
-//        this[selectedTableName + 'Link'].addClass('selected');
+        if (selectedTableName) this[selectedTableName + 'Link'].addClass('selected');
       }
     },
 
@@ -234,11 +234,9 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     },
 
     startLoading: function() {
-
     },
 
     stopLoading: function() {
-
     }
   }
 });

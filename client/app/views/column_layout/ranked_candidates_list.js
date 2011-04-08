@@ -61,13 +61,14 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
     handleUpdate: function(event, ui) {
       var candidate = Candidate.find(ui.item.attr('candidateId'));
       var rankedCandidateLi = this.findRankedLi(candidate);
+      this.showOrHideDragTargets();
       Application.currentOrganization().ensureCurrentUserCanParticipate()
         .onSuccess(function() {
-          this.showOrHideDragTargets();
           rankedCandidateLi.handleUpdate();
         }, this)
         .onFailure(function() {
           rankedCandidateLi.remove();
+          this.showOrHideDragTargets();
         }, this);
     },
 
@@ -173,7 +174,7 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
     adjustHeight: function() {
       var dragTargetHeight = (this.height() - this.separator.outerHeight()) / 2;
       this.goodCandidatesDragTarget.height(dragTargetHeight);
-      this.badCandidatesDragTarget.fillContainingVerticalSpace(2);
+      this.badCandidatesDragTarget.height(dragTargetHeight);
     },
 
     fadeIn: function($super) {

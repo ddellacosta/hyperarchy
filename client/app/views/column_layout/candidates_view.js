@@ -36,31 +36,43 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
     state: {
       afterChange: function(state, oldState) {
-        var relationIsTheSame = oldState &&
-                                (state.parentRecordId === oldState.parentRecordId) &&
-                                (state.parentTableName === oldState.parentTableName);
-        if (relationIsTheSame) {
-          this.selectedRecordId(state.recordId);
-          this.recordDetails.selectedChildLink(state.childTableName);
+        var mainRelationHasChanged = (! oldState)
+                                     || (state.parentRecordId  !== oldState.parentRecordId)
+                                     || (state.parentTableName !== oldState.parentTableName);
+        if (mainRelationHasChanged) {
+          this.startLoading();
+          try {
+            this.fetchRelations(state).onSuccess(function() {
+              var candidatesRelation = this.mainRelation(state);
+              var rankingsRelation = candidatesRelation.joinThrough(Ranking).
+                                     where({userId: state.userId}).
+                                     orderBy(Ranking.position.desc());
+              this.unrankedList.relation(candidatesRelation);
+              this.rankedList.rankingsRelation(rankingsRelation);
+              this.selectedRecordId(state.recordId);
+              this.recordDetails.selectedChildLink(state.childTableName);
+              if (this.isInFirstColumn()) this.setCurrentOrganizationId();
+              this.stopLoading();
+            }, this);
+          } catch (invalidState) {this.containingColumn.handleInvalidState(invalidState)}
           return;
         }
 
-        this.startLoading();
-        try {
-          this.fetchRelations(state).onSuccess(function() {
-            var candidatesRelation = this.mainRelation(state);
-            var rankingsRelation = candidatesRelation.joinThrough(Ranking).
-                                   where({userId: Application.currentUser().id()});
-            this.unrankedList.relation(this.mainRelation(state));
-            this.rankedList.rankingsRelation(rankingsRelation.orderBy(Ranking.position.desc()));
-            this.selectedRecordId(state.recordId);
-            this.recordDetails.selectedChildLink(state.childTableName);
-            if (this.isInFirstColumn()) this.setCurrentOrganizationId();
-            this.stopLoading();
+        var rankingRelationHasChanged = (! oldState) || (state.userId !== oldState.userId);
+        if (rankingRelationHasChanged) {
+          var candidatesRelation = this.mainRelation(state);
+          var rankingsRelation = candidatesRelation.joinThrough(Ranking).
+                                 where({userId: state.userId}).
+                                 orderBy(Ranking.position.desc());
+          this.rankedList.startLoading();
+          rankingsRelation.fetch().onSuccess(function() {
+            this.rankedList.stopLoading();
+            this.rankedList.rankingsRelation(rankingsRelation);
           }, this);
-        } catch (badColumnState) {
-          this.containingColumn.handleInvalidState(badColumnState);
         }
+
+        this.selectedRecordId(state.recordId);
+        this.recordDetails.selectedChildLink(state.childTableName);
       }
     },
 
@@ -69,7 +81,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       return Server.fetch([
         candidatesRelation.join(User).on(Candidate.creatorId.eq(User.id)),
         candidatesRelation.joinThrough(Election),
-        candidatesRelation.joinThrough(Ranking).where({userId: Application.currentUser().id()})
+        candidatesRelation.joinThrough(Ranking).where({userId: state.userId})
       ]);
     },
 
@@ -85,6 +97,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       afterChange: function(id) {
         if (! id) {
           this.showRankedList();
+          this.unrankedList.children().removeClass("selected");
           return;
         }
 

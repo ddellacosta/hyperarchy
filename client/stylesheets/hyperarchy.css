@@ -1333,10 +1333,10 @@ body.legal {
     -webkit-transition-duration: 150ms;
     -moz-transition-duration: 150ms;
     -o-transition-duration: 150ms;
-    transition-timing-function: ease-out;
-    -moz-transition-timing-function: ease-out;
-    -webkit-transition-timing-function: ease-out;
-    -o-transition-timing-function: ease-out; }
+    transition-timing-function: ease-in-out;
+    -moz-transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out; }
   .columnView > .section {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1485,6 +1485,7 @@ body.legal {
   position: relative; }
   .dragTarget > .explanation {
     width: 100%;
+    font-size: 15px;
     text-align: center;
     position: absolute;
     top: 40%; }

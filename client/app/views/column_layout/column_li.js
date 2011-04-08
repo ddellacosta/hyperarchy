@@ -18,31 +18,64 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }, this);
     },
 
+    // This is this view's only input. The column's state is represented
+    // by an object with these properties:
+    //  - tableName
+    //  - recordId
+    //  - parentTableName
+    //  - parentRecordId
+    //  - childTableName
+    //  - userId.
     state: {
       afterChange: function(state, oldState) {
         if (! state || _(state).isEqual(oldState)) return;
-        _(state).defaults(oldState);
+        if (oldState
+            && state.tableName === oldState.tableName
+            && state.recordId  === oldState.recordId) {
+          if (! state.parentTableName) state.parentTableName = oldState.parentTableName;
+          if (! state.parentRecordId)  state.parentRecordId  = oldState.parentRecordId;
+        }
 
-        this.currentView = this.views[state.tableName];
-        if (! this.currentView) return this.handleInvalidState(this.state())
-        this.children().hide();
-        this.currentView.show();
+        this.switchToView(state.tableName);
         this.currentView.state(state);
       }
     },
 
-    pushState: function(state) {
-      var urlState = {};
-      urlState["col" + (this.number + 1)] = state.tableName;
-      urlState["id"  + (this.number + 1)] = state.recordId;
-      urlState["col" + (this.number)] = state.parentTableName;
-      urlState["id"  + (this.number)] = state.parentRecordId;
-      $.bbq.pushState(urlState);
+    switchToView: function(viewName) {
+      this.currentView = this.views[viewName];
+      if (! this.currentView) return this.handleInvalidState(this.state());
+      this.children().hide();
+      this.currentView.show();
     },
 
-    pushNextState: function(state) {
+    pushState: function(columnState) {
+      var urlState = $.bbq.getState();
+      if ('tableName' in columnState) {
+        if (columnState.tableName) urlState["col" + (this.number+1)] = columnState.tableName;
+        else delete urlState["col" + (this.number + 1)];
+      }
+      if ('recordId' in columnState) {
+        if (columnState.recordId) urlState["id" + (this.number+1)] = columnState.recordId;
+        else delete urlState["id" + (this.number + 1)];
+      }
+      if ('parentTableName' in columnState) {
+        if (columnState.parentTableName) urlState["col" + this.number] = columnState.parentTableName;
+        else delete urlState["col" + (this.number)];
+      }
+      if ('parentRecordId' in columnState) {
+        if (columnState.parentRecordId) urlState["id" + this.number] = columnState.parentRecordId;
+        else delete urlState["id" + (this.number)];
+      }
+      if ('childTableName' in columnState) {
+        if (columnState.childTableName) urlState["col" + (this.number+2)] = columnState.childTableName;
+        else delete urlState["col" + (this.number + 2)];
+      }
+      $.bbq.pushState(urlState, 2);
+    },
+
+    pushNextState: function(columnState) {
       if (this.nextColumn()) {
-        this.nextColumn().pushState(state);
+        this.nextColumn().pushState(columnState);
         return;
       }
       var urlState = {}, currentState = $.bbq.getState();
@@ -51,16 +84,16 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         urlState["col" + i] = currentState["col" + (i+1)];
         urlState["id" + i]  = currentState["id" + (i+1)];
       }
-      if (state.tableName) urlState["col" + n] = state.tableName;
-      if (state.recordId)  urlState["id"  + n] = state.recordId;
-      if (state.parentTableName) urlState["col" + (n-1)] = state.parentTableName;
-      if (state.parentRecordId)  urlState["id"  + (n-1)] = state.parentRecordId;
+      if (columnState.tableName) urlState["col" + n] = columnState.tableName;
+      if (columnState.recordId)  urlState["id"  + n] = columnState.recordId;
+      if (columnState.parentTableName) urlState["col" + (n-1)] = columnState.parentTableName;
+      if (columnState.parentRecordId)  urlState["id"  + (n-1)] = columnState.parentRecordId;
       $.bbq.pushState(urlState, 2);
     },
 
-    pushPreviousState: function(state) {
+    pushPreviousState: function(columnState) {
       if (this.previousColumn()) {
-        this.previousColumn().pushState(state);
+        this.previousColumn().pushState(columnState);
         return;
       }
       var urlState = {}, currentState = $.bbq.getState();
@@ -69,8 +102,8 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         urlState["col" + i] = currentState["col" + (i-1)];
         urlState["id" + i]  = currentState["id" + (i-1)];
       }
-      if (state.tableName) urlState["col" + 1] = state.tableName;
-      if (state.recordId)  urlState["col" + 1] = state.recordId;
+      if (columnState.tableName) urlState["col" + 1] = columnState.tableName;
+      if (columnState.recordId)  urlState["col" + 1] = columnState.recordId;
       $.bbq.pushState(urlState, 2);
     },
 
