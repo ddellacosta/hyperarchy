@@ -105,7 +105,7 @@ _.constructor("Views.ColumnLayout.OrganizationDetails", Views.ColumnLayout.Recor
       }
     },
 
-    selectedChildLink: {
+    selectedChildTableName: {
       afterChange: function(selectedTableName) {
         _(this.childRelations).each(function(relation, tableName) {
           this[tableName + 'Link'].removeClass('selected');

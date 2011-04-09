@@ -18,14 +18,13 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }, this);
     },
 
-    // This is this view's only input. The column's state is represented
-    // by an object with these properties:
-    //  - tableName
-    //  - recordId
-    //  - parentTableName
-    //  - parentRecordId
-    //  - childTableName
-    //  - userId.
+    // The column's state is represented by an object with the following properties:
+    //   - tableName
+    //   - recordId
+    //   - parentTableName
+    //   - parentRecordId
+    //   - childTableName
+    //   - userId.
     state: {
       afterChange: function(state, oldState) {
         if (! state || _(state).isEqual(oldState)) return;
@@ -41,13 +40,11 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       }
     },
 
-    switchToView: function(viewName) {
-      this.currentView = this.views[viewName];
-      if (! this.currentView) return this.handleInvalidState(this.state());
-      this.children().hide();
-      this.currentView.show();
-    },
-
+    // This method takes a column state object as a parameter, and alters the parts
+    //  of the URL that correspond to THOSE properties of THIS column.
+    //  If properties are omitted, the corresponding parts of the URL will be
+    //  left unchanged. Properties with "falsey" values will cause the
+    //  corresponding parts of the URL to be deleted.
     pushState: function(columnState) {
       var urlState = $.bbq.getState();
       if ('tableName' in columnState) {
@@ -107,14 +104,21 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       $.bbq.pushState(urlState, 2);
     },
 
+    adjustHeight: function() {if (this.currentView) this.currentView.adjustHeight()},
+
+    // private
+
+    switchToView: function(viewName) {
+      this.currentView = this.views[viewName];
+      if (! this.currentView) return this.handleInvalidState(this.state());
+      this.children().hide();
+      this.currentView.show();
+    },
+
     nextColumn:     function() {return this.containingList.onScreenColumns[this.number + 1]},
     previousColumn: function() {return this.containingList.onScreenColumns[this.number - 1]},
-    handleInvalidState: function(error) {this.containingList.handleInvalidState(error)},
 
-    adjustHeight:   function() {
-//      console.debug(this.number);
-      if (this.currentView) this.currentView.adjustHeight();
-    },
+    handleInvalidState: function(error) {this.containingList.handleInvalidState(error)},
 
     afterShow: function() {this.adjustHeight()}
   }

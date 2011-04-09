@@ -1,10 +1,17 @@
 _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
-
   content: function() {with(this.builder) {
     div({'class': "candidates columnView"}, function() {
-      div({'class': "header"}, function() {
-        h2("Answers");
-      }).ref("header");
+      div({'class': "left header"}, function() {
+        span("Answers");
+      }).ref("leftHeader");
+      div({'class': "right header"}, function() {
+        a("New Answer").
+          ref("createRecordLink").
+          click("showCreateCandidateForm");
+        a("Your Ranking").
+          ref("rankingLink").
+          click("showRanking");
+      }).ref("rightHeader");
       div({'class': "left section"}, function() {
         div({'class': "unranked recordsList"}, function() {
           subview('unrankedList', Views.SortedList);
@@ -36,56 +43,72 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
     state: {
       afterChange: function(state, oldState) {
-        var mainRelationHasChanged = (! oldState)
-                                     || (state.parentRecordId  !== oldState.parentRecordId)
-                                     || (state.parentTableName !== oldState.parentTableName);
+        var mainRelationHasChanged = (! oldState) ||
+                                     (state.parentRecordId  !== oldState.parentRecordId) ||
+                                     (state.parentTableName !== oldState.parentTableName);
         if (mainRelationHasChanged) {
-          this.startLoading();
-          try {
-            this.fetchRelations(state).onSuccess(function() {
-              var candidatesRelation = this.mainRelation(state);
-              var rankingsRelation = candidatesRelation.joinThrough(Ranking).
-                                     where({userId: state.userId}).
-                                     orderBy(Ranking.position.desc());
-              this.unrankedList.relation(candidatesRelation);
-              this.rankedList.rankingsRelation(rankingsRelation);
-              this.selectedRecordId(state.recordId);
-              this.recordDetails.selectedChildLink(state.childTableName);
-              if (this.isInFirstColumn()) this.setCurrentOrganizationId();
-              this.stopLoading();
-            }, this);
-          } catch (invalidState) {this.containingColumn.handleInvalidState(invalidState)}
-          return;
+          this.fetchRelations(state);
         }
-
-        var rankingRelationHasChanged = (! oldState) || (state.userId !== oldState.userId);
-        if (rankingRelationHasChanged) {
-          var candidatesRelation = this.mainRelation(state);
-          var rankingsRelation = candidatesRelation.joinThrough(Ranking).
-                                 where({userId: state.userId}).
-                                 orderBy(Ranking.position.desc());
-          this.rankedList.startLoading();
-          rankingsRelation.fetch().onSuccess(function() {
-            this.rankedList.stopLoading();
-            this.rankedList.rankingsRelation(rankingsRelation);
-          }, this);
+        else {
+          var rankingRelationHasChanged = (state.userId !== oldState.userId);
+          if (rankingRelationHasChanged) this.fetchRankingRelation(state);
+          this.selectedRecordId(state.recordId);
+          this.selectedChildTableName(state.childTableName);
         }
-
-        this.selectedRecordId(state.recordId);
-        this.recordDetails.selectedChildLink(state.childTableName);
       }
     },
 
-    fetchRelations: function(state) {
-      var candidatesRelation = this.mainRelation(state);
-      return Server.fetch([
-        candidatesRelation.join(User).on(Candidate.creatorId.eq(User.id)),
-        candidatesRelation.joinThrough(Election),
-        candidatesRelation.joinThrough(Ranking).where({userId: state.userId})
-      ]);
+    adjustHeight: function() {
+      this.leftSection.fillContainingVerticalSpace();
+      this.rightSection.fillContainingVerticalSpace();
+      this.rankedList.adjustHeight();
     },
 
-    mainRelation: function(state) {
+    showCreateCandidateForm: function() {
+      this.containingColumn.pushState({recordId: "new"});
+    },
+
+    showRanking: function() {
+      this.containingColumn.pushState({recordId: ""});
+    },
+
+    // private
+
+    fetchRelations: function(state) {
+      this.startLoading();
+      try {
+        var mainRelation = this.parseMainRelation(state);
+        var rankingsRelation = mainRelation.joinThrough(Ranking).
+                               where({userId: state.userId}).
+                               orderBy(Ranking.position.desc());
+        Server.fetch([
+          mainRelation.join(User).on(Candidate.creatorId.eq(User.id)),
+          mainRelation.joinThrough(Election),
+          rankingsRelation
+        ]).onSuccess(function() {
+          this.unrankedList.relation(mainRelation);
+          this.rankedList.rankingsRelation(rankingsRelation);
+          this.selectedRecordId(state.recordId);
+          this.selectedChildTableName(state.childTableName);
+          if (this.isInFirstColumn()) this.setCurrentOrganizationId();
+          this.stopLoading();
+        }, this);
+      } catch (invalidState) {this.containingColumn.handleInvalidState(invalidState)}
+    },
+
+    fetchRankingRelation: function(state) {
+      var mainRelation = this.parseMainRelation(state);
+      var rankingsRelation = mainRelation.joinThrough(Ranking).
+                             where({userId: state.userId}).
+                             orderBy(Ranking.position.desc());
+      this.rankedList.startLoading();
+      rankingsRelation.fetch().onSuccess(function() {
+        this.rankedList.stopLoading();
+        this.rankedList.rankingsRelation(rankingsRelation);
+      }, this);
+    },
+
+    parseMainRelation: function(state) {
       if (state.parentRecordId) {
         return Candidate.where({electionId: state.parentRecordId})
       } else {
@@ -93,28 +116,45 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       }
     },
 
+    relation: function() {
+      return this.unrankedList.relation();
+    },
+
     selectedRecordId: {
       afterChange: function(id) {
-        if (! id) {
-          this.showRankedList();
-          this.unrankedList.children().removeClass("selected");
-          return;
-        }
-
-        this.rankedList.hide();
-        this.recordDetails.show();
-        this.recordDetails.recordId(id);
         this.unrankedList.children().removeClass("selected");
-        var selectedLi = this.unrankedList.elementsById[id];
-        if (! selectedLi) return;
-        selectedLi.addClass("selected");
+        if (! id) {
+          this.rightHeader.children().removeClass('active');
+          this.rankingLink.addClass('active');
+          this.showRankedList();
+        } else if (id === "new") {
+          this.rightHeader.children().removeClass('active');
+          this.createRecordLink.addClass('active');
+          this.showRecordDetails();
+          this.recordDetails.recordId("new");
+        } else {
+          this.rightHeader.children().removeClass('active');
+          this.showRecordDetails();
+          this.recordDetails.recordId(id);
+          var selectedLi = this.unrankedList.elementsById[id];
+          if (! selectedLi) return;
+          selectedLi.addClass("selected");
+        }
       }
     },
 
+    selectedChildTableName: {
+      afterChange: function(tableName) {this.recordDetails.selectedChildTableName(tableName)}
+    },
+
     showRankedList: function() {
-      this.header.show();
       this.recordDetails.hide();
       this.rankedList.show();
+    },
+
+    showRecordDetails: function() {
+      this.rankedList.hide();
+      this.recordDetails.show();
     },
 
     setCurrentOrganizationId: function() {
@@ -122,7 +162,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
     },
 
     isInFirstColumn: function() {
-      return (this.containingColumn.number == 0);
+      return (this.containingColumn.number === 0);
     },
 
     startLoading: function() {
@@ -136,12 +176,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       this.unrankedList.show();
       this.recordDetails.stopLoading();
       this.adjustHeight();
-    },
-
-    adjustHeight: function() {
-      this.leftSection.fillContainingVerticalSpace();
-      this.rightSection.fillContainingVerticalSpace();
-      this.rankedList.adjustHeight();
     }
   }
 });

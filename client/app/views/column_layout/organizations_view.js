@@ -36,7 +36,7 @@ _.constructor("Views.ColumnLayout.OrganizationsView", View.Template, {
                                 (state.parentTableName === oldState.parentTableName);
         if (relationIsTheSame) {
           this.selectedRecordId(state.recordId);
-          this.recordDetails.selectedChildLink(state.childTableName);
+          this.recordDetails.selectedChildTableName(state.childTableName);
           return;
         }
 
@@ -45,7 +45,7 @@ _.constructor("Views.ColumnLayout.OrganizationsView", View.Template, {
           this.fetchRelations(state).onSuccess(function() {
             this.unrankedList.relation(this.mainRelation(state));
             this.selectedRecordId(state.recordId);
-            this.recordDetails.selectedChildLink(state.childTableName);
+            this.recordDetails.selectedChildTableName(state.childTableName);
             if (this.isInFirstColumn()) this.setCurrentOrganizationId();
             this.stopLoading();
           }, this);

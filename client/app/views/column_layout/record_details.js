@@ -41,8 +41,11 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
           .ref("editButton")
           .click("enableEditing");
         button("Save", {style: "display: none;"})
-          .ref("saveButton")
+          .ref("updateButton")
           .click("updateRecord");
+        button("Save", {style: "display: none;"})
+          .ref("createButton")
+          .click("createRecord");
         button("Cancel", {style: "display: none;"})
           .ref("cancelButton")
           .click("disableEditing");
@@ -78,7 +81,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         break;
       case 13: // enter
         if (event.ctrlKey) break;
-        view.updateRecord();
+        view.clickSave();
         event.preventDefault();
         break;
     }
@@ -92,6 +95,12 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     recordId: {
       afterChange: function(recordId) {
+        if (recordId === "new") {
+          this.newRecord();
+          return;
+        }
+
+        recordId = parseInt(recordId);
         this.record(this.template.recordConstructor.find(recordId));
         this.childRelations = this.template.childRelations(recordId);
         Server.fetch(this.childRelations).onSuccess(function() {
@@ -101,8 +110,20 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }
     },
 
+    selectedChildTableName: {
+      afterChange: function(selectedTableName) {
+        _(this.childRelations).each(function(relation, tableName) {
+          this[tableName + 'Link'].removeClass('selected');
+        }, this);
+        if (selectedTableName) this[selectedTableName + 'Link'].addClass('selected');
+      }
+    },
+
+    // private
+
     record: {
       afterChange: function(record) {
+        this.disableEditing();
         this.body.bindHtml(record, "body");
         this.details.bindHtml(record, "details");
         this.editableBody.val(record.body());
@@ -117,22 +138,29 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         this.avatar.user(creator);
         this.creatorName.html(htmlEscape(creator.fullName()));
         this.createdAt.html(record.formattedCreatedAt());
+
+        this.childLinksList.show();
       }
     },
 
-    selectedChildLink: {
-      afterChange: function(selectedTableName) {
-        _(this.childRelations).each(function(relation, tableName) {
-          this[tableName + 'Link'].removeClass('selected');
-        }, this);
-        if (selectedTableName) this[selectedTableName + 'Link'].addClass('selected');
-      }
+    newRecord: function() {
+      this.editableBody.val("");
+      this.editableDetails.val("");
+      this.editableDetails.elastic();
+      this.editableBody.elastic();
+      this.showOrHideExpandButton();
+
+      var creator = User.find(Application.currentUserId);
+      this.avatar.user(creator);
+      this.creatorName.html(htmlEscape(creator.fullName()));
+      this.createdAt.html("");
+
+      this.childLinksList.hide();
+      this.enableCreating();
     },
 
     showChildTable: function(tableName) {
-      this.containingView.containingColumn.pushNextState({
-        tableName: tableName
-      });
+      this.containingView.containingColumn.pushNextState({tableName: tableName});
     },
 
     populateChildLinks: function() {
@@ -182,7 +210,8 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     contractDetails: function() {
       this.detailsContainer.addClass("contracted");
       this.contractButton.hide();
-      this.saveButton.hide();
+      this.updateButton.hide();
+      this.createButton.hide();
       this.cancelButton.hide();
       this.editButton.show();
       this.showOrHideExpandButton();
@@ -200,7 +229,23 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       this.expandButton.hide();
       this.contractButton.hide();
       this.cancelButton.show();
-      this.saveButton.show();
+      this.createButton.hide();
+      this.updateButton.show();
+      this.editableBody.focus();
+    },
+
+    enableCreating: function() {
+      this.body.hide();
+      this.detailsContainer.hide();
+      this.detailsEllipsis.hide();
+      this.editableBody.show();
+      this.editableDetails.show();
+      this.editButton.hide();
+      this.expandButton.hide();
+      this.contractButton.hide();
+      this.cancelButton.show();
+      this.updateButton.hide();
+      this.createButton.show();
       this.editableBody.focus();
     },
 
@@ -231,6 +276,24 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         this.stopLoading();
         this.disableEditing();
       }, this);
+    },
+
+    createRecord: function() {
+      Application.currentOrganization().ensureCurrentUserCanParticipate().
+        onSuccess(function() {
+          this.containingView.relation().create({
+            body:    this.editableBody.val(),
+            details: this.editableDetails.val()
+          }).onSuccess(function(newRecord) {
+            this.containingView.containingColumn.pushState({recordId: newRecord.id()});
+            this.disableEditing();
+          }, this);
+        }, this);
+    },
+
+    clickSave: function() {
+      if (this.createButton.is(':visible'))      this.createButton.click();
+      else if (this.updateButton.is(':visible')) this.updateButton.click();
     },
 
     startLoading: function() {

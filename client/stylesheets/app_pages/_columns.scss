@@ -30,11 +30,15 @@ $hoverColor: mix($selectedColor, white, 40%);
             height: 0;
             padding: 0;
           }
-          >.section > .recordDetails {
-            border-top: none;
-            border-bottom: none;
-            border-left: none;
-            @include dropShadow(3px, .5);
+          >.section {
+            top: 0;
+
+            > .recordDetails {
+              border-top: none;
+              border-bottom: none;
+              border-left: none;
+              @include dropShadow(3px, .5);
+            }
           }
         }
       }
@@ -47,27 +51,34 @@ $hoverColor: mix($selectedColor, white, 40%);
   height: 100%;
   position: relative;
 
+  >.header, .section {
+    @include borderBox;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding-right: 20px;
+
+    &.left  {width: 50%;  left: 0;}
+    &.right {width: 50%;  left: 50%;}
+  }
+
   >.header {
-    overflow: hidden;
-    margin-right: 20px;
-    padding: 10px;
-    padding-top: 0;
+    height: 20px;
     @include transition(height, 150ms, ease-in-out);
+
+    span, a {
+      font-size: 16px;
+      color: black;
+      padding: 0 10px;
+    }
+    a {color: #aaa}
+    a:hover  {color: #888;}
+    a.active {color: black;}
   }
 
   >.section {
-    @include borderBox;
-    position: absolute;
-    left: 0%;
-    width: 50%;
-    padding-right: 20px;
-
-    &.right  {
-      left: 50%;
-    }
-    &.full {
-      width: 100%;
-    }
+    overflow: hidden;
+    top: 30px;
   }
 }
 

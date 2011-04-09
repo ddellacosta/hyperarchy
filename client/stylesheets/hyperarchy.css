@@ -1310,21 +1310,34 @@ body.legal {
         #columns > ol > .column.first > .columnView > .header {
           height: 0;
           padding: 0; }
-        #columns > ol > .column.first > .columnView > .section > .recordDetails {
-          border-top: none;
-          border-bottom: none;
-          border-left: none;
-          -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px;
-          -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px; }
+        #columns > ol > .column.first > .columnView > .section {
+          top: 0; }
+          #columns > ol > .column.first > .columnView > .section > .recordDetails {
+            border-top: none;
+            border-bottom: none;
+            border-left: none;
+            -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px;
+            -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px; }
 
 .columnView {
   height: 100%;
   position: relative; }
+  .columnView > .header, .columnView .section {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding-right: 20px; }
+    .columnView > .header.left, .columnView .section.left {
+      width: 50%;
+      left: 0; }
+    .columnView > .header.right, .columnView .section.right {
+      width: 50%;
+      left: 50%; }
   .columnView > .header {
-    overflow: hidden;
-    margin-right: 20px;
-    padding: 10px;
-    padding-top: 0;
+    height: 20px;
     transition-property: height;
     -webkit-transition-property: height;
     -moz-transition-property: height;
@@ -1337,18 +1350,19 @@ body.legal {
     -moz-transition-timing-function: ease-in-out;
     -webkit-transition-timing-function: ease-in-out;
     -o-transition-timing-function: ease-in-out; }
+    .columnView > .header span, .columnView > .header a {
+      font-size: 16px;
+      color: black;
+      padding: 0 10px; }
+    .columnView > .header a {
+      color: #aaa; }
+    .columnView > .header a:hover {
+      color: #888; }
+    .columnView > .header a.active {
+      color: black; }
   .columnView > .section {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    position: absolute;
-    left: 0%;
-    width: 50%;
-    padding-right: 20px; }
-    .columnView > .section.right {
-      left: 50%; }
-    .columnView > .section.full {
-      width: 100%; }
+    overflow: hidden;
+    top: 30px; }
 
 .recordDetails {
   -moz-box-sizing: border-box;

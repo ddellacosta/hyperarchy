@@ -3,7 +3,7 @@ _.constructor("Views.ColumnLayout.ElectionsView", View.Template, {
   content: function() {with(this.builder) {
     div({'class': "elections columnView"}, function() {
       div({'class': "header"}, function() {
-        h2("Questions Under Discussion");
+        span("Questions Under Discussion");
       }).ref("header");
       div({'class': "left section"}, function() {
         div({'class': "unranked recordsList"}, function() {
@@ -33,21 +33,21 @@ _.constructor("Views.ColumnLayout.ElectionsView", View.Template, {
 
     state: {
       afterChange: function(state, oldState) {
-        var relationIsTheSame = oldState &&
-                                (state.parentRecordId === oldState.parentRecordId) &&
-                                (state.parentTableName === oldState.parentTableName);
-        if (relationIsTheSame) {
+        var mainRelationHasChanged = (! oldState) ||
+                                     (state.parentRecordId !== oldState.parentRecordId) &&
+                                     (state.parentTableName !== oldState.parentTableName);
+        if (! mainRelationHasChanged) {
           this.selectedRecordId(state.recordId);
-          this.recordDetails.selectedChildLink(state.childTableName);
+          this.recordDetails.selectedChildTableName(state.childTableName);
           return;
         }
 
         this.startLoading();
         try {
           this.fetchRelations(state).onSuccess(function() {
-            this.unrankedList.relation(this.mainRelation(state));
+            this.unrankedList.relation(this.parseMainRelation(state));
             this.selectedRecordId(state.recordId);
-            this.recordDetails.selectedChildLink(state.childTableName);
+            this.recordDetails.selectedChildTableName(state.childTableName);
             if (this.isInFirstColumn()) this.setCurrentOrganizationId();
             this.stopLoading();
           }, this);
@@ -59,11 +59,11 @@ _.constructor("Views.ColumnLayout.ElectionsView", View.Template, {
 
     fetchRelations: function(state) {
       return Server.fetch([
-        this.mainRelation(state).join(User).on(Election.creatorId.eq(User.id))
+        this.parseMainRelation(state).join(User).on(Election.creatorId.eq(User.id))
       ]);
     },
 
-    mainRelation: function(state) {
+    parseMainRelation: function(state) {
       if (state.parentRecordId) {
         return Election.where({organizationId: state.parentRecordId});
       } else {

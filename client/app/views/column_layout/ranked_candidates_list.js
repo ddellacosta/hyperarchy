@@ -29,8 +29,10 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
       this.subscriptions = new Monarch.SubscriptionBundle();
     },
 
+    // This is this view's only input. The relation should already be fetched.
     rankingsRelation: {
-      afterChange: function(rankingsRelation) {
+      afterChange: function() {
+        this.subscriptions.destroy();
         this.populateRankings();
         this.subscribeToRankingsChanges();
       }

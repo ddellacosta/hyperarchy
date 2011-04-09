@@ -44,7 +44,9 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
     },
 
     select: function() {
-      this.containingView.containingColumn.pushState({recordId: this.candidate.id()});
+      this.containingView.containingColumn.pushState({
+        recordId: this.candidate.id()
+      });
     },
 
     showRankedList: function() {

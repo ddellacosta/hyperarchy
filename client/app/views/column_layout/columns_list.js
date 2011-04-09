@@ -43,11 +43,6 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       Application.layout.activateNavigationTab("questionsLink");
     },
 
-    onUserSwitch: function() {
-      state = $.bbq.getState();
-      this.navigate(state);
-    },
-
     getColumnStatesFromUrlState: function(state) {
       var columnStates = [];
       for (var i = 0; i < this.numOnScreenColumns; i++) {
@@ -124,7 +119,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         _(this.offScreenColumns).each(function(column) {column.hide()});
         this.list.children('.column').removeClass("first");
         this.onScreenColumns[0].addClass("first");
-        this.onScreenColumns[0].adjustHeight();
+        this.adjustHeight();
       }), duration);
 
 //      this.list.animate({left: left + "%"}, duration, this.bind(function() {
