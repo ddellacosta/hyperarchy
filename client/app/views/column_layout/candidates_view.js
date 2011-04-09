@@ -128,14 +128,14 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
           this.rankingLink.addClass('active');
           this.showRankedList();
         } else if (id === "new") {
+          this.recordDetails.recordId("new");
           this.rightHeader.children().removeClass('active');
           this.createRecordLink.addClass('active');
           this.showRecordDetails();
-          this.recordDetails.recordId("new");
         } else {
+          this.recordDetails.recordId(id);
           this.rightHeader.children().removeClass('active');
           this.showRecordDetails();
-          this.recordDetails.recordId(id);
           var selectedLi = this.unrankedList.elementsById[id];
           if (! selectedLi) return;
           selectedLi.addClass("selected");

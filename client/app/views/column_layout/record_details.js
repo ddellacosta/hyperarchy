@@ -122,7 +122,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     // private
 
     record: {
-      afterChange: function(record) {
+      afterWrite: function(record) {
         this.disableEditing();
         this.body.bindHtml(record, "body");
         this.details.bindHtml(record, "details");
