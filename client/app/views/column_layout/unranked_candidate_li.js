@@ -45,12 +45,13 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
 
     select: function() {
       this.containingView.containingColumn.pushState({
+        tableName: "candidates",
         recordId: this.candidate.id()
       });
     },
 
     showRankedList: function() {
-      this.containingView.containingColumn.pushState({recordId: ""});
+      this.containingView.showOwnRanking();
     },
 
     showRankedIcon: function() {

@@ -138,7 +138,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         this.avatar.user(creator);
         this.creatorName.html(htmlEscape(creator.fullName()));
         this.createdAt.html(record.formattedCreatedAt());
-
         this.childLinksList.show();
       }
     },
@@ -246,7 +245,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       this.cancelButton.show();
       this.updateButton.hide();
       this.createButton.show();
-      this.editableBody.focus();
+      this.defer(this.bind(function() {this.editableBody.focus()}));
     },
 
     disableEditing: function() {
@@ -281,7 +280,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     createRecord: function() {
       Application.currentOrganization().ensureCurrentUserCanParticipate().
         onSuccess(function() {
-          this.containingView.relation().create({
+          this.containingView.unrankedList.relation().create({
             body:    this.editableBody.val(),
             details: this.editableDetails.val()
           }).onSuccess(function(newRecord) {

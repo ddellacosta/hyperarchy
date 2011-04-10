@@ -5,11 +5,11 @@ _.constructor("Views.ColumnLayout.CandidateDetails", Views.ColumnLayout.RecordDe
   recordConstructor: Candidate,
 
   childNames: {
-    comments:   "Comments"
+//    comments:   "Comments"
   },
 
   childRelations: function(candidateId) { return {
-    comments:   CandidateComment.where({candidateId: candidateId})
+//    comments:   CandidateComment.where({candidateId: candidateId})
   }}
 
 });

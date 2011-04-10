@@ -1,23 +1,33 @@
 _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
   content: function() {with(this.builder) {
     div({'class': "candidates columnView"}, function() {
+
       div({'class': "left header"}, function() {
-        span("Answers");
+        a("Answers").
+          ref("candidatesLink").
+          click("showCandidates");
+        a("Votes").
+          ref("votesLink").
+          click("showVotes");
       }).ref("leftHeader");
+
       div({'class': "right header"}, function() {
+        a("Your Ranking").
+          ref("rankingLink").
+          click("showOwnRanking");
         a("New Answer").
           ref("createRecordLink").
           click("showCreateCandidateForm");
-        a("Your Ranking").
-          ref("rankingLink").
-          click("showRanking");
       }).ref("rightHeader");
+
       div({'class': "left section"}, function() {
         div({'class': "unranked recordsList"}, function() {
           subview('unrankedList', Views.SortedList);
+          subview('votesList', Views.SortedList);
           div({'class': "loading"}).ref("loading");
-        });
+        }).ref("unrankedListContainer");
       }).ref("leftSection");
+
       div({'class': "right section"}, function() {
         subview('recordDetails', Views.ColumnLayout.CandidateDetails);
         subview('rankedList', Views.ColumnLayout.RankedCandidatesList);
@@ -28,30 +38,40 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
   viewProperties: {
 
     initialize: function() {
-      this.subscriptions = new Monarch.SubscriptionBundle;
       this.unrankedList.buildElement = this.bind(function(record) {
         return Views.ColumnLayout.UnrankedCandidateLi.toView({
           record: record,
           containingView: this
-        });
-      });
+        })});
+      this.votesList.buildElement = this.bind(function(vote) {
+        return Views.ColumnLayout.VoteLi.toView({
+          vote: vote,
+          containingView: this
+        })});
       this.recordDetails.containingView = this;
       this.recordDetails.hide();
+      this.votesList.hide();
       this.rankedList.containingView = this;
       this.rankedList.setupSortable();
     },
 
     state: {
       afterChange: function(state, oldState) {
-        var mainRelationHasChanged = (! oldState) ||
-                                     (state.parentRecordId  !== oldState.parentRecordId) ||
-                                     (state.parentTableName !== oldState.parentTableName);
+        var mainRelationHasChanged = (! oldState)
+                                     || (state.parentRecordId  !== oldState.parentRecordId)
+                                     || (state.parentTableName !== oldState.parentTableName);
         if (mainRelationHasChanged) {
           this.fetchRelations(state);
+          return;
         }
-        else {
-          var rankingRelationHasChanged = (state.userId !== oldState.userId);
-          if (rankingRelationHasChanged) this.fetchRankingRelation(state);
+        var rankingsUserId    = this.parseRankingsUserId(state);
+        var oldRankingsUserId = this.parseRankingsUserId(oldState);
+        if (rankingsUserId !== oldRankingsUserId) {
+          this.fetchRankingRelation(state, rankingsUserId);
+        }
+        if (state.tableName === "votes") {
+          this.selectedUserId(rankingsUserId);
+        } else {
           this.selectedRecordId(state.recordId);
           this.selectedChildTableName(state.childTableName);
         }
@@ -65,11 +85,25 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
     },
 
     showCreateCandidateForm: function() {
-      this.containingColumn.pushState({recordId: "new"});
+      this.containingColumn.pushState({tableName: "candidates", recordId: "new"});
     },
 
-    showRanking: function() {
-      this.containingColumn.pushState({recordId: ""});
+    showOwnRanking: function() {
+      this.containingColumn.pushState({tableName: "candidates", recordId: ""});
+    },
+
+    showOtherRanking: function(rankingsUserId) {
+      this.containingColumn.pushState({tableName: "votes", recordId: rankingsUserId});
+    },
+
+    showCandidates: function() {
+      if (this.unrankedList.is(':visible')) return;
+      this.containingColumn.pushState({tableName: "candidates", recordId: null});
+    },
+
+    showVotes: function() {
+      if (this.votesList.is(':visible')) return;
+      this.containingColumn.pushState({tableName: "votes", recordId: null});
     },
 
     // private
@@ -77,17 +111,19 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
     fetchRelations: function(state) {
       this.startLoading();
       try {
-        var mainRelation = this.parseMainRelation(state);
+        var mainRelation  = this.parseMainRelation(state);
+        var votesRelation = mainRelation.joinThrough(Election).joinThrough(Vote);
         var rankingsRelation = mainRelation.joinThrough(Ranking).
                                where({userId: state.userId}).
                                orderBy(Ranking.position.desc());
         Server.fetch([
           mainRelation.join(User).on(Candidate.creatorId.eq(User.id)),
-          mainRelation.joinThrough(Election),
-          rankingsRelation
+          rankingsRelation.joinTo(User),
+          votesRelation
         ]).onSuccess(function() {
           this.unrankedList.relation(mainRelation);
           this.rankedList.rankingsRelation(rankingsRelation);
+          this.votesList.relation(votesRelation);
           this.selectedRecordId(state.recordId);
           this.selectedChildTableName(state.childTableName);
           if (this.isInFirstColumn()) this.setCurrentOrganizationId();
@@ -96,10 +132,10 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       } catch (invalidState) {this.containingColumn.handleInvalidState(invalidState)}
     },
 
-    fetchRankingRelation: function(state) {
+    fetchRankingRelation: function(state, rankingsUserId) {
       var mainRelation = this.parseMainRelation(state);
       var rankingsRelation = mainRelation.joinThrough(Ranking).
-                             where({userId: state.userId}).
+                             where({userId: rankingsUserId}).
                              orderBy(Ranking.position.desc());
       this.rankedList.startLoading();
       rankingsRelation.fetch().onSuccess(function() {
@@ -116,26 +152,36 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       }
     },
 
-    relation: function() {
-      return this.unrankedList.relation();
+    parseRankingsUserId: function(state) {
+      if (state.tableName === "votes" && state.recordId) {
+        return state.recordId;
+      } else {
+        return Application.currentUserId;
+      }
     },
 
     selectedRecordId: {
-      afterChange: function(id) {
+      afterWrite: function(id) {
+        this.votesList.hide();
+        this.unrankedList.show();
         this.unrankedList.children().removeClass("selected");
+        this.leftHeader.children().removeClass('selected');
+        this.rightHeader.children().removeClass('selected');
+        this.candidatesLink.addClass('selected');
+
         if (! id) {
-          this.rightHeader.children().removeClass('active');
-          this.rankingLink.addClass('active');
-          this.showRankedList();
+          this.recordDetails.hide();
+          this.rankedList.show();
+          this.rankingLink.addClass('selected');
         } else if (id === "new") {
+          this.rankedList.hide();
+          this.recordDetails.show();
           this.recordDetails.recordId("new");
-          this.rightHeader.children().removeClass('active');
-          this.createRecordLink.addClass('active');
-          this.showRecordDetails();
+          this.createRecordLink.addClass('selected');
         } else {
+          this.rankedList.hide();
+          this.recordDetails.show();
           this.recordDetails.recordId(id);
-          this.rightHeader.children().removeClass('active');
-          this.showRecordDetails();
           var selectedLi = this.unrankedList.elementsById[id];
           if (! selectedLi) return;
           selectedLi.addClass("selected");
@@ -143,18 +189,28 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       }
     },
 
+    selectedUserId: {
+      afterWrite: function(id) {
+        console.debug('hi');
+        this.leftHeader.children().removeClass('selected');
+        this.votesLink.addClass('selected');
+
+        if (! id) id = Application.currentUserId;
+        this.unrankedList.hide();
+        this.recordDetails.hide();
+        this.votesList.show();
+        this.rankedList.show();
+        this.votesList.children().removeClass("selected");
+        this.rightHeader.children().removeClass('selected');
+        this.rankingLink.addClass('selected');
+        var selectedLi = this.votesList.elementsById[id];
+        if (! selectedLi) return;
+        selectedLi.addClass("selected");
+      }
+    },
+
     selectedChildTableName: {
       afterChange: function(tableName) {this.recordDetails.selectedChildTableName(tableName)}
-    },
-
-    showRankedList: function() {
-      this.recordDetails.hide();
-      this.rankedList.show();
-    },
-
-    showRecordDetails: function() {
-      this.rankedList.hide();
-      this.recordDetails.show();
     },
 
     setCurrentOrganizationId: function() {

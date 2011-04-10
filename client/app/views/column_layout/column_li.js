@@ -16,6 +16,8 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         view.containingColumn = this;
         this.append(view.hide());
       }, this);
+
+      this.views.votes = this.views.candidates;
     },
 
     // The column's state is represented by an object with the following properties:
@@ -75,32 +77,19 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
         this.nextColumn().pushState(columnState);
         return;
       }
+
+      // adjust the url to cause a scroll to the right.
       var urlState = {}, currentState = $.bbq.getState();
       var n = this.containingList.onScreenColumns.length;
       for (var i = 1; i < n; i++) {
         urlState["col" + i] = currentState["col" + (i+1)];
         urlState["id" + i]  = currentState["id" + (i+1)];
       }
+
       if (columnState.tableName) urlState["col" + n] = columnState.tableName;
       if (columnState.recordId)  urlState["id"  + n] = columnState.recordId;
       if (columnState.parentTableName) urlState["col" + (n-1)] = columnState.parentTableName;
       if (columnState.parentRecordId)  urlState["id"  + (n-1)] = columnState.parentRecordId;
-      $.bbq.pushState(urlState, 2);
-    },
-
-    pushPreviousState: function(columnState) {
-      if (this.previousColumn()) {
-        this.previousColumn().pushState(columnState);
-        return;
-      }
-      var urlState = {}, currentState = $.bbq.getState();
-      var n = this.containingList.onScreenColumns.length;
-      for (var i = n; i > 1; i--) {
-        urlState["col" + i] = currentState["col" + (i-1)];
-        urlState["id" + i]  = currentState["id" + (i-1)];
-      }
-      if (columnState.tableName) urlState["col" + 1] = columnState.tableName;
-      if (columnState.recordId)  urlState["col" + 1] = columnState.recordId;
       $.bbq.pushState(urlState, 2);
     },
 

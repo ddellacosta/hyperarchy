@@ -66,19 +66,22 @@ $hoverColor: mix($selectedColor, white, 40%);
     height: 20px;
     @include transition(height, 150ms, ease-in-out);
 
-    span, a {
-      font-size: 16px;
-      color: black;
-      padding: 0 10px;
+    a {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #ccc;
+      &:hover    {color: #aaa;}
+      &.selected {color: #888;}
+
+      //&:last-child {float: right;}
+      //&:first-child {float: none;}
     }
-    a {color: #aaa}
-    a:hover  {color: #888;}
-    a.active {color: black;}
   }
 
   >.section {
     overflow: hidden;
-    top: 30px;
+    top: 28px;
   }
 }
 
@@ -118,20 +121,7 @@ $hoverColor: mix($selectedColor, white, 40%);
 
   >.footer {
     margin: 15px 0;
-
-    >.avatar {
-      float: left;
-      margin-right: 5px;
-      background-image: url("/images/mystery_man.jpeg");
-    }
-    >.name {
-      font-size: 15px;
-      margin-bottom: 2px;
-    }
-    >.date {
-      font-size: 12px;
-      color: #999999;
-    }
+    @extend .person;
 
     >button {
       float: right;
@@ -178,7 +168,6 @@ $hoverColor: mix($selectedColor, white, 40%);
     }
   }
 }
-
 
 .recordsList {
   height: 100%;
@@ -250,6 +239,44 @@ $hoverColor: mix($selectedColor, white, 40%);
     background-position: center center;
   }
 }
+
+.personLi {
+  padding: 5px 10px;
+  font-size: 15px;
+  border: 1px solid $borderColor;
+  border-top: none;
+  background-color: white;
+  @include dropShadow(3px, 0.25);
+  cursor: pointer;
+
+  &:hover {
+    background-color: $hoverColor;
+    .icon {background-image: url(/images/play_12x16_light.png);}
+  }
+  &.selected {
+    background-color: $selectedColor;
+    .icon {background-image: url(/images/play_12x16_dark.png) !important;}
+  }
+
+  @extend .person;
+}
+
+.person {
+  >.avatar {
+    float: left;
+    margin-right: 5px;
+    background-image: url("/images/mystery_man.jpeg");
+  }
+  >.name {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  >.date {
+    font-size: 12px;
+    color: #999999;
+  }
+}
+
 
 
 .dragTarget {
