@@ -1359,6 +1359,11 @@ body.legal {
         color: #aaa; }
       .columnView > .header a.selected {
         color: #888; }
+    .columnView > .header span {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #888; }
   .columnView > .section {
     overflow: hidden;
     top: 28px; }
@@ -1494,12 +1499,8 @@ body.legal {
   cursor: pointer; }
   .personLi:hover {
     background-color: #f1f5ff; }
-    .personLi:hover .icon {
-      background-image: url(/images/play_12x16_light.png); }
   .personLi.selected {
     background-color: #dde6ff; }
-    .personLi.selected .icon {
-      background-image: url(/images/play_12x16_dark.png) !important; }
 
 .person > .avatar, .recordDetails > .footer > .avatar, .personLi > .avatar {
   float: left;

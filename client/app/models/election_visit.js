@@ -10,3 +10,4 @@ _.constructor("ElectionVisit", Model.Record, {
     this.belongsTo('user');
   }
 });
+

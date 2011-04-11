@@ -124,8 +124,14 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
           this.unrankedList.relation(mainRelation);
           this.rankedList.rankingsRelation(rankingsRelation);
           this.votesList.relation(votesRelation);
-          this.selectedRecordId(state.recordId);
-          this.selectedChildTableName(state.childTableName);
+
+          var rankingsUserId    = this.parseRankingsUserId(state);
+          if (state.tableName === "votes") {
+            this.selectedUserId(rankingsUserId);
+          } else {
+            this.selectedRecordId(state.recordId);
+            this.selectedChildTableName(state.childTableName);
+          }
           if (this.isInFirstColumn()) this.setCurrentOrganizationId();
           this.stopLoading();
         }, this);
@@ -191,10 +197,9 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
     selectedUserId: {
       afterWrite: function(id) {
-        console.debug('hi');
+        console.debug(id);
         this.leftHeader.children().removeClass('selected');
         this.votesLink.addClass('selected');
-
         if (! id) id = Application.currentUserId;
         this.unrankedList.hide();
         this.recordDetails.hide();
@@ -203,7 +208,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         this.votesList.children().removeClass("selected");
         this.rightHeader.children().removeClass('selected');
         this.rankingLink.addClass('selected');
-        var selectedLi = this.votesList.elementsById[id];
+        var selectedLi = this.votesList.find('[userId=' + id + ']');
         if (! selectedLi) return;
         selectedLi.addClass("selected");
       }
@@ -217,21 +222,17 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       Application.currentOrganizationId(1);
     },
 
-    isInFirstColumn: function() {
-      return (this.containingColumn.number === 0);
-    },
-
     startLoading: function() {
-      this.unrankedList.hide();
       this.loading.show();
       this.recordDetails.startLoading();
     },
 
     stopLoading: function() {
       this.loading.hide();
-      this.unrankedList.show();
       this.recordDetails.stopLoading();
       this.adjustHeight();
-    }
+    },
+
+    isInFirstColumn: function() {return (this.containingColumn.number === 0)}
   }
 });

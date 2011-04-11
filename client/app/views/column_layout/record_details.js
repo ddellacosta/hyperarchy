@@ -115,7 +115,9 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         _(this.childRelations).each(function(relation, tableName) {
           this[tableName + 'Link'].removeClass('selected');
         }, this);
-        if (selectedTableName) this[selectedTableName + 'Link'].addClass('selected');
+        if (this[selectedTableName + 'Link']) {
+          this[selectedTableName + 'Link'].addClass('selected');
+        }
       }
     },
 

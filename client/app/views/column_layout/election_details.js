@@ -5,15 +5,10 @@ _.constructor("Views.ColumnLayout.ElectionDetails", Views.ColumnLayout.RecordDet
   recordConstructor: Election,
 
   childNames: {
-//    comments:   "Comments",
-    candidates: "Answers",
-    votes:      "Votes"
+    candidates: "Answers"
   },
 
   childRelations: function(electionId) { return {
-//    comments:   ElectionComment.where({electionId: electionId}),
-    candidates: Candidate.where({electionId: electionId}),
-    votes:      Vote.where({electionId: electionId})
+    candidates: Candidate.where({electionId: electionId})
   }}
-
 });

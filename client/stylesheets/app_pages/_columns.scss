@@ -73,9 +73,13 @@ $hoverColor: mix($selectedColor, white, 40%);
       color: #ccc;
       &:hover    {color: #aaa;}
       &.selected {color: #888;}
+    }
 
-      //&:last-child {float: right;}
-      //&:first-child {float: none;}
+    span {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #888;
     }
   }
 
@@ -251,11 +255,11 @@ $hoverColor: mix($selectedColor, white, 40%);
 
   &:hover {
     background-color: $hoverColor;
-    .icon {background-image: url(/images/play_12x16_light.png);}
+    //.icon {background-image: url(/images/play_12x16_light.png);}
   }
   &.selected {
     background-color: $selectedColor;
-    .icon {background-image: url(/images/play_12x16_dark.png) !important;}
+    //.icon {background-image: url(/images/play_12x16_dark.png) !important;}
   }
 
   @extend .person;
