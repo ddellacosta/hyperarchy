@@ -1,6 +1,7 @@
 $borderColor: #cacaca;
 $selectedColor: #DDE6FF;
 $hoverColor: mix($selectedColor, white, 40%);
+$leftSectionWidth: 0.5;
 
 #columns {
   height: 100%;
@@ -58,8 +59,16 @@ $hoverColor: mix($selectedColor, white, 40%);
     width: 100%;
     padding-right: 20px;
 
-    &.left  {width: 50%;  left: 0;}
-    &.right {width: 50%;  left: 50%;}
+    &.left  {
+      width: $leftSectionWidth * 100%;
+      left: 0;
+    }
+    &.right {
+      width: (1 - $leftSectionWidth) * 100%;
+      left: $leftSectionWidth * 100%;
+
+      >div {height: 100%; position: relative;}
+    }
   }
 
   >.header {
@@ -244,27 +253,6 @@ $hoverColor: mix($selectedColor, white, 40%);
   }
 }
 
-.personLi {
-  padding: 5px 10px;
-  font-size: 15px;
-  border: 1px solid $borderColor;
-  border-top: none;
-  background-color: white;
-  @include dropShadow(3px, 0.25);
-  cursor: pointer;
-
-  &:hover {
-    background-color: $hoverColor;
-    //.icon {background-image: url(/images/play_12x16_light.png);}
-  }
-  &.selected {
-    background-color: $selectedColor;
-    //.icon {background-image: url(/images/play_12x16_dark.png) !important;}
-  }
-
-  @extend .person;
-}
-
 .person {
   >.avatar {
     float: left;
@@ -280,7 +268,6 @@ $hoverColor: mix($selectedColor, white, 40%);
     color: #999999;
   }
 }
-
 
 
 .dragTarget {
@@ -324,3 +311,37 @@ $hoverColor: mix($selectedColor, white, 40%);
     padding-right: 20px
   }
 }
+
+.ranked.recordsList {
+  width: $leftSectionWidth / (1 - $leftSectionWidth) * 100%;
+}
+
+.votesList {
+  height: 100%;
+  position: absolute;
+  width: (1 - $leftSectionWidth / (1 - $leftSectionWidth)) * 100%;
+  left: $leftSectionWidth / (1 - $leftSectionWidth) * 100%;
+  top: 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.voteLi {
+  padding: 0 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  @extend .person;
+
+  >.name {
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  &:hover {
+    background-color: $hoverColor;
+  }
+  &.selected {
+    background-color: $selectedColor;
+  }
+}
+

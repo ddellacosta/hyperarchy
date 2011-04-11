@@ -6,31 +6,32 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         a("Answers").
           ref("candidatesLink").
           click("showCandidates");
-        a("Votes").
-          ref("votesLink").
-          click("showVotes");
       }).ref("leftHeader");
 
       div({'class': "right header"}, function() {
         a("Your Ranking").
           ref("rankingLink").
           click("showOwnRanking");
-        a("New Answer").
-          ref("createRecordLink").
-          click("showCreateCandidateForm");
+//        a("New Answer").
+//          ref("createRecordLink").
+//          click("showCreateCandidateForm");
       }).ref("rightHeader");
 
       div({'class': "left section"}, function() {
         div({'class': "unranked recordsList"}, function() {
           subview('unrankedList', Views.SortedList);
-          subview('votesList', Views.SortedList);
           div({'class': "loading"}).ref("loading");
         }).ref("unrankedListContainer");
       }).ref("leftSection");
 
       div({'class': "right section"}, function() {
         subview('recordDetails', Views.ColumnLayout.CandidateDetails);
-        subview('rankedList', Views.ColumnLayout.RankedCandidatesList);
+        div(function() {
+          subview('rankedList', Views.ColumnLayout.RankedCandidatesList);
+          subview('votesList', Views.SortedList, {
+            rootAttributes: {'class': "votesList"}
+          });
+        });
       }).ref("rightSection");
     });
   }},
@@ -50,7 +51,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         })});
       this.recordDetails.containingView = this;
       this.recordDetails.hide();
-      this.votesList.hide();
       this.rankedList.containingView = this;
       this.rankedList.setupSortable();
     },
@@ -99,11 +99,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
     showCandidates: function() {
       if (this.unrankedList.is(':visible')) return;
       this.containingColumn.pushState({tableName: "candidates", recordId: null});
-    },
-
-    showVotes: function() {
-      if (this.votesList.is(':visible')) return;
-      this.containingColumn.pushState({tableName: "votes", recordId: null});
     },
 
     // private
@@ -168,7 +163,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
     selectedRecordId: {
       afterWrite: function(id) {
-        this.votesList.hide();
         this.unrankedList.show();
         this.unrankedList.children().removeClass("selected");
         this.leftHeader.children().removeClass('selected');
@@ -178,14 +172,17 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         if (! id) {
           this.recordDetails.hide();
           this.rankedList.show();
+          this.votesList.show();
           this.rankingLink.addClass('selected');
         } else if (id === "new") {
           this.rankedList.hide();
+          this.votesList.hide();
           this.recordDetails.show();
           this.recordDetails.recordId("new");
           this.createRecordLink.addClass('selected');
         } else {
           this.rankedList.hide();
+          this.votesList.hide();
           this.recordDetails.show();
           this.recordDetails.recordId(id);
           var selectedLi = this.unrankedList.elementsById[id];
@@ -197,14 +194,10 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
     selectedUserId: {
       afterWrite: function(id) {
-        console.debug(id);
-        this.leftHeader.children().removeClass('selected');
-        this.votesLink.addClass('selected');
         if (! id) id = Application.currentUserId;
-        this.unrankedList.hide();
         this.recordDetails.hide();
-        this.votesList.show();
         this.rankedList.show();
+        this.votesList.show();
         this.votesList.children().removeClass("selected");
         this.rightHeader.children().removeClass('selected');
         this.rankingLink.addClass('selected');

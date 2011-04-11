@@ -11,9 +11,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     defaultView:  true,
     numOnScreenColumns: 2,
     numOffScreenColumns: 2,
+    leftSectionWidth: 0.5,
 
     initialize: function() {
-      var width = 100.0 / (this.numOnScreenColumns - 1./2);
+      var width = 100.0 / (this.numOnScreenColumns - this.leftSectionWidth);
       this.offScreenColumns = [];
       for (var i = 0; i < this.numOnScreenColumns + this.numOffScreenColumns; i++) {
         this.offScreenColumns[i] = Views.ColumnLayout.ColumnLi.toView();
@@ -112,7 +113,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     adjustScrollPosition: function(duration) {
       if (! duration) duration = 0;
       var left = (-1.0 * parseFloat(this.onScreenColumns[0].css('left'))) -
-                 (0.5  * parseFloat(this.onScreenColumns[0].css('width')));
+                 (this.leftSectionWidth  * parseFloat(this.onScreenColumns[0].css('width')));
       _(this.onScreenColumns).each(function(column) {column.show()});
       this.list.css({left: left + "%"});
       setTimeout(this.bind(function() {
