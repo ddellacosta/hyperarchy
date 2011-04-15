@@ -3,6 +3,16 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     div({'id': "columns"}, function() {
       div({'class': "subnav"});
       ol().ref("list");
+      div({'class': "usersList"}, function() {
+        div({'class': "header"}, function() {
+          span("5 Votes");
+        });
+        subview('usersList', Views.SortedList, {buildElement: function(vote) {
+          return Views.ColumnLayout.VoteLi.toView({
+            vote: vote
+          });
+        }});
+      });
     });
   }},
 
@@ -11,10 +21,9 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     defaultView:  true,
     numOnScreenColumns: 2,
     numOffScreenColumns: 2,
-    leftSectionWidth: 0.5,
 
     initialize: function() {
-      var width = 100.0 / (this.numOnScreenColumns - this.leftSectionWidth);
+      var width = 100.0 / (this.numOnScreenColumns - 1./2);
       this.offScreenColumns = [];
       for (var i = 0; i < this.numOnScreenColumns + this.numOffScreenColumns; i++) {
         this.offScreenColumns[i] = Views.ColumnLayout.ColumnLi.toView();
@@ -112,8 +121,13 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     adjustScrollPosition: function(duration) {
       if (! duration) duration = 0;
-      var left = (-1.0 * parseFloat(this.onScreenColumns[0].css('left'))) -
-                 (this.leftSectionWidth  * parseFloat(this.onScreenColumns[0].css('width')));
+      var listWidth = 0.84;
+//      var listWidth = this.list.css('width');
+//      console.debug(listWidth);
+      var left = -1 * listWidth * (
+        parseFloat(this.onScreenColumns[0].css('left')) +
+        (0.5 * parseFloat(this.onScreenColumns[0].css('width')))
+      );
       _(this.onScreenColumns).each(function(column) {column.show()});
       this.list.css({left: left + "%"});
       setTimeout(this.bind(function() {
@@ -143,6 +157,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     adjustHeight: function() {
       this.list.fillContainingVerticalSpace();
+//      this.usersList.fillContainingVerticalSpace();
       _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
     }
   }

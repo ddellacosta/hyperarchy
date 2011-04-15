@@ -64,8 +64,8 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
 
     createCloneForDragging: function() {
       var clone = this.clone();
-      clone.css('width', this.width());
-      clone.css('height', this.height());
+//      clone.css('width', this.width());
+      clone.css('width', this.containingView.rankedList.width() - 20);
       clone.removeClass('selected');
       clone.find('.icon').remove();
       return clone;

@@ -1286,6 +1286,7 @@ body.legal {
     background: #5a5d62; }
   #columns > ol {
     position: relative;
+    width: 84%;
     transition-property: left;
     -webkit-transition-property: left;
     -moz-transition-property: left;
@@ -1298,26 +1299,85 @@ body.legal {
     -moz-transition-timing-function: ease-in-out;
     -webkit-transition-timing-function: ease-in-out;
     -o-transition-timing-function: ease-in-out; }
-    #columns > ol > .column {
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      height: 100%;
-      padding: 15px 0;
-      position: absolute; }
-      #columns > ol > .column.first {
-        padding: 0; }
-        #columns > ol > .column.first > .columnView > .header {
-          height: 0;
-          padding: 0; }
-        #columns > ol > .column.first > .columnView > .section {
-          top: 0; }
-          #columns > ol > .column.first > .columnView > .section > .recordDetails {
-            border-top: none;
-            border-bottom: none;
-            border-left: none;
-            -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px;
-            -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px; }
+
+.usersList {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  width: 16%;
+  left: 84%;
+  top: 5px;
+  padding: 15px 0;
+  padding-right: 20px;
+  top: 5px;
+  overflow: hidden;
+  z-index: 100;
+  background: white; }
+  .usersList > .header {
+    height: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+    transition-property: height;
+    -webkit-transition-property: height;
+    -moz-transition-property: height;
+    -o-transition-property: height;
+    transition-duration: 150ms;
+    -webkit-transition-duration: 150ms;
+    -moz-transition-duration: 150ms;
+    -o-transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+    -moz-transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out; }
+    .usersList > .header a {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #ccc; }
+      .usersList > .header a:hover {
+        color: #aaa; }
+      .usersList > .header a.selected {
+        color: #888; }
+    .usersList > .header span {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #888; }
+  .usersList > ol {
+    width: 100%;
+    overflow-y: auto; }
+
+.voteLi {
+  margin-top: 5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden; }
+  .voteLi:hover {
+    background-color: #f1f5ff; }
+  .voteLi.selected {
+    background-color: #dde6ff; }
+
+.column {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 15px 0;
+  position: absolute; }
+  .column.first {
+    padding: 0; }
+    .column.first > .columnView > .header {
+      height: 0;
+      padding: 0; }
+    .column.first > .columnView > .section {
+      top: 0; }
+      .column.first > .columnView > .section > .recordDetails {
+        border-top: none;
+        border-bottom: none;
+        border-left: none;
+        -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px; }
 
 .columnView {
   height: 100%;
@@ -1491,14 +1551,14 @@ body.legal {
     background-repeat: no-repeat;
     background-position: center center; }
 
-.person > .avatar, .recordDetails > .footer > .avatar, .voteLi > .avatar {
+.person > .avatar, .voteLi > .avatar, .recordDetails > .footer > .avatar {
   float: left;
   margin-right: 5px;
   background-image: url("/images/mystery_man.jpeg"); }
-.person > .name, .recordDetails > .footer > .name, .voteLi > .name {
+.person > .name, .voteLi > .name, .recordDetails > .footer > .name {
   font-size: 15px;
   margin-bottom: 2px; }
-.person > .date, .recordDetails > .footer > .date, .voteLi > .date {
+.person > .date, .voteLi > .date, .recordDetails > .footer > .date {
   font-size: 12px;
   color: #999999; }
 
@@ -1537,27 +1597,3 @@ body.legal {
     background-image: url("/images/arrow_down_white.png");
     background-position: right;
     padding-right: 20px; }
-
-.ranked.recordsList {
-  width: 100%; }
-
-.votesList {
-  height: 100%;
-  position: absolute;
-  width: 0%;
-  left: 100%;
-  top: 0;
-  overflow: hidden;
-  overflow-y: auto; }
-
-.voteLi {
-  padding: 0 10px;
-  margin-bottom: 5px;
-  cursor: pointer; }
-  .voteLi > .name {
-    font-size: 12px;
-    color: #aaa; }
-  .voteLi:hover {
-    background-color: #f1f5ff; }
-  .voteLi.selected {
-    background-color: #dde6ff; }

@@ -1,7 +1,7 @@
 $borderColor: #cacaca;
 $selectedColor: #DDE6FF;
 $hoverColor: mix($selectedColor, white, 40%);
-$leftSectionWidth: 0.5;
+$votesColumnWidth: 0.16;
 
 #columns {
   height: 100%;
@@ -15,38 +15,95 @@ $leftSectionWidth: 0.5;
 
   >ol {
     position: relative;
+    width: (1 - $votesColumnWidth) * 100%;
     @include transition(left, 150ms, ease-in-out);
+  }
+}
 
-    >.column {
-      @include borderBox;
-      height: 100%;
-      padding: 15px 0;
-      position: absolute;
+.usersList {
+  @include borderBox;
+  position: absolute;
+  width: $votesColumnWidth * 100%;
+  left: (1 - $votesColumnWidth) * 100%;
+  top: 5px;
+  padding: 15px 0;
+  padding-right: 20px;
+  top: 5px;
+  overflow: hidden;
+  z-index: 100;
+  background: white;
 
-      &.first {
+  >.header {
+    height: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+    @include transition(height, 150ms, ease-in-out);
+
+    a {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #ccc;
+      &:hover    {color: #aaa;}
+      &.selected {color: #888;}
+    }
+
+    span {
+      font-size: 18px;
+      padding-left: 10px;
+      padding-right: 30px;
+      color: #888;
+    }
+  }
+
+  >ol {
+    width: 100%;
+    overflow-y: auto;
+  }
+}
+
+.voteLi {
+  margin-top: 5px;
+  cursor: pointer;
+  @extend .person;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    background-color: $hoverColor;
+  }
+  &.selected {
+    background-color: $selectedColor;
+  }
+}
+
+.column {
+  @include borderBox;
+  height: 100%;
+  padding: 15px 0;
+  position: absolute;
+
+  &.first {
+    padding: 0;
+
+    >.columnView {
+      >.header {
+        height: 0;
         padding: 0;
+      }
+      >.section {
+        top: 0;
 
-        >.columnView {
-          >.header {
-            height: 0;
-            padding: 0;
-          }
-          >.section {
-            top: 0;
-
-            > .recordDetails {
-              border-top: none;
-              border-bottom: none;
-              border-left: none;
-              @include dropShadow(3px, .5);
-            }
-          }
+        > .recordDetails {
+          border-top: none;
+          border-bottom: none;
+          border-left: none;
+          @include dropShadow(3px, .5);
         }
       }
     }
   }
 }
-
 
 .columnView {
   height: 100%;
@@ -60,13 +117,12 @@ $leftSectionWidth: 0.5;
     padding-right: 20px;
 
     &.left  {
-      width: $leftSectionWidth * 100%;
+      width: 50%;
       left: 0;
     }
     &.right {
-      width: (1 - $leftSectionWidth) * 100%;
-      left: $leftSectionWidth * 100%;
-
+      width: 50%;
+      left: 50%;
       >div {height: 100%; position: relative;}
     }
   }
@@ -309,39 +365,6 @@ $leftSectionWidth: 0.5;
     background-image: url("/images/arrow_down_white.png");
     background-position: right;
     padding-right: 20px
-  }
-}
-
-.ranked.recordsList {
-  width: $leftSectionWidth / (1 - $leftSectionWidth) * 100%;
-}
-
-.votesList {
-  height: 100%;
-  position: absolute;
-  width: (1 - $leftSectionWidth / (1 - $leftSectionWidth)) * 100%;
-  left: $leftSectionWidth / (1 - $leftSectionWidth) * 100%;
-  top: 0;
-  overflow: hidden;
-  overflow-y: auto;
-}
-
-.voteLi {
-  padding: 0 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  @extend .person;
-
-  >.name {
-    font-size: 12px;
-    color: #aaa;
-  }
-
-  &:hover {
-    background-color: $hoverColor;
-  }
-  &.selected {
-    background-color: $selectedColor;
   }
 }
 

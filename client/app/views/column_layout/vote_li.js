@@ -1,12 +1,10 @@
 _.constructor("Views.ColumnLayout.VoteLi", View.Template, {
   content: function(attrs) { with(this.builder) {
     div({'class': "voteLi", 'style': "display: none;"}, function() {
-      subview('avatar', Views.Avatar, { size: 40 });
-//      span({'class': "name"}, "").ref('name');
-      div({'class': "first name"}, "").ref('firstName');
-      div({'class': "last name"}, "").ref('lastName');
+      subview('avatar', Views.Avatar, { size: 40});
+      div({'class': "name"}, "").ref('name');
 //      br();
-//      span({'class': "date"}, "").ref('votedAt');
+      span({'class': "date"}, "").ref('votedAt');
       div({'class': "clear"});
     }).click('showRanking');
   }},
@@ -22,15 +20,15 @@ _.constructor("Views.ColumnLayout.VoteLi", View.Template, {
       }
 
       this.avatar.user(user);
-      this.firstName.html(htmlEscape(user.firstName()));
-      this.lastName.html(htmlEscape(user.lastName()));
+      this.name.html(htmlEscape(user.fullName()));
+//      this.name.html(htmlEscape(user.firstName() + " " + user.lastName()[0]));
       this.updateVotedAt();
       this.show();
       this.attr("userId", this.vote.userId());
     },
 
     updateVotedAt: function() {
-//      this.votedAt.html(this.vote.formattedUpdatedAt());
+      this.votedAt.html(this.vote.formattedUpdatedAt());
     },
 
     showRanking: function() {

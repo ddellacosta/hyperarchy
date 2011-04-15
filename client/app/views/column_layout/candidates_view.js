@@ -28,9 +28,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         subview('recordDetails', Views.ColumnLayout.CandidateDetails);
         div(function() {
           subview('rankedList', Views.ColumnLayout.RankedCandidatesList);
-          subview('votesList', Views.SortedList, {
-            rootAttributes: {'class': "votesList"}
-          });
         });
       }).ref("rightSection");
     });
@@ -42,11 +39,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       this.unrankedList.buildElement = this.bind(function(record) {
         return Views.ColumnLayout.UnrankedCandidateLi.toView({
           record: record,
-          containingView: this
-        })});
-      this.votesList.buildElement = this.bind(function(vote) {
-        return Views.ColumnLayout.VoteLi.toView({
-          vote: vote,
           containingView: this
         })});
       this.recordDetails.containingView = this;
@@ -107,7 +99,9 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       this.startLoading();
       try {
         var mainRelation  = this.parseMainRelation(state);
-        var votesRelation = mainRelation.joinThrough(Election).joinThrough(Vote);
+        var votesRelation = mainRelation.joinThrough(Election).
+                            joinThrough(Vote).
+                            orderBy(Vote.updatedAt.desc());
         var rankingsRelation = mainRelation.joinThrough(Ranking).
                                where({userId: state.userId}).
                                orderBy(Ranking.position.desc());
@@ -118,6 +112,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         ]).onSuccess(function() {
           this.unrankedList.relation(mainRelation);
           this.rankedList.rankingsRelation(rankingsRelation);
+          this.votesList = this.containingColumn.containingList.usersList;
           this.votesList.relation(votesRelation);
 
           var rankingsUserId    = this.parseRankingsUserId(state);
@@ -172,17 +167,14 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         if (! id) {
           this.recordDetails.hide();
           this.rankedList.show();
-          this.votesList.show();
           this.rankingLink.addClass('selected');
         } else if (id === "new") {
           this.rankedList.hide();
-          this.votesList.hide();
           this.recordDetails.show();
           this.recordDetails.recordId("new");
           this.createRecordLink.addClass('selected');
         } else {
           this.rankedList.hide();
-          this.votesList.hide();
           this.recordDetails.show();
           this.recordDetails.recordId(id);
           var selectedLi = this.unrankedList.elementsById[id];
@@ -197,7 +189,6 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         if (! id) id = Application.currentUserId;
         this.recordDetails.hide();
         this.rankedList.show();
-        this.votesList.show();
         this.votesList.children().removeClass("selected");
         this.rightHeader.children().removeClass('selected');
         this.rankingLink.addClass('selected');
