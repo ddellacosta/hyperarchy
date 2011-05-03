@@ -3,16 +3,14 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
   // template properties to override:
   recordConstructor: Election,
   tableName: "elections",
-  childRelations: function(recordId) { return {
-    candidates: Candidate.where({electionId: recordId}),
-    comments:   ElectionComment.where({electionId: recordId}),
-    votes:      Vote.where({electionId: recordId})
-  }},
   childNames: {
     candidates: "Answers",
-    comments:   "Comments",
     votes:      "Votes"
   },
+  childRelations: function(recordId) { return {
+    comments:   ElectionComment.where({electionId: recordId}),
+    candidates: Candidate.where({electionId: recordId}),
+  }},
 
   content: function() {with(this.builder) {
     div({'class': _.singularize(template.tableName) + " recordDetails"}, function() {
@@ -58,14 +56,38 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         div({'class': "clear"});
       });
 
-      ul({'class': "childLinks"}, function() {
-        _(template.childNames).each(function(informalName, tableName) {
-          li(function() {
-            div({'class': "icon"}).ref(tableName + "LinkIcon");
-            span().ref(tableName + "LinkNumber");
+      if (template.childRelations(0).comments) {
+        div({'class': "comments"}, function() {
+          div({'class': "header"}, function() {
+            span().ref("commentsHeaderNumber");
             raw(' ');
-            span().ref(tableName + "LinkText");
-          }).ref(tableName + "Link").click("showChildTable", tableName);
+            span().ref("commentsHeaderText");
+          });
+          subview('commentsList', Views.SortedList, {
+            buildElement: function(comment) {
+              return Views.ColumnLayout.CommentLi.toView({comment: comment})
+            }
+          });
+          textarea({'class': "comment", placeholder: "Write a comment"}).
+            ref('editableComment').
+            keydown(template.keydownHandler);
+          button("Add Comment").
+            ref("commentSaveButton").
+            click("createComment");
+          div({'class': "clear"});
+        });
+      }
+
+      ul({'class': "childLinks"}, function() {
+        _.each(template.childNames, function(informalName, tableName) {
+          if (tableName !== "comments") {
+            li(function() {
+              div({'class': "icon"}).ref(tableName + "LinkIcon");
+              span().ref(tableName + "LinkNumber");
+              raw(' ');
+              span().ref(tableName + "LinkText");
+            }).ref(tableName + "Link").click("showChildTable", tableName);
+          }
         }, this);
       }).ref("childLinksList");
 
@@ -81,7 +103,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         break;
       case 13: // enter
         if (event.ctrlKey) break;
-        view.clickSave();
+        view.saveEdits();
         event.preventDefault();
         break;
     }
@@ -101,10 +123,12 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         }
 
         recordId = parseInt(recordId);
+        this.subscriptions.destroy();
         this.record(this.template.recordConstructor.find(recordId));
         this.childRelations = this.template.childRelations(recordId);
-        Server.fetch(this.childRelations).onSuccess(function() {
-          this.populateChildLinks();
+        Server.fetch(_.values(this.childRelations)).onSuccess(function() {
+          if (this.commentsList) this.commentsList.relation(this.childRelations.comments);
+          this.populateChildRelations();
           this.subscribeToChildRelationChanges();
         }, this)
       }
@@ -112,12 +136,10 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     selectedChildTableName: {
       afterChange: function(selectedTableName) {
-        _(this.childRelations).each(function(relation, tableName) {
-          this[tableName + 'Link'].removeClass('selected');
+        _.each(this.childRelations, function(relation, tableName) {
+          if (this[tableName + 'Link']) this[tableName + 'Link'].removeClass('selected');
         }, this);
-        if (this[selectedTableName + 'Link']) {
-          this[selectedTableName + 'Link'].addClass('selected');
-        }
+        if (this[selectedTableName + 'Link']) this[selectedTableName + 'Link'].addClass('selected');
       }
     },
 
@@ -144,6 +166,52 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }
     },
 
+    showChildTable: function(tableName) {
+      this.containingView.containingColumn.pushNextState({tableName: tableName});
+    },
+
+    populateChildRelations: function() {
+      _.each(this.childRelations, function(relation, tableName) {
+        this.updateLinkNumber(tableName);
+      }, this);
+    },
+
+    subscribeToChildRelationChanges: function() {
+      _.each(this.childRelations, function(relation, tableName) {
+        this.subscriptions.add(relation.onInsert(function() {
+          this.updateLinkNumber(tableName);
+        }, this));
+        this.subscriptions.add(relation.onRemove(function() {
+          this.updateLinkNumber(tableName);
+        }, this));
+      }, this);
+    },
+
+    updateLinkNumber: function(tableName) {
+      var relation     = this.childRelations[tableName];
+      var informalName = this.template.childNames[tableName];
+      var number, text;
+      if (tableName === "comments") {
+        number = this['commentsHeaderNumber'];
+        text   = this['commentsHeaderText'];
+      } else {
+        number = this[tableName + "LinkNumber"];
+        text   = this[tableName + "LinkText"];
+      }
+      var size = relation.size();
+      if (size > 1) {
+        number.html(size);
+        text.html(informalName);
+      } else if (size === 1) {
+        number.html(1);
+        text.html(_.singularize(informalName));
+      } else {
+        number.html('');
+        var indefiniteArticle = informalName.match(/^[aeiou]/) ? "an " : "a ";
+        text.html("Add " + indefiniteArticle + _.singularize(informalName));
+      }
+    },
+
     newRecord: function() {
       this.editableBody.val("");
       this.editableDetails.val("");
@@ -158,47 +226,6 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
       this.childLinksList.hide();
       this.enableCreating();
-    },
-
-    showChildTable: function(tableName) {
-      this.containingView.containingColumn.pushNextState({tableName: tableName});
-    },
-
-    populateChildLinks: function() {
-      _(this.childRelations).each(function(relation, tableName) {
-        this.updateLinkNumber(tableName);
-      }, this);
-    },
-
-    subscribeToChildRelationChanges: function() {
-      this.subscriptions.destroy();
-      _(this.childRelations).each(function(relation, tableName) {
-        this.subscriptions.add(relation.onInsert(function() {
-          this.updateLinkNumber(tableName);
-        }, this));
-        this.subscriptions.add(relation.onRemove(function() {
-          this.updateLinkNumber(tableName);
-        }, this));
-      }, this);
-    },
-
-    updateLinkNumber: function(tableName) {
-      var relation = this.childRelations[tableName];
-      var informalName = this.template.childNames[tableName];
-      var linkNumber = this[tableName + "LinkNumber"];
-      var linkText   = this[tableName + "LinkText"];
-      var size = relation.size();
-      if (size > 1) {
-        linkNumber.html(size);
-        linkText.html(informalName);
-      } else if (size === 1) {
-        linkNumber.html(1);
-        linkText.html(_(informalName).singularize());
-      } else {
-        linkNumber.html('');
-        var article = _(informalName).singularize()[0].match(/[aeiou]/) ? "an " : "a ";
-        linkText.html("Add " + article + _(informalName).singularize());
-      }
     },
 
     expandDetails: function() {
@@ -292,7 +319,18 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         }, this);
     },
 
-    clickSave: function() {
+    createComment: function() {
+      Application.currentOrganization().ensureCurrentUserCanParticipate().
+        onSuccess(function() {
+          this.childRelations.comments.create({
+            body: this.editableComment.val()
+          }).onSuccess(function(newRecord) {
+            this.editableComment.val('');
+          }, this);
+        }, this);
+    },
+
+    saveEdits: function() {
       if (this.createButton.is(':visible'))      this.createButton.click();
       else if (this.updateButton.is(':visible')) this.updateButton.click();
     },

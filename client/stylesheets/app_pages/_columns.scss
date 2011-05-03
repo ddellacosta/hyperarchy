@@ -30,7 +30,7 @@ $votesColumnWidth: 0.16;
   padding-right: 20px;
   top: 5px;
   overflow: hidden;
-  z-index: 100;
+  z-index: 99;
   background: white;
 
   >.header {
@@ -183,28 +183,40 @@ $votesColumnWidth: 0.16;
       color: black;
     }
   }
-  >textarea {
-    width: 100%;
-    border: 1px solid #aaa;
-  }
 
   >.footer {
     margin: 15px 0;
     @extend .person;
 
-    >button {
-      float: right;
-      cursor: pointer;
-      padding: 3px 10px;
-      margin-left: 5px;
+  }
 
-      border: none;
-      background: $lighterGray;
-      color: gray;
+  textarea {
+    width: 100%;
+    border: 1px solid #aaa;
+  }
 
-      &:hover {
-        color: black;
-      }
+  button {
+    float: right;
+    cursor: pointer;
+    padding: 3px 10px;
+    margin-left: 5px;
+
+    border: none;
+    background: $lighterGray;
+    color: gray;
+
+    &:hover {
+      color: black;
+    }
+  }
+
+  >.comments {
+    margin: 20px -9px;
+    padding: 10px 10px;
+
+    >.header {
+      font-size: 18px;
+      padding-bottom: 10px;
     }
   }
 

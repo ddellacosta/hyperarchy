@@ -1312,7 +1312,7 @@ body.legal {
   padding-right: 20px;
   top: 5px;
   overflow: hidden;
-  z-index: 100;
+  z-index: 99;
   background: white; }
   .usersList > .header {
     height: 20px;
@@ -1452,21 +1452,27 @@ body.legal {
     color: gray; }
     .recordDetails > .ellipsis:hover {
       color: black; }
-  .recordDetails > textarea {
-    width: 100%;
-    border: 1px solid #aaa; }
   .recordDetails > .footer {
     margin: 15px 0; }
-    .recordDetails > .footer > button {
-      float: right;
-      cursor: pointer;
-      padding: 3px 10px;
-      margin-left: 5px;
-      border: none;
-      background: #f4f4f4;
-      color: gray; }
-      .recordDetails > .footer > button:hover {
-        color: black; }
+  .recordDetails textarea {
+    width: 100%;
+    border: 1px solid #aaa; }
+  .recordDetails button {
+    float: right;
+    cursor: pointer;
+    padding: 3px 10px;
+    margin-left: 5px;
+    border: none;
+    background: #f4f4f4;
+    color: gray; }
+    .recordDetails button:hover {
+      color: black; }
+  .recordDetails > .comments {
+    margin: 20px -9px;
+    padding: 10px 10px; }
+    .recordDetails > .comments > .header {
+      font-size: 18px;
+      padding-bottom: 10px; }
   .recordDetails > .childLinks {
     margin: 20px -9px; }
     .recordDetails > .childLinks > li {
