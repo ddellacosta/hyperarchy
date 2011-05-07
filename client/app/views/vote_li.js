@@ -1,7 +1,7 @@
 _.constructor("Views.VoteLi", View.Template, {
   content: function(attrs) { with(this.builder) {
     div({'class': "relatedUser", 'style': "display: none;"}, function() {
-      subview('avatar', Views.Avatar, { size: 40 });
+      subview('avatar', Views.Avatar, {size: 35});
       div({'class': "details"}, function() {
         div({'class': "name"}, "").ref('name');
         div({'class': "date"}, "").ref('votedAt');

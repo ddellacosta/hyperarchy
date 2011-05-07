@@ -1,77 +1,78 @@
 _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
-  // template properties to override:
-  recordConstructor: Election,
-  tableName: "elections",
-  childNames: {
-    candidates: "Answers",
-    votes:      "Votes"
-  },
-  childRelations: function(recordId) { return {
-    comments:   ElectionComment.where({electionId: recordId}),
-    candidates: Candidate.where({electionId: recordId}),
-  }},
+  // properties to override, examples:
+  tableName: null,          // "elections",
+  recordConstructor: null,  // Election,
+  commentConstructor: null, // ElectionComment,
+  childConstructors: {},    // {candidates: Candidate}
+  childNames: {},           // {candidates: "Answers"},
+
+  minTruncationLength: 100,
+  maxTruncationLength: 250,
 
   content: function() {with(this.builder) {
     div({'class': _.singularize(template.tableName) + " recordDetails"}, function() {
 
-      p({'class': "body"}).ref("body");
-      div({'class': "details contracted"}, function() {
-        span({'class': ""}).ref("details");
-      }).ref('detailsContainer');
-      span("...", {'class': "ellipsis", style: "display: none;"})
-        .ref("detailsEllipsis")
-      textarea({'class': "body", style: "display: none;"})
-        .ref('editableBody')
-        .keydown(template.keydownHandler);
-      textarea({'class': "details", style: "display: none;", placeholder: "Further details"})
-        .ref('editableDetails')
-        .keydown(template.keydownHandler);
+      div({'class': "content"}, function() {
+        p({'class': "body"}).ref("body");
+        span({'class': "details truncated"}).ref("truncatedDetails");
+        span({'class': "details", style: "display: none;"}).ref("details");
+        span("...", {'class': "ellipsis", style: "display: none;"})
+          .ref("detailsEllipsis");
+      }).ref("content");
+
+      div({'class': "editable content"}, function() {
+        textarea({'class': "body"})
+          .ref('editableBody')
+          .keydown(template.keydownHandler);
+        textarea({'class': "details", placeholder: "Further details"})
+          .ref('editableDetails')
+          .keydown(template.keydownHandler);
+      }).ref("editableContent");
 
       div({'class': "footer"}, function() {
-        button("More", {style: "display: none;"})
+        button("more", {'class': "expand", style: "display: none;"})
           .ref("expandButton")
           .click("expandDetails");
-        button("Less", {style: "display: none;"})
+        button("less", {'class': "contract", style: "display: none;"})
           .ref("contractButton")
           .click("contractDetails");
-        button("Edit", {style: "display: none;"})
+        button("edit", {'class': "edit", style: "display: none;"})
           .ref("editButton")
           .click("enableEditing");
-        button("Save", {style: "display: none;"})
+        button("save", {'class': "save", style: "display: none;"})
           .ref("updateButton")
           .click("updateRecord");
-        button("Save", {style: "display: none;"})
+        button("save", {'class': "save", style: "display: none;"})
           .ref("createButton")
           .click("createRecord");
-        button("Cancel", {style: "display: none;"})
+        button("cancel", {'class': "cancel"})
           .ref("cancelButton")
           .click("disableEditing");
-
-        subview('avatar', Views.Avatar, { size: 40 });
+        
+        subview('avatar', Views.Avatar, {size: 35});
         span({'class': "name"}, "").ref('creatorName');
         br();
         span({'class': "date"}, "").ref('createdAt');
 
         div({'class': "clear"});
       });
-
-      if (template.childRelations(0).comments) {
+      
+      if (template.commentConstructor) {
         div({'class': "comments"}, function() {
-          div({'class': "header"}, function() {
-            span().ref("commentsHeaderNumber");
+          div({'class': "header"  , /*style: "display: none"*/  }, function() {
+            span().ref("commentsNumber");
             raw(' ');
-            span().ref("commentsHeaderText");
+            span().ref("commentsText");
           });
           subview('commentsList', Views.SortedList, {
             buildElement: function(comment) {
               return Views.ColumnLayout.CommentLi.toView({comment: comment})
-            }
-          });
-          textarea({'class': "comment", placeholder: "Write a comment"}).
+            }});
+          textarea({'class': "comment", placeholder: "Write a comment..."}).
             ref('editableComment').
             keydown(template.keydownHandler);
-          button("Add Comment").
+          button({'class': "create"}, "Add Comment").
             ref("commentSaveButton").
             click("createComment");
           div({'class': "clear"});
@@ -80,14 +81,12 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
       ul({'class': "childLinks"}, function() {
         _.each(template.childNames, function(informalName, tableName) {
-          if (tableName !== "comments") {
-            li(function() {
-              div({'class': "icon"}).ref(tableName + "LinkIcon");
-              span().ref(tableName + "LinkNumber");
-              raw(' ');
-              span().ref(tableName + "LinkText");
-            }).ref(tableName + "Link").click("showChildTable", tableName);
-          }
+          li(function() {
+            div({'class': "icon"}).ref(tableName + "LinkIcon");
+            span().ref(tableName + "Number");
+            raw(' ');
+            span().ref(tableName + "Text");
+          }).ref(tableName + "Link").click("showChildTable", tableName);
         }, this);
       }).ref("childLinksList");
 
@@ -117,18 +116,24 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     recordId: {
       afterChange: function(recordId) {
+        this.subscriptions.destroy();
         if (recordId === "new") {
           this.newRecord();
           return;
         }
 
         recordId = parseInt(recordId);
-        this.subscriptions.destroy();
         this.record(this.template.recordConstructor.find(recordId));
-        this.childRelations = this.template.childRelations(recordId);
-        Server.fetch(_.values(this.childRelations)).onSuccess(function() {
-          if (this.commentsList) this.commentsList.relation(this.childRelations.comments);
-          this.populateChildRelations();
+        var foreignKeyName = _.singularize(this.template.tableName) + "Id";
+        var conditionHash = {}; conditionHash[foreignKeyName] = recordId;
+        var relationsToFetch = _.map(this.template.childConstructors, function(constructor) {
+          return constructor.where(conditionHash);
+        }, this);
+        if (this.commentsList) {
+          relationsToFetch.push(this.template.commentConstructor.where(conditionHash).
+            join(User).on(this.template.commentConstructor.creatorId.eq(User.id)));
+        }
+        Server.fetch(relationsToFetch).onSuccess(function() {
           this.subscribeToChildRelationChanges();
         }, this)
       }
@@ -136,10 +141,12 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     selectedChildTableName: {
       afterChange: function(selectedTableName) {
-        _.each(this.childRelations, function(relation, tableName) {
-          if (this[tableName + 'Link']) this[tableName + 'Link'].removeClass('selected');
+        _.each(this.template.childConstructors, function(constructor, tableName) {
+          this[tableName + 'Link'].removeClass('selected');
         }, this);
-        if (this[selectedTableName + 'Link']) this[selectedTableName + 'Link'].addClass('selected');
+        if (this[selectedTableName + 'Link']) {
+          this[selectedTableName + 'Link'].addClass('selected');
+        }
       }
     },
 
@@ -152,11 +159,20 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         this.details.bindHtml(record, "details");
         this.editableBody.val(record.body());
         this.editableDetails.val(record.details());
+        var updateTruncatedDetails = function(details) {
+          var breakPosition = details.lastIndexOf(' ', this.template.maxTruncationLength);
+          if (breakPosition < this.template.minTruncationLength) {
+            breakPosition = this.template.maxTruncationLength;
+          }
+          this.truncatedDetails.html(details.slice(0, breakPosition));
+          this.showOrTruncateDetails();
+        };
+        updateTruncatedDetails.call(this, record.details());
+        this.subscriptions.add(record.field('details').onUpdate(updateTruncatedDetails, this));
 
         this.editableDetails.elastic();
         this.editableBody.elastic();
         if (record.editableByCurrentUser()) this.editButton.show();
-        this.showOrHideExpandButton();
 
         var creator = User.find(record.creatorId());
         this.avatar.user(creator);
@@ -170,14 +186,16 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       this.containingView.containingColumn.pushNextState({tableName: tableName});
     },
 
-    populateChildRelations: function() {
-      _.each(this.childRelations, function(relation, tableName) {
-        this.updateLinkNumber(tableName);
-      }, this);
-    },
-
     subscribeToChildRelationChanges: function() {
-      _.each(this.childRelations, function(relation, tableName) {
+      var childTableNames = _.keys(this.template.childConstructors);
+      if (this.commentsList) {
+        this.commentsList.relation(this.record().comments());
+        childTableNames.push('comments');
+      }
+
+      _.each(childTableNames, function(tableName) {
+        var relation = this.record()[tableName]();
+        this.updateLinkNumber(tableName);
         this.subscriptions.add(relation.onInsert(function() {
           this.updateLinkNumber(tableName);
         }, this));
@@ -188,111 +206,111 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     },
 
     updateLinkNumber: function(tableName) {
-      var relation     = this.childRelations[tableName];
-      var informalName = this.template.childNames[tableName];
-      var number, text;
-      if (tableName === "comments") {
-        number = this['commentsHeaderNumber'];
-        text   = this['commentsHeaderText'];
-      } else {
-        number = this[tableName + "LinkNumber"];
-        text   = this[tableName + "LinkText"];
-      }
-      var size = relation.size();
+      var informalName = tableName === 'comments' ? "Comments" : this.template.childNames[tableName];
+      var relation     = this.record()[tableName]();
+      var size         = relation.size();
       if (size > 1) {
-        number.html(size);
-        text.html(informalName);
+        this[tableName + "Number"].html(size);
+        this[tableName + "Text"].html(informalName);
       } else if (size === 1) {
-        number.html(1);
-        text.html(_.singularize(informalName));
+        this[tableName + "Number"].html(1);
+        this[tableName + "Text"].html(_.singularize(informalName));
       } else {
-        number.html('');
         var indefiniteArticle = informalName.match(/^[aeiou]/) ? "an " : "a ";
-        text.html("Add " + indefiniteArticle + _.singularize(informalName));
+        this[tableName + "Number"].html('');
+        this[tableName + "Text"].html("Add " + indefiniteArticle + _.singularize(informalName));
+      }
+    },
+
+    showOrTruncateDetails: function() {
+      if (this.expanded) {
+        this.expandButton.hide();
+        this.detailsEllipsis.hide();
+        this.truncatedDetails.hide();
+        this.details.show();
+        if (this.record().details().length > this.template.maxTruncationLength) {
+          this.contractButton.show();
+        } else {
+          this.contractButton.hide();
+        }
+      } else {
+        this.contractButton.hide();
+        if (this.record().details().length > this.template.maxTruncationLength) {
+          this.details.hide();
+          this.truncatedDetails.show();
+          this.expandButton.show();
+          this.detailsEllipsis.show();
+        } else {
+          this.details.show();
+          this.truncatedDetails.hide();
+          this.expandButton.hide();
+          this.detailsEllipsis.hide();
+        }
       }
     },
 
     newRecord: function() {
-      this.editableBody.val("");
-      this.editableDetails.val("");
-      this.editableDetails.elastic();
-      this.editableBody.elastic();
-      this.showOrHideExpandButton();
-
       var creator = User.find(Application.currentUserId);
       this.avatar.user(creator);
       this.creatorName.html(htmlEscape(creator.fullName()));
       this.createdAt.html("");
-
       this.childLinksList.hide();
       this.enableCreating();
+      this.showOrTruncateDetails();
     },
 
     expandDetails: function() {
-      this.detailsContainer.removeClass("contracted");
-      this.expandButton.hide();
-      this.contractButton.show();
-      this.detailsEllipsis.hide();
+      this.expanded = true;
+      this.showOrTruncateDetails();
     },
 
     contractDetails: function() {
-      this.detailsContainer.addClass("contracted");
-      this.contractButton.hide();
-      this.updateButton.hide();
-      this.createButton.hide();
-      this.cancelButton.hide();
-      this.editButton.show();
-      this.showOrHideExpandButton();
+      this.expanded = false;
+      this.showOrTruncateDetails();
     },
 
     enableEditing: function() {
       this.editableBody.val(this.record().body());
       this.editableDetails.val(this.record().details());
-      this.body.hide();
-      this.detailsContainer.hide();
-      this.detailsEllipsis.hide();
-      this.editableBody.show();
-      this.editableDetails.show();
-      this.editButton.hide();
+      this.content.hide();
+      this.editableContent.show();
+      this.editableBody.elastic();
+      this.editableDetails.elastic();
+
       this.expandButton.hide();
       this.contractButton.hide();
-      this.cancelButton.show();
+      this.editButton.hide();
       this.createButton.hide();
+      this.cancelButton.show();
       this.updateButton.show();
-      this.editableBody.focus();
+      this.defer(this.bind(function() {this.editableBody.focus()}));
     },
 
     enableCreating: function() {
-      this.body.hide();
-      this.detailsContainer.hide();
-      this.detailsEllipsis.hide();
-      this.editableBody.show();
-      this.editableDetails.show();
+      this.editableBody.val("");
+      this.editableDetails.val("");
+      this.content.hide();
+      this.editableContent.show();
+      this.editableDetails.elastic();
+      this.editableBody.elastic();
+      
       this.editButton.hide();
       this.expandButton.hide();
       this.contractButton.hide();
-      this.cancelButton.show();
       this.updateButton.hide();
+      this.cancelButton.show();
       this.createButton.show();
       this.defer(this.bind(function() {this.editableBody.focus()}));
     },
 
     disableEditing: function() {
-      this.editableBody.hide();
-      this.editableDetails.hide();
-      this.body.show();
-      this.detailsContainer.show();
-      this.contractDetails();
-    },
-
-    showOrHideExpandButton: function() {
-      if (this.details.height() > this.detailsContainer.height()) {
-        this.detailsEllipsis.show();
-        this.expandButton.show();
-      } else {
-        this.expandButton.hide();
-        this.detailsEllipsis.hide();
-      }
+      this.editableContent.hide();
+      this.cancelButton.hide();
+      this.updateButton.hide();
+      this.createButton.hide();
+      this.editButton.show();
+      this.content.show();
+      this.showOrTruncateDetails();
     },
 
     updateRecord: function() {
@@ -322,7 +340,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     createComment: function() {
       Application.currentOrganization().ensureCurrentUserCanParticipate().
         onSuccess(function() {
-          this.childRelations.comments.create({
+          this.record().comments().create({
             body: this.editableComment.val()
           }).onSuccess(function(newRecord) {
             this.editableComment.val('');

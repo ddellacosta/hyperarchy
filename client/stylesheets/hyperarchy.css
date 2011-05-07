@@ -24,7 +24,6 @@ ol,
 li,
 h1,
 h2,
-.recordDetails > .body,
 h3,
 h4,
 h5,
@@ -78,7 +77,6 @@ th {
 
 h1,
 h2,
-.recordDetails > .body,
 h3,
 h4,
 h5,
@@ -156,7 +154,7 @@ em {
 h1 {
   font-size: 25px; }
 
-h2, .recordDetails > .body {
+h2 {
   font-size: 23px; }
 
 .disabledText {
@@ -344,7 +342,7 @@ h2, .recordDetails > .body {
   #learn_more #summary {
     font-size: 18px;
     margin-bottom: 30px; }
-  #learn_more h2, #learn_more .recordDetails > .body {
+  #learn_more h2 {
     font-weight: bold;
     margin-bottom: 5px; }
   #learn_more .description {
@@ -467,7 +465,7 @@ h2, .recordDetails > .body {
     margin-top: 20px; }
     #signup #centeredWrapper #invitationInfo h1 {
       font-size: 28px; }
-    #signup #centeredWrapper #invitationInfo h2, #signup #centeredWrapper #invitationInfo .recordDetails > .body {
+    #signup #centeredWrapper #invitationInfo h2 {
       font-size: 22px;
       margin-bottom: 30px; }
     #signup #centeredWrapper #invitationInfo #description {
@@ -539,7 +537,7 @@ body.legal {
     margin-bottom: 10px; }
   body.legal h1 {
     margin-bottom: 20px; }
-  body.legal h2, body.legal .recordDetails > .body {
+  body.legal h2 {
     margin-bottom: 15px; }
   body.legal ol {
     margin-bottom: 10px; }
@@ -620,7 +618,7 @@ body.legal {
   #nav > div {
     margin: 5px 30px;
     margin-bottom: 0; }
-  #nav h2, #nav .recordDetails > .body {
+  #nav h2 {
     display: inline-block;
     font-size: 24px;
     margin-right: 24px;
@@ -836,12 +834,12 @@ body.legal {
     #welcomeGuide #currentStep .step {
       padding: 30px;
       background: white; }
-      #welcomeGuide #currentStep .step h2, #welcomeGuide #currentStep .step .recordDetails > .body {
+      #welcomeGuide #currentStep .step h2 {
         margin-bottom: 10px; }
       #welcomeGuide #currentStep .step div.stepDescription {
         font-size: 20px; }
 
-#app #organizationOverview h2, #app #organizationOverview .recordDetails > .body {
+#app #organizationOverview h2 {
   padding-left: 8px; }
 #app #organizationOverview .election {
   padding: 8px;
@@ -916,7 +914,7 @@ body.legal {
     #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight {
       width: 595px;
       display: inline-block; }
-      #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight h2, #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight .recordDetails > .body {
+      #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight h2 {
         display: inline;
         margin-right: 5px; }
       #app #electionOverview .headerContainer #electionBodyContainer #electionBodyContainerRight textarea.electionBody {
@@ -1257,7 +1255,7 @@ body.legal {
     #app #account .emailPreferences .emailPreference label {
       font-size: 16px; }
 
-#app #newElection h2, #app #newElection .recordDetails > .body {
+#app #newElection h2 {
   margin-bottom: 20px; }
 #app #newElection #createElectionLink {
   padding: 6px 20px;
@@ -1279,6 +1277,7 @@ body.legal {
 
 #columns {
   height: 100%;
+  width: 100%;
   position: relative;
   overflow: hidden; }
   #columns > .subnav {
@@ -1305,6 +1304,7 @@ body.legal {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: absolute;
+  height: 100%;
   width: 16%;
   left: 84%;
   top: 5px;
@@ -1441,40 +1441,80 @@ body.legal {
   overflow-y: auto;
   border: 1px solid #cacaca;
   background: white; }
-  .recordDetails > .body {
-    margin-bottom: 5px; }
-  .recordDetails > .details {
-    font-size: 15px; }
-    .recordDetails > .details.contracted {
-      overflow: hidden;
-      max-height: 60px; }
-  .recordDetails > .ellipsis {
-    color: gray; }
-    .recordDetails > .ellipsis:hover {
-      color: black; }
+  .recordDetails > .content {
+    margin-bottom: 10px; }
+    .recordDetails > .content > .body {
+      font-size: 20px;
+      margin-bottom: 5px; }
+    .recordDetails > .content > .details {
+      font-size: 14px; }
+      .recordDetails > .content > .details.contracted {
+        overflow: hidden;
+        max-height: 60px; }
   .recordDetails > .footer {
-    margin: 15px 0; }
+    color: gray;
+    margin-bottom: 20px; }
   .recordDetails textarea {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     width: 100%;
-    border: 1px solid #aaa; }
+    padding: 5px;
+    border: 1px solid #cacaca; }
   .recordDetails button {
+    padding: 3px;
+    padding-right: 5px;
+    padding-left: 15px;
     float: right;
-    cursor: pointer;
-    padding: 3px 10px;
     margin-left: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-color: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
     border: none;
-    background: #f4f4f4;
     color: gray; }
     .recordDetails button:hover {
+      cursor: pointer;
       color: black; }
+  .recordDetails button.edit {
+    background-image: url(/images/pen_12x12_light.png); }
+  .recordDetails button.edit:hover {
+    background-image: url(/images/pen_12x12_dark.png); }
+  .recordDetails button.save {
+    background-image: url(/images/check_12x10_light.png); }
+  .recordDetails button.save:hover {
+    background-image: url(/images/check_12x10_dark.png); }
+  .recordDetails button.cancel {
+    background-image: url(/images/undo_12x12_light.png); }
+  .recordDetails button.cancel:hover {
+    background-image: url(/images/undo_12x12_dark.png); }
+  .recordDetails button.expand {
+    background-image: url(/images/arrow_down_12x12_light.png); }
+  .recordDetails button.expand:hover {
+    background-image: url(/images/arrow_down_12x12_dark.png); }
+  .recordDetails button.contract {
+    background-image: url(/images/arrow_up_12x12_light.png); }
+  .recordDetails button.contract:hover {
+    background-image: url(/images/arrow_up_12x12_dark.png); }
   .recordDetails > .comments {
-    margin: 20px -9px;
-    padding: 10px 10px; }
+    margin-bottom: 10px; }
     .recordDetails > .comments > .header {
       font-size: 18px;
-      padding-bottom: 10px; }
+      padding-bottom: 5px; }
+    .recordDetails > .comments > textarea {
+      margin: 0 -1px;
+      margin-bottom: 5px;
+      font-size: 14px; }
+    .recordDetails > .comments button.create {
+      background-image: url(/images/plus_12x12_light.png); }
+    .recordDetails > .comments button.create:hover {
+      background-image: url(/images/plus_12x12_dark.png); }
   .recordDetails > .childLinks {
-    margin: 20px -9px; }
+    margin: 10px 0;
+    margin-right: -20px; }
     .recordDetails > .childLinks > li {
       padding: 10px 10px;
       margin: 10px 0;
@@ -1495,6 +1535,20 @@ body.legal {
         float: right;
         background-repeat: no-repeat;
         background-position: center center; }
+
+.commentLi {
+  padding: 5px 0;
+  font-size: 14px;
+  border-top: 1px solid #cacaca; }
+  .commentLi > .body {
+    margin-bottom: 5px; }
+  .commentLi > .creator > .name {
+    color: gray;
+    font-size: 14px !important; }
+  .commentLi > button.delete {
+    background-image: url(/images/x_11x11_light.png); }
+  .commentLi > button.delete:hover {
+    background-image: url(/images/x_11x11_dark.png) !important; }
 
 .recordsList {
   height: 100%;
@@ -1557,14 +1611,14 @@ body.legal {
     background-repeat: no-repeat;
     background-position: center center; }
 
-.person > .avatar, .voteLi > .avatar, .recordDetails > .footer > .avatar {
+.person > .avatar, .voteLi > .avatar, .recordDetails > .footer > .avatar, .commentLi > .creator > .avatar {
   float: left;
   margin-right: 5px;
   background-image: url("/images/mystery_man.jpeg"); }
-.person > .name, .voteLi > .name, .recordDetails > .footer > .name {
+.person > .name, .voteLi > .name, .recordDetails > .footer > .name, .commentLi > .creator > .name {
   font-size: 15px;
   margin-bottom: 2px; }
-.person > .date, .voteLi > .date, .recordDetails > .footer > .date {
+.person > .date, .voteLi > .date, .recordDetails > .footer > .date, .commentLi > .creator > .date {
   font-size: 12px;
   color: #999999; }
 

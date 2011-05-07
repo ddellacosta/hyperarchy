@@ -5,6 +5,7 @@ $votesColumnWidth: 0.16;
 
 #columns {
   height: 100%;
+  width: 100%;
   position: relative;
   overflow: hidden;
 
@@ -23,6 +24,7 @@ $votesColumnWidth: 0.16;
 .usersList {
   @include borderBox;
   position: absolute;
+  height: 100%;
   width: $votesColumnWidth * 100%;
   left: (1 - $votesColumnWidth) * 100%;
   top: 5px;
@@ -164,64 +166,92 @@ $votesColumnWidth: 0.16;
   border: 1px solid $borderColor;
   background: white;
 
-  >.body {
-    @extend h2;
-    margin-bottom: 5px;
-  }
-  >.details {
-    font-size: 15px;
+  >.content {
+    margin-bottom: 10px;
 
-    &.contracted {
-      overflow: hidden;
-      max-height: 60px;
+    >.body {
+      font-size: 20px;
+      margin-bottom: 5px;
     }
-  }
-  >.ellipsis {
-    color: gray;
-
-    &:hover {
-      color: black;
+    >.details {
+      font-size: 14px;
+      &.contracted {
+        overflow: hidden;
+        max-height: 60px;
+      }
     }
+    // >.ellipsis {
+    //   color: gray;
+    //   &:hover {color: black;}
+    // }
   }
 
   >.footer {
-    margin: 15px 0;
     @extend .person;
-
+    color: gray;
+    margin-bottom: 20px;
   }
 
   textarea {
+    @include borderBox;
     width: 100%;
-    border: 1px solid #aaa;
+    padding: 5px;
+    border: 1px solid $borderColor;
   }
 
   button {
+    padding: 3px;
+    padding-right: 5px;
+    padding-left: 15px;
     float: right;
-    cursor: pointer;
-    padding: 3px 10px;
     margin-left: 5px;
-
+    font-size: 12px;
+    cursor: pointer;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-color: white;
+    @include borderRadius(5px);
     border: none;
-    background: $lighterGray;
     color: gray;
-
     &:hover {
+      cursor: pointer;
       color: black;
     }
   }
 
+  button.edit           {background-image: url(/images/pen_12x12_light.png);}
+  button.edit:hover     {background-image: url(/images/pen_12x12_dark.png);}
+  button.save           {background-image: url(/images/check_12x10_light.png);}
+  button.save:hover     {background-image: url(/images/check_12x10_dark.png);}
+  button.cancel         {background-image: url(/images/undo_12x12_light.png);}
+  button.cancel:hover   {background-image: url(/images/undo_12x12_dark.png);}
+  button.expand         {background-image: url(/images/arrow_down_12x12_light.png);}
+  button.expand:hover   {background-image: url(/images/arrow_down_12x12_dark.png);}
+  button.contract       {background-image: url(/images/arrow_up_12x12_light.png);}
+  button.contract:hover {background-image: url(/images/arrow_up_12x12_dark.png);}
+
   >.comments {
-    margin: 20px -9px;
-    padding: 10px 10px;
+    margin-bottom: 10px;
 
     >.header {
       font-size: 18px;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
     }
+
+    >textarea {
+      margin: 0 -1px;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+  
+    button.create       {background-image: url(/images/plus_12x12_light.png);}
+    button.create:hover {background-image: url(/images/plus_12x12_dark.png);}
   }
 
   >.childLinks {
-    margin: 20px -9px;
+    // margin: 10px -9px;
+    margin: 10px 0;
+    margin-right: -20px;
 
     >li {
       padding: 10px 10px;
@@ -248,6 +278,26 @@ $votesColumnWidth: 0.16;
       }
     }
   }
+}
+
+.commentLi {
+  padding: 5px 0;
+  font-size: 14px;
+  border-top: 1px solid $borderColor;
+  // &:first-child {border: none;}
+  
+  >.body {
+    margin-bottom: 5px;
+  }
+  
+  >.creator {
+    @extend .person;
+    >.name {color: gray; font-size: 14px !important;}
+    // >.date {font-size: 10px !important;}
+  }
+    
+  >button.delete       {background-image: url(/images/x_11x11_light.png);}
+  >button.delete:hover {background-image: url(/images/x_11x11_dark.png) !important;}
 }
 
 .recordsList {
