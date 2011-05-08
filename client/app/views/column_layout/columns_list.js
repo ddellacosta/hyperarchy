@@ -2,15 +2,13 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
   content: function() {with(this.builder) {
     div({'id': "columns"}, function() {
       div({'class': "subnav"});
-      ol().ref("list");
+      ol().ref("scrollingList");
       div({'class': "usersList"}, function() {
         div({'class': "header"}, function() {
-          span("5 Votes");
+          span().ref("usersListHeader");
         });
         subview('usersList', Views.SortedList, {buildElement: function(vote) {
-          return Views.ColumnLayout.VoteLi.toView({
-            vote: vote
-          });
+          return Views.ColumnLayout.VoteLi.toView({ vote: vote });
         }});
       });
     });
@@ -29,7 +27,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
         this.offScreenColumns[i] = Views.ColumnLayout.ColumnLi.toView();
         this.offScreenColumns[i].hide();
         this.offScreenColumns[i].containingList = this;
-        this.offScreenColumns[i].appendTo(this.list);
+        this.offScreenColumns[i].appendTo(this.scrollingList);
         this.offScreenColumns[i].css('width', width + "%");
         this.offScreenColumns[i].css('left', i * width + "%");
       }
@@ -47,8 +45,10 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     navigate: function(state) {
       var newColumnStates = this.getColumnStatesFromUrlState(state);
       this.shiftColumnsToMatch(newColumnStates);
-      _(this.onScreenColumns).each(function(column, i) {column.state(newColumnStates[i])}, this);
-
+      _.each(this.onScreenColumns, function(column, i) {
+        column.state(newColumnStates[i])
+      }, this);
+      this.selectedUserId(state.userId);
       this.defer(this.hitch('adjustHeight'));
       Application.layout.activateNavigationTab("questionsLink");
     },
@@ -62,7 +62,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
           tableName:       state["col" + (i+1)],
           recordId:        state["id" + (i+1)],
           childTableName:  state["col" + (i+2)],
-          userId:          Application.currentUserId
+          userId:          state["userId"]
         };
       }
       return columnStates;
@@ -70,10 +70,11 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     shiftColumnsToMatch: function(newStates) {
       var state, numberShifted;
-      _(this.onScreenColumns).any(function(column, i) {
-        return _(newStates).any(function(newState, j) {
+      _.any(this.onScreenColumns, function(column, i) {
+        return _.any(newStates, function(newState, j) {
           state = column.state();
-          if (state && (state.tableName === newState.tableName) &&
+          if (state && 
+             (state.tableName === newState.tableName) &&
              (state.recordId === newState.recordId)) {
             numberShifted = i - j;
             return true;
@@ -113,7 +114,7 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
       this.renumberColumns();
 
       setTimeout(this.bind(function() {
-        this.list.children('.column').removeClass("first");
+        this.scrollingList.children('.column').removeClass("first");
         this.onScreenColumns[0].addClass("first");
         this.defer(this.hitch('adjustScrollPosition', 150))
       }), 250);
@@ -121,33 +122,36 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
 
     adjustScrollPosition: function(duration) {
       if (! duration) duration = 0;
-      var listWidth = 0.84;
-//      var listWidth = this.list.css('width');
-//      console.debug(listWidth);
-      var left = -1 * listWidth * (
+      var scrollingListWidth = 0.84;
+      var left = -1 * scrollingListWidth * (
         parseFloat(this.onScreenColumns[0].css('left')) +
         (0.5 * parseFloat(this.onScreenColumns[0].css('width')))
       );
-      _(this.onScreenColumns).each(function(column) {column.show()});
-      this.list.css({left: left + "%"});
+      _.each(this.onScreenColumns, function(column) { column.show() });
+      this.scrollingList.css({left: left + "%"});
       setTimeout(this.bind(function() {
-        _(this.offScreenColumns).each(function(column) {column.hide()});
-        this.list.children('.column').removeClass("first");
+        _.each(this.offScreenColumns, function(column) { column.hide() });
+        this.scrollingList.children('.column').removeClass("first");
         this.onScreenColumns[0].addClass("first");
         this.adjustHeight();
       }), duration);
-
-//      this.list.animate({left: left + "%"}, duration, this.bind(function() {
-//        this.list.children('.column').removeClass("first");
+//      this.scrollingList.animate({left: left + "%"}, duration, this.bind(function() {
+//        this.scrollingList.children('.column').removeClass("first");
 //        this.onScreenColumns[0].addClass("first");
 //        this.onScreenColumns[0].adjustHeight();
 //        _(this.offScreenColumns).each(function(column) {column.hide()});
 //      }));
     },
 
+    selectedUserId: function(id) {
+      this.usersList.children().removeClass('selected');
+      var li = this.usersList.find('[userId=' + id + ']')
+      if (li) li.addClass("selected");
+    },
+
     renumberColumns: function() {
-      _(this.onScreenColumns).each(function(column, i) {column.number = i});
-      _(this.offScreenColumns).each(function(column) {column.number = null});
+      _.each(this.onScreenColumns,  function(column, i) {column.number = i});
+      _.each(this.offScreenColumns, function(column)    {column.number = null});
     },
 
     handleInvalidState: function(error) {
@@ -156,9 +160,9 @@ _.constructor("Views.ColumnLayout.ColumnsList", View.Template, {
     },
 
     adjustHeight: function() {
-      this.list.fillContainingVerticalSpace();
+      this.scrollingList.fillContainingVerticalSpace();
 //      this.usersList.fillContainingVerticalSpace();
-      _(this.onScreenColumns).each(function(column) {column.adjustHeight()});
+      _.each(this.onScreenColumns, function(column) {column.adjustHeight()});
     }
   }
 });

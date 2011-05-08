@@ -133,6 +133,31 @@ $votesColumnWidth: 0.16;
     height: 20px;
     @include transition(height, 150ms, ease-in-out);
 
+    button {
+      padding: 3px;
+      padding-right: 5px;
+      padding-left: 15px;
+      float: right;
+      margin-left: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-color: white;
+      @include borderRadius(5px);
+      border: none;
+      color: gray;
+      &:hover {
+        cursor: pointer;
+        color: black;
+      }
+    }
+
+    button.back         {background-image: url(/images/undo_12x12_light.png);}
+    button.back:hover   {background-image: url(/images/undo_12x12_dark.png);}
+    button.create       {background-image: url(/images/plus_12x12_light.png);}
+    button.create:hover {background-image: url(/images/plus_12x12_dark.png);}
+
     a {
       font-size: 18px;
       padding-left: 10px;

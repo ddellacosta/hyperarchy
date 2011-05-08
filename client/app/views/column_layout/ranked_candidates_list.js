@@ -198,6 +198,7 @@ _.constructor("Views.ColumnLayout.RankedCandidatesList", View.Template, {
     stopLoading: function() {
       this.loading.hide();
       this.rankedCandidatesList.children().show();
+      this.showOrHideDragTargets();
     }
   }
 });

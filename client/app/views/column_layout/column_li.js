@@ -29,9 +29,9 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
     //   - userId.
     state: {
       afterChange: function(state, oldState) {
-        if (! state || _(state).isEqual(oldState)) return;
-        if (oldState
-            && state.tableName === oldState.tableName
+        if (! state || _.isEqual(state, oldState)) return;
+        if (oldState 
+            && state.tableName === oldState.tableName 
             && state.recordId  === oldState.recordId) {
           if (! state.parentTableName) state.parentTableName = oldState.parentTableName;
           if (! state.parentRecordId)  state.parentRecordId  = oldState.parentRecordId;
@@ -68,6 +68,10 @@ _.constructor("Views.ColumnLayout.ColumnLi", View.Template, {
       if ('childTableName' in columnState) {
         if (columnState.childTableName) urlState["col" + (this.number+2)] = columnState.childTableName;
         else delete urlState["col" + (this.number + 2)];
+      }
+      if ('userId' in columnState) {
+        if (columnState.userId) urlState["userId"] = columnState.userId;
+        else delete urlState["userId"];
       }
       $.bbq.pushState(urlState, 2);
     },

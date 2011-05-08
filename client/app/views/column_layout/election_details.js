@@ -1,9 +1,10 @@
 _.constructor("Views.ColumnLayout.ElectionDetails", Views.ColumnLayout.RecordDetails, {
 
   tableName: "elections",
+  informalTableName: "Questions",
   recordConstructor: Election,
   commentConstructor: ElectionComment,
-  childNames: {
+  informalChildNames: {
     candidates: "Answers",
   },
   childConstructors: {

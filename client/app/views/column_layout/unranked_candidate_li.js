@@ -46,7 +46,8 @@ _.constructor("Views.ColumnLayout.UnrankedCandidateLi", View.Template, {
     select: function() {
       this.containingView.containingColumn.pushState({
         tableName: "candidates",
-        recordId: this.candidate.id()
+        recordId: this.candidate.id(),
+        userId: null
       });
     },
 

@@ -2,10 +2,11 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
   // properties to override, examples:
   tableName: null,          // "elections",
+  informalTableName: null,  // "Questions",
   recordConstructor: null,  // Election,
   commentConstructor: null, // ElectionComment,
   childConstructors: {},    // {candidates: Candidate}
-  childNames: {},           // {candidates: "Answers"},
+  informalChildNames: {},   // {candidates: "Answers"},
 
   minTruncationLength: 100,
   maxTruncationLength: 250,
@@ -22,7 +23,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }).ref("content");
 
       div({'class': "editable content"}, function() {
-        textarea({'class': "body"})
+        textarea({'class': "body", placeholder: "Short " + _.singularize(template.informalTableName)})
           .ref('editableBody')
           .keydown(template.keydownHandler);
         textarea({'class': "details", placeholder: "Further details"})
@@ -72,7 +73,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
           textarea({'class': "comment", placeholder: "Write a comment..."}).
             ref('editableComment').
             keydown(template.keydownHandler);
-          button({'class': "create"}, "Add Comment").
+          button({'class': "create"}, "add").
             ref("commentSaveButton").
             click("createComment");
           div({'class': "clear"});
@@ -80,7 +81,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }
 
       ul({'class': "childLinks"}, function() {
-        _.each(template.childNames, function(informalName, tableName) {
+        _.each(template.informalChildNames, function(informalName, tableName) {
           li(function() {
             div({'class': "icon"}).ref(tableName + "LinkIcon");
             span().ref(tableName + "Number");
@@ -116,6 +117,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     recordId: {
       afterChange: function(recordId) {
+        if (! recordId) return;
         this.subscriptions.destroy();
         if (recordId === "new") {
           this.newRecord();
@@ -206,9 +208,10 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     },
 
     updateLinkNumber: function(tableName) {
-      var informalName = tableName === 'comments' ? "Comments" : this.template.childNames[tableName];
       var relation     = this.record()[tableName]();
       var size         = relation.size();
+      var informalName = tableName === 'comments' ? "Comments" : 
+                         this.template.informalChildNames[tableName];
       if (size > 1) {
         this[tableName + "Number"].html(size);
         this[tableName + "Text"].html(informalName);
@@ -256,7 +259,7 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       this.createdAt.html("");
       this.childLinksList.hide();
       this.enableCreating();
-      this.showOrTruncateDetails();
+      // this.showOrTruncateDetails();
     },
 
     expandDetails: function() {

@@ -1413,6 +1413,32 @@ body.legal {
     -moz-transition-timing-function: ease-in-out;
     -webkit-transition-timing-function: ease-in-out;
     -o-transition-timing-function: ease-in-out; }
+    .columnView > .header button {
+      padding: 3px;
+      padding-right: 5px;
+      padding-left: 15px;
+      float: right;
+      margin-left: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-color: white;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border: none;
+      color: gray; }
+      .columnView > .header button:hover {
+        cursor: pointer;
+        color: black; }
+    .columnView > .header button.back {
+      background-image: url(/images/undo_12x12_light.png); }
+    .columnView > .header button.back:hover {
+      background-image: url(/images/undo_12x12_dark.png); }
+    .columnView > .header button.create {
+      background-image: url(/images/plus_12x12_light.png); }
+    .columnView > .header button.create:hover {
+      background-image: url(/images/plus_12x12_dark.png); }
     .columnView > .header a {
       font-size: 18px;
       padding-left: 10px;

@@ -3,18 +3,22 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
     div({'class': "candidates columnView"}, function() {
 
       div({'class': "left header"}, function() {
-        a("Answers").
-          ref("candidatesLink").
-          click("showCandidates");
+        span("Top Answers");
+        button("New Answer", {'class': "create"}).
+          ref("createRecordLink").
+          click("showCreateCandidateForm");
       }).ref("leftHeader");
 
       div({'class': "right header"}, function() {
-        a("Your Ranking").
-          ref("rankingLink").
-          click("showOwnRanking");
-//        a("New Answer").
-//          ref("createRecordLink").
-//          click("showCreateCandidateForm");
+        span("Your Ranking").ref("ownRankingHeader");
+        div(function() {
+          span().ref("otherRankingUserName");
+          button("back", {'class': "back"}).click("showOwnRanking");
+        }).ref("otherRankingHeader");
+        div(function() {
+          span("Answer Details");
+          button("back", {'class': "back"}).click("showOwnRanking");
+        }).ref("detailsHeader");
       }).ref("rightHeader");
 
       div({'class': "left section"}, function() {
@@ -42,31 +46,43 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
           containingView: this
         })});
       this.recordDetails.containingView = this;
-      this.recordDetails.hide();
       this.rankedList.containingView = this;
       this.rankedList.setupSortable();
     },
 
     state: {
       afterChange: function(state, oldState) {
-        var mainRelationHasChanged = (! oldState)
-                                     || (state.parentRecordId  !== oldState.parentRecordId)
-                                     || (state.parentTableName !== oldState.parentTableName);
-        if (mainRelationHasChanged) {
-          this.fetchRelations(state);
-          return;
-        }
-        var rankingsUserId    = this.parseRankingsUserId(state);
-        var oldRankingsUserId = this.parseRankingsUserId(oldState);
-        if (rankingsUserId !== oldRankingsUserId) {
-          this.fetchRankingRelation(state, rankingsUserId);
-        }
-        if (state.tableName === "votes") {
-          this.selectedUserId(rankingsUserId);
-        } else {
-          this.selectedRecordId(state.recordId);
-          this.selectedChildTableName(state.childTableName);
-        }
+        try {
+          var mainRelationIsNew = (! oldState)
+                                   || (state.parentRecordId  !== oldState.parentRecordId)
+                                   || (state.parentTableName !== oldState.parentTableName);
+          if (mainRelationIsNew) {
+            this.startLoading();
+            this.mainRelation = this.parseMainRelation(state);
+            this.votesRelation = this.mainRelation.joinThrough(Election).joinThrough(Vote).
+                                   orderBy(Vote.updatedAt.desc());
+            this.rankingsUserId = state.userId || Application.currentUserId;
+            this.rankingsRelation = this.mainRelation.joinThrough(Ranking).
+                                      where({userId: this.rankingsUserId}).
+                                      orderBy(Ranking.position.desc());
+            Server.fetch([this.mainRelation, this.votesRelation, this.rankingsRelation]).
+              onSuccess(this.populateContent, this);
+            return;
+          }
+
+          var rankingRelationIsNew = (! oldState) || (state.userId !== oldState.userId);
+          if (rankingRelationIsNew) {
+            this.rankedList.startLoading();
+            this.rankingsUserId = state.userId || Application.currentUserId;
+            this.rankingsRelation = this.mainRelation.joinThrough(Ranking).
+                                      where({userId: this.rankingsUserId}).
+                                      orderBy(Ranking.position.desc());
+            Server.fetch([this.rankingsRelation]).
+              onSuccess(this.populateContent, this);
+            return;
+          }
+        } catch (invalidState) {this.containingColumn.handleInvalidState(invalidState)}
+        this.populateContent();
       }
     },
 
@@ -77,68 +93,14 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
     },
 
     showCreateCandidateForm: function() {
-      this.containingColumn.pushState({tableName: "candidates", recordId: "new"});
+      this.containingColumn.pushState({recordId: "new", userId: ""});
     },
 
     showOwnRanking: function() {
-      this.containingColumn.pushState({tableName: "candidates", recordId: ""});
-    },
-
-    showOtherRanking: function(rankingsUserId) {
-      this.containingColumn.pushState({tableName: "votes", recordId: rankingsUserId});
-    },
-
-    showCandidates: function() {
-      if (this.unrankedList.is(':visible')) return;
-      this.containingColumn.pushState({tableName: "candidates", recordId: null});
+      this.containingColumn.pushState({recordId: "", userId: ""});
     },
 
     // private
-
-    fetchRelations: function(state) {
-      this.startLoading();
-      try {
-        var mainRelation  = this.parseMainRelation(state);
-        var votesRelation = mainRelation.joinThrough(Election).
-                            joinThrough(Vote).
-                            orderBy(Vote.updatedAt.desc());
-        var rankingsRelation = mainRelation.joinThrough(Ranking).
-                               where({userId: state.userId}).
-                               orderBy(Ranking.position.desc());
-        Server.fetch([
-          mainRelation.join(User).on(Candidate.creatorId.eq(User.id)),
-          rankingsRelation.joinTo(User),
-          votesRelation
-        ]).onSuccess(function() {
-          this.unrankedList.relation(mainRelation);
-          this.rankedList.rankingsRelation(rankingsRelation);
-          this.votesList = this.containingColumn.containingList.usersList;
-          this.votesList.relation(votesRelation);
-
-          var rankingsUserId    = this.parseRankingsUserId(state);
-          if (state.tableName === "votes") {
-            this.selectedUserId(rankingsUserId);
-          } else {
-            this.selectedRecordId(state.recordId);
-            this.selectedChildTableName(state.childTableName);
-          }
-          if (this.isInFirstColumn()) this.setCurrentOrganizationId();
-          this.stopLoading();
-        }, this);
-      } catch (invalidState) {this.containingColumn.handleInvalidState(invalidState)}
-    },
-
-    fetchRankingRelation: function(state, rankingsUserId) {
-      var mainRelation = this.parseMainRelation(state);
-      var rankingsRelation = mainRelation.joinThrough(Ranking).
-                             where({userId: rankingsUserId}).
-                             orderBy(Ranking.position.desc());
-      this.rankedList.startLoading();
-      rankingsRelation.fetch().onSuccess(function() {
-        this.rankedList.stopLoading();
-        this.rankedList.rankingsRelation(rankingsRelation);
-      }, this);
-    },
 
     parseMainRelation: function(state) {
       if (state.parentRecordId) {
@@ -148,58 +110,50 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       }
     },
 
-    parseRankingsUserId: function(state) {
-      if (state.tableName === "votes" && state.recordId) {
-        return state.recordId;
-      } else {
-        return Application.currentUserId;
-      }
+    populateContent: function() {
+      this.unrankedList.relation(this.mainRelation);
+      this.rankedList.rankingsRelation(this.rankingsRelation);
+      this.containingColumn.containingList.usersList.relation(this.votesRelation);
+      this.recordDetails.recordId(this.state().recordId);
+      this.recordDetails.selectedChildTableName(this.state().childTableName);
+      this.showSelectedElements();
+      if (this.isInFirstColumn()) this.setCurrentOrganizationId();
+      this.stopLoading();
     },
 
-    selectedRecordId: {
-      afterWrite: function(id) {
-        this.unrankedList.show();
-        this.unrankedList.children().removeClass("selected");
-        this.leftHeader.children().removeClass('selected');
-        this.rightHeader.children().removeClass('selected');
-        this.candidatesLink.addClass('selected');
-
-        if (! id) {
-          this.recordDetails.hide();
-          this.rankedList.show();
-          this.rankingLink.addClass('selected');
-        } else if (id === "new") {
-          this.rankedList.hide();
-          this.recordDetails.show();
-          this.recordDetails.recordId("new");
-          this.createRecordLink.addClass('selected');
-        } else {
-          this.rankedList.hide();
-          this.recordDetails.show();
-          this.recordDetails.recordId(id);
-          var selectedLi = this.unrankedList.elementsById[id];
-          if (! selectedLi) return;
-          selectedLi.addClass("selected");
-        }
-      }
-    },
-
-    selectedUserId: {
-      afterWrite: function(id) {
-        if (! id) id = Application.currentUserId;
+    showSelectedElements: function() {
+      this.unrankedList.children().removeClass("selected");
+      this.rightHeader.children().hide();
+      var recordId = this.state().recordId;
+      var userId = this.state().userId;
+      if (userId && userId !== Application.currentUserId) {
         this.recordDetails.hide();
         this.rankedList.show();
-        this.votesList.children().removeClass("selected");
-        this.rightHeader.children().removeClass('selected');
-        this.rankingLink.addClass('selected');
-        var selectedLi = this.votesList.find('[userId=' + id + ']');
-        if (! selectedLi) return;
-        selectedLi.addClass("selected");
+        this.otherRankingUserName.html(User.find(userId).fullName() + "'s Ranking");
+        this.ownRankingHeader.hide();
+        this.detailsHeader.hide();
+        this.otherRankingHeader.show();
+      } else if (recordId) {
+        this.rankedList.hide();
+        this.recordDetails.show();
+        this.recordDetails.recordId(recordId);
+        this.otherRankingHeader.hide();
+        this.ownRankingHeader.hide();
+        this.detailsHeader.show();
+        if (recordId === "new") {
+          this.createRecordLink.addClass('selected');
+        } else {
+          var li = this.unrankedList.elementsById[recordId];
+          if (li) li.addClass("selected");
+        }
+      } else {
+        this.recordDetails.hide();
+        this.rankedList.show();
+        this.otherRankingHeader.hide();
+        this.detailsHeader.hide();
+        this.ownRankingHeader.show();
+        this.ownRankingHeader.addClass('selected');
       }
-    },
-
-    selectedChildTableName: {
-      afterChange: function(tableName) {this.recordDetails.selectedChildTableName(tableName)}
     },
 
     setCurrentOrganizationId: function() {
@@ -215,6 +169,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
       this.loading.hide();
       this.recordDetails.stopLoading();
       this.adjustHeight();
+      this.rankedList.stopLoading();
     },
 
     isInFirstColumn: function() {return (this.containingColumn.number === 0)}
