@@ -4,7 +4,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
       div({'class': "left header"}, function() {
         span("Top Answers");
-        button("New Answer", {'class': "create"}).
+        button("add answer", {'class': "create"}).
           ref("createRecordLink").
           click("showCreateCandidateForm");
       }).ref("leftHeader");

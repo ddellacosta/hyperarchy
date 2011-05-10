@@ -2,7 +2,7 @@ _.constructor("Views.ColumnLayout.CommentLi", View.Template, {
   content: function() {with(this.builder) {
     div({'class': "commentLi"}, function() {
       div({'class': "body"}).ref("body");
-      button('delete', {'class': "delete"}).
+      button({'class': "delete"}).
         ref("deleteButton").
         click("deleteComment");
       div({'class': "creator"}, function() {

@@ -30,7 +30,12 @@ _.constructor("Views.ColumnLayout.VoteLi", View.Template, {
     },
 
     showRanking: function() {
-      $.bbq.pushState({userId: this.vote.userId()});
+      var userId = this.vote.userId();
+      if (userId == Application.currentUserId) {
+        $.bbq.removeState("userId");
+      } else {
+        $.bbq.pushState({userId: userId});
+      }
     }
   }
 });

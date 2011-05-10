@@ -59,37 +59,39 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         div({'class': "clear"});
       });
       
+      ul({'class': "childLinks"}, function() {
+        _.each(template.informalChildNames, function(informalName, tableName) {
+          li(function() { 
+            a(function() {
+              div({'class': "icon"}).ref(tableName + "LinkIcon");
+              span().ref(tableName + "Number");
+              raw(' ');
+              span().ref(tableName + "Text");
+            }).ref(tableName + "Link").click("showChildTable", tableName);
+          })
+        }, this);
+      }).ref("childLinksList");
+
       if (template.commentConstructor) {
         div({'class': "comments"}, function() {
-          div({'class': "header"  , /*style: "display: none"*/  }, function() {
+          a({'class': "header"}, function() {
             span().ref("commentsNumber");
             raw(' ');
             span().ref("commentsText");
-          });
-          subview('commentsList', Views.SortedList, {
-            buildElement: function(comment) {
-              return Views.ColumnLayout.CommentLi.toView({comment: comment})
-            }});
-          textarea({'class': "comment", placeholder: "Write a comment..."}).
-            ref('editableComment').
-            keydown(template.keydownHandler);
-          button({'class': "create"}, "add").
-            ref("commentSaveButton").
-            click("createComment");
-          div({'class': "clear"});
+            div({'class': "expand icon"}).ref("commentsExpandIcon");
+          }).ref("commentsHeader").click("toggleComments");
+          div({'class': "body", style: "display: none;"}, function() {
+            subview('commentsList', Views.SortedList, {
+              buildElement: function(comment) {
+                return Views.ColumnLayout.CommentLi.toView({comment: comment})
+              }});
+            textarea({'class': "comment", placeholder: "Write a comment..."}).
+              ref('editableComment').
+              keydown(template.keydownHandler);
+            div({'class': "clear"});
+          }).ref("commentsBody");
         });
       }
-
-      ul({'class': "childLinks"}, function() {
-        _.each(template.informalChildNames, function(informalName, tableName) {
-          li(function() {
-            div({'class': "icon"}).ref(tableName + "LinkIcon");
-            span().ref(tableName + "Number");
-            raw(' ');
-            span().ref(tableName + "Text");
-          }).ref(tableName + "Link").click("showChildTable", tableName);
-        }, this);
-      }).ref("childLinksList");
 
       div({'class': "loading"}).ref("loading");
     });
@@ -103,7 +105,11 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
         break;
       case 13: // enter
         if (event.ctrlKey) break;
-        view.saveEdits();
+        if ($(event.target).hasClass('comment')) {
+          view.createComment();
+        } else { 
+          view.saveEdits();
+        }
         event.preventDefault();
         break;
     }
@@ -113,12 +119,14 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
 
     initialize: function() {
       this.subscriptions = new Monarch.SubscriptionBundle;
+      this.editableComment.elastic();
     },
 
     recordId: {
       afterChange: function(recordId) {
         if (! recordId) return;
         this.subscriptions.destroy();
+        this.contractComments();
         if (recordId === "new") {
           this.newRecord();
           return;
@@ -354,6 +362,25 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
     saveEdits: function() {
       if (this.createButton.is(':visible'))      this.createButton.click();
       else if (this.updateButton.is(':visible')) this.updateButton.click();
+    },
+
+    toggleComments: function() {
+      if (this.commentsHeader.hasClass('expanded')) {
+        this.contractComments();
+      } else {
+        this.expandComments();
+      }
+    },
+
+    contractComments: function() {
+      this.commentsHeader.removeClass('expanded');
+      this.commentsBody.hide();
+    },
+
+    expandComments: function() {
+      this.commentsHeader.addClass('expanded');
+      this.commentsBody.show();
+      this.editableComment.focus();
     },
 
     startLoading: function() {

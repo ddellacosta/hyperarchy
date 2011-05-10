@@ -1389,7 +1389,7 @@ body.legal {
     position: absolute;
     left: 0;
     width: 100%;
-    padding-right: 20px; }
+    padding-right: 18px; }
     .columnView > .header.left, .columnView .section.left {
       width: 50%;
       left: 0; }
@@ -1416,19 +1416,18 @@ body.legal {
     .columnView > .header button {
       padding: 3px;
       padding-right: 5px;
-      padding-left: 15px;
+      padding-left: 20px;
       float: right;
       margin-left: 5px;
       font-size: 18px;
       cursor: pointer;
-      background-position: left center;
+      background-position: 5px center;
       background-repeat: no-repeat;
       background-color: white;
-      -webkit-border-radius: 5px;
-      -moz-border-radius: 5px;
       border: none;
       color: gray; }
       .columnView > .header button:hover {
+        text-decoration: underline;
         cursor: pointer;
         color: black; }
     .columnView > .header button.back {
@@ -1440,7 +1439,7 @@ body.legal {
     .columnView > .header button.create:hover {
       background-image: url(/images/plus_12x12_dark.png); }
     .columnView > .header a {
-      font-size: 18px;
+      font-size: 14px;
       padding-left: 10px;
       padding-right: 30px;
       color: #ccc; }
@@ -1462,7 +1461,7 @@ body.legal {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
-  padding: 15px 20px;
+  padding: 15px 18px;
   overflow-x: hidden;
   overflow-y: auto;
   border: 1px solid #cacaca;
@@ -1490,12 +1489,12 @@ body.legal {
   .recordDetails button {
     padding: 3px;
     padding-right: 5px;
-    padding-left: 15px;
+    padding-left: 20px;
     float: right;
     margin-left: 5px;
     font-size: 12px;
     cursor: pointer;
-    background-position: left center;
+    background-position: 5px center;
     background-repeat: no-repeat;
     background-color: white;
     -webkit-border-radius: 5px;
@@ -1503,6 +1502,7 @@ body.legal {
     border: none;
     color: gray; }
     .recordDetails button:hover {
+      text-decoration: underline;
       cursor: pointer;
       color: black; }
   .recordDetails button.edit {
@@ -1525,47 +1525,68 @@ body.legal {
     background-image: url(/images/arrow_up_12x12_light.png); }
   .recordDetails button.contract:hover {
     background-image: url(/images/arrow_up_12x12_dark.png); }
-  .recordDetails > .comments {
-    margin-bottom: 10px; }
-    .recordDetails > .comments > .header {
-      font-size: 18px;
-      padding-bottom: 5px; }
-    .recordDetails > .comments > textarea {
-      margin: 0 -1px;
-      margin-bottom: 5px;
+  .recordDetails > .comments > .header {
+    display: block;
+    padding: 8px 10px;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    background-color: #f4f4f4;
+    font-size: 18px;
+    color: black; }
+    .recordDetails > .comments > .header:hover {
+      text-decoration: underline; }
+    .recordDetails > .comments > .header > .icon {
+      width: 20px;
+      height: 20px;
+      float: right;
+      background-repeat: no-repeat;
+      background-position: center center; }
+      .recordDetails > .comments > .header > .icon.expand {
+        background-image: url(/images/arrow_down_16x16_light.png); }
+    .recordDetails > .comments > .header:hover > .expand {
+      background-image: url(/images/arrow_down_16x16_dark.png); }
+    .recordDetails > .comments > .header.expanded {
+      background-color: #dde6ff; }
+      .recordDetails > .comments > .header.expanded > .expand {
+        background-image: url(/images/arrow_down_16x16_dark.png); }
+  .recordDetails > .comments > .body {
+    padding-left: 18px; }
+    .recordDetails > .comments > .body > textarea {
       font-size: 14px; }
-    .recordDetails > .comments button.create {
-      background-image: url(/images/plus_12x12_light.png); }
-    .recordDetails > .comments button.create:hover {
-      background-image: url(/images/plus_12x12_dark.png); }
+  .recordDetails > .comments button.create {
+    background-image: url(/images/comment_stroke_12x11_light.png); }
+  .recordDetails > .comments button.create:hover {
+    background-image: url(/images/comment_stroke_12x11_dark.png); }
   .recordDetails > .childLinks {
-    margin: 10px 0;
-    margin-right: -20px; }
-    .recordDetails > .childLinks > li {
-      padding: 10px 10px;
-      margin: 10px 0;
+    margin: 10px 0; }
+    .recordDetails > .childLinks > li > a {
+      display: block;
+      padding: 8px 10px;
+      padding-left: 18px;
+      margin-bottom: 10px;
       background-color: #f4f4f4;
-      cursor: pointer;
-      font-size: 18px; }
-      .recordDetails > .childLinks > li:hover {
-        background-color: #f1f5ff; }
-        .recordDetails > .childLinks > li:hover .icon {
-          background-image: url(/images/play_12x16_light.png); }
-      .recordDetails > .childLinks > li.selected {
-        background-color: #dde6ff; }
-        .recordDetails > .childLinks > li.selected .icon {
-          background-image: url(/images/play_12x16_dark.png); }
-      .recordDetails > .childLinks > li > .icon {
+      font-size: 18px;
+      color: black; }
+      .recordDetails > .childLinks > li > a > .icon {
         width: 20px;
         height: 20px;
         float: right;
         background-repeat: no-repeat;
         background-position: center center; }
+      .recordDetails > .childLinks > li > a:hover {
+        text-decoration: underline;
+        background-color: #f1f5ff; }
+        .recordDetails > .childLinks > li > a:hover .icon {
+          background-image: url(/images/arrow_right_16x16_light.png); }
+      .recordDetails > .childLinks > li > a.selected {
+        text-decoration: none;
+        background-color: #dde6ff; }
+        .recordDetails > .childLinks > li > a.selected .icon {
+          background-image: url(/images/arrow_right_16x16_dark.png); }
 
 .commentLi {
-  padding: 5px 0;
-  font-size: 14px;
-  border-top: 1px solid #cacaca; }
+  margin-bottom: 10px;
+  font-size: 14px; }
   .commentLi > .body {
     margin-bottom: 5px; }
   .commentLi > .creator > .name {
@@ -1616,18 +1637,17 @@ body.legal {
   .recordLi.ranked > .icon.unrank {
     background-image: url(/images/x_11x11_light.png); }
   .recordLi.ranked > .icon.unrank:hover {
-    cursor: pointer;
     background-image: url(/images/x_11x11_dark.png) !important; }
   .recordLi.unranked > .icon.ranked {
     background-image: url(/images/check_12x10_light.png); }
   .recordLi.unranked:hover {
     background-color: #f1f5ff; }
     .recordLi.unranked:hover .icon {
-      background-image: url(/images/play_12x16_light.png); }
+      background-image: url(/images/arrow_right_16x16_light.png); }
   .recordLi.unranked.selected {
     background-color: #dde6ff; }
     .recordLi.unranked.selected .icon {
-      background-image: url(/images/play_12x16_dark.png) !important; }
+      background-image: url(/images/arrow_right_16x16_dark.png) !important; }
   .recordLi > .body {
     color: black; }
   .recordLi > .icon {
