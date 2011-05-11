@@ -32,22 +32,22 @@ _.constructor("Views.ColumnLayout.RecordDetails", View.Template, {
       }).ref("editableContent");
 
       div({'class': "footer"}, function() {
-        button("more", {'class': "expand", style: "display: none;"})
+        a("more", {'class': "expand button", style: "display: none;"})
           .ref("expandButton")
           .click("expandDetails");
-        button("less", {'class': "contract", style: "display: none;"})
+        a("less", {'class': "contract button", style: "display: none;"})
           .ref("contractButton")
           .click("contractDetails");
-        button("edit", {'class': "edit", style: "display: none;"})
+        a("edit", {'class': "edit button", style: "display: none;"})
           .ref("editButton")
           .click("enableEditing");
-        button("save", {'class': "save", style: "display: none;"})
+        a("save", {'class': "save button", style: "display: none;"})
           .ref("updateButton")
           .click("updateRecord");
-        button("save", {'class': "save", style: "display: none;"})
+        a("save", {'class': "save button", style: "display: none;"})
           .ref("createButton")
           .click("createRecord");
-        button("cancel", {'class': "cancel"})
+        a("cancel", {'class': "cancel button"})
           .ref("cancelButton")
           .click("disableEditing");
         

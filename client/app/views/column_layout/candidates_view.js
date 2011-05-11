@@ -4,7 +4,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
       div({'class': "left header"}, function() {
         span("Top Answers");
-        button("add answer", {'class': "create"}).
+        a("add answer", {'class': "create button"}).
           ref("createRecordLink").
           click("showCreateCandidateForm");
       }).ref("leftHeader");
@@ -13,11 +13,11 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
         span("Your Ranking").ref("ownRankingHeader");
         div(function() {
           span().ref("otherRankingUserName");
-          button("back", {'class': "back"}).click("showOwnRanking");
+          a("back", {'class': "back button"}).click("showOwnRanking");
         }).ref("otherRankingHeader");
         div(function() {
           span("Answer Details");
-          button("back", {'class': "back"}).click("showOwnRanking");
+          a("back", {'class': "back button"}).click("showOwnRanking");
         }).ref("detailsHeader");
       }).ref("rightHeader");
 
@@ -104,7 +104,7 @@ _.constructor("Views.ColumnLayout.CandidatesView", View.Template, {
 
     parseMainRelation: function(state) {
       if (state.parentRecordId) {
-        return Candidate.where({electionId: state.parentRecordId})
+        return Candidate.where({electionId: state.parentRecordId}).orderBy('position asc');
       } else {
         return Candidate.where({id: state.recordId});
       }

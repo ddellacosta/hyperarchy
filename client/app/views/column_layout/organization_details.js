@@ -53,12 +53,12 @@ _.constructor("Views.ColumnLayout.OrganizationDetails", Views.ColumnLayout.Recor
 
       ul({'class': "childLinks"}, function() {
         _(template.childNames).each(function(informalName, tableName) {
-          li(function() {
+          li(function() { a(function() {
             div({'class': "icon"}).ref(tableName + "LinkIcon");
             span().ref(tableName + "LinkNumber");
             raw(' ');
             span().ref(tableName + "LinkText");
-          }).ref(tableName + "Link").click("showChildTable", tableName);
+          })}).ref(tableName + "Link").click("showChildTable", tableName);
         }, this);
       }).ref("childLinksList");
 

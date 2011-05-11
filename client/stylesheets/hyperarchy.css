@@ -1354,7 +1354,7 @@ body.legal {
   position: relative;
   overflow: hidden; }
   .voteLi:hover {
-    background-color: #f1f5ff; }
+    background-color: #eef2ff; }
   .voteLi.selected {
     background-color: #dde6ff; }
 
@@ -1413,40 +1413,26 @@ body.legal {
     -moz-transition-timing-function: ease-in-out;
     -webkit-transition-timing-function: ease-in-out;
     -o-transition-timing-function: ease-in-out; }
-    .columnView > .header button {
-      padding: 3px;
-      padding-right: 5px;
-      padding-left: 20px;
+    .columnView > .header a.button {
       float: right;
+      padding-left: 20px;
       margin-left: 5px;
-      font-size: 18px;
-      cursor: pointer;
+      margin-top: 2px;
+      font-size: 16px;
       background-position: 5px center;
       background-repeat: no-repeat;
-      background-color: white;
-      border: none;
       color: gray; }
-      .columnView > .header button:hover {
+      .columnView > .header a.button:hover {
         text-decoration: underline;
-        cursor: pointer;
         color: black; }
-    .columnView > .header button.back {
+    .columnView > .header .button.back {
       background-image: url(/images/undo_12x12_light.png); }
-    .columnView > .header button.back:hover {
+    .columnView > .header .button.back:hover {
       background-image: url(/images/undo_12x12_dark.png); }
-    .columnView > .header button.create {
+    .columnView > .header .button.create {
       background-image: url(/images/plus_12x12_light.png); }
-    .columnView > .header button.create:hover {
+    .columnView > .header .button.create:hover {
       background-image: url(/images/plus_12x12_dark.png); }
-    .columnView > .header a {
-      font-size: 14px;
-      padding-left: 10px;
-      padding-right: 30px;
-      color: #ccc; }
-      .columnView > .header a:hover {
-        color: #aaa; }
-      .columnView > .header a.selected {
-        color: #888; }
     .columnView > .header span {
       font-size: 18px;
       padding-left: 10px;
@@ -1478,7 +1464,7 @@ body.legal {
         max-height: 60px; }
   .recordDetails > .footer {
     color: gray;
-    margin-bottom: 20px; }
+    margin-bottom: 30px; }
   .recordDetails textarea {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1486,54 +1472,46 @@ body.legal {
     width: 100%;
     padding: 5px;
     border: 1px solid #cacaca; }
-  .recordDetails button {
-    padding: 3px;
-    padding-right: 5px;
+  .recordDetails .button {
     padding-left: 20px;
     float: right;
     margin-left: 5px;
     font-size: 12px;
-    cursor: pointer;
     background-position: 5px center;
     background-repeat: no-repeat;
-    background-color: white;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border: none;
     color: gray; }
-    .recordDetails button:hover {
+    .recordDetails .button:hover {
       text-decoration: underline;
       cursor: pointer;
       color: black; }
-  .recordDetails button.edit {
+  .recordDetails .button.edit {
     background-image: url(/images/pen_12x12_light.png); }
-  .recordDetails button.edit:hover {
+  .recordDetails .button.edit:hover {
     background-image: url(/images/pen_12x12_dark.png); }
-  .recordDetails button.save {
+  .recordDetails .button.save {
     background-image: url(/images/check_12x10_light.png); }
-  .recordDetails button.save:hover {
+  .recordDetails .button.save:hover {
     background-image: url(/images/check_12x10_dark.png); }
-  .recordDetails button.cancel {
+  .recordDetails .button.cancel {
     background-image: url(/images/undo_12x12_light.png); }
-  .recordDetails button.cancel:hover {
+  .recordDetails .button.cancel:hover {
     background-image: url(/images/undo_12x12_dark.png); }
-  .recordDetails button.expand {
+  .recordDetails .button.expand {
     background-image: url(/images/arrow_down_12x12_light.png); }
-  .recordDetails button.expand:hover {
+  .recordDetails .button.expand:hover {
     background-image: url(/images/arrow_down_12x12_dark.png); }
-  .recordDetails button.contract {
+  .recordDetails .button.contract {
     background-image: url(/images/arrow_up_12x12_light.png); }
-  .recordDetails button.contract:hover {
+  .recordDetails .button.contract:hover {
     background-image: url(/images/arrow_up_12x12_dark.png); }
   .recordDetails > .comments > .header {
     display: block;
     padding: 8px 10px;
-    padding-left: 18px;
-    margin-bottom: 10px;
     background-color: #f4f4f4;
     font-size: 18px;
     color: black; }
     .recordDetails > .comments > .header:hover {
+      background-color: #eef2ff;
       text-decoration: underline; }
     .recordDetails > .comments > .header > .icon {
       width: 20px;
@@ -1550,7 +1528,9 @@ body.legal {
       .recordDetails > .comments > .header.expanded > .expand {
         background-image: url(/images/arrow_down_16x16_dark.png); }
   .recordDetails > .comments > .body {
-    padding-left: 18px; }
+    padding: 10px 5px;
+    padding-left: 10px;
+    background-color: #f1f1f1; }
     .recordDetails > .comments > .body > textarea {
       font-size: 14px; }
   .recordDetails > .comments button.create {
@@ -1562,7 +1542,6 @@ body.legal {
     .recordDetails > .childLinks > li > a {
       display: block;
       padding: 8px 10px;
-      padding-left: 18px;
       margin-bottom: 10px;
       background-color: #f4f4f4;
       font-size: 18px;
@@ -1575,7 +1554,7 @@ body.legal {
         background-position: center center; }
       .recordDetails > .childLinks > li > a:hover {
         text-decoration: underline;
-        background-color: #f1f5ff; }
+        background-color: #eef2ff; }
         .recordDetails > .childLinks > li > a:hover .icon {
           background-image: url(/images/arrow_right_16x16_light.png); }
       .recordDetails > .childLinks > li > a.selected {
@@ -1585,16 +1564,22 @@ body.legal {
           background-image: url(/images/arrow_right_16x16_dark.png); }
 
 .commentLi {
-  margin-bottom: 10px;
-  font-size: 14px; }
+  padding: 5px 0;
+  font-size: 14px;
+  border-top: 2px solid white; }
+  .commentLi:first-child {
+    border: none; }
   .commentLi > .body {
     margin-bottom: 5px; }
   .commentLi > .creator > .name {
     color: gray;
     font-size: 14px !important; }
-  .commentLi > button.delete {
+  .commentLi > .delete {
+    display: block;
+    height: 12px; }
+  .commentLi > .delete {
     background-image: url(/images/x_11x11_light.png); }
-  .commentLi > button.delete:hover {
+  .commentLi > .delete:hover {
     background-image: url(/images/x_11x11_dark.png) !important; }
 
 .recordsList {
@@ -1641,7 +1626,7 @@ body.legal {
   .recordLi.unranked > .icon.ranked {
     background-image: url(/images/check_12x10_light.png); }
   .recordLi.unranked:hover {
-    background-color: #f1f5ff; }
+    background-color: #eef2ff; }
     .recordLi.unranked:hover .icon {
       background-image: url(/images/arrow_right_16x16_light.png); }
   .recordLi.unranked.selected {

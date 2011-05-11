@@ -1,10 +1,10 @@
 _.constructor("Views.ColumnLayout.CommentLi", View.Template, {
   content: function() {with(this.builder) {
     div({'class': "commentLi"}, function() {
-      div({'class': "body"}).ref("body");
-      button({'class': "delete"}).
+      a({'class': "delete button"}).
         ref("deleteButton").
         click("deleteComment");
+      p({'class': "body"}).ref("body");
       div({'class': "creator"}, function() {
         subview('avatar', Views.Avatar, {size: 35});
         span({'class': "name"}).ref("creatorName");
