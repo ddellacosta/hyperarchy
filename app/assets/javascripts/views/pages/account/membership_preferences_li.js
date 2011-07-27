@@ -3,7 +3,7 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
     li(function() {
       h3(function() {
         span("Email Preferences for ");
-        span().ref('organizationName');
+        span().ref('teamName');
       });
 
       div({'class': "email-preference"}, function() {
@@ -31,8 +31,8 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
       });
 
       div({'class': "email-preference"}, function() {
-        label("Email me about new comments on agendaItems I suggested: ");
-        select({name: "notifyOfNewCommentsOnOwnAgendaItems"}, function() {
+        label("Email me about new notes on agendaItems I suggested: ");
+        select({name: "notifyOfNewNotesOnOwnAgendaItems"}, function() {
           option({value: "immediately"}, "Immediately");
           option({value: "every5"}, "Every 5 Minutes");
           option({value: "hourly"}, "Hourly");
@@ -43,8 +43,8 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
       });
 
       div({'class': "email-preference"}, function() {
-        label("Email me about new comments on agendaItems I have ranked: ");
-        select({name: "notifyOfNewCommentsOnRankedAgendaItems"}, function() {
+        label("Email me about new notes on agendaItems I have ranked: ");
+        select({name: "notifyOfNewNotesOnRankedAgendaItems"}, function() {
           option({value: "immediately"}, "Immediately");
           option({value: "every5"}, "Every 5 Minutes");
           option({value: "hourly"}, "Hourly");
@@ -58,7 +58,7 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
 
   viewProperties: {
     initialize: function() {
-      this.organizationName.bindText(this.membership.organization(), 'name');
+      this.teamName.bindText(this.membership.team(), 'name');
       this.model(this.membership);
       this.find('select').change(this.hitch('save'));
     }

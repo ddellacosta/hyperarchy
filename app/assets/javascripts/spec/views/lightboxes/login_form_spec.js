@@ -21,8 +21,8 @@ describe("Views.Lightboxes.LoginForm", function() {
     
     it("causes the form to be hidden if the url changes", function() {
       loginForm.show();
-      spyOn(Application.organizationPage, 'params');
-      History.pushState(null, null, 'organizations/1');
+      spyOn(Application.teamPage, 'params');
+      History.pushState(null, null, 'teams/1');
       expect(loginForm).toBeHidden();
     });
     
@@ -51,8 +51,8 @@ describe("Views.Lightboxes.LoginForm", function() {
       enableAjax();
       usingBackdoor(function() {
         user = User.create();
-        user.memberships().joinTo(Organization).fetch();
-        History.pushState(null, null, user.defaultOrganization().url());
+        user.memberships().joinTo(Team).fetch();
+        History.pushState(null, null, user.defaultTeam().url());
         Repository.clear();
       });
       loginForm.show();

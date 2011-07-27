@@ -1,26 +1,26 @@
 require "spec_helper"
 
 describe NotificationMailer do
-  attr_reader :org1, :org1_e1, :org1_e1_c1, :org1_e1_c1_comment, :org1_e1_c2, :org1_e2, :org1_e2_c1,
-              :org1_e2_c1_comment, :org2, :org2_e1, :org2_e1_c1, :org2_e1_c1_comment,
+  attr_reader :org1, :org1_e1, :org1_e1_c1, :org1_e1_c1_note, :org1_e1_c2, :org1_e2, :org1_e2_c1,
+              :org1_e2_c1_note, :org2, :org2_e1, :org2_e1_c1, :org2_e1_c1_note,
               :user, :membership1, :membership2, :email
 
   before do
     set_current_user(User.make)
 
-    @org1 = Organization.make(:name => "Org 1")
+    @org1 = Team.make(:name => "Org 1")
     @org1_e1 = org1.questions.make(:body => "Org 1 Question 1")
     @org1_e1_c1 = org1_e1.agenda_items.make(:body => "Org 1 Question 1 AgendaItem 1")
-    @org1_e1_c1_comment = org1_e1_c1.comments.make(:body => "Org 1 Question 1 AgendaItem 1 Comment")
+    @org1_e1_c1_note = org1_e1_c1.notes.make(:body => "Org 1 Question 1 AgendaItem 1 Note")
     @org1_e1_c2 = org1_e1.agenda_items.make(:body => "Org 1 Question 1 AgendaItem 2")
     @org1_e2 = org1.questions.make(:body => "Org 1 Question 2")
     @org1_e2_c1 = org1_e2.agenda_items.make(:body => "Org 1 Question 2 AgendaItem 1")
-    @org1_e2_c1_comment = org1_e2_c1.comments.make(:body => "Org 1 Question 2 AgendaItem 1 Comment")
+    @org1_e2_c1_note = org1_e2_c1.notes.make(:body => "Org 1 Question 2 AgendaItem 1 Note")
 
-    @org2 = Organization.make(:name => "Org 2")
+    @org2 = Team.make(:name => "Org 2")
     @org2_e1 = org2.questions.make(:body => "Org 2 Question 1")
     @org2_e1_c1 = org2_e1.agenda_items.make(:body => "Org 2 Question 1 AgendaItem 1")
-    @org2_e1_c1_comment = org2_e1_c1.comments.make(:body => "Org 2 Question 1 AgendaItem 1 Comment")
+    @org2_e1_c1_note = org2_e1_c1.notes.make(:body => "Org 2 Question 1 AgendaItem 1 Note")
 
     @user = User.make
     @membership1 = org1.memberships.make(:user => user, :all_notifications => 'hourly')
@@ -30,13 +30,13 @@ describe NotificationMailer do
 
     mock(membership1).new_questions_in_period('hourly') { [org1_e1] }
     mock(membership1).new_agenda_items_in_period('hourly') { [org1_e1_c1, org1_e2_c1] }
-    mock(membership1).new_comments_on_ranked_agenda_items_in_period('hourly') { [org1_e1_c1_comment, org1_e2_c1_comment ] }
-    mock(membership1).new_comments_on_own_agenda_items_in_period('hourly') { [] }
+    mock(membership1).new_notes_on_ranked_agenda_items_in_period('hourly') { [org1_e1_c1_note, org1_e2_c1_note ] }
+    mock(membership1).new_notes_on_own_agenda_items_in_period('hourly') { [] }
 
     mock(membership2).new_questions_in_period('hourly') { [] }
     mock(membership2).new_agenda_items_in_period('hourly') { [] }
-    mock(membership2).new_comments_on_ranked_agenda_items_in_period('hourly') { [] }
-    mock(membership2).new_comments_on_own_agenda_items_in_period('hourly') { [org2_e1_c1_comment] }
+    mock(membership2).new_notes_on_ranked_agenda_items_in_period('hourly') { [] }
+    mock(membership2).new_notes_on_own_agenda_items_in_period('hourly') { [org2_e1_c1_note] }
 
     presenter = Views::NotificationMailer::NotificationPresenter.new(user, 'hourly')
 
@@ -50,10 +50,10 @@ describe NotificationMailer do
     end
 
     it "gives counts for each new item in the subject" do
-      email.subject.should == "1 new question, 2 new agenda_items, and 3 new comments on Actionitems"
+      email.subject.should == "1 new question, 2 new agenda_items, and 3 new notes on Actionitems"
     end
 
-    it "includes all questions, agenda_items, and comments that are new for the notification period" do
+    it "includes all questions, agenda_items, and notes that are new for the notification period" do
       expect_all_content_present(email.text_part.body)
       expect_all_content_present(email.html_part.body)
     end
@@ -62,15 +62,15 @@ describe NotificationMailer do
       email_part_body.should include(org1.name)
       email_part_body.should include(org1_e1.body)
       email_part_body.should include(org1_e1_c1.body)
-      email_part_body.should include(org1_e1_c1_comment.body)
+      email_part_body.should include(org1_e1_c1_note.body)
       email_part_body.should include(org1_e2.body)
       email_part_body.should include(org1_e2_c1.body)
-      email_part_body.should include(org1_e2_c1_comment.body)
+      email_part_body.should include(org1_e2_c1_note.body)
 
       email_part_body.should include(org2.name)
       email_part_body.should include(org2_e1.body)
       email_part_body.should include(org2_e1_c1.body)
-      email_part_body.should include(org2_e1_c1_comment.body)
+      email_part_body.should include(org2_e1_c1_note.body)
     end
   end
 end

@@ -2,7 +2,7 @@ _.constructor("Question", Model.Record, {
   constructorProperties: {
     initialize: function() {
       this.columns({
-        organizationId: 'key',
+        teamId: 'key',
         creatorId: 'key',
         body: 'string',
         details: 'string',
@@ -16,9 +16,9 @@ _.constructor("Question", Model.Record, {
 
       this.hasMany('agendaItems');
       this.hasMany('votes', {orderBy: 'updatedAt desc'});
-      this.hasMany('comments', {constructorName: 'QuestionComment'});
-      this.relatesToMany('commenters', function() {
-        return this.comments().join(User).on(QuestionComment.creatorId.eq(User.id));
+      this.hasMany('notes', {constructorName: 'QuestionNote'});
+      this.relatesToMany('noters', function() {
+        return this.notes().join(User).on(QuestionNote.creatorId.eq(User.id));
       });
 
       this.hasMany('questionVisits');
@@ -28,7 +28,7 @@ _.constructor("Question", Model.Record, {
 
       this.hasMany('rankings', {orderBy: 'position desc'});
 
-      this.belongsTo('organization');
+      this.belongsTo('team');
       this.belongsTo('creator', {constructorName: 'User'});
     },
 
@@ -74,7 +74,7 @@ _.constructor("Question", Model.Record, {
   },
 
   editableByCurrentUser: function() {
-    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.organization().currentUserIsOwner();
+    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.team().currentUserIsOwner();
   },
 
   belongsToCurrentUser: function() {
@@ -95,14 +95,14 @@ _.constructor("Question", Model.Record, {
     return Server.fetch(this.votes(), this.voters());
   },
 
-  fetchCommentsAndCommentersIfNeeded: function() {
-    if (this.commentFetchFuture) {
-      return this.commentFetchFuture;
+  fetchNotesAndNotersIfNeeded: function() {
+    if (this.noteFetchFuture) {
+      return this.noteFetchFuture;
     } else {
-      return this.commentFetchFuture =
+      return this.noteFetchFuture =
         this.agendaItems()
-          .joinThrough(AgendaItemComment)
-          .join(User).on(AgendaItemComment.creatorId.eq(User.id))
+          .joinThrough(AgendaItemNote)
+          .join(User).on(AgendaItemNote.creatorId.eq(User.id))
           .fetch();
     }
   },

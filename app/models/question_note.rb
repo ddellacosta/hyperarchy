@@ -1,4 +1,4 @@
-class QuestionComment < Prequel::Record
+class QuestionNote < Prequel::Record
   column :id, :integer
   column :body, :string
   column :question_id, :integer
@@ -8,22 +8,22 @@ class QuestionComment < Prequel::Record
 
   belongs_to :question
   belongs_to :creator, :class_name => 'User'
-  delegate :organization, :to => :question
+  delegate :team, :to => :question
 
   def before_create
     self.creator = current_user
   end
 
-  def organization_ids
-    question ? question.organization_ids : []
+  def team_ids
+    question ? question.team_ids : []
   end
 
   def can_create?
-    organization.current_user_can_create_items?
+    team.current_user_can_create_items?
   end
 
   def can_update_or_destroy?
-    current_user.admin? || creator_id == current_user.id || question.organization.has_owner?(current_user)
+    current_user.admin? || creator_id == current_user.id || question.team.has_owner?(current_user)
   end
 
   alias can_update? can_update_or_destroy?

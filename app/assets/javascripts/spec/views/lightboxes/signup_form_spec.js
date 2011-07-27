@@ -11,10 +11,10 @@ describe("Views.Lightboxes.SignupForm", function() {
   });
 
   describe("#afterShow / #afterHide", function() {
-    it("shows / hides the darkened background, hides the organization section, and focuses the first field", function() {
+    it("shows / hides the darkened background, hides the team section, and focuses the first field", function() {
       expect(signupForm).toBeVisible();
       expect(darkenedBackground).toBeVisible();
-      signupForm.showOrganizationSection();
+      signupForm.showTeamSection();
 
       signupForm.hide();
 
@@ -24,7 +24,7 @@ describe("Views.Lightboxes.SignupForm", function() {
       signupForm.show();
 
       expect(signupForm.errors).toBeHidden();
-      expect(signupForm.organizationSection).toBeHidden();
+      expect(signupForm.teamSection).toBeHidden();
       expect(darkenedBackground).toBeVisible();
 
       expect(Application.signupForm.firstName[0]).toBe(document.activeElement);
@@ -50,7 +50,7 @@ describe("Views.Lightboxes.SignupForm", function() {
       it("creates a user and logs them in according to the information entered and hides the form", function() {
         fetchInitialRepositoryContents();
         spyOn(Application, 'showPage');
-        History.pushState(null, null, Organization.findSocial().url());
+        History.pushState(null, null, Team.findSocial().url());
 
         var signupForm = Application.signupForm;
         signupForm.firstName.val("Richard");
@@ -69,9 +69,9 @@ describe("Views.Lightboxes.SignupForm", function() {
           expect(user.firstName()).toEqual("Richard");
           expect(user.lastName()).toEqual("Nixon");
           expect(user.emailAddress()).toEqual("dick@hell.de");
-          expect(user.organizations().size()).toBe(1);
-          expect(user.organizations().first().social()).toBeTruthy();
-          expect(Path.routes.current).toEqual(Organization.findSocial().url());
+          expect(user.teams().size()).toBe(1);
+          expect(user.teams().first().social()).toBeTruthy();
+          expect(Path.routes.current).toEqual(Team.findSocial().url());
           expect(signupForm).toBeHidden();
           expect(Application.darkenedBackground).toBeHidden();
         });
@@ -98,18 +98,18 @@ describe("Views.Lightboxes.SignupForm", function() {
       });
     });
 
-    describe("when the organization section is visible and the organization name is specified", function() {
-      it("signs them up and directs them to the main page of their new organization", function() {
+    describe("when the team section is visible and the team name is specified", function() {
+      it("signs them up and directs them to the main page of their new team", function() {
         fetchInitialRepositoryContents();
         spyOn(Application, 'showPage');
-        History.pushState(null, null, Organization.findSocial().url());
+        History.pushState(null, null, Team.findSocial().url());
 
         var signupForm = Application.signupForm;
-        signupForm.organizationSection.show();
+        signupForm.teamSection.show();
         signupForm.firstName.val("Richard");
         signupForm.lastName.val("Nixon");
         signupForm.emailAddress.val("dick@hell.de");
-        signupForm.organizationName.val("dick's group");
+        signupForm.teamName.val("dick's group");
         signupForm.password.val("integrity");
 
         waitsFor("successful signup", function(complete) {
@@ -122,9 +122,9 @@ describe("Views.Lightboxes.SignupForm", function() {
           expect(user.firstName()).toEqual("Richard");
           expect(user.lastName()).toEqual("Nixon");
           expect(user.emailAddress()).toEqual("dick@hell.de");
-          expect(user.organizations().size()).toBe(2);
+          expect(user.teams().size()).toBe(2);
 
-          var org = user.organizations().find({name: "dick's group"});
+          var org = user.teams().find({name: "dick's group"});
           expect(Path.routes.current).toEqual(org.url());
           expect(signupForm).toBeHidden();
           expect(Application.darkenedBackground).toBeHidden();
@@ -161,13 +161,13 @@ describe("Views.Lightboxes.SignupForm", function() {
       });
     });
 
-    describe("when in 'add organization' mode", function() {
+    describe("when in 'add team' mode", function() {
       beforeEach(function() {
-        signupForm.showOrganizationSection();
+        signupForm.showTeamSection();
       });
 
       describe("when facebook login succeeds", function() {
-        it("shows the add organization form", function() {
+        it("shows the add team form", function() {
           signupForm.facebookLoginButton.click();
 
           expect(Application.facebookLogin).toHaveBeenCalled();
@@ -175,7 +175,7 @@ describe("Views.Lightboxes.SignupForm", function() {
 
           expect(successTriggered).toBeTruthy();
           expect(signupForm).toBeHidden();
-          expect(Application.addOrganizationForm).toBeVisible();
+          expect(Application.addTeamForm).toBeVisible();
           expect(Application.darkenedBackground).toBeVisible();
         });
       });
@@ -210,13 +210,13 @@ describe("Views.Lightboxes.SignupForm", function() {
       });
     });
 
-    describe("when in 'add organization' mode", function() {
+    describe("when in 'add team' mode", function() {
       beforeEach(function() {
-        signupForm.showOrganizationSection();
+        signupForm.showTeamSection();
       });
 
       describe("when twitter login succeeds", function() {
-        it("shows the add organization form", function() {
+        it("shows the add team form", function() {
           signupForm.twitterLoginButton.click();
 
           expect(Application.twitterLogin).toHaveBeenCalled();
@@ -224,7 +224,7 @@ describe("Views.Lightboxes.SignupForm", function() {
 
           expect(successTriggered).toBeTruthy();
           expect(signupForm).toBeHidden();
-          expect(Application.addOrganizationForm).toBeVisible();
+          expect(Application.addTeamForm).toBeVisible();
           expect(Application.darkenedBackground).toBeVisible();
         });
       });

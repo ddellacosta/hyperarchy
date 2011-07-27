@@ -8,7 +8,7 @@ class QuestionVisit < Prequel::Record
   belongs_to :question
   belongs_to :user
 
-  def organization_ids
-    question ? question.organization_ids : []
+  def team_ids
+    question ? question.team_ids : []
   end
 end

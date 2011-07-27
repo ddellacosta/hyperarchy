@@ -37,7 +37,7 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
         div({'class': "date"}).ref('createdAt');
       }).ref('creator');
 
-      subview('comments', Views.Pages.Question.Comments, { fullScreen: params.fullScreen });
+      subview('notes', Views.Pages.Question.Notes, { fullScreen: params.fullScreen });
     });
   }},
 
@@ -45,12 +45,12 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
     attach: function($super) {
       Application.onCurrentUserChange(this.hitch('showOrHideMutateButtons'));
       $super();
-      $(window).resize(this.hitch('adjustCommentsHeight'));
+      $(window).resize(this.hitch('adjustNotesHeight'));
       this.editableBody.elastic();
       this.editableDetails.elastic();
-      this.editableBody.bind('elastic', this.hitch('adjustCommentsHeight'));
+      this.editableBody.bind('elastic', this.hitch('adjustNotesHeight'));
       this.charsRemaining.field(this.editableBody);
-      this.editableDetails.bind('elastic', this.hitch('adjustCommentsHeight'));
+      this.editableDetails.bind('elastic', this.hitch('adjustNotesHeight'));
       this.editableBody.bind('keydown', 'return', this.bind(function() {
         this.find(".create:visible, .update:visible").click();
         return false;
@@ -122,11 +122,11 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
       }
 
       this.editableBody.focus();
-      this.adjustCommentsHeight();
+      this.adjustNotesHeight();
     },
 
     showNewForm: function() {
-      this.comments.hide();
+      this.notes.hide();
       this.edit();
       this.editableBody.val('');
       this.editableBody.keyup();
@@ -142,12 +142,12 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
     cancelEdit: function() {
       this.expanded(false);
       this.nonEditableContent.show();
-      if (!this.comments.loading()) this.comments.show();
+      if (!this.notes.loading()) this.notes.show();
       this.form.hide();
       this.updateButton.hide();
       this.cancelEditButton.hide();
       this.createButton.hide();
-      this.adjustCommentsHeight();
+      this.adjustNotesHeight();
     },
 
     showOrHideMutateButtons: function() {
@@ -160,7 +160,7 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
 
     expanded: {
       change: function(isExpanded) {
-        this.comments.expanded(isExpanded);
+        this.notes.expanded(isExpanded);
         if (isExpanded) {
           this.addClass('expanded');
           this.details.hide();
@@ -174,7 +174,7 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
           this.lessLink.hide();
           this.scrollTop(0);
           this.showOrHideMoreButton();
-          this.adjustCommentsHeight();
+          this.adjustNotesHeight();
         }
       }
     },
@@ -215,16 +215,16 @@ _.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
         this.detailsClearDiv.hide();
       }
       this.showOrHideMoreButton();
-      this.adjustCommentsHeight();
+      this.adjustNotesHeight();
     },
 
-    adjustCommentsHeight: function() {
+    adjustNotesHeight: function() {
       if (this.expanded()) return;
-      this.comments.fillVerticalSpace(this);
+      this.notes.fillVerticalSpace(this);
     },
 
     loading: function(loading) {
-      return this.comments.loading.apply(this.comments, arguments);
+      return this.notes.loading.apply(this.notes, arguments);
     },
 
     scrollToBottom: function() {

@@ -7,28 +7,28 @@ class AgendaItem < Prequel::Record
   column :position, :integer
   column :created_at, :datetime
   column :updated_at, :datetime
-  column :comment_count, :integer, :default => 0
+  column :note_count, :integer, :default => 0
 
   belongs_to :question
   belongs_to :creator, :class_name => "User"
   has_many :rankings
-  has_many :comments, :class_name => "AgendaItemComment"
+  has_many :notes, :class_name => "AgendaItemNote"
 
   include SupportsNotifications
 
   attr_accessor :suppress_current_user_membership_check
-  delegate :organization, :to => :question
+  delegate :team, :to => :question
 
-  def organization_ids
-    question ? question.organization_ids : []
+  def team_ids
+    question ? question.team_ids : []
   end
 
   def can_create?
-    organization.current_user_can_create_items?
+    team.current_user_can_create_items?
   end
 
   def can_update_or_destroy?
-    current_user.admin? || creator_id == current_user.id || question.organization.has_owner?(current_user)
+    current_user.admin? || creator_id == current_user.id || question.team.has_owner?(current_user)
   end
   alias can_update? can_update_or_destroy?
   alias can_destroy? can_update_or_destroy?
@@ -43,7 +43,7 @@ class AgendaItem < Prequel::Record
 
   def before_create
     ensure_body_within_limit
-    organization.ensure_current_user_is_member unless suppress_current_user_membership_check
+    team.ensure_current_user_is_member unless suppress_current_user_membership_check
     question.lock
     self.creator ||= current_user
   end
@@ -75,7 +75,7 @@ class AgendaItem < Prequel::Record
   end
 
   def before_destroy
-    comments.each(&:destroy)
+    notes.each(&:destroy)
     question.lock
     rankings.each do |ranking|
       ranking.suppress_vote_update = true
@@ -113,7 +113,7 @@ class AgendaItem < Prequel::Record
 
   def users_to_notify_immediately
     question.votes.
-      join(Membership.where(:organization_id => question.organization_id), Vote[:user_id].eq(Membership[:user_id])).
+      join(Membership.where(:team_id => question.team_id), Vote[:user_id].eq(Membership[:user_id])).
       where(:notify_of_new_agenda_items => "immediately").
       where(Membership[:user_id].neq(creator_id)).
       join_through(User)

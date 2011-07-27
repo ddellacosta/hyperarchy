@@ -7,17 +7,17 @@ _.constructor("AgendaItem", Model.Record, {
       details: 'string',
       position: 'integer',
       createdAt: 'datetime',
-      commentCount: 'integer'
+      noteCount: 'integer'
     });
 
     this.defaultOrderBy('position asc');
 
     this.hasMany('rankings');
-    this.hasMany('comments', {constructorName: "AgendaItemComment"});
+    this.hasMany('notes', {constructorName: "AgendaItemNote"});
     this.belongsTo('question');
     this.belongsTo('creator', {constructorName: "User"});
-    this.relatesToMany('commenters', function() {
-      return this.comments().join(User).on(AgendaItemComment.creatorId.eq(User.id));
+    this.relatesToMany('noters', function() {
+      return this.notes().join(User).on(AgendaItemNote.creatorId.eq(User.id));
     });
   },
 
@@ -47,11 +47,11 @@ _.constructor("AgendaItem", Model.Record, {
   },
 
   editableByCurrentUser: function() {
-    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.organization().currentUserIsOwner();
+    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.team().currentUserIsOwner();
   },
 
-  organization: function() {
-    return this.question().organization();
+  team: function() {
+    return this.question().team();
   },
 
   formattedCreatedAt: function() {

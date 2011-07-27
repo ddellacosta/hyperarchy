@@ -11,9 +11,9 @@ _.constructor('Views.Lightboxes.SignupForm', Views.Lightboxes.Lightbox, {
       ul({'class': "errors"}).ref("errors");
 
       div(function() {
-        label("Organization Name");
-        input({name: "organization[name]"}).ref('organizationName');
-      }).ref("organizationSection");
+        label("Team Name");
+        input({name: "team[name]"}).ref('teamName');
+      }).ref("teamSection");
       label("First Name");
       input({name: "user[first_name]"}).ref('firstName');
       label("Last Name");
@@ -43,7 +43,7 @@ _.constructor('Views.Lightboxes.SignupForm', Views.Lightboxes.Lightbox, {
 
     afterShow: function($super) {
       this.errors.hide();
-      this.hideOrganizationSection();
+      this.hideTeamSection();
       $super();
     },
 
@@ -73,24 +73,24 @@ _.constructor('Views.Lightboxes.SignupForm', Views.Lightboxes.Lightbox, {
     },
 
     socialLogin: function(loginMethod) {
-      var addOrganization = this.organizationSection.is(':visible');
+      var addTeam = this.teamSection.is(':visible');
       Application[loginMethod]()
         .success(function() {
           this.trigger('success');
           this.hide();
-          if (addOrganization) Application.addOrganizationForm.show();
+          if (addTeam) Application.addTeamForm.show();
         }, this);
     },
 
-    showOrganizationSection: function() {
-      this.organizationSection.show();
-      this.addClass('add-organization');
-      this.organizationName.focus();
+    showTeamSection: function() {
+      this.teamSection.show();
+      this.addClass('add-team');
+      this.teamName.focus();
     },
 
-    hideOrganizationSection: function() {
-      this.organizationSection.hide();
-      this.removeClass('add-organization');
+    hideTeamSection: function() {
+      this.teamSection.hide();
+      this.removeClass('add-team');
     },
     
     close: function($super) {

@@ -8,7 +8,7 @@ module Views
 
         items.push(pluralize(new_question_count, 'new question')) if new_question_count > 0
         items.push(pluralize(new_agenda_item_count, 'new agenda_item')) if new_agenda_item_count > 0
-        items.push(pluralize(new_comment_count, 'new comment')) if new_comment_count > 0
+        items.push(pluralize(new_note_count, 'new note')) if new_note_count > 0
 
         case items.length
           when 3

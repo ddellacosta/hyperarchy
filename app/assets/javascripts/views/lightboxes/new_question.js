@@ -29,7 +29,7 @@ _.constructor('Views.Lightboxes.NewQuestion', Views.Lightboxes.Lightbox, {
     afterShow: function($super) {
       $super();
       this.find('textarea').val("").keyup();
-      if (Application.currentOrganization().isPublic()) {
+      if (Application.currentTeam().isPublic()) {
         this.shareOnFacebook.attr('checked', true);
         this.share.show();
       } else {
@@ -45,7 +45,7 @@ _.constructor('Views.Lightboxes.NewQuestion', Views.Lightboxes.Lightbox, {
 
       this.ensureLoggedIn(fieldValues)
         .success(function(shareOnFacebook) {
-          Application.currentOrganization().questions().create(fieldValues)
+          Application.currentTeam().questions().create(fieldValues)
             .success(function(question) {
               question.trackCreate();
               this.hide();

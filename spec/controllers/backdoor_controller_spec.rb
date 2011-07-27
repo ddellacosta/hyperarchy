@@ -19,11 +19,11 @@ describe BackdoorController do
   describe "#clear_tables" do
     it "clears all tables in the database" do
       User.make
-      Organization.make
+      Team.make
       User.should_not be_empty
       post :clear_tables
       response.should be_success
-      Organization.all.should == [Organization.social]
+      Team.all.should == [Team.social]
       User.all.should == [User.default_guest]
     end
   end

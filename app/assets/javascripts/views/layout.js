@@ -7,17 +7,17 @@ _.constructor("Views.Layout", View.Template, {
           a(function() {
             div({id: "logo"})
             h1("ACTIONITEMS");
-            h2("/").ref('organizationNameSeparator');
-            h2().ref('organizationName');
-          }).ref('logoAndTitle').click('navigateToCurrentOrganization');
+            h2("/").ref('teamNameSeparator');
+            h2().ref('teamName');
+          }).ref('logoAndTitle').click('navigateToCurrentTeam');
 
           div({id: "menu-items"}, function() {
             a({id: "blog-link", href: "http://blog.actionitems.us"}, "Blog / About");
             a({id: "feedback-link"}, "Feedback").ref('feedbackLink').click('showFeedbackForm');
             a({id: "invite-link"}, "Invite Your Team").ref('inviteLink').click('showInviteBox');
             
-            div({id: "organization-and-account"}, function() {
-              subview('organizationsMenu', Views.Layout.OrganizationsMenu);
+            div({id: "team-and-account"}, function() {
+              subview('teamsMenu', Views.Layout.TeamsMenu);
               subview('accountMenu', Views.Layout.AccountMenu);
             });
           });
@@ -25,8 +25,8 @@ _.constructor("Views.Layout", View.Template, {
 
         div({id: "body"}, function() {
           subview('accountPage', Views.Pages.Account);
-          subview('organizationPage', Views.Pages.Organization);
-          subview('organizationSettingsPage', Views.Pages.OrganizationSettings);
+          subview('teamPage', Views.Pages.Team);
+          subview('teamSettingsPage', Views.Pages.TeamSettings);
           subview('questionPage', Views.Pages.Question);
         }).ref("body");
       }).ref("bodyWrapper");
@@ -38,7 +38,7 @@ _.constructor("Views.Layout", View.Template, {
         subview("newQuestion", Views.Lightboxes.NewQuestion);
         subview("disconnectDialog", Views.Lightboxes.DisconnectDialog);
         subview("inviteBox", Views.Lightboxes.InviteBox);
-        subview("addOrganizationForm", Views.Lightboxes.AddOrganizationForm);
+        subview("addTeamForm", Views.Lightboxes.AddTeamForm);
 
         subview("fullScreenConsensus", Views.Lightboxes.FullScreenConsensus);
         subview("fullScreenAgendaItem", Views.Lightboxes.FullScreenAgendaItem);
@@ -76,9 +76,9 @@ _.constructor("Views.Layout", View.Template, {
       this.loginForm.hide();
       this.signupForm.hide();
 
-      var newOrganizationId = data.new_organization_id;
-      if (newOrganizationId) {
-        History.pushState(null, null, Organization.find(newOrganizationId).url());
+      var newTeamId = data.new_team_id;
+      if (newTeamId) {
+        History.pushState(null, null, Team.find(newTeamId).url());
       }
 
       if (Application.currentUserId() !== data.current_user_id) {
@@ -168,7 +168,7 @@ _.constructor("Views.Layout", View.Template, {
           return new Monarch.Promise().triggerSuccess();
         } else {
           this.currentUserId(newUser.id());
-          this.recordOrganizationVisit();
+          this.recordTeamVisit();
           newUser.trackLogin();
           newUser.trackIdentity();
           return this.currentUserChangeNode.publishForPromise(newUser);
@@ -186,38 +186,38 @@ _.constructor("Views.Layout", View.Template, {
       this.currentUserChangeNode.subscribe(callback, context);
     },
 
-    currentOrganizationId: {
-      change: function(currentOrganizationId) {
-        var organization = Organization.find(currentOrganizationId);
+    currentTeamId: {
+      change: function(currentTeamId) {
+        var team = Team.find(currentTeamId);
         this.socketConnectionFuture.success(function(sessionId) {
-          organization.subscribe({session_id: sessionId});
+          team.subscribe({session_id: sessionId});
         });
-        this.currentOrganization(organization);
+        this.currentTeam(team);
       }
     },
 
-    currentOrganization: {
-      change: function(organization) {
-        if (!organization) return;
-        this.currentOrganizationId(organization.id());
-        if (organization.social()) {
-          this.organizationNameSeparator.hide();
-          this.organizationName.hide();
+    currentTeam: {
+      change: function(team) {
+        if (!team) return;
+        this.currentTeamId(team.id());
+        if (team.social()) {
+          this.teamNameSeparator.hide();
+          this.teamName.hide();
         } else {
-          this.organizationNameSeparator.show();
-          this.organizationName.show();
-          this.organizationName.bindText(organization, 'name');
+          this.teamNameSeparator.show();
+          this.teamName.show();
+          this.teamName.bindText(team, 'name');
         }
 
-        this.registerInterest(organization, 'onUpdate', this.showOrHideIniviteLink);
+        this.registerInterest(team, 'onUpdate', this.showOrHideIniviteLink);
         this.showOrHideIniviteLink();
-        this.recordOrganizationVisit();
+        this.recordTeamVisit();
       }
     },
 
-    recordOrganizationVisit: function() {
-      if (!this.currentOrganization() || Application.currentUser().guest()) return;
-      var membership = this.currentOrganization().membershipForUser(Application.currentUser());
+    recordTeamVisit: function() {
+      if (!this.currentTeam() || Application.currentUser().guest()) return;
+      var membership = this.currentTeam().membershipForUser(Application.currentUser());
       if (membership) membership.update({lastVisited: new Date()});
     },
 
@@ -252,7 +252,7 @@ _.constructor("Views.Layout", View.Template, {
       socket.on('connect', this.bind(function() {
         if (this.reconnectTimeout) {
           clearTimeout(this.reconnectTimeout);
-          Application.currentOrganization().subscribe({ session_id: socket.transport.sessionid, reconnecting: 1 });
+          Application.currentTeam().subscribe({ session_id: socket.transport.sessionid, reconnecting: 1 });
         } else {
           this.socketConnectionFuture.triggerSuccess(socket.transport.sessionid);
         }
@@ -322,8 +322,8 @@ _.constructor("Views.Layout", View.Template, {
       return promise;
     },
 
-    navigateToCurrentOrganization: function() {
-      History.pushState(null, null, this.currentOrganization().url());
+    navigateToCurrentTeam: function() {
+      History.pushState(null, null, this.currentTeam().url());
     },
 
     showFeedbackForm: function() {
@@ -335,7 +335,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     showOrHideIniviteLink: function() {
-      if (this.currentOrganization().isPrivate()) {
+      if (this.currentTeam().isPrivate()) {
         this.inviteLink.show();
       } else {
         this.inviteLink.hide();

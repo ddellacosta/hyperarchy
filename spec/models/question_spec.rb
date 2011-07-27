@@ -2,14 +2,14 @@ require 'spec_helper'
 
 module Models
   describe Question do
-    attr_reader :question, :organization, :creator, :memphis, :knoxville, :chattanooga, :nashville, :unranked
+    attr_reader :question, :team, :creator, :memphis, :knoxville, :chattanooga, :nashville, :unranked
 
     before do
       freeze_time
 
-      @organization = Organization.make
-      @creator = organization.make_member
-      @question = organization.questions.make(:body => "Where should the capital of Tennesee be?", :creator => creator)
+      @team = Team.make
+      @creator = team.make_member
+      @question = team.questions.make(:body => "Where should the capital of Tennesee be?", :creator => creator)
       @memphis = question.agenda_items.make(:body => "Memphis")
       @knoxville = question.agenda_items.make(:body => "Knoxville")
       @chattanooga = question.agenda_items.make(:body => "Chattanooga")
@@ -39,19 +39,19 @@ module Models
     end
 
     describe "before create" do
-      it "if the creator is not a member of the question's organization, makes them one (as long as the org is public)" do
+      it "if the creator is not a member of the question's team, makes them one (as long as the org is public)" do
         set_current_user(User.make)
-        current_user.memberships.where(:organization => organization).should be_empty
+        current_user.memberships.where(:team => team).should be_empty
 
-        organization.update(:privacy => "private")
+        team.update(:privacy => "private")
         expect do
-          organization.questions.create!(:body => "foo")
+          team.questions.create!(:body => "foo")
         end.should raise_error(SecurityError)
 
-        organization.update(:privacy => "public")
-        organization.questions.create!(:body => "foo")
+        team.update(:privacy => "public")
+        team.questions.create!(:body => "foo")
 
-        current_user.memberships.where(:organization => organization).size.should == 1
+        current_user.memberships.where(:team => team).size.should == 1
       end
 
       it "assigns the creator to the Model::Record.current_user" do
@@ -66,18 +66,18 @@ module Models
     end
 
     describe "after create" do
-      attr_reader :organization, :creator, :opted_in, :opted_out, :non_member
+      attr_reader :team, :creator, :opted_in, :opted_out, :non_member
 
       before do
-        @organization = Organization.make
+        @team = Team.make
         @creator = User.make
         @opted_in = User.make
         @opted_out = User.make
         @non_member = User.make
 
-        organization.memberships.make(:user => creator, :notify_of_new_questions => "immediately")
-        organization.memberships.make(:user => opted_in, :notify_of_new_questions => "immediately")
-        organization.memberships.make(:user => opted_out, :notify_of_new_questions => "never")
+        team.memberships.make(:user => creator, :notify_of_new_questions => "immediately")
+        team.memberships.make(:user => opted_in, :notify_of_new_questions => "immediately")
+        team.memberships.make(:user => opted_out, :notify_of_new_questions => "never")
 
         set_current_user(creator)
       end
@@ -88,14 +88,14 @@ module Models
           job_params = params
         end
         
-        question = organization.questions.create!(:body => "What should we eat for dinner?")
+        question = team.questions.create!(:body => "What should we eat for dinner?")
         job_params.should ==  { :class_name => "Question", :id => question.id }
       end
 
-      it "increments the question count on its organization" do
+      it "increments the question count on its team" do
         lambda do
-          organization.questions.create!(:body => "What should we eat for dinner?")
-        end.should change { organization.question_count }.by(1)
+          team.questions.create!(:body => "What should we eat for dinner?")
+        end.should change { team.question_count }.by(1)
       end
     end
 
@@ -109,14 +109,14 @@ module Models
     end
 
     describe "before destroy" do
-      it "destroys any agenda_items, agenda_item comments, votes and visits that belong to the question" do
+      it "destroys any agenda_items, agenda_item notes, votes and visits that belong to the question" do
         question = Question.make
-        user_1 = question.organization.make_member
-        user_2 = question.organization.make_member
+        user_1 = question.team.make_member
+        user_2 = question.team.make_member
         agenda_item_1 = question.agenda_items.make
         agenda_item_2 = question.agenda_items.make
-        agenda_item_1.comments.make
-        agenda_item_2.comments.make
+        agenda_item_1.notes.make
+        agenda_item_2.notes.make
 
         Ranking.create!(:user => user_1, :agenda_item => agenda_item_1, :position => 64)
         Ranking.create!(:user => user_1, :agenda_item => agenda_item_2, :position => 32)
@@ -126,21 +126,21 @@ module Models
         question.question_visits.size.should == 1
         question.agenda_items.size.should == 2
         question.votes.size.should == 2
-        question.agenda_items.join_through(AgendaItemComment).size.should == 2
+        question.agenda_items.join_through(AgendaItemNote).size.should == 2
         question.destroy
         question.agenda_items.should be_empty
         question.votes.should be_empty
         question.question_visits.should be_empty
-        question.agenda_items.join_through(AgendaItemComment).should be_empty
+        question.agenda_items.join_through(AgendaItemNote).should be_empty
       end
     end
 
     describe "after destroy" do
-      it "decrements the question count on its organization" do
+      it "decrements the question count on its team" do
         question = Question.make
         lambda do
           question.destroy
-        end.should change { question.organization.question_count }.by(-1)
+        end.should change { question.team.question_count }.by(-1)
       end
     end
 
@@ -193,27 +193,27 @@ module Models
     end
 
     describe "#users_to_notify_immediately" do
-      it "includes members of the organization that have their question notification preference set to immediately and are not the creator of the question" do
+      it "includes members of the team that have their question notification preference set to immediately and are not the creator of the question" do
         notify1 = User.make
         notify2 = User.make
         dont_notify = User.make
 
-        organization.memberships.make(:user => notify1, :notify_of_new_questions => 'immediately')
-        organization.memberships.make(:user => notify2, :notify_of_new_questions => 'immediately')
-        organization.memberships.make(:user => dont_notify, :notify_of_new_questions => 'hourly')
-        organization.memberships.find(:user => creator).update!(:notify_of_new_questions => 'immediately')
+        team.memberships.make(:user => notify1, :notify_of_new_questions => 'immediately')
+        team.memberships.make(:user => notify2, :notify_of_new_questions => 'immediately')
+        team.memberships.make(:user => dont_notify, :notify_of_new_questions => 'hourly')
+        team.memberships.find(:user => creator).update!(:notify_of_new_questions => 'immediately')
 
         question.users_to_notify_immediately.all.should =~ [notify1, notify2]
       end
     end
 
     describe "security" do
-      attr_reader :organization, :member, :owner, :admin, :non_member
+      attr_reader :team, :member, :owner, :admin, :non_member
 
       before do
-        @organization = Organization.make
-        @member = organization.make_member
-        @owner = organization.make_owner
+        @team = Team.make
+        @member = team.make_member
+        @owner = team.make_owner
         @admin = User.make(:admin => true)
         @non_member = User.make
       end
@@ -245,12 +245,12 @@ module Models
 
       describe "#can_create?" do
         before do
-          @question = organization.questions.make_unsaved
+          @question = team.questions.make_unsaved
         end
 
-        context "if the question's organization is non-public" do
+        context "if the question's team is non-public" do
           before do
-            question.organization.update(:privacy => "read_only")
+            question.team.update(:privacy => "read_only")
           end
 
           specify "only members create agenda_items" do
@@ -262,9 +262,9 @@ module Models
           end
         end
 
-        context "if the given question's organization is public" do
+        context "if the given question's team is public" do
           before do
-            question.organization.update(:privacy => "public")
+            question.team.update(:privacy => "public")
           end
 
           specify "non-guest users can create agenda_items" do
@@ -278,10 +278,10 @@ module Models
       end
 
       describe "#can_update? and #can_destroy?" do
-        it "only allows admins, organization owners, and the creator of the question itself to update or destroy it" do
+        it "only allows admins, team owners, and the creator of the question itself to update or destroy it" do
           other_member = set_current_user(User.make)
-          organization.memberships.create!(:user => other_member)
-          question = organization.questions.create!(:body => "What should we do?")
+          team.memberships.create!(:user => other_member)
+          question = team.questions.create!(:body => "What should we do?")
 
           set_current_user(member)
           question.can_update?.should be_false

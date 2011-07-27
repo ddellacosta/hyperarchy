@@ -22,7 +22,7 @@ module Views
 
       def membership_section(presenter)
         if num_membership_presenters > 1
-          h1 "#{presenter.organization.name}", :style => "font-size: 22px;"
+          h1 "#{presenter.team.name}", :style => "font-size: 22px;"
         end
         h2 presenter.headline
         presenter.question_presenters.each do |question_presenter|
@@ -63,12 +63,12 @@ module Views
           div raw("&mdash;#{agenda_item.creator.full_name}"), :style => "white-space: nowrap; float: right; font-style: italic; color: #777; padding: 8px;"
           div :style => "clear: both;"
 
-          unless presenter.new_comments.empty?
+          unless presenter.new_notes.empty?
             div :style => "padding: 8px; padding-top: 0px;" do
               div :style => "padding: 8px; background: white; color: black; border: 2px solid #ddd; font-size: 13px;" do
-                div "Comments", :style => "margin-bottom: 16px; font-weight: bold;"
-                presenter.new_comments.each do |comment|
-                  comment_section(comment)
+                div "Notes", :style => "margin-bottom: 16px; font-weight: bold;"
+                presenter.new_notes.each do |note|
+                  note_section(note)
                 end
               end
             end
@@ -76,13 +76,13 @@ module Views
         end
       end
 
-      def comment_section(comment)
+      def note_section(note)
         div do
           div :style => "color: #777; border-bottom: 1px solid #f0f0f0; margin-bottom: 4px;" do
-            div comment.creator.full_name, :style => "font-style: italic;"
+            div note.creator.full_name, :style => "font-style: italic;"
           end
 
-          div comment.body, :style => "margin-bottom: 16px;"
+          div note.body, :style => "margin-bottom: 16px;"
         end
       end
 

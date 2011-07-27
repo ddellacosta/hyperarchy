@@ -25,12 +25,12 @@ class User < Prequel::Record
   has_many :agenda_items, :foreign_key => :creator_id
   belongs_to :referring_share, :class_name => "Share"
 
-  def organizations
-    memberships.join_through(Organization)
+  def teams
+    memberships.join_through(Team)
   end
 
-  def owned_organizations
-    memberships.where(:role => "owner").join_through(Organization)
+  def owned_teams
+    memberships.where(:role => "owner").join_through(Team)
   end
 
   validates_uniqueness_of :email_address, :message => "There is already an account with that email address."
@@ -43,8 +43,8 @@ class User < Prequel::Record
     Membership.where_any(
       :notify_of_new_questions => period,
       :notify_of_new_agenda_items => period,
-      :notify_of_new_comments_on_own_agenda_items => period,
-      :notify_of_new_comments_on_ranked_agenda_items => period
+      :notify_of_new_notes_on_own_agenda_items => period,
+      :notify_of_new_notes_on_ranked_agenda_items => period
     ).join_through(User).where(:guest => false, :email_enabled => true).distinct
   end
 
@@ -52,11 +52,11 @@ class User < Prequel::Record
     find(:default_guest => true)
   end
 
-  def self.create_guest(organization_id)
+  def self.create_guest(team_id)
     self.create!(:guest => true,
                  :first_name => "Guest",
-                 :last_name  => "User#{organization_id}",
-                 :email_address => "guest#{organization_id}@actionitems.us",
+                 :last_name  => "User#{team_id}",
+                 :email_address => "guest#{team_id}@actionitems.us",
                  :email_enabled => false,
                  :password => "guest_password")
   end
@@ -88,33 +88,33 @@ class User < Prequel::Record
 
   def current_user_can_read_email_address?
     return false unless current_user
-    self == current_user || current_user.admin? || current_user.owns_organization_with_member?(self)
+    self == current_user || current_user.admin? || current_user.owns_team_with_member?(self)
   end
 
-  def owns_organization_with_member?(user)
-    !owned_organizations.join_through(user.memberships).empty?
+  def owns_team_with_member?(user)
+    !owned_teams.join_through(user.memberships).empty?
   end
 
   def after_create
     run_later do
       AdminMailer.new_user(self).deliver
     end
-    memberships.create!(:organization => Organization.social)
+    memberships.create!(:team => Team.social)
   end
 
-  def organization_ids
-    memberships.map(&:organization_id)
+  def team_ids
+    memberships.map(&:team_id)
   end
 
   def initial_repository_contents
-    [self] + memberships.all  + initial_repository_organizations.all
+    [self] + memberships.all  + initial_repository_teams.all
   end
 
-  def initial_repository_organizations
+  def initial_repository_teams
     if admin?
-      Organization.table
+      Team.table
     else
-      organizations | Organization.where(Organization[:privacy].neq('private'))
+      teams | Team.where(Team[:privacy].neq('private'))
     end
   end
 
@@ -158,30 +158,30 @@ class User < Prequel::Record
     end
   end
 
-  def default_organization
+  def default_team
     if memberships.empty?
-      Organization.find(:social => true)    
+      Team.find(:social => true)
     else
-      memberships.order_by(Membership[:last_visited].desc).first.organization
+      memberships.order_by(Membership[:last_visited].desc).first.team
     end
   end
 
-  def guest_organization
+  def guest_team
     return nil unless guest?
-    organizations.find(:social => false)
+    teams.find(:social => false)
   end
 
   def memberships_to_notify(period)
     memberships.
-      join(Organization).
+      join(Team).
       order_by(:social.desc).
       project(Membership).
       all.
       select {|m| m.wants_notifications?(period)}
   end
 
-  def member_of?(organization)
-    !memberships.where(:organization => organization).empty?
+  def member_of?(team)
+    !memberships.where(:team => team).empty?
   end
 
   def associate_referring_share(share_code)

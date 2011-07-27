@@ -64,14 +64,14 @@ body
     #blog-link, #feedback-link, #invite-link
       padding: 0 $line-height
 
-    #organization-and-account
+    #team-and-account
       position: relative
       display: inline-block
       height: $header-height
 
-      #organizations-menu
+      #teams-menu
         display: inline-block
-        #add-organization-link
+        #add-team-link
           display: inline-block
           padding: ceil($line-height/2) $line-height ($line-height/2) $line-height
         .dropdown-menu ul
@@ -109,13 +109,13 @@ body
     background: white
     color: black
     @include box-shadow(transparentize(black, 0.5) 0 0 3px)
-    li, #add-organization-menu-item
+    li, #add-team-menu-item
       cursor: pointer
       display: block
       padding: $line-height/2 $line-height
       &:hover
         background: $highlight-yellow
-    #add-organization-menu-item
+    #add-team-menu-item
       border-top: 1px solid #eee
       background: #f8f8f8
 

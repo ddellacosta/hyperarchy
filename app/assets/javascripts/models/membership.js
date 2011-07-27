@@ -1,7 +1,7 @@
 _.constructor("Membership", Model.Record, {
   constructorInitialize: function() {
     this.columns({
-      organizationId: "key",
+      teamId: "key",
       userId: "key",
       role: "string",
       firstName: "string",
@@ -10,11 +10,11 @@ _.constructor("Membership", Model.Record, {
       lastVisited: "datetime",
       notifyOfNewQuestions: "string",
       notifyOfNewAgendaItems: "string",
-      notifyOfNewCommentsOnOwnAgendaItems: "string",
-      notifyOfNewCommentsOnRankedAgendaItems: "string"
+      notifyOfNewNotesOnOwnAgendaItems: "string",
+      notifyOfNewNotesOnRankedAgendaItems: "string"
     });
 
-    this.belongsTo("organization");
+    this.belongsTo("team");
     this.belongsTo("user");
   },
 

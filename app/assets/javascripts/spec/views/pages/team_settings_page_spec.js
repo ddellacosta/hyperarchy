@@ -1,12 +1,12 @@
 //= require spec/spec_helper
 
-describe("Views.Pages.OrganizationSettings", function() {
+describe("Views.Pages.TeamSettings", function() {
   var settingsPage, org, owner, member1, member2;
 
   beforeEach(function() {
     renderLayout();
-    settingsPage = Application.organizationSettingsPage.show();
-    org = Organization.createFromRemote({id: 2, name: "ProPublica", privacy: "public"});
+    settingsPage = Application.teamSettingsPage.show();
+    org = Team.createFromRemote({id: 2, name: "ProPublica", privacy: "public"});
     member1 = org.makeMember({id: 1, guest: false});
     member2 = org.makeMember({id: 2, guest: false});
     org.makeMember({id: 3, guest: true});
@@ -15,7 +15,7 @@ describe("Views.Pages.OrganizationSettings", function() {
 
   describe("fetch logic", function() {
     describe("#params", function() {
-      it("assigns the memberships to the list after fetching the members and memberships of the given organization", function() {
+      it("assigns the memberships to the list after fetching the members and memberships of the given team", function() {
         enableAjax();
         uploadRepository();
         login(owner);
@@ -24,7 +24,7 @@ describe("Views.Pages.OrganizationSettings", function() {
         expect(Membership.size()).toBe(owner.memberships().size());
 
         waitsFor("fetch to complete", function(complete) {
-          settingsPage.params({organizationId: org.id()}).success(complete);
+          settingsPage.params({teamId: org.id()}).success(complete);
         });
 
         runs(function() {
@@ -39,19 +39,19 @@ describe("Views.Pages.OrganizationSettings", function() {
   describe("local logic (no fetching)", function() {
     beforeEach(function() {
       useFakeServer();
-      settingsPage.params({organizationId: org.id()});
+      settingsPage.params({teamId: org.id()});
       Server.lastFetch.simulateSuccess();
     });
 
     describe("#params", function() {
       // also fetches, see above
-      it("populates the organization name field and privacy setting", function() {
+      it("populates the team name field and privacy setting", function() {
         expect(settingsPage.name.val()).toBe(org.name());
         expect(settingsPage.privacy.val()).toBe(org.privacy());
       });
 
-      it("assigns the current organization id on the layout", function() {
-        expect(Application.currentOrganization()).toBe(org);
+      it("assigns the current team id on the layout", function() {
+        expect(Application.currentTeam()).toBe(org);
       });
 
       it("does not include guests in the members list", function() {

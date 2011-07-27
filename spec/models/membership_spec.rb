@@ -2,9 +2,9 @@ require 'spec_helper'
 
 module Models
   describe Membership do
-    attr_reader :organization, :user
+    attr_reader :team, :user
     before do
-      @organization = Organization.make
+      @team = Team.make
       @user = set_current_user(User.make)
     end
 
@@ -12,22 +12,22 @@ module Models
       it "assigns last_visited to the current time" do
         freeze_time
         freeze_time
-        membership = organization.memberships.make(:user => User.make)
+        membership = team.memberships.make(:user => User.make)
         membership.last_visited.should == Time.now
       end
     end
 
     describe "security" do
       describe "#can_create?, #can_update?, #can_destroy?" do
-        it "only allows admins, organization owners to modify memberships. the members themselves can update only the last_visited and email preferences columns" do
-          organization = Organization.make
-          member = organization.make_member
-          owner = organization.make_owner
+        it "only allows admins, team owners to modify memberships. the members themselves can update only the last_visited and email preferences columns" do
+          team = Team.make
+          member = team.make_member
+          owner = team.make_owner
           admin = User.make(:admin => true)
           other_user = User.make
 
-          new_membership = organization.memberships.new(:user => other_user)
-          membership = organization.memberships.find(:user => member)
+          new_membership = team.memberships.new(:user => other_user)
+          membership = team.memberships.find(:user => member)
 
           set_current_user(member)
           new_membership.can_create?.should be_false
@@ -50,8 +50,8 @@ module Models
     end
 
     describe "methods supporting notifications" do
-      let(:membership) { organization.memberships.make(:user => user) }
-      let(:other_user) { organization.make_member }
+      let(:membership) { team.memberships.make(:user => user) }
+      let(:other_user) { team.make_member }
       let(:time_of_notification) { freeze_time }
 
       describe "#last_notified_or_visited_at(period)" do

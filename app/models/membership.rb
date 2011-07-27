@@ -1,13 +1,13 @@
 class Membership < Prequel::Record
   column :id, :integer
-  column :organization_id, :integer
+  column :team_id, :integer
   column :user_id, :integer
   column :role, :string, :default => "member"
   column :last_visited, :datetime
   column :notify_of_new_questions, :string, :default => "daily"
   column :notify_of_new_agenda_items, :string, :default => "daily"
-  column :notify_of_new_comments_on_own_agenda_items, :string, :default => "daily"
-  column :notify_of_new_comments_on_ranked_agenda_items, :string, :default => "daily"
+  column :notify_of_new_notes_on_own_agenda_items, :string, :default => "daily"
+  column :notify_of_new_notes_on_ranked_agenda_items, :string, :default => "daily"
   column :created_at, :datetime
   column :updated_at, :datetime
 
@@ -15,39 +15,39 @@ class Membership < Prequel::Record
   synthetic_column :last_name, :string
   synthetic_column :email_address, :string
 
-  belongs_to :organization
+  belongs_to :team
   belongs_to :user
 
   attr_writer :email_address, :first_name, :last_name
   delegate :email_address, :first_name, :last_name, :to => :user
 
-  def current_user_is_admin_or_organization_owner?
-    current_user.admin? || organization.has_owner?(current_user)
+  def current_user_is_admin_or_team_owner?
+    current_user.admin? || team.has_owner?(current_user)
   end
-  alias can_create? current_user_is_admin_or_organization_owner?
-  alias can_destroy? current_user_is_admin_or_organization_owner?
+  alias can_create? current_user_is_admin_or_team_owner?
+  alias can_destroy? current_user_is_admin_or_team_owner?
 
   def can_update?
-    current_user_is_admin_or_organization_owner? || user == current_user
+    current_user_is_admin_or_team_owner? || user == current_user
   end
 
   def create_whitelist
-    [:organization_id, :user_id, :role, :first_name, :last_name, :email_address,
+    [:team_id, :user_id, :role, :first_name, :last_name, :email_address,
      :notify_of_new_questions, :notify_of_new_agenda_items,
-     :notify_of_new_comments_on_ranked_agenda_items,
-     :notify_of_new_comments_on_own_agenda_items]
+     :notify_of_new_notes_on_ranked_agenda_items,
+     :notify_of_new_notes_on_own_agenda_items]
   end
 
   def update_whitelist
-    if current_user_is_admin_or_organization_owner?
+    if current_user_is_admin_or_team_owner?
       [:first_name, :last_name, :role, :last_visited,
        :notify_of_new_questions, :notify_of_new_agenda_items,
-       :notify_of_new_comments_on_ranked_agenda_items,
-       :notify_of_new_comments_on_own_agenda_items]
+       :notify_of_new_notes_on_ranked_agenda_items,
+       :notify_of_new_notes_on_own_agenda_items]
     else
       [:last_visited, :notify_of_new_questions, :notify_of_new_agenda_items,
-       :notify_of_new_comments_on_ranked_agenda_items,
-       :notify_of_new_comments_on_own_agenda_items]
+       :notify_of_new_notes_on_ranked_agenda_items,
+       :notify_of_new_notes_on_own_agenda_items]
     end
   end
 
@@ -62,11 +62,11 @@ class Membership < Prequel::Record
 
   def current_user_can_read_email_address?
     return false unless current_user
-    user == current_user || current_user.admin? || organization.current_user_is_owner?
+    user == current_user || current_user.admin? || team.current_user_is_owner?
   end
 
-  def organization_ids
-    [organization_id]
+  def team_ids
+    [team_id]
   end
 
   def email_address
@@ -92,8 +92,8 @@ class Membership < Prequel::Record
   def wants_notifications?(period)
      wants_question_notifications?(period) ||
        wants_agenda_item_notifications?(period) ||
-       wants_ranked_agenda_item_comment_notifications?(period) ||
-       wants_own_agenda_item_comment_notifications?(period)
+       wants_ranked_agenda_item_note_notifications?(period) ||
+       wants_own_agenda_item_note_notifications?(period)
 
   end
 
@@ -105,44 +105,44 @@ class Membership < Prequel::Record
     notify_of_new_questions == period
   end
 
-  def wants_ranked_agenda_item_comment_notifications?(period)
-    notify_of_new_comments_on_ranked_agenda_items == period
+  def wants_ranked_agenda_item_note_notifications?(period)
+    notify_of_new_notes_on_ranked_agenda_items == period
   end
 
-  def wants_own_agenda_item_comment_notifications?(period)
-    notify_of_new_comments_on_own_agenda_items == period
+  def wants_own_agenda_item_note_notifications?(period)
+    notify_of_new_notes_on_own_agenda_items == period
   end
 
   def new_questions_in_period(period)
-    organization.questions.
+    team.questions.
       where(Question[:created_at].gt(last_notified_or_visited_at(period))).
       where(Question[:creator_id].neq(user_id))
   end
 
   def new_agenda_items_in_period(period)
     user.votes.
-      join(organization.questions).
+      join(team.questions).
       join_through(AgendaItem).
       where(AgendaItem[:created_at].gt(last_notified_or_visited_at(period))).
       where(AgendaItem[:creator_id].neq(user_id))
   end
 
-  def new_comments_on_ranked_agenda_items_in_period(period)
-    organization.questions.
+  def new_notes_on_ranked_agenda_items_in_period(period)
+    team.questions.
       join(user.rankings).
       join(AgendaItem, Ranking[:agenda_item_id] => AgendaItem[:id]).
       where(AgendaItem[:creator_id].neq(user_id)).
-      join_through(AgendaItemComment).
-      where(AgendaItemComment[:created_at].gt(last_notified_or_visited_at(period))).
-      where(AgendaItemComment[:creator_id].neq(user_id))
+      join_through(AgendaItemNote).
+      where(AgendaItemNote[:created_at].gt(last_notified_or_visited_at(period))).
+      where(AgendaItemNote[:creator_id].neq(user_id))
   end
 
-  def new_comments_on_own_agenda_items_in_period(period)
-    organization.questions.
+  def new_notes_on_own_agenda_items_in_period(period)
+    team.questions.
       join(user.agenda_items).
-      join_through(AgendaItemComment).
-      where(AgendaItemComment[:created_at].gt((last_notified_or_visited_at(period)))).
-      where(AgendaItemComment[:creator_id].neq(user_id))
+      join_through(AgendaItemNote).
+      where(AgendaItemNote[:created_at].gt((last_notified_or_visited_at(period)))).
+      where(AgendaItemNote[:creator_id].neq(user_id))
   end
 
   protected

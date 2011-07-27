@@ -15,8 +15,8 @@ class Vote < Prequel::Record
   alias can_update? can_mutate?
   alias can_destroy? can_mutate?
 
-  def organization_ids
-    question ? question.organization_ids : []
+  def team_ids
+    question ? question.team_ids : []
   end
 
   # note: this approach to incrementing / decrementing is not atomic!

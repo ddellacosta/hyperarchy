@@ -40,13 +40,13 @@ describe PasswordResetsController do
   describe "#create" do
     context "if the token corresponds to a user and was generated < 1 hour ago" do
       context "if a password is supplied" do
-        it "resets the user's password, logs them in, and redirects them to their default organization" do
+        it "resets the user's password, logs them in, and redirects them to their default team" do
           jump 30.minutes
           post :create, :token => user.password_reset_token, :password => "new password", :password_confirmation => "new password"
           current_user.should == user
           user.password.should == "new password"
-          default_org_id = user.default_organization.id
-          response.should redirect_to(organization_url(user.default_organization))
+          default_org_id = user.default_team.id
+          response.should redirect_to(team_url(user.default_team))
         end
       end
 

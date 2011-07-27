@@ -1,7 +1,7 @@
-_.constructor('Views.Pages.OrganizationSettings', Monarch.View.Template, {
+_.constructor('Views.Pages.TeamSettings', Monarch.View.Template, {
   content: function() { with(this.builder) {
-    div({id: 'organization-settings'}, function() {
-      h2("Organization Settings")
+    div({id: 'team-settings'}, function() {
+      h2("Team Settings")
       form(function() {
         label({'for': "name"}, "Name");
         input({'name': "name"}).ref('name');
@@ -27,7 +27,7 @@ _.constructor('Views.Pages.OrganizationSettings', Monarch.View.Template, {
             placeholderTag: "tbody",
             rootTag: "tbody",
             buildElement: function(membership) {
-              return Views.Pages.OrganizationSettings.MembershipLi.toView({membership: membership});
+              return Views.Pages.TeamSettings.MembershipLi.toView({membership: membership});
             }
           });
         });
@@ -42,17 +42,17 @@ _.constructor('Views.Pages.OrganizationSettings', Monarch.View.Template, {
 
     params: {
       change: function(params) {
-        return this.organization(Organization.find(params.organizationId));
+        return this.team(Team.find(params.teamId));
       }
     },
 
-    organization: {
-      change: function(organization) {
-        Application.currentOrganization(organization);
-        this.model(organization);
+    team: {
+      change: function(team) {
+        Application.currentTeam(team);
+        this.model(team);
         this.enableOrDisableUpdateButton();
-        return organization.memberships().joinTo(User).fetch().success(function() {
-          this.memberships.relation(organization.memberships().joinTo(User).where({guest: false}).project(Membership));
+        return team.memberships().joinTo(User).fetch().success(function() {
+          this.memberships.relation(team.memberships().joinTo(User).where({guest: false}).project(Membership));
         }, this);
       }
     },

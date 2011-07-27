@@ -4,8 +4,8 @@ Sham.define do
   email_address { Faker::Internet.email }
   question { Faker::Lorem.sentence.chop + "?" }
   agenda_item { Faker::Lorem.sentence }
-  organization_description { Faker::Company.bs.capitalize + "." }
-  organization_name { Faker::Company.name }
+  team_description { Faker::Company.bs.capitalize + "." }
+  team_name { Faker::Company.name }
 end
 
 User.blueprint do
@@ -17,12 +17,12 @@ end
 
 Question.blueprint do
   body { Sham.question }
-  organization { Organization.make }
+  team { Team.make }
   suppress_immediate_notifications { true }
   suppress_current_user_membership_check { true }
 end
 
-QuestionComment.blueprint do
+QuestionNote.blueprint do
   question { Question.make }
   body { Faker::Lorem.sentence }
 end
@@ -34,7 +34,7 @@ AgendaItem.blueprint do
   suppress_current_user_membership_check { true }
 end
 
-AgendaItemComment.blueprint do
+AgendaItemNote.blueprint do
   agenda_item { AgendaItem.make }
   body { Faker::Lorem.sentence }
   suppress_immediate_notifications { true }
@@ -47,11 +47,11 @@ end
 Vote.blueprint do
 end
 
-Organization.class_eval do
+Team.class_eval do
   blueprint do
     suppress_membership_creation { true }
-    name { Sham.organization_name }
-    description { Sham.organization_description }
+    name { Sham.team_name }
+    description { Sham.team_description }
   end
 
   def make_member(attributes={})
@@ -73,7 +73,7 @@ end
 Membership.class_eval do
   blueprint do
     user { User.make }
-    organization { Organization.make }
+    team { Team.make }
   end
 
   attr_accessor :all_notifications
@@ -82,8 +82,8 @@ Membership.class_eval do
     return unless all_notifications
     self.notify_of_new_questions = all_notifications
     self.notify_of_new_agenda_items = all_notifications
-    self.notify_of_new_comments_on_own_agenda_items = all_notifications
-    self.notify_of_new_comments_on_ranked_agenda_items = all_notifications
+    self.notify_of_new_notes_on_own_agenda_items = all_notifications
+    self.notify_of_new_notes_on_ranked_agenda_items = all_notifications
   end
 end
 

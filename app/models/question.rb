@@ -1,6 +1,6 @@
 class Question < Prequel::Record
   column :id, :integer
-  column :organization_id, :integer
+  column :team_id, :integer
   column :creator_id, :integer
   column :body, :string
   column :details, :string
@@ -16,7 +16,7 @@ class Question < Prequel::Record
   has_many :question_visits
 
   belongs_to :creator, :class_name => "User"
-  belongs_to :organization
+  belongs_to :team
 
   attr_accessor :suppress_current_user_membership_check
 
@@ -40,30 +40,30 @@ class Question < Prequel::Record
   INITIAL_SCORE = compute_score(0, 0)
 
   def can_create?
-    organization.current_user_can_create_items?
+    team.current_user_can_create_items?
   end
 
   def can_update_or_destroy?
-    current_user.admin? || creator_id == current_user.id || organization.has_owner?(current_user)
+    current_user.admin? || creator_id == current_user.id || team.has_owner?(current_user)
   end
   alias can_update? can_update_or_destroy?
   alias can_destroy? can_update_or_destroy?
 
   def create_whitelist
-    [:organization_id, :body, :details]
+    [:team_id, :body, :details]
   end
 
   def update_whitelist
     [:body, :details]
   end
 
-  def organization_ids
-    [organization_id]
+  def team_ids
+    [team_id]
   end
 
   def before_create
     ensure_body_within_limit
-    organization.ensure_current_user_is_member unless suppress_current_user_membership_check
+    team.ensure_current_user_is_member unless suppress_current_user_membership_check
     self.creator ||= current_user
     self.score = INITIAL_SCORE
   end
@@ -78,12 +78,12 @@ class Question < Prequel::Record
   end
 
   def after_create
-    organization.increment(:question_count)
+    team.increment(:question_count)
     send_immediate_notifications
   end
 
   def users_to_notify_immediately
-    organization.memberships.
+    team.memberships.
       where(:notify_of_new_questions => "immediately").
       where(Membership[:user_id].neq(creator_id)).
       join_through(User)
@@ -95,7 +95,7 @@ class Question < Prequel::Record
   end
 
   def after_destroy
-    organization.decrement(:question_count)
+    team.decrement(:question_count)
   end
 
   def compute_global_ranking

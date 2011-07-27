@@ -1,8 +1,8 @@
 Actionitems::Application.routes.draw do
   root :to => 'home#show'
-  match 'organizations/:id' => 'home#show', :as => "organanization"
-  match 'organizations/:id/questions/new' => 'home#show', :as => "new_organization_question"
-  match 'organizations/:id/settings' => 'home#show', :as => "organization_settings"
+  match 'teams/:id' => 'home#show', :as => "organanization"
+  match 'teams/:id/questions/new' => 'home#show', :as => "new_team_question"
+  match 'teams/:id/settings' => 'home#show', :as => "team_settings"
   match 'questions/:id' => 'home#show', :as => "question"
   match 'questions/:id/full_screen' => 'home#show', :as => "full_screen_question"
   match 'questions/:id/agenda_items/:selected_agenda_item_id' => 'home#show', :as => "question_agenda_item"
@@ -16,7 +16,7 @@ Actionitems::Application.routes.draw do
   match 'signup' => 'users#new', :via => 'get', :as => "signup"
   match 'signup' => 'users#create', :via => 'post', :as => "signup"
 
-  match '/access/:organization_id/:code' => 'memberships#create', :via => ['post', 'get']
+  match '/access/:team_id/:code' => 'memberships#create', :via => ['post', 'get']
   post '/feedback' => 'feedbacks#create'
 
   get '/sandbox' => 'sandbox#fetch'
@@ -24,8 +24,8 @@ Actionitems::Application.routes.draw do
   put '/sandbox/:relation/:id' => 'sandbox#update'
   delete '/sandbox/:relation/:id' => 'sandbox#destroy'
 
-  post '/channel_subscriptions/organizations/:id' => 'channel_subscriptions#create'
-  delete '/channel_subscriptions/organizations/:id' => 'channel_subscriptions#destroy'
+  post '/channel_subscriptions/teams/:id' => 'channel_subscriptions#create'
+  delete '/channel_subscriptions/teams/:id' => 'channel_subscriptions#destroy'
 
   resources :facebook_sessions
   resources :facebook_connections
@@ -35,7 +35,7 @@ Actionitems::Application.routes.draw do
   resources :shares
 
   # TODO: delete?
-  resources :organizations do
+  resources :teams do
     resources :questions
   end
 
@@ -91,13 +91,13 @@ Actionitems::Application.routes.draw do
 
   # Sample resource route with sub-resources:
   #   resources :products do
-  #     resources :comments, :sales
+  #     resources :notes, :sales
   #     resource :seller
   #   end
 
   # Sample resource route with more complex sub-resources
   #   resources :products do
-  #     resources :comments
+  #     resources :notes
   #     resources :sales do
   #       get 'recent', :on => :collection
   #     end

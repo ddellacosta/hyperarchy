@@ -1,6 +1,6 @@
 Sequel.migration do
   up do
-    create_table(:candidate_comments) do
+    create_table(:candidate_notes) do
       primary_key :id
       String :body, :text=>true
       Integer :candidate_id
@@ -30,7 +30,7 @@ Sequel.migration do
     
     create_table(:elections) do
       primary_key :id
-      Integer :organization_id
+      Integer :team_id
       String :body, :text=>true
       DateTime :updated_at
       DateTime :created_at
@@ -42,7 +42,7 @@ Sequel.migration do
     create_table(:mailing_list_entries) do
       primary_key :id
       String :email_address, :text=>true
-      String :comments, :text=>true
+      String :notes, :text=>true
       DateTime :created_at
     end
     
@@ -58,7 +58,7 @@ Sequel.migration do
     
     create_table(:memberships) do
       primary_key :id
-      Integer :organization_id
+      Integer :team_id
       Integer :user_id
       String :role, :size=>255
       DateTime :last_visited
@@ -66,12 +66,12 @@ Sequel.migration do
       DateTime :updated_at
       String :notify_of_new_elections, :text=>true
       String :notify_of_new_candidates, :text=>true
-      String :notify_of_new_comments_on_own_candidates, :text=>true
-      String :notify_of_new_comments_on_ranked_candidates, :text=>true
+      String :notify_of_new_notes_on_own_candidates, :text=>true
+      String :notify_of_new_notes_on_ranked_candidates, :text=>true
       TrueClass :has_participated, :default=>false
     end
     
-    create_table(:organizations) do
+    create_table(:teams) do
       primary_key :id
       String :name, :size=>255
       String :description, :size=>255
@@ -130,6 +130,6 @@ Sequel.migration do
   end
   
   down do
-    drop_table(:candidate_comments, :candidates, :election_visits, :elections, :mailing_list_entries, :majorities, :memberships, :organizations, :rankings, :schema_info, :users, :votes)
+    drop_table(:candidate_notes, :candidates, :election_visits, :elections, :mailing_list_entries, :majorities, :memberships, :teams, :rankings, :schema_info, :users, :votes)
   end
 end

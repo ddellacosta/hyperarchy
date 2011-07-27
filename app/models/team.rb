@@ -1,4 +1,4 @@
-class Organization < Prequel::Record
+class Team < Prequel::Record
   column :id, :integer
   column :name, :string
   column :description, :string, :default => ""
@@ -16,7 +16,7 @@ class Organization < Prequel::Record
   has_many :memberships
 
   attr_accessor :suppress_membership_creation
-  validates_presence_of :name, :message => "Organization name must not be blank"
+  validates_presence_of :name, :message => "Team name must not be blank"
 
   def self.social
     find(:social => true)
@@ -97,11 +97,11 @@ class Organization < Prequel::Record
   end
 
   def subscribe_url
-    "http://#{SOCKET_SERVER_HOST}/channel_subscriptions/organizations/#{id}"
+    "http://#{SOCKET_SERVER_HOST}/channel_subscriptions/teams/#{id}"
   end
 
   def event_url
-    "http://#{SOCKET_SERVER_HOST}/channel_events/organizations/#{id}"
+    "http://#{SOCKET_SERVER_HOST}/channel_events/teams/#{id}"
   end
 
   def public?
@@ -116,7 +116,7 @@ class Organization < Prequel::Record
     privacy == "private"
   end
 
-  def organization_ids
+  def team_ids
     [id]
   end
 end

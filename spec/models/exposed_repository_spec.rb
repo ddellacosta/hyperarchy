@@ -5,7 +5,7 @@ describe Sandbox do
   attr_reader :question, :repository, :user_1, :user_2, :agenda_item_1, :agenda_item_2
 
   before do
-    org = Organization.make
+    org = Team.make
     current_user = org.make_member
 
     @user_1 = org.make_member

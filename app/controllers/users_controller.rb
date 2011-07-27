@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     Prequel.transaction do
       data = {}
       create_user(data, errors)
-      create_organization(data, errors) if params[:organization]
+      create_team(data, errors) if params[:team]
 
       render :json => {
         'data' => data,
@@ -29,8 +29,8 @@ class UsersController < ApplicationController
     if user.valid?
       previous_user = current_user
       set_current_user(user)
-      if organization = previous_user.guest_organization
-        current_user.memberships.find_or_create!(:organization => organization)
+      if team = previous_user.guest_team
+        current_user.memberships.find_or_create!(:team => team)
       end
       data['current_user_id'] = user.id
     else
@@ -39,12 +39,12 @@ class UsersController < ApplicationController
     end
   end
 
-  def create_organization(data, errors)
-    organization = Organization.secure_create(params[:organization])
-    if organization.valid?
-      data['new_organization_id'] = organization.id
+  def create_team(data, errors)
+    team = Team.secure_create(params[:team])
+    if team.valid?
+      data['new_team_id'] = team.id
     else
-      errors.push(*organization.errors.full_messages)
+      errors.push(*team.errors.full_messages)
       clear_current_user
       raise Prequel::Rollback
     end

@@ -102,14 +102,14 @@ describe ApplicationController do
 
     context "when no one is logged in" do
       it "returns the guest user for Actionitems Social" do
-        controller.send(:current_user).should == Organization.social.guest
+        controller.send(:current_user).should == Team.social.guest
       end
     end
 
     context "when the session has an invalid :current_user_id in it" do
       it "returns the guest user for Actionitems Social and clears out the bad id" do
         session[:current_user_id] = -1
-        controller.send(:current_user).should == Organization.social.guest
+        controller.send(:current_user).should == Team.social.guest
         session[:current_user_id].should be_nil
       end
     end

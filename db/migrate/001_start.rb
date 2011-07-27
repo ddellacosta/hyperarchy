@@ -1,6 +1,6 @@
 Sequel.migration do
   up do
-    create_table(:agenda_item_comments) do
+    create_table(:agenda_item_notes) do
       primary_key :id
       String :body, :text=>true
       Integer :agenda_item_id
@@ -18,13 +18,13 @@ Sequel.migration do
       String :details, :default=>"", :text=>true
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
-      Integer :comment_count, :default=>0
+      Integer :note_count, :default=>0
     end
     
     create_table(:mailing_list_entries) do
       primary_key :id
       String :email_address, :text=>true
-      String :comments, :text=>true
+      String :notes, :text=>true
       column :created_at, 'timestamp with time zone'
     end
     
@@ -40,7 +40,7 @@ Sequel.migration do
     
     create_table(:memberships) do
       primary_key :id
-      Integer :organization_id
+      Integer :team_id
       Integer :user_id
       String :role, :size=>255
       column :last_visited, 'timestamp with time zone'
@@ -48,12 +48,12 @@ Sequel.migration do
       column :updated_at, 'timestamp with time zone'
       String :notify_of_new_questions, :text=>true
       String :notify_of_new_agenda_items, :text=>true
-      String :notify_of_new_comments_on_own_agenda_items, :text=>true
-      String :notify_of_new_comments_on_ranked_agenda_items, :text=>true
+      String :notify_of_new_notes_on_own_agenda_items, :text=>true
+      String :notify_of_new_notes_on_ranked_agenda_items, :text=>true
       TrueClass :has_participated, :default=>false
     end
     
-    create_table(:organizations) do
+    create_table(:teams) do
       primary_key :id
       String :name, :size=>255
       String :description, :size=>255
@@ -69,7 +69,7 @@ Sequel.migration do
       Integer :member_count, :default=>0
     end
     
-    create_table(:question_comments) do
+    create_table(:question_notes) do
       primary_key :id
       String :body, :text=>true
       Integer :question_id
@@ -88,7 +88,7 @@ Sequel.migration do
     
     create_table(:questions) do
       primary_key :id
-      Integer :organization_id
+      Integer :team_id
       String :body, :text=>true
       column :updated_at, 'timestamp with time zone'
       column :created_at, 'timestamp with time zone'
@@ -151,6 +151,6 @@ Sequel.migration do
   end
   
   down do
-    drop_table(:agenda_item_comments, :agenda_items, :mailing_list_entries, :majorities, :memberships, :organizations, :question_comments, :question_visits, :questions, :rankings, :schema_info, :shares, :users, :votes)
+    drop_table(:agenda_item_notes, :agenda_items, :mailing_list_entries, :majorities, :memberships, :teams, :question_notes, :question_visits, :questions, :rankings, :schema_info, :shares, :users, :votes)
   end
 end

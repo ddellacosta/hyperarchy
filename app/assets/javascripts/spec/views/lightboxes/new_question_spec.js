@@ -1,14 +1,14 @@
 //= require spec/spec_helper
 
 describe("Views.Lightboxes.NewQuestion", function() {
-  var newQuestionForm, organization, member, guest;
+  var newQuestionForm, team, member, guest;
   beforeEach(function() {
     renderLayout();
-    organization = Organization.createFromRemote({id: 1, privacy: "public"});
-    member = organization.makeMember({id: 1});
-    guest =  organization.makeMember({id: 2, guest: true});
+    team = Team.createFromRemote({id: 1, privacy: "public"});
+    member = team.makeMember({id: 1});
+    guest =  team.makeMember({id: 2, guest: true});
     Application.currentUser(member);
-    Application.currentOrganization(organization);
+    Application.currentTeam(team);
     useFakeServer();
 
     newQuestionForm = Application.newQuestion.show();
@@ -110,7 +110,7 @@ describe("Views.Lightboxes.NewQuestion", function() {
             expect(Server.creates.length).toBe(1);
 
             var createdQuestion = Server.lastCreate.record;
-            expect(createdQuestion.organization()).toBe(organization);
+            expect(createdQuestion.team()).toBe(team);
             expect(createdQuestion.body()).toBe("What are you doing saturday night?");
             expect(createdQuestion.details()).toBe("I am very lonely.");
 
@@ -209,18 +209,18 @@ describe("Views.Lightboxes.NewQuestion", function() {
       expect(newQuestionForm.details.val()).toBe("");
     });
 
-    it("only shows the checkbox if the current organization is public, otherwise it hides it and unchecks it", function() {
+    it("only shows the checkbox if the current team is public, otherwise it hides it and unchecks it", function() {
       expect(newQuestionForm.shareOnFacebook).toBeVisible();
       newQuestionForm.close();
 
-      organization.remotelyUpdated({privacy: "private"});
+      team.remotelyUpdated({privacy: "private"});
       newQuestionForm.show();
 
       expect(newQuestionForm.shareOnFacebook.attr('checked')).toBeFalsy();
       expect(newQuestionForm.shareOnFacebook).toBeHidden();
       newQuestionForm.close();
 
-      organization.remotelyUpdated({privacy: "public"});
+      team.remotelyUpdated({privacy: "public"});
       newQuestionForm.show();
       expect(newQuestionForm.shareOnFacebook.attr('checked')).toBeTruthy();
     });

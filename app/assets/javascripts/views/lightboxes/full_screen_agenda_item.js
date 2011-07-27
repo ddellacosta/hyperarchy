@@ -15,7 +15,7 @@ _.constructor('Views.Lightboxes.FullScreenAgendaItem', Views.Lightboxes.Lightbox
     agendaItem: {
       change: function(agendaItem) {
         this.agendaItemDetails.agendaItem(agendaItem);
-        this.agendaItemDetails.comments.comments(agendaItem.comments());
+        this.agendaItemDetails.notes.notes(agendaItem.notes());
 
         var question = agendaItem.question();
         var total = question.agendaItems().size();

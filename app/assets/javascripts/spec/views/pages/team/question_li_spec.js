@@ -1,6 +1,6 @@
 //= require spec/spec_helper
 
-describe("Views.Pages.Organization.QuestionLi", function() {
+describe("Views.Pages.Team.QuestionLi", function() {
   var questionLi, creator, question, agendaItem1, agendaItem2, agendaItem1Li, agendaItem2Li;
   beforeEach(function() {
     attachLayout();
@@ -8,7 +8,7 @@ describe("Views.Pages.Organization.QuestionLi", function() {
     question = Question.createFromRemote({id: 1, body: "What's your *favorite* color?", creatorId: creator.id()});
     agendaItem1 = question.agendaItems().createFromRemote({id: 1, body: "*Red*", position: 1});
     agendaItem2 = question.agendaItems().createFromRemote({id: 2, body: "Blue", position: 2});
-    questionLi = Views.Pages.Organization.QuestionLi.toView({question: question});
+    questionLi = Views.Pages.Team.QuestionLi.toView({question: question});
     agendaItem1Li = questionLi.find('li:contains("Red")').view();
     agendaItem2Li = questionLi.find('li:contains("Blue")').view();
   });

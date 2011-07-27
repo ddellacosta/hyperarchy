@@ -1,12 +1,12 @@
 //= require spec/spec_helper
 
 describe("Views.Pages.Question.RankedAgendaItems", function() {
-  var organization, questionPage, rankedAgendaItems, currentUser, question, agendaItem1, agendaItem2, agendaItem3, ranking1, ranking2, rankingsRelation, lastCreateOrUpdatePromise;
+  var team, questionPage, rankedAgendaItems, currentUser, question, agendaItem1, agendaItem2, agendaItem3, ranking1, ranking2, rankingsRelation, lastCreateOrUpdatePromise;
   
   beforeEach(function() {
-    organization = Organization.createFromRemote({id: 1})
-    currentUser = organization.makeMember({id: 2, emailAddress: "foo@example.com"});
-    question = Question.createFromRemote({id: 1, creatorId: 2, createdAt: 234234234, organizationId: organization.id()});
+    team = Team.createFromRemote({id: 1})
+    currentUser = team.makeMember({id: 2, emailAddress: "foo@example.com"});
+    question = Question.createFromRemote({id: 1, creatorId: 2, createdAt: 234234234, teamId: team.id()});
     agendaItem1 = question.agendaItems().createFromRemote({id: 1, body: "AgendaItem 1", createdAt: 1308352736162, creatorId: 2});
     agendaItem2 = question.agendaItems().createFromRemote({id: 2, body: "AgendaItem 2", createdAt: 1308352736162, creatorId: 2});
     agendaItem3 = question.agendaItems().createFromRemote({id: 3, body: "AgendaItem 3", createdAt: 1308352736162, creatorId: 2});
@@ -17,7 +17,7 @@ describe("Views.Pages.Question.RankedAgendaItems", function() {
     spyOn(Application, 'showPage');
 
     Application.currentUser(currentUser);
-    Application.currentOrganization(organization);
+    Application.currentTeam(team);
     Application.height(640);
     questionPage = Application.questionPage;
     rankedAgendaItems = questionPage.rankedAgendaItems;
@@ -205,7 +205,7 @@ describe("Views.Pages.Question.RankedAgendaItems", function() {
 
       describe("when displaying another user's ranking", function() {
         beforeEach(function() {
-          var otherUser = organization.makeMember({id: 99});
+          var otherUser = team.makeMember({id: 99});
           otherUser.rankings().createFromRemote({questionId: question.id(), agendaItemId: agendaItem1.id(), position: 64});
           rankedAgendaItems.rankings(otherUser.rankings());
         });
@@ -343,8 +343,8 @@ describe("Views.Pages.Question.RankedAgendaItems", function() {
           expect(Application.currentUserId()).toBeDefined();
           expect(Application.currentUser()).toBeDefined();
           expect(Application.currentUser().defaultGuest()).toBeTruthy();
-          expect(organization.social()).toBeTruthy();
-          expect(organization.isPublic()).toBeTruthy();
+          expect(team.social()).toBeTruthy();
+          expect(team.isPublic()).toBeTruthy();
 
           synchronously(function() {
             questionPage.params({questionId: question.id()});

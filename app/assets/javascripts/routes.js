@@ -1,19 +1,19 @@
 Path.map('/').to(function() {
   _.defer(function() {
-    History.replaceState(null, null, Application.currentUser().defaultOrganization().url());
+    History.replaceState(null, null, Application.currentUser().defaultTeam().url());
   })
 });
 
-Path.map('/organizations/:organizationId').to(function() {
-  Application.showPage('organization', this.params);
+Path.map('/teams/:teamId').to(function() {
+  Application.showPage('team', this.params);
 });
 
-Path.map('/organizations/:organizationId/settings').to(function() {
-  Application.showPage('organizationSettings', this.params);
+Path.map('/teams/:teamId/settings').to(function() {
+  Application.showPage('teamSettings', this.params);
 });
 
-Path.map('/organizations/:organizationId/questions/new').to(function() {
-  Application.showPage('question', { organizationId: this.params.organizationId, questionId: 'new'});
+Path.map('/teams/:teamId/questions/new').to(function() {
+  Application.showPage('question', { teamId: this.params.teamId, questionId: 'new'});
 });
 
 Path.map('/questions/:questionId').to(function() {
@@ -47,7 +47,7 @@ Path.map('/account').to(function() {
     Application.promptLogin()
       .success(showAccountPage)
       .invalid(function() {
-        History.replaceState(null, null, currentUser.defaultOrganization().url());
+        History.replaceState(null, null, currentUser.defaultTeam().url());
       });
   } else {
     showAccountPage();

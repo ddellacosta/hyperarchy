@@ -25,8 +25,8 @@ class Ranking < Prequel::Record
     user_id == current_user.id
   end
 
-  def organization_ids
-    question ? question.organization_ids : []
+  def team_ids
+    question ? question.team_ids : []
   end
 
   def before_create

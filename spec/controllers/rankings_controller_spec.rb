@@ -1,18 +1,18 @@
 require 'spec_helper'
 
 describe RankingsController do
-  attr_reader :organization, :member, :non_member, :question, :c1, :c2
+  attr_reader :team, :member, :non_member, :question, :c1, :c2
 
   before do
-    @organization = Organization.make
-    @question = organization.questions.make
+    @team = Team.make
+    @question = team.questions.make
     @c1 = question.agenda_items.make
     @c2 = question.agenda_items.make
-    @member = organization.make_member
+    @member = team.make_member
     @non_member = User.make
   end
 
-  context "when authenticated as a member of the ranked question's organization" do
+  context "when authenticated as a member of the ranked question's team" do
     before do
       login_as member
     end
@@ -47,24 +47,24 @@ describe RankingsController do
     end
   end
 
-  context "when authenticated as a user that is not a member of the ranked question's organization" do
+  context "when authenticated as a user that is not a member of the ranked question's team" do
     before do
       login_as(non_member)
     end
 
-    context "if the organization is public" do
+    context "if the team is public" do
       before do
-        organization.update(:privacy => 'public')
+        team.update(:privacy => 'public')
       end
 
-      it "makes the user a member of the organization before proceeding and includes the new membership in the returned records" do
+      it "makes the user a member of the team before proceeding and includes the new membership in the returned records" do
         Ranking.find(:user => member, :agenda_item => c1).should be_nil
-        non_member.memberships.where(:organization => organization).should be_empty
+        non_member.memberships.where(:team => team).should be_empty
 
         post :create, :agenda_item_id => c1.id, :position => 64
         response.should be_success
 
-        new_membership = non_member.memberships.find(:organization => organization)
+        new_membership = non_member.memberships.find(:team => team)
         new_membership.should be
         c1_ranking = Ranking.find(:user => non_member, :agenda_item => c1)
         c1_ranking.position.should == 64
@@ -75,9 +75,9 @@ describe RankingsController do
       end
     end
 
-    context "if the organization is not public" do
+    context "if the team is not public" do
       before do
-        organization.privacy.should_not == 'public'
+        team.privacy.should_not == 'public'
       end
 
       it "returns a security error" do

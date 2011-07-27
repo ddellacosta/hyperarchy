@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe FeedbacksController do
-  let(:organization) { Organization.make }
+  let(:team) { Team.make }
   let(:user) { User.make(:password => "password") }
-  let(:membership) { organization.memberships.make(:user => user) }
+  let(:membership) { team.memberships.make(:user => user) }
 
   describe "#create" do
     it "sends an email to max and nathan with the feedback and the user's name" do

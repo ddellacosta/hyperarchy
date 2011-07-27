@@ -11,30 +11,30 @@ describe("Views.Pages.Question", function() {
 
   describe("when the params hash is assigned", function() {
     var currentUser, question, agendaItem1, agendaItem2, currentUserRanking1, currentUserRanking2;
-    var otherUser, otherUser2, questionCommentCreator, agendaItemCommentCreator, otherUserRanking1, otherUserRanking2;
+    var otherUser, otherUser2, questionNoteCreator, agendaItemNoteCreator, otherUserRanking1, otherUserRanking2;
 
     beforeEach(function() {
       enableAjax();
       currentUser = login();
       usingBackdoor(function() {
         var questionCreator = User.create();
-        var organization = Organization.create({privacy: "public"});
-        organization.memberships().create({userId: Application.currentUserId()});
-        question = organization.questions().create();
+        var team = Team.create({privacy: "public"});
+        team.memberships().create({userId: Application.currentUserId()});
+        question = team.questions().create();
         question.update({creatorId: questionCreator.id()});
         otherUser = User.create();
         otherUser2 = User.create();
-        questionCommentCreator = User.create();
-        agendaItemCommentCreator = User.create();
-        currentUser.memberships().create({organizationId: question.organizationId()});
-        otherUser.memberships().create({organizationId: question.organizationId()});
-        questionCommentCreator.memberships().create({organizationId: question.organizationId()});
-        agendaItemCommentCreator.memberships().create({organizationId: question.organizationId()});
-        var questionComment = question.comments().create();
-        questionComment.update({creatorId: questionCommentCreator.id()});
+        questionNoteCreator = User.create();
+        agendaItemNoteCreator = User.create();
+        currentUser.memberships().create({teamId: question.teamId()});
+        otherUser.memberships().create({teamId: question.teamId()});
+        questionNoteCreator.memberships().create({teamId: question.teamId()});
+        agendaItemNoteCreator.memberships().create({teamId: question.teamId()});
+        var questionNote = question.notes().create();
+        questionNote.update({creatorId: questionNoteCreator.id()});
         agendaItem1 = question.agendaItems().create();
-        var agendaItemComment = agendaItem1.comments().create();
-        agendaItemComment.update({creatorId: agendaItemCommentCreator.id()});
+        var agendaItemNote = agendaItem1.notes().create();
+        agendaItemNote.update({creatorId: agendaItemNoteCreator.id()});
         agendaItem2 = question.agendaItems().create({creatorId: otherUser2.id()});
         currentUserRanking1 = question.rankings().create({userId: currentUser.id(), position: 64, agendaItemId: agendaItem1.id()});
         currentUserRanking2 = question.rankings().create({userId: currentUser.id(), position: -64, agendaItemId: agendaItem2.id()});
@@ -53,16 +53,16 @@ describe("Views.Pages.Question", function() {
         expect(question.rankings().size()).toBeGreaterThan(0);
         expect(question.votes().size()).toBeGreaterThan(0);
         expect(question.voters().size()).toBe(question.votes().size());
-        expect(question.comments().size()).toBeGreaterThan(0);
-        expect(question.commenters().size()).toBe(question.comments().size());
+        expect(question.notes().size()).toBeGreaterThan(0);
+        expect(question.noters().size()).toBe(question.notes().size());
       }
 
       function expectQuestionDataAssigned() {
-        expect(Application.currentOrganizationId()).toBe(question.organizationId());
+        expect(Application.currentTeamId()).toBe(question.teamId());
         expect(questionPage.question()).toEqual(question);
         expect(questionPage.currentConsensus.agendaItems()).toEqual(question.agendaItems());
         expect(questionPage.votes.votes().tuples()).toEqual(question.votes().tuples());
-        expect(questionPage.comments.comments().tuples()).toEqual(question.comments().tuples());
+        expect(questionPage.notes.notes().tuples()).toEqual(question.notes().tuples());
       }
 
       describe("if no voterId or agendaItemId is specified", function() {
@@ -121,7 +121,7 @@ describe("Views.Pages.Question", function() {
 
       describe("if the agendaItemId is specified", function() {
         describe("if the agendaItem exists", function() {
-          it("fetches the question data along with the agendaItem's comments and commenters before assigning relations to the subviews and the selectedAgendaItem to the currentConsensus and agendaItemDetails", function() {
+          it("fetches the question data along with the agendaItem's notes and noters before assigning relations to the subviews and the selectedAgendaItem to the currentConsensus and agendaItemDetails", function() {
             waitsFor("fetch to complete", function(complete) {
               questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id() }).success(complete);
               expect(questionPage.votes.selectedVoterId()).toBeFalsy();
@@ -129,8 +129,8 @@ describe("Views.Pages.Question", function() {
 
             runs(function() {
               expectQuestionDataFetched();
-              expect(agendaItem1.comments().size()).toBeGreaterThan(0);
-              expect(agendaItem1.commenters().size()).toBe(agendaItem1.comments().size());
+              expect(agendaItem1.notes().size()).toBeGreaterThan(0);
+              expect(agendaItem1.noters().size()).toBe(agendaItem1.notes().size());
 
               expectQuestionDataAssigned();
 
@@ -246,31 +246,31 @@ describe("Views.Pages.Question", function() {
 
           waitsFor("fetch to complete", function(complete) {
             questionPage.params({questionId: question.id()}).success(complete);
-            expect(Application.currentOrganizationId()).toBe(question.organizationId());
+            expect(Application.currentTeamId()).toBe(question.teamId());
             expect(questionPage.question()).toEqual(question);
             expect(questionPage.currentConsensus.agendaItems().tuples()).toEqual(question.agendaItems().tuples());
             expect(questionPage.rankedAgendaItems.loading()).toBeTruthy();
             expect(questionPage.votes.loading()).toBeTruthy();
-            expect(questionPage.comments.loading()).toBeTruthy();
+            expect(questionPage.notes.loading()).toBeTruthy();
           });
 
           runs(function() {
             expect(questionPage.rankedAgendaItems.rankings()).toBeDefined();
             expect(questionPage.rankedAgendaItems.loading()).toBeFalsy();
             expect(questionPage.votes.loading()).toBeFalsy();
-            expect(questionPage.comments.loading()).toBeFalsy();
+            expect(questionPage.notes.loading()).toBeFalsy();
           })
         });
       });
 
       describe("if the question does not exist", function() {
-        it("navigates to the current user's default organization url", function() {
+        it("navigates to the current user's default team url", function() {
           waitsFor("fetch to complete", function(complete) {
             questionPage.params({questionId: -27}).success(complete);
           });
 
           runs(function() {
-            expect(Path.routes.current).toBe(currentUser.defaultOrganization().url());
+            expect(Path.routes.current).toBe(currentUser.defaultTeam().url());
           });
         });
       });
@@ -316,7 +316,7 @@ describe("Views.Pages.Question", function() {
             expect(questionPage.rankedAgendaItems.sortingEnabled()).toBeFalsy();
 
             expect(questionPage.rankedAgendaItems.loading()).toBeTruthy();
-            expect(questionPage.comments.loading()).toBeFalsy();
+            expect(questionPage.notes.loading()).toBeFalsy();
             expect(questionPage.votes.loading()).toBeFalsy();
           });
 
@@ -343,8 +343,8 @@ describe("Views.Pages.Question", function() {
 
       describe("if the agendaItemId is specified", function() {
         describe("if the agendaItem exists", function() {
-          it("assigns the selectedAgendaItem to the currentConsensus and agendaItemDetails, then fetches the agendaItems comments and assigns those later", function() {
-            waitsFor("comments and commenters to be fetched", function(complete) {
+          it("assigns the selectedAgendaItem to the currentConsensus and agendaItemDetails, then fetches the agendaItems notes and assigns those later", function() {
+            waitsFor("notes and noters to be fetched", function(complete) {
               questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id() }).success(complete);
 
               expect(questionPage.agendaItemDetails.loading()).toBeTruthy();
@@ -355,16 +355,16 @@ describe("Views.Pages.Question", function() {
               expect(questionPage.votes.selectedVoterId()).toBeFalsy();
 
               expect(questionPage.rankedAgendaItems.loading()).toBeFalsy();
-              expect(questionPage.comments.loading()).toBeFalsy();
+              expect(questionPage.notes.loading()).toBeFalsy();
               expect(questionPage.votes.loading()).toBeFalsy();
             });
 
             runs(function() {
               expect(questionPage.agendaItemDetails.loading()).toBeFalsy();
 
-              expect(agendaItem1.comments().size()).toBeGreaterThan(0);
-              expect(agendaItem1.commenters().size()).toBe(agendaItem1.comments().size());
-              expect(questionPage.agendaItemDetails.comments.comments().tuples()).toEqual(agendaItem1.comments().tuples());
+              expect(agendaItem1.notes().size()).toBeGreaterThan(0);
+              expect(agendaItem1.noters().size()).toBe(agendaItem1.notes().size());
+              expect(questionPage.agendaItemDetails.notes.notes().tuples()).toEqual(agendaItem1.notes().tuples());
               expect(questionPage.backLink).toBeVisible();
             });
           });
@@ -447,16 +447,16 @@ describe("Views.Pages.Question", function() {
   });
 
   describe("local logic (no fetching)", function() {
-    var currentUser, creator, organization, question, agendaItem1, question2, editableByCurrentUser, mockedRandomString;
+    var currentUser, creator, team, question, agendaItem1, question2, editableByCurrentUser, mockedRandomString;
     var headlineTextWhenAdjustColumnTopWasCalled;
 
     beforeEach(function() {
       creator = User.createFromRemote({id: 1, firstName: "animal", lastName: "eater"});
-      organization = Organization.createFromRemote({id: 1, name: "Neurotic designers", privacy: "public"});
-      question = creator.questions().createFromRemote({id: 1, body: "What's a body?", details: "aoeu!", createdAt: 91234, organizationId: organization.id()});
+      team = Team.createFromRemote({id: 1, name: "Neurotic designers", privacy: "public"});
+      question = creator.questions().createFromRemote({id: 1, body: "What's a body?", details: "aoeu!", createdAt: 91234, teamId: team.id()});
       agendaItem1 = question.agendaItems().createFromRemote({id: 1, body: "AgendaItem 1", position: 1, creatorId: creator.id(), createdAt: 2345});
-      question2 = creator.questions().createFromRemote({id: 2, body: 'short body', details: "woo!", organizationId: organization.id(), createdAt: 91234});
-      currentUser = organization.makeMember({id: 1, firstName: "John", lastName: "Five"});
+      question2 = creator.questions().createFromRemote({id: 2, body: 'short body', details: "woo!", teamId: team.id(), createdAt: 91234});
+      currentUser = team.makeMember({id: 1, firstName: "John", lastName: "Five"});
       Application.currentUser(currentUser);
       useFakeServer();
 
@@ -471,13 +471,13 @@ describe("Views.Pages.Question", function() {
       });
 
       questionPage.params({questionId: question.id()});
-      expect(Server.lastUpdate.record).toBe(organization.membershipForCurrentUser());
+      expect(Server.lastUpdate.record).toBe(team.membershipForCurrentUser());
       Server.lastUpdate.simulateSuccess();
       Server.lastFetch.simulateSuccess();
     });
 
     describe("when a question is assigned", function() {
-      it("assigns the question's body, details, avatar, and comments relation, and keeps the body and details up to date when they change", function() {
+      it("assigns the question's body, details, avatar, and notes relation, and keeps the body and details up to date when they change", function() {
         expect(questionPage.body.html()).toEqual($.markdown(question.body()));
         expect(questionPage.details.html()).toEqual($.markdown(question.details()));
         question.remotelyUpdated({body: "what would satan & damien do?", details: "Isdf"});
@@ -486,7 +486,7 @@ describe("Views.Pages.Question", function() {
         expect(questionPage.avatar.user()).toBe(question.creator());
         expect(questionPage.creatorName.text()).toBe(question.creator().fullName());
         expect(questionPage.createdAt.text()).toBe(question.formattedCreatedAt());
-        expect(questionPage.comments.comments()).toBe(question.comments());
+        expect(questionPage.notes.notes()).toBe(question.notes());
 
         questionPage.question(question2);
         expect(questionPage.body.text()).toEqual(question2.body());
@@ -688,10 +688,10 @@ describe("Views.Pages.Question", function() {
 
     describe("when the question is destroyed", function() {
       describe("when the question page is visible", function() {
-        it("navigates back to the current organization page", function() {
+        it("navigates back to the current team page", function() {
           spyOn(Application, 'showPage');
           questionPage.question().remotelyDestroyed();
-          expect(Path.routes.current).toBe(Application.currentOrganization().url());
+          expect(Path.routes.current).toBe(Application.currentTeam().url());
         });
       });
 
@@ -725,7 +725,7 @@ describe("Views.Pages.Question", function() {
       var privateOrg, privateOrgQuestion;
 
       beforeEach(function() {
-        privateOrg = Organization.createFromRemote({id: 2, name: "Private Org", privacy: "private"});
+        privateOrg = Team.createFromRemote({id: 2, name: "Private Org", privacy: "private"});
         var member = privateOrg.makeMember({id: 3});
         privateOrgQuestion = privateOrg.questions().createFromRemote({id: 3, body: "Nobody knows", createdAt: 932, creatorId: member.id()});
       });
@@ -747,10 +747,10 @@ describe("Views.Pages.Question", function() {
     });
 
     describe("when the 'back to questions' link is clicked", function() {
-      it("navigates to the question's organization page", function() {
+      it("navigates to the question's team page", function() {
         spyOn(Application, 'showPage');
-        questionPage.organizationLink.click();
-        expect(Path.routes.current).toBe(organization.url());
+        questionPage.teamLink.click();
+        expect(Path.routes.current).toBe(team.url());
       });
     });
 
@@ -796,7 +796,7 @@ describe("Views.Pages.Question", function() {
       });
     })
 
-    describe("adjustment of the comments height", function() {
+    describe("adjustment of the notes height", function() {
       var longDetails = "";
       beforeEach(function() {
         longDetails = "";
@@ -804,53 +804,53 @@ describe("Views.Pages.Question", function() {
       });
 
       describe("when the details and creator div are populated or when the details change", function() {
-        it("adjusts comments to fill remaining vertical space", function() {
-          expectCommentsToHaveFullHeight();
+        it("adjusts notes to fill remaining vertical space", function() {
+          expectNotesToHaveFullHeight();
           question.remotelyUpdated({details: longDetails});
-          expectCommentsToHaveFullHeight();
+          expectNotesToHaveFullHeight();
         });
       });
 
       describe("when the window is resized", function() {
-        it("adjusts comments to fill remaining vertical space", function() {
+        it("adjusts notes to fill remaining vertical space", function() {
           Application.width(1000);
           question.remotelyUpdated({details: longDetails});
 
           Application.width(700);
           $(window).resize();
-          expectCommentsToHaveFullHeight();
+          expectNotesToHaveFullHeight();
         });
       });
 
       describe("when showing or hiding the editable details", function() {
-        it("adjusts comments to fill remaining vertical space", function() {
+        it("adjusts notes to fill remaining vertical space", function() {
           questionPage.editButton.click();
-          expectCommentsToHaveFullHeight();
+          expectNotesToHaveFullHeight();
         });
       });
 
       describe("when elastic is triggered on the or the body editable details", function() {
-        it("adjusts comments to fill remaining vertical space", function() {
+        it("adjusts notes to fill remaining vertical space", function() {
           questionPage.editButton.click();
-          expectCommentsToHaveFullHeight();
+          expectNotesToHaveFullHeight();
 
           var columnHeightBeforeElastic = questionPage.find('#column1').height();
           questionPage.editableDetails.val(longDetails + longDetails);
           questionPage.editableDetails.keyup();
-          expectCommentsToHaveFullHeight(columnHeightBeforeElastic);
+          expectNotesToHaveFullHeight(columnHeightBeforeElastic);
 
           questionPage.editableDetails.val("");
           questionPage.editableDetails.keyup();
-          expectCommentsToHaveFullHeight(columnHeightBeforeElastic);
+          expectNotesToHaveFullHeight(columnHeightBeforeElastic);
 
           questionPage.editableBody.val(longDetails);
           questionPage.editableBody.keyup();
         });
       });
 
-      function expectCommentsToHaveFullHeight(expectedBottom) {
-        var commentsBottom = questionPage.comments.position().top + questionPage.comments.height();
-        expect(commentsBottom).toBe(expectedBottom || questionPage.find('#column1').height());
+      function expectNotesToHaveFullHeight(expectedBottom) {
+        var notesBottom = questionPage.notes.position().top + questionPage.notes.height();
+        expect(notesBottom).toBe(expectedBottom || questionPage.find('#column1').height());
       }
     });
 
@@ -951,7 +951,7 @@ describe("Views.Pages.Question", function() {
 
     beforeEach(function() {
       creator = User.createFromRemote({id: 1});
-      question = creator.questions().createFromRemote({id: 1, body: "What's the best kind of mate?", createdAt: 1234, organizationId: Organization.findSocial().id()});
+      question = creator.questions().createFromRemote({id: 1, body: "What's the best kind of mate?", createdAt: 1234, teamId: Team.findSocial().id()});
     });
 
     describe("when the question changes", function() {

@@ -1,28 +1,28 @@
 //= require spec/spec_helper
 
 describe("Views.Pages.Account.MembershipPreferencesLi", function() {
-  var membership, organization, preferencesLi;
+  var membership, team, preferencesLi;
 
   beforeEach(function() {
-    organization = Organization.createFromRemote({id: 1, name: "Crazy Eddie's"});
+    team = Team.createFromRemote({id: 1, name: "Crazy Eddie's"});
     membership = Membership.createFromRemote({
       id: 1,
-      organizationId: organization.id(),
+      teamId: team.id(),
       notifyOfNewQuestions: "daily",
       notifyOfNewAgendaItems: "weekly",
-      notifyOfNewCommentsOnOwnAgendaItems: "never",
-      notifyOfNewCommentsOnRankedAgendaItems: "immediately"
+      notifyOfNewNotesOnOwnAgendaItems: "never",
+      notifyOfNewNotesOnRankedAgendaItems: "immediately"
     });
     preferencesLi = Views.Pages.Account.MembershipPreferencesLi.toView({membership: membership});
   });
 
   describe("#initialize", function() {
-    it("assigns the organization name and all the email preferences", function() {
-      expect(preferencesLi.find('h3').text()).toBe("Email Preferences for " + organization.name());
+    it("assigns the team name and all the email preferences", function() {
+      expect(preferencesLi.find('h3').text()).toBe("Email Preferences for " + team.name());
       expect(preferencesLi.find("[name='notifyOfNewQuestions']").val()).toBe(membership.notifyOfNewQuestions());
       expect(preferencesLi.find("[name='notifyOfNewAgendaItems']").val()).toBe(membership.notifyOfNewAgendaItems());
-      expect(preferencesLi.find("[name='notifyOfNewCommentsOnOwnAgendaItems']").val()).toBe(membership.notifyOfNewCommentsOnOwnAgendaItems());
-      expect(preferencesLi.find("[name='notifyOfNewCommentsOnRankedAgendaItems']").val()).toBe(membership.notifyOfNewCommentsOnRankedAgendaItems());
+      expect(preferencesLi.find("[name='notifyOfNewNotesOnOwnAgendaItems']").val()).toBe(membership.notifyOfNewNotesOnOwnAgendaItems());
+      expect(preferencesLi.find("[name='notifyOfNewNotesOnRankedAgendaItems']").val()).toBe(membership.notifyOfNewNotesOnRankedAgendaItems());
     });
   });
 

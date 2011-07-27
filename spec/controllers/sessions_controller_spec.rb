@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe SessionsController do
-  let(:organization) { Organization.make }
+  let(:team) { Team.make }
   let(:user) { User.make(:password => "password") }
 
   describe "#create" do
     context "when the email address and password match an existing user" do
       context "when logged in as the default guest" do
         attr_reader :membership
-        before { @membership = organization.memberships.make(:user => user) }
+        before { @membership = team.memberships.make(:user => user) }
 
         it "logs the user in, and returns the current user id plus the user's initial dataset" do
           current_user.should == User.default_guest
@@ -25,14 +25,14 @@ describe SessionsController do
 
 
       context "when logged in as a special guest" do
-        it "creates a membership on the guest's organization for the user who logs in" do
-          login_as organization.guest
+        it "creates a membership on the guest's team for the user who logs in" do
+          login_as team.guest
 
-          user.should_not be_member_of(organization)
+          user.should_not be_member_of(team)
           xhr :post, :create, :user => { :email_address => user.email_address, :password => "password" }
           current_user.should == user
 
-          membership = user.memberships.find(:organization => organization)
+          membership = user.memberships.find(:team => team)
           membership.should be
 
           response_records.should include(membership)

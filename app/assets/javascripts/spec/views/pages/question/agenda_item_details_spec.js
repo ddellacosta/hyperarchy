@@ -1,17 +1,17 @@
 //= require spec/spec_helper
 
 describe("Views.Pages.Question.AgendaItemDetails", function() {
-  var agendaItemDetails, agendaItem, creator, question, organization;
+  var agendaItemDetails, agendaItem, creator, question, team;
 
   beforeEach(function() {
     renderLayout();
     Application.height(1000);
 
     agendaItemDetails = Application.questionPage.agendaItemDetails;
-    organization = Organization.createFromRemote({id: 42});
-    creator = organization.makeMember({id: 999, emailHash: 'blas', firstName: "Mr.", lastName: "Creator"});
+    team = Team.createFromRemote({id: 42});
+    creator = team.makeMember({id: 999, emailHash: 'blas', firstName: "Mr.", lastName: "Creator"});
     Application.currentUser(creator);
-    question = organization.questions().createFromRemote({id: 1, creatorId: 999, createdAt: 12});
+    question = team.questions().createFromRemote({id: 1, creatorId: 999, createdAt: 12});
     agendaItem = creator.agendaItems().createFromRemote({id: 1, questionId: 1, body: "Mustard.", details: "Pardon me. Do you have any Gray Poupon?", createdAt: 1308352736162});
 
     Application.questionPage.show();
@@ -92,7 +92,7 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
     });
 
     describe("on user switch", function() {
-      it("shows the edit button only when the current user is the creator of the agendaItem, an owner of the organization, or an admin", function() {
+      it("shows the edit button only when the current user is the creator of the agendaItem, an owner of the team, or an admin", function() {
         var otherUser = User.createFromRemote({id: 123});
 
         currentUserCanEdit = false;
@@ -204,7 +204,7 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
   });
 
   describe("showing and hiding the new form", function() {
-    it("hides comments and empties out and shows the form fields & create button when #showNewForm is called", function() {
+    it("hides notes and empties out and shows the form fields & create button when #showNewForm is called", function() {
       agendaItemDetails.editableBody.val("woweee!");
       agendaItemDetails.editableDetails.val("cocooo!");
       agendaItemDetails.cancelEdit();
@@ -222,7 +222,7 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
       expect(agendaItemDetails.createButton).toBeVisible();
       expect(agendaItemDetails.cancelEditButton).toBeHidden();
       expect(agendaItemDetails.updateButton).toBeHidden();
-      expect(agendaItemDetails.comments).toBeHidden();
+      expect(agendaItemDetails.notes).toBeHidden();
 
       expect(agendaItemDetails.avatar.user()).toBe(Application.currentUser());
       expect(agendaItemDetails.creatorName.text()).toBe(Application.currentUser().fullName());
@@ -234,7 +234,7 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
       expect(agendaItemDetails.createButton).toBeHidden();
       expect(agendaItemDetails.cancelEditButton).toBeHidden();
       expect(agendaItemDetails.updateButton).toBeHidden();
-      expect(agendaItemDetails.comments).toBeVisible();
+      expect(agendaItemDetails.notes).toBeVisible();
     });
   });
 
@@ -289,8 +289,8 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
 
       beforeEach(function() {
         spyOn(agendaItem, 'editableByCurrentUser').andReturn(true);
-        guest = organization.makeMember({id: 5, guest: true});
-        member = organization.makeMember({id: 6, emailAddress: "member@example.com"});
+        guest = team.makeMember({id: 5, guest: true});
+        member = team.makeMember({id: 6, emailAddress: "member@example.com"});
         Application.currentUser(guest);
 
         Application.questionPage.params({questionId: question.id(), agendaItemId: 'new'});
@@ -409,11 +409,11 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
       expect(agendaItemDetails.expanded()).toBeFalsy();
     });
 
-    it("does not show the comments if they are still loading", function() {
-      agendaItemDetails.comments.loading(true);
+    it("does not show the notes if they are still loading", function() {
+      agendaItemDetails.notes.loading(true);
       agendaItemDetails.editButton.click();
       agendaItemDetails.cancelEditButton.click();
-      expect(agendaItemDetails.comments).toBeHidden();
+      expect(agendaItemDetails.notes).toBeHidden();
     });
   });
 
@@ -508,7 +508,7 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
     });
   });
   
-  describe("adjustment of the comments height", function() {
+  describe("adjustment of the notes height", function() {
     var longText;
 
     beforeEach(function() {
@@ -517,32 +517,32 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
     });
 
     describe("when the details/body are assigned and when they change", function() {
-      it("adjusts the comments to fill the remaining available height", function() {
+      it("adjusts the notes to fill the remaining available height", function() {
         Application.questionPage.showAgendaItemDetails();
-        expectCommentsToHaveFullHeight();
+        expectNotesToHaveFullHeight();
 
         agendaItem.remotelyUpdated({body: longText});
-        expectCommentsToHaveFullHeight();
+        expectNotesToHaveFullHeight();
 
         agendaItem.remotelyUpdated({details: longText});
-        expectCommentsToHaveFullHeight();
+        expectNotesToHaveFullHeight();
       });
     });
 
     describe("when the window is resized", function() {
-      it("adjusts the comments to fill the remaining available height", function() {
+      it("adjusts the notes to fill the remaining available height", function() {
         Application.questionPage.width(1200);
         agendaItem.remotelyUpdated({details: longText});
 
         Application.questionPage.width(800);
         $(window).resize();
-        expectCommentsToHaveFullHeight();
+        expectNotesToHaveFullHeight();
       });
     });
 
-    function expectCommentsToHaveFullHeight() {
-      var commentsBottom = agendaItemDetails.comments.position().top + agendaItemDetails.comments.outerHeight();
-      expect(commentsBottom).toBe(agendaItemDetails.outerHeight() - parseInt(agendaItemDetails.css('padding-bottom')));
+    function expectNotesToHaveFullHeight() {
+      var notesBottom = agendaItemDetails.notes.position().top + agendaItemDetails.notes.outerHeight();
+      expect(notesBottom).toBe(agendaItemDetails.outerHeight() - parseInt(agendaItemDetails.css('padding-bottom')));
     }
   });
 
@@ -555,11 +555,11 @@ describe("Views.Pages.Question.AgendaItemDetails", function() {
   });
 
   describe("loading", function() {
-    it("assigns loading to the comments", function() {
+    it("assigns loading to the notes", function() {
       agendaItemDetails.loading(true);
-      expect(agendaItemDetails.comments.loading()).toBeTruthy();
+      expect(agendaItemDetails.notes.loading()).toBeTruthy();
       agendaItemDetails.loading(false);
-      expect(agendaItemDetails.comments.loading()).toBeFalsy();
+      expect(agendaItemDetails.notes.loading()).toBeFalsy();
     });
   });
 

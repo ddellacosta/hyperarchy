@@ -60,28 +60,28 @@ describe("Views.Layout", function() {
   });
 
   describe("#currentUser and #currentUserId", function() {
-    var organization, user1, user2
+    var team, user1, user2
 
     beforeEach(function() {
-      organization = Organization.createFromRemote({id: 1});
-      user1 = organization.makeMember({id: 1});
-      user2 = organization.makeMember({id: 2});
+      team = Team.createFromRemote({id: 1});
+      user1 = team.makeMember({id: 1});
+      user2 = team.makeMember({id: 2});
     });
 
-    it("updates lastVisited for the current user's membership to the current organization if they aren't a guest", function() {
-      Application.currentOrganization(organization);
+    it("updates lastVisited for the current user's membership to the current team if they aren't a guest", function() {
+      Application.currentTeam(team);
       useFakeServer();
       freezeTime();
 
       Application.currentUser(user1);
-      var user1Membership = organization.membershipForUser(user1);
+      var user1Membership = team.membershipForUser(user1);
       expect(Server.updates.length).toBe(1);
       expect(Server.lastUpdate.record).toBe(user1Membership);
       Server.lastUpdate.simulateSuccess();
       expect(user1Membership.lastVisited()).toBe(new Date());
 
       Application.currentUser(user2);
-      var user2Membership = organization.membershipForUser(user2);
+      var user2Membership = team.membershipForUser(user2);
       expect(Server.updates.length).toBe(1);
       expect(Server.lastUpdate.record).toBe(user2Membership);
       Server.lastUpdate.simulateSuccess();
@@ -103,31 +103,31 @@ describe("Views.Layout", function() {
     });
   });
 
-  describe("#currentOrganization / #currentOrganizationId", function() {
-    var organization1, organization2, member, guest, membership;
+  describe("#currentTeam / #currentTeamId", function() {
+    var team1, team2, member, guest, membership;
 
     beforeEach(function() {
-      organization1 = Organization.createFromRemote({id: 1, name: "Fujimoto's", privacy: "private"});
-      organization2 = Organization.createFromRemote({id: 2, name: "Hey Ya", privacy: "public"});
+      team1 = Team.createFromRemote({id: 1, name: "Fujimoto's", privacy: "private"});
+      team2 = Team.createFromRemote({id: 2, name: "Hey Ya", privacy: "public"});
       guest = User.createFromRemote({id: 11, guest: true});
       member = User.createFromRemote({id: 12, guest: false});
-      membership = member.memberships().createFromRemote({id: 9, organizationId: organization1.id()});
-      guest.memberships().createFromRemote({id: 9, organizationId: organization2.id()});
+      membership = member.memberships().createFromRemote({id: 9, teamId: team1.id()});
+      guest.memberships().createFromRemote({id: 9, teamId: team2.id()});
       Application.currentUser(guest);
     });
 
-    describe("#currentOrganizationId", function() {
+    describe("#currentTeamId", function() {
       describe("when the socket client has finished connecting", function() {
         beforeEach(function() {
           socketClient.transport.sessionid = 'fake-session-id';
           socketClient.emit('connect');
         });
 
-        it("subscribes to the organization's channel", function() {
-          Application.currentOrganizationId(organization2.id());
+        it("subscribes to the team's channel", function() {
+          Application.currentTeamId(team2.id());
           expect(jQuery.ajax).toHaveBeenCalledWith({
             type : 'post',
-            url : '/channel_subscriptions/organizations/' + organization2.id(),
+            url : '/channel_subscriptions/teams/' + team2.id(),
             data : { session_id : 'fake-session-id' },
             success: undefined,
             dataType: undefined
@@ -136,8 +136,8 @@ describe("Views.Layout", function() {
       });
 
       describe("when the socket client has not yet connected", function() {
-        it("subscribes to the organization's channel after the client connects", function() {
-          Application.currentOrganizationId(organization2.id());
+        it("subscribes to the team's channel after the client connects", function() {
+          Application.currentTeamId(team2.id());
 
           expect(jQuery.ajax).not.toHaveBeenCalled();
 
@@ -146,7 +146,7 @@ describe("Views.Layout", function() {
 
           expect(jQuery.ajax).toHaveBeenCalledWith({
             type : 'post',
-            url : '/channel_subscriptions/organizations/' + organization2.id(),
+            url : '/channel_subscriptions/teams/' + team2.id(),
             data : { session_id : 'fake-session-id' },
             success: undefined,
             dataType: undefined
@@ -155,33 +155,33 @@ describe("Views.Layout", function() {
       });
     });
 
-    describe("#currentOrganization", function() {
-      it("it changes the organization name or hides it when viewing social", function() {
-        var social = Organization.createFromRemote({id: 3, name: "Actionitems Social", social: true, privacy: "public"});
+    describe("#currentTeam", function() {
+      it("it changes the team name or hides it when viewing social", function() {
+        var social = Team.createFromRemote({id: 3, name: "Actionitems Social", social: true, privacy: "public"});
 
         $('#jasmine_content').html(Application);
 
-        Application.currentOrganizationId(organization1.id());
-        expect(Application.organizationName).toBeVisible();
-        expect(Application.organizationNameSeparator).toBeVisible();
-        expect(Application.organizationName.text()).toBe(organization1.name());
+        Application.currentTeamId(team1.id());
+        expect(Application.teamName).toBeVisible();
+        expect(Application.teamNameSeparator).toBeVisible();
+        expect(Application.teamName.text()).toBe(team1.name());
 
-        Application.currentOrganizationId(social.id());
-        expect(Application.organizationName).toBeHidden();
-        expect(Application.organizationNameSeparator).toBeHidden();
+        Application.currentTeamId(social.id());
+        expect(Application.teamName).toBeHidden();
+        expect(Application.teamNameSeparator).toBeHidden();
 
-        Application.currentOrganizationId(organization2.id());
-        expect(Application.organizationName).toBeVisible();
-        expect(Application.organizationNameSeparator).toBeVisible();
-        expect(Application.organizationName.text()).toBe(organization2.name());
+        Application.currentTeamId(team2.id());
+        expect(Application.teamName).toBeVisible();
+        expect(Application.teamNameSeparator).toBeVisible();
+        expect(Application.teamName.text()).toBe(team2.name());
       });
 
-      it("updates the visited_at field of the current user's membership to this organization if they aren't a guest", function() {
+      it("updates the visited_at field of the current user's membership to this team if they aren't a guest", function() {
         freezeTime();
         useFakeServer();
 
         Application.currentUser(member);
-        Application.currentOrganization(organization1);
+        Application.currentTeam(team1);
 
         expect(Server.updates.length).toBe(1);
         expect(Server.lastUpdate.record).toBe(membership);
@@ -189,23 +189,23 @@ describe("Views.Layout", function() {
         expect(membership.lastVisited()).toBe(new Date());
 
         Application.currentUser(guest);
-        Application.currentOrganization(organization2);
+        Application.currentTeam(team2);
         expect(Server.updates.length).toBe(0);
       });
     });
 
-    it("assigns currentOrganizationId when currentOrganization is assigned and vice versa", function() {
-      Application.currentOrganization(organization1);
-      expect(Application.currentOrganizationId()).toBe(organization1.id());
-      Application.currentOrganizationId(organization2.id());
-      expect(Application.currentOrganization()).toBe(organization2);
+    it("assigns currentTeamId when currentTeam is assigned and vice versa", function() {
+      Application.currentTeam(team1);
+      expect(Application.currentTeamId()).toBe(team1.id());
+      Application.currentTeamId(team2.id());
+      expect(Application.currentTeam()).toBe(team2);
     });
   });
 
   describe("when the socket client is disconnected", function() {
     beforeEach(function() {
       $("#jasmine_content").html(Application);
-      Application.currentOrganization(Organization.createFromRemote({id: 1}));
+      Application.currentTeam(Team.createFromRemote({id: 1}));
 
       expect(Application.disconnectDialog).toBeHidden();
       expect(Application.darkenedBackground).toBeHidden();
@@ -224,12 +224,12 @@ describe("Views.Layout", function() {
     });
 
     describe("if the client reconnects before the timeout occurs", function() {
-      it("cancels the timeout and resubscribes to the current organization with the reconnecting=1 param", function() {
+      it("cancels the timeout and resubscribes to the current team with the reconnecting=1 param", function() {
         socketClient.emit('connect');
 
         expect(jQuery.ajax).toHaveBeenCalledWith({
           type : 'post',
-          url : '/channel_subscriptions/organizations/' + Application.currentOrganizationId(),
+          url : '/channel_subscriptions/teams/' + Application.currentTeamId(),
           data : { session_id : 'fake-session-id', reconnecting: 1 },
           success: undefined,
           dataType: undefined
@@ -254,8 +254,8 @@ describe("Views.Layout", function() {
   describe("when the logo is clicked", function() {
     it("navigates to the current org", function() {
       spyOn(Application, 'showPage');
-      var org = Organization.createFromRemote({id: 1, name: "Boboland"});
-      Application.currentOrganization(org);
+      var org = Team.createFromRemote({id: 1, name: "Boboland"});
+      Application.currentTeam(org);
 
       Application.logoAndTitle.click()
       expect(Path.routes.current).toBe(org.url());
@@ -271,18 +271,18 @@ describe("Views.Layout", function() {
   });
 
   describe("the invite link", function() {
-    it("shows the invite link only for private organizations, and shows the invite box with the org's secret url when it is clicked", function() {
+    it("shows the invite link only for private teams, and shows the invite box with the org's secret url when it is clicked", function() {
       $('#jasmine_content').html(Application);
-      var privateOrg = Organization.createFromRemote({id: 1, name: "Private Eyes", privacy: "private"});
-      var publicOrg = Organization.createFromRemote({id: 2, name: "Public Enemies", privacy: "public"});
+      var privateOrg = Team.createFromRemote({id: 1, name: "Private Eyes", privacy: "private"});
+      var publicOrg = Team.createFromRemote({id: 2, name: "Public Enemies", privacy: "public"});
       var user = privateOrg.makeMember({id: 1});
       spyOn(privateOrg, 'secretUrl').andReturn('/this_is_so_secret');
       Application.currentUser(user);
 
-      Application.currentOrganization(publicOrg);
+      Application.currentTeam(publicOrg);
       expect(Application.inviteLink).not.toBeVisible();
 
-      Application.currentOrganization(privateOrg);
+      Application.currentTeam(privateOrg);
       expect(Application.inviteLink).toBeVisible();
 
       Application.inviteLink.click();
@@ -399,12 +399,12 @@ describe("Views.Layout", function() {
 
   describe("mixpanel tracking", function() {
     describe("when the current user changes", function() {
-      var organization, member, guest;
+      var team, member, guest;
 
       beforeEach(function() {
-        organization = Organization.createFromRemote({id: 1, name: "Data Miners"});
-        member = organization.makeMember({guest: false, firstName: "Phillip", lastName: "Seymour", id: 1});
-        guest  = organization.makeMember({guest: true, id: 2});
+        team = Team.createFromRemote({id: 1, name: "Data Miners"});
+        member = team.makeMember({guest: false, firstName: "Phillip", lastName: "Seymour", id: 1});
+        guest  = team.makeMember({guest: true, id: 2});
       });
 
       describe("if the user is NOT a guest", function() {

@@ -1,4 +1,4 @@
-_.constructor("QuestionComment", Model.Record, {
+_.constructor("QuestionNote", Model.Record, {
   constructorInitialize: function() {
     this.columns({
       questionId: 'key',
@@ -17,11 +17,11 @@ _.constructor("QuestionComment", Model.Record, {
   },
 
   editableByCurrentUser: function() {
-    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.organization().currentUserIsOwner();
+    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.team().currentUserIsOwner();
   },
 
-  organization: function() {
-    return this.question().organization();
+  team: function() {
+    return this.question().team();
   },
 
   formattedCreatedAt: function() {

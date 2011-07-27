@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe SandboxController do
-  attr_reader :organization, :other_organization, :question, :user
+  attr_reader :team, :other_team, :question, :user
 
   before do
-    @organization = Organization.make(:privacy => 'public')
-    @other_organization = Organization.make(:privacy => 'private')
-    @user = login_as organization.make_member
-    @question = organization.questions.make(:creator => user)
+    @team = Team.make(:privacy => 'public')
+    @other_team = Team.make(:privacy => 'private')
+    @user = login_as team.make_member
+    @question = team.questions.make(:creator => user)
   end
 
   describe "#fetch" do
@@ -21,7 +21,7 @@ describe SandboxController do
     context "when creating a legal record" do
       it "creates the record and returns its wire representation" do
         Question.count.should == 1
-        post :create, :relation => "questions", :field_values => Question.plan(:organization => organization)
+        post :create, :relation => "questions", :field_values => Question.plan(:team => team)
         response.should be_success
         Question.count.should == 2
         json = JSON.parse(response.body)
@@ -32,7 +32,7 @@ describe SandboxController do
     context "when creating an illegal record" do
       it "returns '403 forbidden'" do
         Question.count.should == 1
-        post :create, :relation => "questions", :field_values => Question.plan(:organization => other_organization)
+        post :create, :relation => "questions", :field_values => Question.plan(:team => other_team)
         Question.count.should == 1
         response.should be_forbidden
       end

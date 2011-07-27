@@ -278,8 +278,8 @@ describe Ranking do
     before do
       question = Question.make
       @agenda_item = question.agenda_items.make
-      @creator = agenda_item.question.organization.make_member
-      @other_member = agenda_item.question.organization.make_member
+      @creator = agenda_item.question.team.make_member
+      @other_member = agenda_item.question.team.make_member
       @ranking = Ranking.create!(:user => creator, :agenda_item => agenda_item, :position => 64)
     end
 

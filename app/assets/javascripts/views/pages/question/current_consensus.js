@@ -45,7 +45,7 @@ _.constructor('Views.Pages.Question.CurrentConsensus', Monarch.View.Template, {
 
     observeAgendaItems: function() {
       this.registerInterest('agendaItems', this.agendaItems(), 'onUpdate', function(agendaItem, changeset) {
-        if (changeset.commentCount || changeset.details) {
+        if (changeset.noteCount || changeset.details) {
           this.list.elementForRecord(agendaItem).showOrHideEllipsis();
         }
       }, this);

@@ -62,7 +62,7 @@ _.constructor('Views.Pages.Question.AgendaItemLi', Monarch.View.Template, {
     },
 
     showOrHideEllipsis: function() {
-      if (this.agendaItem.details() || this.agendaItem.commentCount() > 0) {
+      if (this.agendaItem.details() || this.agendaItem.noteCount() > 0) {
         this.ellipsis.show();
       } else {
         this.ellipsis.hide();

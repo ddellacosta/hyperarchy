@@ -1,4 +1,4 @@
-_.constructor("AgendaItemComment", Model.Record, {
+_.constructor("AgendaItemNote", Model.Record, {
   constructorInitialize: function() {
     this.columns({
       agendaItemId: 'key',
@@ -17,11 +17,11 @@ _.constructor("AgendaItemComment", Model.Record, {
   },
 
   editableByCurrentUser: function() {
-    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.organization().currentUserIsOwner();
+    return Application.currentUser().admin() || this.belongsToCurrentUser() || this.team().currentUserIsOwner();
   },
 
-  organization: function() {
-    return this.question().organization();
+  team: function() {
+    return this.question().team();
   },
 
   question: function() {

@@ -42,7 +42,7 @@ module Models
 
       it "makes the new user a member of social" do
         user = User.make
-        user.organizations.all.should == [Organization.social]
+        user.teams.all.should == [Team.social]
         user.memberships.first.tap do |m|
           m.role.should == 'member'
         end
@@ -74,24 +74,24 @@ module Models
       attr_reader :org_1, :org_2, :org_3
 
       before do
-        @org_1 = Organization.make(:privacy => "public")
-        @org_2 = Organization.make(:privacy => "read_only")
-        @org_3 = Organization.make(:privacy => "private")
+        @org_1 = Team.make(:privacy => "public")
+        @org_2 = Team.make(:privacy => "read_only")
+        @org_3 = Team.make(:privacy => "private")
       end
 
       context "if the user is a member" do
         attr_reader :member, :contents, :org_4, :membership_1, :membership_2
 
         before do
-          @org_4 = Organization.make(:privacy => "private")
+          @org_4 = Team.make(:privacy => "private")
 
           @member = User.make
-          @membership_1 = member.memberships.make(:organization => org_1)
-          @membership_2 = member.memberships.make(:organization => org_3)
+          @membership_1 = member.memberships.make(:team => org_1)
+          @membership_2 = member.memberships.make(:team => org_3)
           @contents = member.initial_repository_contents
         end
 
-        it "includes the member's user model, their memberships, all non-private organizations, and all private organizations that the user is a member of" do
+        it "includes the member's user model, their memberships, all non-private teams, and all private teams that the user is a member of" do
           contents.should include(member)
           contents.should include(membership_1)
           contents.should include(membership_2)
@@ -107,11 +107,11 @@ module Models
 
         before do
           @admin = User.make(:admin => true)
-          @membership = admin.memberships.make(:organization => org_1)
+          @membership = admin.memberships.make(:team => org_1)
           @contents = admin.initial_repository_contents
         end
 
-        it "includes the admin's user model, memberships, and all organizations" do
+        it "includes the admin's user model, memberships, and all teams" do
           contents.should include(admin)
           contents.should include(membership)
           contents.should include(org_1)
@@ -121,37 +121,37 @@ module Models
       end
     end
 
-    describe "#default_organization" do
+    describe "#default_team" do
       context "when the user has memberships" do
-        it "returns their last visited organization" do
-          organization_1 = Organization.make
-          organization_2 = Organization.make
+        it "returns their last visited team" do
+          team_1 = Team.make
+          team_2 = Team.make
           user = User.make
-          user.memberships.make(:organization => organization_1, :created_at => 3.hours.ago)
-          user.memberships.make(:organization => organization_2, :created_at => 1.hour.ago)
+          user.memberships.make(:team => team_1, :created_at => 3.hours.ago)
+          user.memberships.make(:team => team_2, :created_at => 1.hour.ago)
 
-          user.default_organization.should == organization_2
+          user.default_team.should == team_2
         end
       end
     end
 
-    describe "#guest_organization" do
+    describe "#guest_team" do
       context "if the user is a special guest" do
-        it "returns the organization they are a guest of" do
-          org = Organization.make
-          org.guest.guest_organization.should == org
+        it "returns the team they are a guest of" do
+          org = Team.make
+          org.guest.guest_team.should == org
         end
       end
 
       context "if the user is the default guest" do
         it "returns nil" do
-          User.default_guest.guest_organization.should be_nil
+          User.default_guest.guest_team.should be_nil
         end
       end
 
       context "if the user is a normal user" do
         it "returns nil" do
-          User.make.guest_organization.should be_nil
+          User.make.guest_team.should be_nil
         end
       end
     end
@@ -181,12 +181,12 @@ module Models
           User.users_to_notify('hourly').all.map(&:id).should =~ [m1, m2, m3, m4].map(&:user).map(&:id)
         end
 
-        def make_membership(questions, agenda_items, comments_on_ranked, comments_on_own, additional_attrs = {})
+        def make_membership(questions, agenda_items, notes_on_ranked, notes_on_own, additional_attrs = {})
           Membership.make(additional_attrs.merge(
             :notify_of_new_questions => questions,
             :notify_of_new_agenda_items => agenda_items,
-            :notify_of_new_comments_on_own_agenda_items => comments_on_ranked,
-            :notify_of_new_comments_on_ranked_agenda_items => comments_on_own
+            :notify_of_new_notes_on_own_agenda_items => notes_on_ranked,
+            :notify_of_new_notes_on_ranked_agenda_items => notes_on_own
           ))
         end
 

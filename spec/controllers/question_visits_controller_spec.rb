@@ -7,7 +7,7 @@ describe QuestionVisitsController do
 
     context "for a normal user" do
       before do
-        login_as question.organization.make_member
+        login_as question.team.make_member
       end
 
       context "when the question has never been visited" do

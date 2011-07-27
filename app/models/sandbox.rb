@@ -4,11 +4,11 @@ class Sandbox < Prequel::Sandbox
     @user = user
   end
 
-  expose :organizations do
+  expose :teams do
     if user.admin?
-      Organization.table
+      Team.table
     else
-      user.organizations | Organization.where(Organization[:privacy].neq("private"))
+      user.teams | Team.where(Team[:privacy].neq("private"))
     end
   end
 
@@ -21,11 +21,11 @@ class Sandbox < Prequel::Sandbox
   end
 
   expose :questions do
-    organizations.join_through(Question)
+    teams.join_through(Question)
   end
 
-  expose :question_comments do
-    questions.join_through(QuestionComment)
+  expose :question_notes do
+    questions.join_through(QuestionNote)
   end
 
   expose :agenda_items do
@@ -44,8 +44,8 @@ class Sandbox < Prequel::Sandbox
     questions.join_through(Ranking)
   end
 
-  expose :agenda_item_comments do
-    agenda_items.join_through(AgendaItemComment)
+  expose :agenda_item_notes do
+    agenda_items.join_through(AgendaItemNote)
   end
 
   def subscribe(*args)

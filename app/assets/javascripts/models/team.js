@@ -1,4 +1,4 @@
-_.constructor("Organization", Model.Record, {
+_.constructor("Team", Model.Record, {
   constructorProperties: {
     initialize: function() {
       this.columns({
@@ -37,7 +37,7 @@ _.constructor("Organization", Model.Record, {
   },
 
   subscribe: function(data) {
-    $.post('/channel_subscriptions/organizations/' + this.id(), data);
+    $.post('/channel_subscriptions/teams/' + this.id(), data);
   },
 
   fetchMoreQuestions: function() {
@@ -62,7 +62,7 @@ _.constructor("Organization", Model.Record, {
     var promise = $.ajax({
       url: "/questions",
       data: {
-        organization_id: this.id(),
+        team_id: this.id(),
         offset: offset,
         limit: limit
       },
@@ -136,7 +136,7 @@ _.constructor("Organization", Model.Record, {
   },
 
   url: function() {
-    return "/organizations/" + this.id();
+    return "/teams/" + this.id();
   },
 
   settingsUrl: function() {

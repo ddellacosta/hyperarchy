@@ -20,7 +20,7 @@ module Jobs
         user3_membership.update!(:notify_of_new_questions => period)
         user4_membership.update!(:notify_of_new_questions => 'never', :notify_of_new_agenda_items => period)
 
-        new_question = Organization.social.questions.make
+        new_question = Team.social.questions.make
 
         mock(user1.memberships.first).new_questions_in_period(period) { [new_question] }
         mock(user2.memberships.first).new_questions_in_period(period) { [new_question] }
@@ -45,7 +45,7 @@ module Jobs
         user1_membership = user1.memberships.first
         user1_membership.update!(:notify_of_new_questions => period)
 
-        new_question = Organization.social.questions.make
+        new_question = Team.social.questions.make
         user1.update!(:email_enabled => false)
 
         stub(user1.memberships.first).new_questions_in_period(period) { [new_question] }

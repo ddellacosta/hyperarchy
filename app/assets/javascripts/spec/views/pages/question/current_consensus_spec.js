@@ -77,7 +77,7 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
       user2.rankingsForQuestion(question).createFromRemote({agendaItemId: agendaItem2.id(), position: 64});
       user2.rankingsForQuestion(question).createFromRemote({agendaItemId: agendaItem3.id(), position: -64});
 
-      agendaItem1.remotelyUpdated({commentCount: 1});
+      agendaItem1.remotelyUpdated({noteCount: 1});
       agendaItem2.remotelyUpdated({details: "Arcata's full of nimby cryers"});
 
       currentConsensusView.agendaItems(question.agendaItems());
@@ -152,7 +152,7 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
 
     describe("showing and hiding of the ellipsis", function() {
       describe("when the agendaItems relation is assigned", function() {
-        it("shows the ellipsis for only those agendaItems that have details or comments", function() {
+        it("shows the ellipsis for only those agendaItems that have details or notes", function() {
           expect(agendaItem1Li.ellipsis).toBeVisible();
           expect(agendaItem2Li.ellipsis).toBeVisible();
           expect(agendaItem3Li.ellipsis).not.toBeVisible();
@@ -160,7 +160,7 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
       });
 
       describe("when agendaItems' details are updated", function() {
-        it("shows the ellipsis for only those agendaItems that have details or comments", function() {
+        it("shows the ellipsis for only those agendaItems that have details or notes", function() {
           agendaItem2.remotelyUpdated({details: ""});
           agendaItem3.remotelyUpdated({details: "Deer always die in car accidents."});
 
@@ -170,10 +170,10 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
         });
       });
 
-      describe("when agendaItem comments are created or removed", function() {
-        it("shows the ellipsis for only those agendaItems that have details or comments", function() {
-          agendaItem1.remotelyUpdated({commentCount: 0});
-          agendaItem3.remotelyUpdated({commentCount: 1});
+      describe("when agendaItem notes are created or removed", function() {
+        it("shows the ellipsis for only those agendaItems that have details or notes", function() {
+          agendaItem1.remotelyUpdated({noteCount: 0});
+          agendaItem3.remotelyUpdated({noteCount: 1});
 
           expect(agendaItem1Li.ellipsis).not.toBeVisible();
           expect(agendaItem2Li.ellipsis).toBeVisible();

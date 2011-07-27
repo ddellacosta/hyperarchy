@@ -4,7 +4,7 @@ module Views
       include HeadlineGeneration
 
       attr_reader :user, :period, :item, :membership_presenters
-      attr_accessor :new_question_count, :new_agenda_item_count, :new_comment_count
+      attr_accessor :new_question_count, :new_agenda_item_count, :new_note_count
 
       def initialize(user, period, item=nil)
         @user, @period, @item = user, period, item
@@ -17,7 +17,7 @@ module Views
       end
 
       def build_immediate_notification
-        membership = item.organization.memberships.find(:user => user)
+        membership = item.team.memberships.find(:user => user)
         @membership_presenters = [MembershipPresenter.new(membership, period, item)]
       end
 
@@ -31,12 +31,12 @@ module Views
       def gather_counts
         @new_question_count = 0
         @new_agenda_item_count = 0
-        @new_comment_count = 0
+        @new_note_count = 0
 
         membership_presenters.each do |presenter|
           self.new_question_count += presenter.new_question_count
           self.new_agenda_item_count += presenter.new_agenda_item_count
-          self.new_comment_count += presenter.new_comment_count
+          self.new_note_count += presenter.new_note_count
         end
       end
 
@@ -55,7 +55,7 @@ module Views
       def to_s(template)
         lines = []
         membership_presenters.each do |presenter|
-          lines.push(presenter.organization.name) if multiple_memberships?
+          lines.push(presenter.team.name) if multiple_memberships?
           lines.push("")
           presenter.add_lines(template, lines)
           lines.push("", "", "")

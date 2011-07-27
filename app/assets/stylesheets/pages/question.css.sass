@@ -178,7 +178,7 @@
     right: 5px
     font-size: $s-1
 
-  .comments .textarea-and-button // padding on answer-details div itself causes chrome problems when it scrolls and comments resizes
+  .notes .textarea-and-button // padding on answer-details div itself causes chrome problems when it scrolls and notes resizes
     padding-bottom: $line-height/2
 
 
@@ -286,7 +286,7 @@
     float: right
     margin-left: $s-3
 
-.comments
+.notes
   position: relative
   h2
     margin-bottom: $line-height / 2
@@ -310,7 +310,7 @@
     .button
       float:right
 
-.comment
+.note
   font-size: $s-1
   margin-top: ceil($line-height/3)
   padding: ($line-height/3 - 1)
@@ -341,7 +341,7 @@
     font-size: $s-2
     color: #888
 
-[class="comment destroyable"]:hover // help firefox
+[class="note destroyable"]:hover // help firefox
   .destroy
     display: block
 

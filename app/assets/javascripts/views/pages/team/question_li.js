@@ -1,4 +1,4 @@
-_.constructor('Views.Pages.Organization.QuestionLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Team.QuestionLi', Monarch.View.Template, {
   content: function() { with(this.builder) {
     li({'class': "question"}, function() {
       div(function() {

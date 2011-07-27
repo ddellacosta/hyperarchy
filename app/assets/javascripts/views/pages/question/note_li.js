@@ -1,6 +1,6 @@
-_.constructor('Views.Pages.Question.CommentLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.NoteLi', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
-    li({'class': "comment"}, function() {
+    li({'class': "note"}, function() {
       subview('avatar', Views.Components.Avatar, {imageSize: params.fullScreen ? 46 : 34});
       a({'class': "destroy"}, "×").ref('destroyButton').click('destroy');
       div({'class': "date"}).ref('createdAt');
@@ -13,16 +13,16 @@ _.constructor('Views.Pages.Question.CommentLi', Monarch.View.Template, {
 
   viewProperties: {
     initialize: function() {
-      this.avatar.user(this.comment.creator());
-      this.creatorName.bindText(this.comment.creator(), 'fullName');
-      this.body.markdown(this.comment.body());
-      this.createdAt.text(this.comment.formattedCreatedAt());
+      this.avatar.user(this.note.creator());
+      this.creatorName.bindText(this.note.creator(), 'fullName');
+      this.body.markdown(this.note.body());
+      this.createdAt.text(this.note.formattedCreatedAt());
       this.registerInterest(Application.signal('currentUser'), 'change', this.hitch('enableOrDisableDestruction'));
       this.enableOrDisableDestruction();
     },
 
     enableOrDisableDestruction: function() {
-      if (this.comment.editableByCurrentUser()) {
+      if (this.note.editableByCurrentUser()) {
         this.addClass('destroyable');
       } else {
         this.removeClass('destroyable');
@@ -30,7 +30,7 @@ _.constructor('Views.Pages.Question.CommentLi', Monarch.View.Template, {
     },
 
     destroy: function() {
-      this.comment.destroy();
+      this.note.destroy();
     }
   }
 });

@@ -2,17 +2,17 @@ class MembershipsController < ApplicationController
   before_filter :require_authentication, :only => :confirm
 
   def create
-    organization = Organization.find(:id => params[:organization_id], :membership_code => params[:code])
-    unless organization
-      redirect_to organization_url(current_user.default_organization)
+    team = Team.find(:id => params[:team_id], :membership_code => params[:code])
+    unless team
+      redirect_to team_url(current_user.default_team)
       return
     end
     if current_user.guest?
-      set_current_user(organization.guest)
-    elsif !current_user.memberships.find(:organization => organization)
-      current_user.memberships.create!(:organization => organization)
+      set_current_user(team.guest)
+    elsif !current_user.memberships.find(:team => team)
+      current_user.memberships.create!(:team => team)
     end
     
-    redirect_to organization_url(organization)
+    redirect_to team_url(team)
   end
 end

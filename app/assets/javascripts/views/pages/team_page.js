@@ -1,6 +1,6 @@
-_.constructor('Views.Pages.Organization', Monarch.View.Template, {
+_.constructor('Views.Pages.Team', Monarch.View.Template, {
   content: function() { with(this.builder) {
-    div({id: "organization"}, function() {
+    div({id: "team"}, function() {
 
       div({id: "headline"}, function() {
         a({'class': "new button"}, "Ask A Question").ref('newQuestionButton').click('newQuestion');
@@ -9,7 +9,7 @@ _.constructor('Views.Pages.Organization', Monarch.View.Template, {
 
       subview("questionsList", Views.Components.SortedList, {
         buildElement: function(question) {
-          return Views.Pages.Organization.QuestionLi.toView({question: question});
+          return Views.Pages.Team.QuestionLi.toView({question: question});
         }
       });
 
@@ -24,25 +24,25 @@ _.constructor('Views.Pages.Organization', Monarch.View.Template, {
       $(window).scroll(this.hitch('fetchIfNeeded'));
     },
 
-    organization: {
-      change: function(organization) {
-        Application.currentOrganizationId(organization.id());
+    team: {
+      change: function(team) {
+        Application.currentTeamId(team.id());
         this.questionsList.relation(null);
         this.loading(true);
 
-        organization.trackView();
+        team.trackView();
 
-        return organization.fetchMoreQuestions()
+        return team.fetchMoreQuestions()
           .success(this.bind(function() {
             this.stopLoadingIfNeeded();
-            this.questionsList.relation(organization.questions());
+            this.questionsList.relation(team.questions());
           }));
       }
     },
 
     params: {
       write: function(newParams, oldParams) {
-        if (oldParams && newParams.organizationId === oldParams.organizationId) {
+        if (oldParams && newParams.teamId === oldParams.teamId) {
           Application.scrollTop(this.previousScrollPosition || 0);
         } else {
           Application.scrollTop(0);
@@ -50,9 +50,9 @@ _.constructor('Views.Pages.Organization', Monarch.View.Template, {
       },
 
       change: function(params) {
-        var organization = Organization.find(params.organizationId);
-        if (!organization) History.replaceState(null,  null, Application.currentUser().defaultOrganization().url());
-        this.organization(organization);
+        var team = Team.find(params.teamId);
+        if (!team) History.replaceState(null,  null, Application.currentUser().defaultTeam().url());
+        this.team(team);
       }
     },
 
@@ -69,12 +69,12 @@ _.constructor('Views.Pages.Organization', Monarch.View.Template, {
       if (!this.is(':visible')) return;
       if (!this.questionsList.relation()) return;
       if (this.remainingScrollHeight() < this.listBottom.height() * 2) {
-        this.organization().fetchMoreQuestions().success(this.hitch('stopLoadingIfNeeded'));
+        this.team().fetchMoreQuestions().success(this.hitch('stopLoadingIfNeeded'));
       }
     },
 
     stopLoadingIfNeeded: function() {
-      if (this.organization().numQuestionsFetched >= this.organization().questionCount()) {
+      if (this.team().numQuestionsFetched >= this.team().questionCount()) {
         this.loading(false);
       }
     },

@@ -1,4 +1,4 @@
-_.constructor('Views.Pages.OrganizationSettings.MembershipLi', Monarch.View.Template, {
+_.constructor('Views.Pages.TeamSettings.MembershipLi', Monarch.View.Template, {
   content: function() { with(this.builder) {
     tr(function() {
       td().ref('name');

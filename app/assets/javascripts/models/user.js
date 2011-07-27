@@ -26,13 +26,13 @@ _.constructor("User", Model.Record, {
     this.hasMany('memberships');
     this.hasMany('questionVisits');
 
-    this.relatesToMany('organizations', function() {
-      return this.memberships().joinThrough(Organization);
+    this.relatesToMany('teams', function() {
+      return this.memberships().joinThrough(Team);
     });
 
-    this.relatesToMany('organizationsPermittedToInvite', function() {
-      return this.memberships().where({role: "owner"}).joinThrough(Organization)
-        .union(this.organizations().where({membersCanInvite: true}));
+    this.relatesToMany('teamsPermittedToInvite', function() {
+      return this.memberships().where({role: "owner"}).joinThrough(Team)
+        .union(this.teams().where({membersCanInvite: true}));
     });
   },
 
@@ -77,8 +77,8 @@ _.constructor("User", Model.Record, {
     return baseUrl + "/avatar/" + this.emailHash() + "?s=" + size.toString() + "&d=404"
   },
 
-  defaultOrganization: function() {
-    return this.memberships().orderBy(Membership.lastVisited.desc()).first().organization();
+  defaultTeam: function() {
+    return this.memberships().orderBy(Membership.lastVisited.desc()).first().team();
   },
 
   rankingsForQuestion: function(question) {

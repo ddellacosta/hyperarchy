@@ -7,13 +7,13 @@ module Jobs
 
     describe "#perform" do
       it "sends a NotificationMailer.notification for every user to notify immediately" do
-        organization = question.organization
-        user1 = organization.make_member
-        user2 = organization.make_member
-        user3 = organization.make_member
-        user1_membership = organization.memberships.find(:user => user1)
-        user2_membership = organization.memberships.find(:user => user2)
-        user3_membership = organization.memberships.find(:user => user3)
+        team = question.team
+        user1 = team.make_member
+        user2 = team.make_member
+        user3 = team.make_member
+        user1_membership = team.memberships.find(:user => user1)
+        user2_membership = team.memberships.find(:user => user2)
+        user3_membership = team.memberships.find(:user => user3)
         user1_membership.update!(:notify_of_new_questions => 'immediately')
         user2_membership.update!(:notify_of_new_questions => 'immediately')
         user3_membership.update!(:notify_of_new_questions => 'never')
@@ -32,10 +32,10 @@ module Jobs
       end
 
       it "doesn't send notifications to users with email disabled" do
-        organization = question.organization
-        user1 = organization.make_member
+        team = question.team
+        user1 = team.make_member
         user1.update!(:email_enabled => false)
-        user1_membership = organization.memberships.find(:user => user1)
+        user1_membership = team.memberships.find(:user => user1)
         user1_membership.update!(:notify_of_new_questions => 'immediately')
 
         dont_allow(NotificationMailer).notification

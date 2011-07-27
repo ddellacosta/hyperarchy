@@ -1,16 +1,16 @@
-_.constructor('Views.Pages.Question.Comments', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.Notes', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
-    div({'class': "comments"}, function() {
+    div({'class': "notes"}, function() {
       h2("Discussion").ref('header');
       subview('list', Views.Components.SortedList, {
-        buildElement: function(comment) {
-          return Views.Pages.Question.CommentLi.toView({comment: comment, fullScreen: (params && params.fullScreen)});
+        buildElement: function(note) {
+          return Views.Pages.Question.NoteLi.toView({note: note, fullScreen: (params && params.fullScreen)});
         }
       });
 
       div({'class': "textarea-and-button"}, function() {
         textarea().ref('textarea').bind('keydown', 'return', 'create');
-        a({'class': "create button"}, "Add Comment").ref('createButton').click('create');
+        a({'class': "create button"}, "Add Note").ref('createButton').click('create');
         div({'class': "clearfix"});
       }).ref('textareaAndButton');
     });
@@ -22,9 +22,9 @@ _.constructor('Views.Pages.Question.Comments', Monarch.View.Template, {
       this.autoScroll = true;
     },
 
-    comments: {
-      change: function(comments) {
-        this.list.relation(comments);
+    notes: {
+      change: function(notes) {
+        this.list.relation(notes);
         this.defer(this.adjustListHeight);
       }
     },
@@ -42,8 +42,8 @@ _.constructor('Views.Pages.Question.Comments', Monarch.View.Template, {
 
       this.scrollToBottom();
       this.autoScroll = true;
-      this.comments().create({body: this.textarea.val()}).success(function(comment) {
-        comment.trackCreate();
+      this.notes().create({body: this.textarea.val()}).success(function(note) {
+        note.trackCreate();
       });
 
       this.textarea.val("");

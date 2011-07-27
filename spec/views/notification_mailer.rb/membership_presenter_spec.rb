@@ -8,22 +8,22 @@ module Views
         Membership.make(
           :notify_of_new_questions => new_questions,
           :notify_of_new_agenda_items => new_agenda_items,
-          :notify_of_new_comments_on_own_agenda_items => new_comments_on_own_agenda_items,
-          :notify_of_new_comments_on_ranked_agenda_items => new_comments_on_ranked_agenda_items
+          :notify_of_new_notes_on_own_agenda_items => new_notes_on_own_agenda_items,
+          :notify_of_new_notes_on_ranked_agenda_items => new_notes_on_ranked_agenda_items
         )
       end
 
       let(:new_questions) { 'hourly' }
       let(:new_agenda_items) { 'hourly' }
-      let(:new_comments_on_own_agenda_items) { 'hourly' }
-      let(:new_comments_on_ranked_agenda_items) { 'hourly' }
+      let(:new_notes_on_own_agenda_items) { 'hourly' }
+      let(:new_notes_on_ranked_agenda_items) { 'hourly' }
 
       before do
         stub(membership) do |m|
           m.new_questions_in_period('hourly') { [] }
           m.new_agenda_items_in_period('hourly') { [] }
-          m.new_comments_on_ranked_agenda_items_in_period('hourly') { [] }
-          m.new_comments_on_own_agenda_items_in_period('hourly') { [] }
+          m.new_notes_on_ranked_agenda_items_in_period('hourly') { [] }
+          m.new_notes_on_own_agenda_items_in_period('hourly') { [] }
         end
       end
 
@@ -45,20 +45,20 @@ module Views
         end
       end
 
-      describe "when the user elects not to receive new comment notifications on their own agenda_items for this period" do
-        let(:new_comments_on_own_agenda_items) { 'immediately' }
+      describe "when the user elects not to receive new note notifications on their own agenda_items for this period" do
+        let(:new_notes_on_own_agenda_items) { 'immediately' }
 
         it "does not query them from the membership" do
-          dont_allow(membership).new_comments_on_own_agenda_items_in_period
+          dont_allow(membership).new_notes_on_own_agenda_items_in_period
           MembershipPresenter.new(membership, 'hourly', nil)
         end
       end
 
-      describe "when the user elects not to receive new comment notifications on agenda_items they have ranked for this period" do
-        let(:new_comments_on_ranked_agenda_items) { 'daily' }
+      describe "when the user elects not to receive new note notifications on agenda_items they have ranked for this period" do
+        let(:new_notes_on_ranked_agenda_items) { 'daily' }
 
         it "does not query them from the membership" do
-          dont_allow(membership).new_comments_on_ranked_agenda_items_in_period
+          dont_allow(membership).new_notes_on_ranked_agenda_items_in_period
           MembershipPresenter.new(membership, 'hourly', nil)
         end
       end
@@ -68,8 +68,8 @@ module Views
           mock(membership) do |m|
             m.new_questions_in_period('hourly') { [] }
             m.new_agenda_items_in_period('hourly') { [] }
-            m.new_comments_on_ranked_agenda_items_in_period('hourly') { [] }
-            m.new_comments_on_own_agenda_items_in_period('hourly') { [] }
+            m.new_notes_on_ranked_agenda_items_in_period('hourly') { [] }
+            m.new_notes_on_own_agenda_items_in_period('hourly') { [] }
           end
           MembershipPresenter.new(membership, 'hourly', nil)
         end

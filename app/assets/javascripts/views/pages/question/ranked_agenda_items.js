@@ -127,7 +127,7 @@ _.constructor('Views.Pages.Question.RankedAgendaItems', Monarch.View.Template, {
     },
 
     currentUserCanRank: function() {
-      return Application.currentOrganization().currentUserCanParticipate()
+      return Application.currentTeam().currentUserCanParticipate()
     },
 
     handleListReceive: function(event, ui) {

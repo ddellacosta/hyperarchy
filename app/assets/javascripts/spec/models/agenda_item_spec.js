@@ -2,12 +2,12 @@
 
 describe("AgendaItem", function() {
   describe("#editableByCurrentUser()", function() {
-    var organization, agendaItem, admin, owner, creator, otherUser, organization;
+    var team, agendaItem, admin, owner, creator, otherUser, team;
     beforeEach(function() {
-      organization = Organization.createFromRemote({id: 1});
-      var question = organization.questions().createFromRemote({id: 1});
+      team = Team.createFromRemote({id: 1});
+      var question = team.questions().createFromRemote({id: 1});
       owner = User.createFromRemote({id: 1});
-      organization.memberships().createFromRemote({userId: owner.id(), role: 'owner'});
+      team.memberships().createFromRemote({userId: owner.id(), role: 'owner'});
       admin = User.createFromRemote({id: 2, admin: true});
       otherUser = User.createFromRemote({id: 3});
       creator = User.createFromRemote({id: 4});
@@ -16,7 +16,7 @@ describe("AgendaItem", function() {
       attachLayout();
     });
 
-    it("returns true only if the current user is an admin, an owner of the agendaItem's organization, or the creator of the agendaItem", function() {
+    it("returns true only if the current user is an admin, an owner of the agendaItem's team, or the creator of the agendaItem", function() {
       Application.currentUser(admin);
       expect(agendaItem.editableByCurrentUser()).toBeTruthy();
 

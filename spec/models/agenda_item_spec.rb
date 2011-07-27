@@ -2,11 +2,11 @@ require 'spec_helper'
 
 module Models
   describe AgendaItem do
-    attr_reader :question, :organization, :creator, :agenda_item
+    attr_reader :question, :team, :creator, :agenda_item
     before do
       @question = Question.make
-      @organization = question.organization
-      @creator = organization.make_member
+      @team = question.team
+      @creator = team.make_member
       set_current_user(creator)
       @agenda_item = question.agenda_items.make
     end
@@ -19,25 +19,25 @@ module Models
       describe "before create" do
         it "assigns the creator to the Model::Record.current_user" do
           set_current_user(User.make)
-          question.organization.memberships.make(:user => current_user)
+          question.team.memberships.make(:user => current_user)
 
           agenda_item = question.agenda_items.create(:body => "foo")
           agenda_item.creator.should == current_user
         end
 
-        it "if the creator is not a member of the organization, makes them one (as long as the org is public)" do
+        it "if the creator is not a member of the team, makes them one (as long as the org is public)" do
           set_current_user(User.make)
-          current_user.memberships.where(:organization => organization).should be_empty
+          current_user.memberships.where(:team => team).should be_empty
 
-          organization.update(:privacy => "private")
+          team.update(:privacy => "private")
           expect do
             question.agenda_items.create(:body => "foo")
           end.should raise_error(SecurityError)
 
-          organization.update(:privacy => "public")
+          team.update(:privacy => "public")
           agenda_item = question.agenda_items.create(:body => "foo")
 
-          current_user.memberships.where(:organization => organization).size.should == 1
+          current_user.memberships.where(:team => team).size.should == 1
         end
       end
 
@@ -141,14 +141,14 @@ module Models
       end
 
       describe "#before_destroy" do
-        it "destroys any rankings, comments, and majorities associated with the agenda_item, but does not change the updated_at time of associated votes" do
+        it "destroys any rankings, notes, and majorities associated with the agenda_item, but does not change the updated_at time of associated votes" do
           user_1 = User.make
           user_2 = User.make
 
           agenda_item_1 = question.agenda_items.make(:body => "foo")
           agenda_item_2 = question.agenda_items.make(:body => "bar")
-          comment_1 = agenda_item_1.comments.make
-          comment_2 = agenda_item_1.comments.make
+          note_1 = agenda_item_1.notes.make
+          note_2 = agenda_item_1.notes.make
 
           freeze_time
           voting_time = Time.now
@@ -160,7 +160,7 @@ module Models
           Ranking.where(:agenda_item_id => agenda_item_1.id).size.should == 2
           Majority.where(:winner_id => agenda_item_1.id).size.should == 1
           Majority.where(:loser_id => agenda_item_1.id).size.should == 1
-          AgendaItemComment.where(:agenda_item_id => agenda_item_1.id).size.should == 2
+          AgendaItemNote.where(:agenda_item_id => agenda_item_1.id).size.should == 2
 
           question.votes.size.should == 2
           question.votes.each do |vote|
@@ -174,7 +174,7 @@ module Models
           Ranking.where(:agenda_item_id => agenda_item_1.id).should be_empty
           Majority.where(:winner_id => agenda_item_1.id).should be_empty
           Majority.where(:loser_id => agenda_item_1.id).should be_empty
-          AgendaItemComment.where(:agenda_item_id => agenda_item_1.id).should be_empty
+          AgendaItemNote.where(:agenda_item_id => agenda_item_1.id).should be_empty
 
           question.votes.size.should == 1
           question.votes.first.updated_at.should == voting_time
@@ -183,7 +183,7 @@ module Models
     end
 
     describe "#users_to_notify_immediately" do
-      it "returns the members of the agenda_item's organization who have their agenda_item notifaction preference set to 'immediately' " +
+      it "returns the members of the agenda_item's team who have their agenda_item notifaction preference set to 'immediately' " +
           "and who voted on the agenda_item's question and who did not create the agenda_item" do
         notify1 = User.make
         notify2 = User.make
@@ -195,11 +195,11 @@ module Models
         dont_notify1.votes.create!(:question => question)
         creator.votes.create!(:question => question)
 
-        organization.memberships.make(:user => notify1, :notify_of_new_agenda_items => 'immediately')
-        organization.memberships.make(:user => notify2, :notify_of_new_agenda_items => 'immediately')
-        organization.memberships.make(:user => dont_notify1, :notify_of_new_agenda_items => 'hourly')
-        organization.memberships.make(:user => dont_notify2, :notify_of_new_agenda_items => 'immediately')
-        organization.memberships.find(:user => creator).update!(:notify_of_new_agenda_items => 'immediately')
+        team.memberships.make(:user => notify1, :notify_of_new_agenda_items => 'immediately')
+        team.memberships.make(:user => notify2, :notify_of_new_agenda_items => 'immediately')
+        team.memberships.make(:user => dont_notify1, :notify_of_new_agenda_items => 'hourly')
+        team.memberships.make(:user => dont_notify2, :notify_of_new_agenda_items => 'immediately')
+        team.memberships.find(:user => creator).update!(:notify_of_new_agenda_items => 'immediately')
 
         agenda_item.users_to_notify_immediately.all.should =~ [notify1, notify2]
       end
@@ -215,10 +215,10 @@ module Models
       attr_reader :member, :owner, :non_member, :membership, :agenda_item
 
       before do
-        @member = question.organization.make_member
-        @owner = question.organization.make_owner
+        @member = question.team.make_member
+        @owner = question.team.make_owner
         @non_member = User.make
-        @membership = question.organization.memberships.make(:user => member)
+        @membership = question.team.memberships.make(:user => member)
         @agenda_item = question.agenda_items.make(:body => "Hey you!")
       end
 
@@ -249,10 +249,10 @@ module Models
 
       describe "#can_create?" do
         before do
-          question.organization.update(:privacy => "read_only")
+          question.team.update(:privacy => "read_only")
         end
 
-        context "if the given question's organization is non-public" do
+        context "if the given question's team is non-public" do
           specify "only members create agenda_items" do
             set_current_user(member)
             question.agenda_items.make_unsaved.can_create?.should be_true
@@ -262,9 +262,9 @@ module Models
           end
         end
 
-        context "if the given question's organization is public" do
+        context "if the given question's team is public" do
           before do
-            question.organization.update(:privacy => "public")
+            question.team.update(:privacy => "public")
           end
 
           specify "non-guest users can create agenda_items" do
@@ -278,7 +278,7 @@ module Models
       end
 
       describe "#can_update? and #can_destroy?" do
-        specify "only admins, organization owners, and the agenda_item creator can destroy it or update its body and details" do
+        specify "only admins, team owners, and the agenda_item creator can destroy it or update its body and details" do
           set_current_user(non_member)
           agenda_item.can_update?.should be_false
           agenda_item.can_destroy?.should be_false

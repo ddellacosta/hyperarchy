@@ -2,8 +2,8 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "question"}, function() {
       div({id: "subheader"}, function() {
-        a({href: "javascript:void"}, "Back to Questions").ref('organizationLink').click(function() {
-          History.pushState(null, null, this.question().organization().url());
+        a({href: "javascript:void"}, "Back to Questions").ref('teamLink').click(function() {
+          History.pushState(null, null, this.question().team().url());
           return false;
         });
       });
@@ -78,7 +78,7 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       div({'class': 'date'}).ref('createdAt');
     }).ref('creator');
 
-    subview('comments', Views.Pages.Question.Comments);
+    subview('notes', Views.Pages.Question.Notes);
   }},
 
   column2: function() { with(this.builder) {
@@ -116,8 +116,8 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       this.editableBody.elastic();
       this.editableDetails.elastic();
       this.editableBody.bind('elastic', this.hitch('adjustColumnTop'));
-      this.editableDetails.bind('elastic', this.hitch('adjustCommentsHeight'));
-      $(window).resize(this.hitch('adjustCommentsHeight'));
+      this.editableDetails.bind('elastic', this.hitch('adjustNotesHeight'));
+      $(window).resize(this.hitch('adjustNotesHeight'));
 
       Application.onCurrentUserChange(function(currentUser) {
         if (this.question()) {
@@ -200,9 +200,9 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
         relationsToFetch.push(AgendaItem.where({questionId: params.questionId}).join(User).on(AgendaItem.creatorId.eq(User.id))); // agendaItems
         relationsToFetch.push(Vote.where({questionId: params.questionId}).joinTo(User)); // votes
         relationsToFetch.push(Application.currentUser().rankings().where({questionId: params.questionId})); // current user's rankings
-        relationsToFetch.push(QuestionComment.where({questionId: params.questionId}).join(User).on(QuestionComment.creatorId.eq(User.id))); // question comments and commenters
+        relationsToFetch.push(QuestionNote.where({questionId: params.questionId}).join(User).on(QuestionNote.creatorId.eq(User.id))); // question notes and noters
 
-        this.comments.loading(true);
+        this.notes.loading(true);
         this.votes.loading(true);
       }
 
@@ -211,7 +211,7 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       }
 
       if (params.agendaItemId && params.agendaItemId !== "new") {
-        relationsToFetch.push(AgendaItemComment.where({agendaItemId: params.agendaItemId}).join(User).on(AgendaItemComment.creatorId.eq(User.id))); // agendaItem comments and commenters
+        relationsToFetch.push(AgendaItemNote.where({agendaItemId: params.agendaItemId}).join(User).on(AgendaItemNote.creatorId.eq(User.id))); // agendaItem notes and noters
         this.agendaItemDetails.loading(true);
       } else {
         this.rankedAgendaItems.loading(true);
@@ -227,26 +227,26 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       this.rankedAgendaItems.loading(false);
       this.agendaItemDetails.loading(false);
       this.votes.loading(false);
-      this.comments.loading(false);
+      this.notes.loading(false);
 
       var question = Question.find(params.questionId);
 
       if (!question) {
-        History.pushState(null, null, Application.currentUser().defaultOrganization().url());
+        History.pushState(null, null, Application.currentUser().defaultTeam().url());
         return;
       }
 
       this.question(question);
       this.currentConsensus.agendaItems(question.agendaItems());
       this.votes.votes(question.votes());
-      this.comments.comments(question.comments());
+      this.notes.notes(question.notes());
 
       if (params.agendaItemId) {
         var agendaItem = AgendaItem.find(params.agendaItemId);
         this.currentConsensus.selectedAgendaItem(agendaItem);
         this.agendaItemDetails.agendaItem(agendaItem);
         if (agendaItem) {
-          this.agendaItemDetails.comments.comments(agendaItem.comments());
+          this.agendaItemDetails.notes.notes(agendaItem.notes());
         } else if (params.agendaItemId === 'new') {
           this.agendaItemDetails.showNewForm();
         } else {
@@ -267,9 +267,9 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
         this.avatar.user(question.creator());
         this.body.bindMarkdown(question, 'body');
 
-        var organization = question.organization();
-        Application.currentOrganization(organization);
-        if (organization.isPublic()) {
+        var team = question.team();
+        Application.currentTeam(team);
+        if (team.isPublic()) {
           this.facebookButton.show();
           this.twitterButton.show();
         } else {
@@ -278,7 +278,7 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
         }
 
         this.details.bindMarkdown(question, 'details');
-        this.comments.comments(question.comments());
+        this.notes.notes(question.notes());
         this.avatar.user(question.creator());
         this.creatorName.bindText(question.creator(), 'fullName');
         this.createdAt.text(question.formattedCreatedAt());
@@ -289,10 +289,10 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
         this.registerInterest(question, 'onUpdate', this.handleQuestionUpdate);
         this.handleQuestionUpdate();
         this.registerInterest(question, 'onDestroy', this.bind(function() {
-          if (this.is(':visible')) History.pushState(null, null, Application.currentOrganization().url());
+          if (this.is(':visible')) History.pushState(null, null, Application.currentTeam().url());
         }));
 
-        this.adjustCommentsHeight();
+        this.adjustNotesHeight();
         question.trackView();
       }
     },
@@ -381,7 +381,7 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
 
     adjustColumnTop: function() {
       this.columns.css('top', this.columnTopPosition());
-      this.adjustCommentsHeight();
+      this.adjustNotesHeight();
     },
 
     columnTopPosition: function() {
@@ -394,8 +394,8 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       return Math.round(quantizedHeadlineHeight + distanceFromHeadline + subheaderHeight);
     },
 
-    adjustCommentsHeight: function() {
-      this.comments.fillVerticalSpace(this.columns);
+    adjustNotesHeight: function() {
+      this.notes.fillVerticalSpace(this.columns);
     },
 
     showOrHideMutateButtons: function() {

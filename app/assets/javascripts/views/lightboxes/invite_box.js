@@ -8,7 +8,7 @@ _.constructor('Views.Lightboxes.InviteBox', Views.Lightboxes.Lightbox, {
 
   viewProperties: {
     afterShow: function() {
-      var secretUrl = Application.currentOrganization().secretUrl();
+      var secretUrl = Application.currentTeam().secretUrl();
       this.secretUrl.val(secretUrl);
       this.selectSecretUrl();
       this.secretUrl.mouseup(this.hitch('selectSecretUrl'));

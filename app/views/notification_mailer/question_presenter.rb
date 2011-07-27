@@ -23,10 +23,10 @@ module Views
         agenda_item_presenters_by_agenda_item[agenda_item] = AgendaItemPresenter.new(agenda_item, true)
       end
 
-      def add_new_comment(comment)
-        agenda_item = comment.agenda_item
+      def add_new_note(note)
+        agenda_item = note.agenda_item
         build_agenda_item_presenter_if_needed(agenda_item)
-        agenda_item_presenters_by_agenda_item[agenda_item].add_new_comment(comment)
+        agenda_item_presenters_by_agenda_item[agenda_item].add_new_note(note)
       end
 
       def build_agenda_item_presenter_if_needed(agenda_item)

@@ -1,13 +1,13 @@
 //= require spec/spec_helper
 
 describe("Views.Pages.Account", function() {
-  var currentUser, membership, organization, accountPage;
+  var currentUser, membership, team, accountPage;
 
   beforeEach(function() {
     renderLayout();
-    organization = Organization.createFromRemote({id: 1, name: "Bad Bob's"});
+    team = Team.createFromRemote({id: 1, name: "Bad Bob's"});
     currentUser = User.createFromRemote({id: 1, firstName: "First", lastName: "Last", emailAddress: "email@example.com", emailEnabled: true});
-    membership = currentUser.memberships().createFromRemote({id: 1, organizationId: organization.id()});
+    membership = currentUser.memberships().createFromRemote({id: 1, teamId: team.id()});
     Application.showPage('account', {userId: 1})
     accountPage = Application.accountPage;
   });
@@ -21,12 +21,12 @@ describe("Views.Pages.Account", function() {
       expect(accountPage.membershipPreferences.relation()).toBe(currentUser.memberships());
     });
 
-    it("assigns the current organization to the user's default org", function() {
-      expect(Application.currentOrganization()).toBe(currentUser.defaultOrganization());
+    it("assigns the current team to the user's default org", function() {
+      expect(Application.currentTeam()).toBe(currentUser.defaultTeam());
     });
 
     it("disables the membership preferences if the user has email disabled", function() {
-      organization.makeMember({id: 2, emailEnabled: false});
+      team.makeMember({id: 2, emailEnabled: false});
       Application.showPage('account', {userId: 2})
       
       expect(accountPage.membershipPreferences).toHaveClass('disabled');

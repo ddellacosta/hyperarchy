@@ -18,7 +18,7 @@ class PasswordResetsController < ApplicationController
 
     user.update(:password => params[:password])
     set_current_user(user)
-    redirect_to(organization_url(user.default_organization))
+    redirect_to(team_url(user.default_team))
   end
 
   protected
