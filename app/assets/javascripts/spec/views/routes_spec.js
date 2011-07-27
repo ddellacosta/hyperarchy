@@ -7,21 +7,33 @@ describe("Routes", function() {
     defaultTeam = Team.createFromRemote({id: 23});
     defaultGuest = User.createFromRemote({id: 1, defaultGuest: true, guest: true});
     member = defaultTeam.makeMember({id: 2});
-    spyOn(defaultGuest, 'defaultTeam').andReturn(defaultTeam);
+    spyOn(defaultGuest, 'defaultTeam').andReturn(null);
     spyOn(member, 'defaultTeam').andReturn(defaultTeam);
     Application.currentUser(defaultGuest);
     Application.currentTeam(defaultTeam);
   });
 
   describe("/", function() {
-    it("navigates to the current user's default team page", function() {
-      spyOn(_, 'defer').andCallFake(function(fn) {
-        fn();
+    describe("if the current user has no default team", function() {
+      it("navigates to the splash page", function() {
+        History.pushState(null, null, '/');
+        expect(Path.routes.current).toBe('/');
+        expect(Application.landingPage).toBeVisible();
       });
-      History.pushState(null, null, '/');
-      
-      expect(Path.routes.current).toBe(defaultTeam.url());
-      expect(_.defer).toHaveBeenCalled(); // firefox needs this
+    });
+
+    describe("if the current user has a default team", function() {
+      it("navigates to the current user's default team page", function() {
+        Application.currentUser(member);
+
+        spyOn(_, 'defer').andCallFake(function(fn) {
+          fn();
+        });
+        History.pushState(null, null, '/');
+
+        expect(Path.routes.current).toBe(defaultTeam.url());
+        expect(_.defer).toHaveBeenCalled(); // firefox needs this
+      });
     });
   });
 

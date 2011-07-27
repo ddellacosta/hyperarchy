@@ -1,7 +1,11 @@
 Path.map('/').to(function() {
-  _.defer(function() {
-    History.replaceState(null, null, Application.currentUser().defaultTeam().url());
-  })
+  if (Application.currentUser().defaultTeam()) {
+    _.defer(function() {
+      History.replaceState(null, null, Application.currentUser().defaultTeam().url());
+    });
+  } else {
+    Application.showPage('landing');
+  }
 });
 
 Path.map('/teams/:teamId').to(function() {

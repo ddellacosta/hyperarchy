@@ -78,6 +78,7 @@ _.constructor("User", Model.Record, {
   },
 
   defaultTeam: function() {
+    if (this.memberships().empty()) return null;
     return this.memberships().orderBy(Membership.lastVisited.desc()).first().team();
   },
 

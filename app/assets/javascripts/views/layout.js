@@ -24,6 +24,7 @@ _.constructor("Views.Layout", View.Template, {
         });
 
         div({id: "body"}, function() {
+          subview('landingPage', Views.Pages.Landing);
           subview('teamPage', Views.Pages.Team);
           subview('teamSettingsPage', Views.Pages.TeamSettings);
           subview('meetingPage', Views.Pages.Meeting);
@@ -217,25 +218,29 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     showPage: function(name, params) {
-      if (!params.fullScreen) {
-        this.lightboxes.children().each(function() {
-          $(this).view().hide();
-        });
-      }
+      this.lightboxes.children().each(function() {
+        $(this).view().hide();
+      });
+      
       this.body.children().each(function() {
         $(this).view().hide();
       });
       this.removeClass('normal-height');
+
+      var page = this[name + 'Page'];
+      if (!page.fixedHeight) this.addClass('normal-height');
+      page.show();
+      _gaq.push(['_trackPageview']);
+
+      if (!params) return;
 
       var parsedParams = {};
       _.each(params, function(value, key) {
         var intValue = parseInt(value);
         parsedParams[key] = (intValue || intValue === 0) ? intValue : value;
       });
-      var page = this[name + 'Page'];
-      if (!page.fixedHeight) this.addClass('normal-height');
-      page.show().params(parsedParams);
-      _gaq.push(['_trackPageview']);
+
+      page.params(parsedParams);
     },
 
     connectToSocketServer: function() {

@@ -124,9 +124,7 @@ Sequel.migration do
       String :last_name, :size=>255
       String :email_address, :size=>255
       String :encrypted_password, :size=>255
-      TrueClass :dismissed_welcome_blurb
       TrueClass :admin, :default=>false
-      TrueClass :dismissed_welcome_guide, :default=>false
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
       String :password_reset_token, :text=>true
