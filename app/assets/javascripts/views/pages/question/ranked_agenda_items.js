@@ -1,6 +1,6 @@
-_.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.RankedAgendaItems', Monarch.View.Template, {
   content: function() { with(this.builder) {
-    div({id: "ranked-answers"}, function() {
+    div({id: "ranked-agendaItems"}, function() {
       ol(function() {
         li({id: "positive-drag-target"}, function() {
           span("Drag ideas you like here").ref('positiveDragExplanation');
@@ -131,15 +131,15 @@ _.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
     },
 
     handleListReceive: function(event, ui) {
-      var answer = ui.item.view().answer;
+      var agendaItem = ui.item.view().agendaItem;
       if (this.currentUserCanRank()) {
-        this.insertRankingLi(answer, { replace: this.list.find('li.ui-draggable') });
+        this.insertRankingLi(agendaItem, { replace: this.list.find('li.ui-draggable') });
       } else {
-        this.handleGuestRanking(answer);
+        this.handleGuestRanking(agendaItem);
       }
     },
 
-    handleGuestRanking: function(answer) {
+    handleGuestRanking: function(agendaItem) {
       var isPositive = (this.list.find('li.ui-draggable').nextAll("#separator").length > 0);
 
       if (isPositive) {
@@ -150,22 +150,22 @@ _.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
 
       Application.promptSignup()
         .success(function() {
-          this.insertRankingLi(answer, {isPositive: isPositive});
+          this.insertRankingLi(agendaItem, {isPositive: isPositive});
         }, this)
         .invalid(function() {
-          this.list.find('.answer').remove();
+          this.list.find('.agendaItem').remove();
           this.showOrHideDragTargets();
         }, this);
     },
 
-    insertRankingLi: function(answer, options) {
-      var rankingLi = this.lisByAnswerId[answer.id()];
+    insertRankingLi: function(agendaItem, options) {
+      var rankingLi = this.lisByAgendaItemId[agendaItem.id()];
 
       if (rankingLi) {
         rankingLi.detach();
       } else {
-        rankingLi = Views.Pages.Question.RankingLi.toView({answer: answer});
-        this.lisByAnswerId[answer.id()] = rankingLi;
+        rankingLi = Views.Pages.Question.RankingLi.toView({agendaItem: agendaItem});
+        this.lisByAgendaItemId[agendaItem.id()] = rankingLi;
       }
 
       this.detachDragTargets();
@@ -186,7 +186,7 @@ _.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
 
     rankings: {
       change: function(rankingsRelation) {
-        this.lisByAnswerId = {};
+        this.lisByAgendaItemId = {};
         this.populateList();
         this.observeListUpdates();
       }
@@ -242,10 +242,10 @@ _.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
     },
 
     removeRanking: function(ranking) {
-      var answerId = ranking.answerId();
-      var rankingLi = this.lisByAnswerId[answerId];
+      var agendaItemId = ranking.agendaItemId();
+      var rankingLi = this.lisByAgendaItemId[agendaItemId];
       if (rankingLi) rankingLi.remove();
-      delete this.lisByAnswerId[answerId];
+      delete this.lisByAgendaItemId[agendaItemId];
       this.showOrHideDragTargets();
     },
 
@@ -266,9 +266,9 @@ _.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
     },
 
     findOrCreateLi: function(ranking) {
-      var id = ranking.answerId();
-      if (!this.lisByAnswerId[id]) this.lisByAnswerId[id] = Views.Pages.Question.RankingLi.toView({ranking: ranking});
-      return this.lisByAnswerId[id];
+      var id = ranking.agendaItemId();
+      if (!this.lisByAgendaItemId[id]) this.lisByAgendaItemId[id] = Views.Pages.Question.RankingLi.toView({ranking: ranking});
+      return this.lisByAgendaItemId[id];
     },
 
     appendRankings: function(rankings, dragTargetIfEmpty) {

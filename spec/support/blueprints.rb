@@ -3,7 +3,7 @@ Sham.define do
   last_name { Faker::Name.last_name }
   email_address { Faker::Internet.email }
   question { Faker::Lorem.sentence.chop + "?" }
-  answer { Faker::Lorem.sentence }
+  agenda_item { Faker::Lorem.sentence }
   organization_description { Faker::Company.bs.capitalize + "." }
   organization_name { Faker::Company.name }
 end
@@ -27,15 +27,15 @@ QuestionComment.blueprint do
   body { Faker::Lorem.sentence }
 end
 
-Answer.blueprint do
+AgendaItem.blueprint do
   question { Question.make }
-  body { Sham.answer }
+  body { Sham.agenda_item }
   suppress_immediate_notifications { true }
   suppress_current_user_membership_check { true }
 end
 
-AnswerComment.blueprint do
-  answer { Answer.make }
+AgendaItemComment.blueprint do
+  agenda_item { AgendaItem.make }
   body { Faker::Lorem.sentence }
   suppress_immediate_notifications { true }
   suppress_current_user_membership_check { true }
@@ -81,9 +81,9 @@ Membership.class_eval do
   def before_save
     return unless all_notifications
     self.notify_of_new_questions = all_notifications
-    self.notify_of_new_answers = all_notifications
-    self.notify_of_new_comments_on_own_answers = all_notifications
-    self.notify_of_new_comments_on_ranked_answers = all_notifications
+    self.notify_of_new_agenda_items = all_notifications
+    self.notify_of_new_comments_on_own_agenda_items = all_notifications
+    self.notify_of_new_comments_on_ranked_agenda_items = all_notifications
   end
 end
 

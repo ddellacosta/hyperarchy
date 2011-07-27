@@ -8,9 +8,9 @@ class QuestionsController < ApplicationController
 
     questions = organization.questions.offset(offset).limit(limit)
     question_creators = questions.join(User, :creator_id => User[:id])
-    answers = questions.join_through(Answer).join(User, :creator_id => User[:id])
+    agenda_items = questions.join_through(AgendaItem).join(User, :creator_id => User[:id])
     visits = questions.join_through(current_user.question_visits)
     
-    render :json => build_client_dataset(questions, question_creators, answers, visits)
+    render :json => build_client_dataset(questions, question_creators, agenda_items, visits)
   end
 end

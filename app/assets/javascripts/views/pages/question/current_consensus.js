@@ -2,8 +2,8 @@ _.constructor('Views.Pages.Question.CurrentConsensus', Monarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "current-consensus"}, function() {
       subview('list', Views.Components.SortedList, {
-        buildElement: function(answer) {
-          return Views.Pages.Question.AnswerLi.toView({answer: answer});
+        buildElement: function(agendaItem) {
+          return Views.Pages.Question.AgendaItemLi.toView({agendaItem: agendaItem});
         },
 
         onUpdate: function(element, record) {
@@ -22,17 +22,17 @@ _.constructor('Views.Pages.Question.CurrentConsensus', Monarch.View.Template, {
     },
 
     handleCurrentUserChange: function() {
-      if (! this.answers()) return;
+      if (! this.agendaItems()) return;
       this.updateStatuses();
       this.observeCurrentUserRankings();
     },
 
-    answers: {
-      change: function(answers) {
-        this.list.relation(answers);
+    agendaItems: {
+      change: function(agendaItems) {
+        this.list.relation(agendaItems);
         this.updateStatuses();
         this.observeCurrentUserRankings();
-        this.observeAnswers();
+        this.observeAgendaItems();
       }
     },
 
@@ -43,38 +43,38 @@ _.constructor('Views.Pages.Question.CurrentConsensus', Monarch.View.Template, {
       this.registerInterest('rankings', currentUserRankings, 'onRemove', this.hitch('clearStatus'));
     },
 
-    observeAnswers: function() {
-      this.registerInterest('answers', this.answers(), 'onUpdate', function(answer, changeset) {
+    observeAgendaItems: function() {
+      this.registerInterest('agendaItems', this.agendaItems(), 'onUpdate', function(agendaItem, changeset) {
         if (changeset.commentCount || changeset.details) {
-          this.list.elementForRecord(answer).showOrHideEllipsis();
+          this.list.elementForRecord(agendaItem).showOrHideEllipsis();
         }
       }, this);
     },
 
-    selectedAnswer: {
-      change: function(selectedAnswer) {
+    selectedAgendaItem: {
+      change: function(selectedAgendaItem) {
         this.list.find('li').removeClass('selected');
-        if (selectedAnswer) this.list.elementForRecord(selectedAnswer).addClass('selected');
+        if (selectedAgendaItem) this.list.elementForRecord(selectedAgendaItem).addClass('selected');
       }
     },
 
     updateStatuses: function() {
       var currentUserRankings = Application.currentUser().rankings();
-      this.answers().each(function(answer) {
-        var ranking = currentUserRankings.find({answerId: answer.id()});
-        this.list.elementForRecord(answer).ranking(ranking);
+      this.agendaItems().each(function(agendaItem) {
+        var ranking = currentUserRankings.find({agendaItemId: agendaItem.id()});
+        this.list.elementForRecord(agendaItem).ranking(ranking);
       }, this);
     },
 
     updateStatus: function(ranking) {
-      var answer = ranking.answer();
-      this.list.elementForRecord(answer).ranking(ranking);
+      var agendaItem = ranking.agendaItem();
+      this.list.elementForRecord(agendaItem).ranking(ranking);
     },
 
     clearStatus: function(ranking) {
-      var answer = ranking.answer();
-      if (!answer) return;
-      this.list.elementForRecord(answer).ranking(null);
+      var agendaItem = ranking.agendaItem();
+      if (!agendaItem) return;
+      this.list.elementForRecord(agendaItem).ranking(null);
     }
   }
 });

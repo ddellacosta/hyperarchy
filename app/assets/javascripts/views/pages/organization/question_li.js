@@ -4,13 +4,13 @@ _.constructor('Views.Pages.Organization.QuestionLi', Monarch.View.Template, {
       div(function() {
         subview('avatar', Views.Components.Avatar, {imageSize: 50});
         div({'class': "body"}).ref('body')
-        subview('answers', Views.Components.SortedList, {
-          buildElement: function(answer, index) {
+        subview('agendaItems', Views.Components.SortedList, {
+          buildElement: function(agendaItem, index) {
             return Monarch.View.build(function(b) { with(b) {
-              li({'class': "answer"}, function() {
-                div({'class': "position"}, answer.position()).ref('position');
+              li({'class': "agendaItem"}, function() {
+                div({'class': "position"}, agendaItem.position()).ref('position');
                 div({'class': "body"}, function() {
-                  raw($.markdown(answer.body()));
+                  raw($.markdown(agendaItem.body()));
                 }).ref('body');
               });
             }});
@@ -30,7 +30,7 @@ _.constructor('Views.Pages.Organization.QuestionLi', Monarch.View.Template, {
   viewProperties: {
     initialize: function() {
       this.body.bindMarkdown(this.question, 'body');
-      this.answers.relation(this.question.answers().limit(6));
+      this.agendaItems.relation(this.question.agendaItems().limit(6));
       this.avatar.user(this.question.creator());
     }
   }

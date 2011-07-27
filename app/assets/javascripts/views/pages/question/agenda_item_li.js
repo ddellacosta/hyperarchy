@@ -1,26 +1,26 @@
-_.constructor('Views.Pages.Question.AnswerLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.AgendaItemLi', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
-    li({'class': "answer"}, function() {
+    li({'class': "agendaItem"}, function() {
       div({'class': "more"}, '…').ref('ellipsis');
       if (!params.fullScreen) div({'class': "status "}).ref('status');
-      div({'class': "position"}, params.answer.position()).ref('position');
+      div({'class': "position"}, params.agendaItem.position()).ref('position');
       div({'class': "body"}).ref('body');
     });
   }},
 
   viewProperties: {
     initialize: function() {
-      this.data('answerId', this.answer.id());
+      this.data('agendaItemId', this.agendaItem.id());
 
-      this.body.markdown(this.answer.body());
+      this.body.markdown(this.agendaItem.body());
 
       if (this.fullScreen) {
         this.click(this.bind(function() {
-          History.replaceState(null, null, this.answer.fullScreenUrl());
+          History.replaceState(null, null, this.agendaItem.fullScreenUrl());
         }));
       } else {
         this.draggable({
-          connectToSortable: '#ranked-answers ol',
+          connectToSortable: '#ranked-agendaItems ol',
           appendTo: '#question',
           revert: 'invalid',
           delay: this.dragDelay,
@@ -33,9 +33,9 @@ _.constructor('Views.Pages.Question.AnswerLi', Monarch.View.Template, {
 
         this.click(this.bind(function() {
           if (this.is('.selected')) {
-            History.replaceState(null, null, this.answer.question().url());
+            History.replaceState(null, null, this.agendaItem.question().url());
           } else {
-            History.replaceState(null, null, this.answer.url());
+            History.replaceState(null, null, this.agendaItem.url());
           }
         }));
       }
@@ -51,7 +51,7 @@ _.constructor('Views.Pages.Question.AnswerLi', Monarch.View.Template, {
     },
 
     handleDragStart: function() {
-      History.replaceState(null, null, this.answer.question().url());
+      History.replaceState(null, null, this.agendaItem.question().url());
     },
 
     ranking: {
@@ -62,7 +62,7 @@ _.constructor('Views.Pages.Question.AnswerLi', Monarch.View.Template, {
     },
 
     showOrHideEllipsis: function() {
-      if (this.answer.details() || this.answer.commentCount() > 0) {
+      if (this.agendaItem.details() || this.agendaItem.commentCount() > 0) {
         this.ellipsis.show();
       } else {
         this.ellipsis.hide();

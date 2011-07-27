@@ -9,10 +9,10 @@ _.constructor('Views.Pages.Question.RankingLi', Monarch.View.Template, {
   viewProperties: {
     initialize: function() {
       if (this.ranking) {
-        this.answer = this.ranking.answer();
+        this.agendaItem = this.ranking.agendaItem();
         this.observeRankingPosition();
       }
-      this.body.bindMarkdown(this.answer, 'body');
+      this.body.bindMarkdown(this.agendaItem, 'body');
       this.outstandingRequests = 0;
     },
     
@@ -28,7 +28,7 @@ _.constructor('Views.Pages.Question.RankingLi', Monarch.View.Template, {
     },
     
     handleListDrop: function() {
-      var answer = this.answer;
+      var agendaItem = this.agendaItem;
 
       var nextLi = this.next('li');
       var nextPosition = nextLi.data('position');
@@ -44,7 +44,7 @@ _.constructor('Views.Pages.Question.RankingLi', Monarch.View.Template, {
 
       this.loading(true);
       this.outstandingRequests++;
-      Ranking.createOrUpdate(Application.currentUser(), answer, position)
+      Ranking.createOrUpdate(Application.currentUser(), agendaItem, position)
         .success(function(ranking) {
           if (this.ranking) {
             ranking.trackUpdate();

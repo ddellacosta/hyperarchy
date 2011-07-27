@@ -12,7 +12,7 @@ jQuery.ajax = function() {
 
 var originalServer = window.Server;
 
-Views.Pages.Question.AnswerLi.prototype.viewProperties.dragDelay = null;
+Views.Pages.Question.AgendaItemLi.prototype.viewProperties.dragDelay = null;
 
 var mpq;
 var _gaq;

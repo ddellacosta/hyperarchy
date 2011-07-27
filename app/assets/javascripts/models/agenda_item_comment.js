@@ -1,14 +1,14 @@
-_.constructor("AnswerComment", Model.Record, {
+_.constructor("AgendaItemComment", Model.Record, {
   constructorInitialize: function() {
     this.columns({
-      answerId: 'key',
+      agendaItemId: 'key',
       creatorId: 'key',
       body: 'string',
       updatedAt: 'datetime',
       createdAt: 'datetime'
     });
 
-    this.belongsTo('answer');
+    this.belongsTo('agendaItem');
     this.belongsTo('creator', {constructorName: "User"});
   },
 
@@ -25,7 +25,7 @@ _.constructor("AnswerComment", Model.Record, {
   },
 
   question: function() {
-    return this.answer().question();
+    return this.agendaItem().question();
   },
 
   formattedCreatedAt: function() {

@@ -4,16 +4,16 @@ module Views
       include HeadlineGeneration
 
       attr_reader :membership, :period, :item
-      attr_reader :question_presenters_by_question, :answer_presenters_by_answer
-      attr_accessor :new_question_count, :new_answer_count, :new_comment_count
+      attr_reader :question_presenters_by_question, :agenda_item_presenters_by_agenda_item
+      attr_accessor :new_question_count, :new_agenda_item_count, :new_comment_count
       delegate :organization, :to => :membership
 
       def initialize(membership, period, item)
         @membership, @period, @item = membership, period, item
         @question_presenters_by_question = {}
-        @answer_presenters_by_answer = {}
+        @agenda_item_presenters_by_agenda_item = {}
         @new_question_count = 0
-        @new_answer_count = 0
+        @new_agenda_item_count = 0
         @new_comment_count = 0
 
         if period == "immediately"
@@ -27,9 +27,9 @@ module Views
         case item
           when Question
             add_new_question(item)
-          when Answer
-            add_new_answer(item)
-          when AnswerComment
+          when AgendaItem
+            add_new_agenda_item(item)
+          when AgendaItemComment
             add_new_comment(item)
           else
             raise "No notification mechanism implemented for item: #{item.inspect}"
@@ -43,20 +43,20 @@ module Views
           end
         end
 
-        if membership.wants_answer_notifications?(period)
-          membership.new_answers_in_period(period).each do |answer|
-            add_new_answer(answer)
+        if membership.wants_agenda_item_notifications?(period)
+          membership.new_agenda_items_in_period(period).each do |agenda_item|
+            add_new_agenda_item(agenda_item)
           end
         end
 
-        if membership.wants_own_answer_comment_notifications?(period)
-          membership.new_comments_on_own_answers_in_period(period).each do |comment|
+        if membership.wants_own_agenda_item_comment_notifications?(period)
+          membership.new_comments_on_own_agenda_items_in_period(period).each do |comment|
             add_new_comment(comment)
           end
         end
 
-        if membership.wants_ranked_answer_comment_notifications?(period)
-          membership.new_comments_on_ranked_answers_in_period(period).each do |comment|
+        if membership.wants_ranked_agenda_item_comment_notifications?(period)
+          membership.new_comments_on_ranked_agenda_items_in_period(period).each do |comment|
             add_new_comment(comment)
           end
         end
@@ -67,11 +67,11 @@ module Views
         question_presenters_by_question[question] = QuestionPresenter.new(question, true)
       end
 
-      def add_new_answer(answer)
-        self.new_answer_count += 1
-        question = answer.question
+      def add_new_agenda_item(agenda_item)
+        self.new_agenda_item_count += 1
+        question = agenda_item.question
         build_question_presenter_if_needed(question)
-        question_presenters_by_question[question].add_new_answer(answer)
+        question_presenters_by_question[question].add_new_agenda_item(agenda_item)
       end
 
       def add_new_comment(comment)
@@ -95,7 +95,7 @@ module Views
       end
 
       def empty?
-        new_question_count == 0 && new_answer_count == 0 && new_comment_count == 0
+        new_question_count == 0 && new_agenda_item_count == 0 && new_comment_count == 0
       end
 
       def add_lines(template, lines)

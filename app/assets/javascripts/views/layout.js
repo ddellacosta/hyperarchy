@@ -41,7 +41,7 @@ _.constructor("Views.Layout", View.Template, {
         subview("addOrganizationForm", Views.Lightboxes.AddOrganizationForm);
 
         subview("fullScreenConsensus", Views.Lightboxes.FullScreenConsensus);
-        subview("fullScreenAnswer", Views.Lightboxes.FullScreenAnswer);
+        subview("fullScreenAgendaItem", Views.Lightboxes.FullScreenAgendaItem);
       }).ref("lightboxes");
 
       div({id: "darkened-background"}).ref("darkenedBackground");

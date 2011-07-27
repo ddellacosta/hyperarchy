@@ -4,8 +4,8 @@ _.constructor('Views.Lightboxes.FullScreenConsensus', Views.Lightboxes.Lightbox,
   lightboxContent: function() { with(this.builder) {
     h1("Current Consensus");
     subview('list', Views.Components.SortedList, {
-      buildElement: function(answer) {
-        return Views.Pages.Question.AnswerLi.toView({answer: answer, fullScreen: true});
+      buildElement: function(agendaItem) {
+        return Views.Pages.Question.AgendaItemLi.toView({agendaItem: agendaItem, fullScreen: true});
       },
 
       onUpdate: function(element, record) {
@@ -19,7 +19,7 @@ _.constructor('Views.Lightboxes.FullScreenConsensus', Views.Lightboxes.Lightbox,
 
     question: {
       change: function(question) {
-        this.list.relation(question.answers());
+        this.list.relation(question.agendaItems());
       }
     },
 

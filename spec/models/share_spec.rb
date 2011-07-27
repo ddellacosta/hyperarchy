@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Share do
   describe "before create" do
-    attr_reader :user_1, :user_2, :question, :answer
+    attr_reader :user_1, :user_2, :question, :agenda_item
 
     before do
       set_current_user(User.make)

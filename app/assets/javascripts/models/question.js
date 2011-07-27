@@ -14,7 +14,7 @@ _.constructor("Question", Model.Record, {
 
       this.defaultOrderBy('score desc');
 
-      this.hasMany('answers');
+      this.hasMany('agendaItems');
       this.hasMany('votes', {orderBy: 'updatedAt desc'});
       this.hasMany('comments', {constructorName: 'QuestionComment'});
       this.relatesToMany('commenters', function() {
@@ -49,8 +49,8 @@ _.constructor("Question", Model.Record, {
 
   afterInitialize: function() {
     this.rankingsByUserId = {};
-    this.rankedAnswersByUserId = {};
-    this.unrankedAnswersByUserId = {};
+    this.rankedAgendaItemsByUserId = {};
+    this.unrankedAgendaItemsByUserId = {};
   },
 
   rankingsForUser: function(user) {
@@ -67,10 +67,10 @@ _.constructor("Question", Model.Record, {
     return this.rankingsForCurrentUser().where(Ranking.position.gt(0));
   },
 
-  rankedAnswersForUser: function(user) {
+  rankedAgendaItemsForUser: function(user) {
     var userId = user.id();
-    if (this.rankedAnswersByUserId[userId]) return this.rankedAnswersByUserId[userId];
-    return this.rankedAnswersByUserId[userId] = this.rankingsForUser(user).joinThrough(Answer);
+    if (this.rankedAgendaItemsByUserId[userId]) return this.rankedAgendaItemsByUserId[userId];
+    return this.rankedAgendaItemsByUserId[userId] = this.rankingsForUser(user).joinThrough(AgendaItem);
   },
 
   editableByCurrentUser: function() {
@@ -81,10 +81,10 @@ _.constructor("Question", Model.Record, {
     return this.creator() === Application.currentUser();
   },
 
-  unrankedAnswersForUser: function(user) {
+  unrankedAgendaItemsForUser: function(user) {
     var userId = user.id();
-    if (this.unrankedAnswersByUserId[userId]) return this.unrankedAnswersByUserId[userId];
-    return this.unrankedAnswersByUserId[userId] = this.answers().difference(this.rankedAnswersForUser(user));
+    if (this.unrankedAgendaItemsByUserId[userId]) return this.unrankedAgendaItemsByUserId[userId];
+    return this.unrankedAgendaItemsByUserId[userId] = this.agendaItems().difference(this.rankedAgendaItemsForUser(user));
   },
 
   currentUsersVisit: function() {
@@ -100,9 +100,9 @@ _.constructor("Question", Model.Record, {
       return this.commentFetchFuture;
     } else {
       return this.commentFetchFuture =
-        this.answers()
-          .joinThrough(AnswerComment)
-          .join(User).on(AnswerComment.creatorId.eq(User.id))
+        this.agendaItems()
+          .joinThrough(AgendaItemComment)
+          .join(User).on(AgendaItemComment.creatorId.eq(User.id))
           .fetch();
     }
   },
@@ -135,31 +135,31 @@ _.constructor("Question", Model.Record, {
     return this.url() + "/full_screen";
   },
 
-  newAnswerUrl: function() {
-    return this.url() + "/answers/new";
+  newAgendaItemUrl: function() {
+    return this.url() + "/agenda_items/new";
   },
 
   shareOnFacebook: function() {
-    var answers = this.positiveRankingsForCurrentUser().limit(3).joinThrough(Answer);
-    var numAnswers = answers.size();
+    var agendaItems = this.positiveRankingsForCurrentUser().limit(3).joinThrough(AgendaItem);
+    var numAgendaItems = agendaItems.size();
     var currentUserName = Application.currentUser().fullName();
 
     var caption, description;
-    switch (numAnswers) {
+    switch (numAgendaItems) {
       case 0:
         caption = this.noRankingsShareCaption;
         break;
       case 1:
-        caption = currentUserName + "'s top answer:";
+        caption = currentUserName + "'s top agendaItem:";
         break;
       default:
-        caption = currentUserName + "'s top answers:";
+        caption = currentUserName + "'s top agendaItems:";
     }
 
-    if (numAnswers > 0) {
+    if (numAgendaItems > 0) {
       var numerals = ["⑴", "⑵", "⑶"];
-      description = answers.inject("", function(description, answer, i) {
-        return description + " " + numerals[i] + " " + answer.body();
+      description = agendaItems.inject("", function(description, agendaItem, i) {
+        return description + " " + numerals[i] + " " + agendaItem.body();
       });
     }
 
@@ -204,5 +204,5 @@ _.constructor("Question", Model.Record, {
     return this.body()
   },
 
-  noRankingsShareCaption: "Click on this question to suggest and rank answers."
+  noRankingsShareCaption: "Click on this question to suggest and rank agendaItems."
 });

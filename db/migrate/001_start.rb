@@ -1,15 +1,15 @@
 Sequel.migration do
   up do
-    create_table(:answer_comments) do
+    create_table(:agenda_item_comments) do
       primary_key :id
       String :body, :text=>true
-      Integer :answer_id
+      Integer :agenda_item_id
       Integer :creator_id
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
     end
     
-    create_table(:answers) do
+    create_table(:agenda_items) do
       primary_key :id
       String :body, :size=>255
       Integer :question_id
@@ -47,9 +47,9 @@ Sequel.migration do
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
       String :notify_of_new_questions, :text=>true
-      String :notify_of_new_answers, :text=>true
-      String :notify_of_new_comments_on_own_answers, :text=>true
-      String :notify_of_new_comments_on_ranked_answers, :text=>true
+      String :notify_of_new_agenda_items, :text=>true
+      String :notify_of_new_comments_on_own_agenda_items, :text=>true
+      String :notify_of_new_comments_on_ranked_agenda_items, :text=>true
       TrueClass :has_participated, :default=>false
     end
     
@@ -102,7 +102,7 @@ Sequel.migration do
       primary_key :id
       Integer :user_id
       Integer :question_id
-      Integer :answer_id
+      Integer :agenda_item_id
       Float :position
       Integer :vote_id
       column :created_at, 'timestamp with time zone'
@@ -151,6 +151,6 @@ Sequel.migration do
   end
   
   down do
-    drop_table(:answer_comments, :answers, :mailing_list_entries, :majorities, :memberships, :organizations, :question_comments, :question_visits, :questions, :rankings, :schema_info, :shares, :users, :votes)
+    drop_table(:agenda_item_comments, :agenda_items, :mailing_list_entries, :majorities, :memberships, :organizations, :question_comments, :question_visits, :questions, :rankings, :schema_info, :shares, :users, :votes)
   end
 end

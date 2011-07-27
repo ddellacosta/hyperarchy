@@ -1,7 +1,7 @@
 //= require spec/spec_helper
 
 describe("Views.Pages.Question.CurrentConsensus", function() {
-  var currentConsensusView, question, answer1, answer2, user1;
+  var currentConsensusView, question, agendaItem1, agendaItem2, user1;
 
   beforeEach(function() {
     attachLayout();
@@ -9,175 +9,175 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
     $('#jasmine_content').append(currentConsensusView);
 
     question = Question.createFromRemote({id: 1});
-    answer1 = question.answers().createFromRemote({id: 1, body: "Cheese", position: 1});
-    answer2 = question.answers().createFromRemote({id: 2, body: "Goats", position: 2});
+    agendaItem1 = question.agendaItems().createFromRemote({id: 1, body: "Cheese", position: 1});
+    agendaItem2 = question.agendaItems().createFromRemote({id: 2, body: "Goats", position: 2});
 
     user1 = User.createFromRemote({id: 1});
     Application.currentUser(user1);
   });
 
 
-  describe("with the answers relation assigned", function() {
+  describe("with the agendaItems relation assigned", function() {
     beforeEach(function() {
-      currentConsensusView.answers(question.answers());
+      currentConsensusView.agendaItems(question.agendaItems());
     });
 
-    describe("when the selectedAnswer is changed", function() {
-      it("adds the .selected class on the selected answer's li and removes it from any others", function() {
-        currentConsensusView.selectedAnswer(answer1);
-        expect(currentConsensusView).toContain('li.selected:contains("' + answer1.body() + '")');
+    describe("when the selectedAgendaItem is changed", function() {
+      it("adds the .selected class on the selected agendaItem's li and removes it from any others", function() {
+        currentConsensusView.selectedAgendaItem(agendaItem1);
+        expect(currentConsensusView).toContain('li.selected:contains("' + agendaItem1.body() + '")');
 
-        currentConsensusView.selectedAnswer(answer2);
+        currentConsensusView.selectedAgendaItem(agendaItem2);
 
-        expect(currentConsensusView).toContain('li.selected:contains("' + answer2.body() + '")');
-        expect(currentConsensusView).not.toContain('li.selected:contains("' + answer1.body() + '")');
+        expect(currentConsensusView).toContain('li.selected:contains("' + agendaItem2.body() + '")');
+        expect(currentConsensusView).not.toContain('li.selected:contains("' + agendaItem1.body() + '")');
 
-        currentConsensusView.selectedAnswer(null);
+        currentConsensusView.selectedAgendaItem(null);
         expect(currentConsensusView).not.toContain('li.selected');
       });
     });
 
-    describe("when the position of a answer changes", function() {
-      it("updates the position on the answer li", function() {
-        var answer1Li = currentConsensusView.find('li:contains("' + answer1.body() + '")').view();
-        var answer2Li = currentConsensusView.find('li:contains("' + answer2.body() + '")').view();
+    describe("when the position of a agendaItem changes", function() {
+      it("updates the position on the agendaItem li", function() {
+        var agendaItem1Li = currentConsensusView.find('li:contains("' + agendaItem1.body() + '")').view();
+        var agendaItem2Li = currentConsensusView.find('li:contains("' + agendaItem2.body() + '")').view();
 
-        expect(answer1Li.position.text()).toBe("1");
-        expect(answer2Li.position.text()).toBe("2");
+        expect(agendaItem1Li.position.text()).toBe("1");
+        expect(agendaItem2Li.position.text()).toBe("2");
 
-        answer1.remotelyUpdated({position: 2});
-        answer2.remotelyUpdated({position: 1});
+        agendaItem1.remotelyUpdated({position: 2});
+        agendaItem2.remotelyUpdated({position: 1});
 
-        expect(answer1Li.position.text()).toBe("2");
-        expect(answer2Li.position.text()).toBe("1");
+        expect(agendaItem1Li.position.text()).toBe("2");
+        expect(agendaItem2Li.position.text()).toBe("1");
       });
     });
 
-    describe("when the body of a answer changes", function()  {
-      it("updates the body in the answer li", function() {
-        var answer1Li = currentConsensusView.find('li:contains("' + answer1.body() + '")').view();
+    describe("when the body of a agendaItem changes", function()  {
+      it("updates the body in the agendaItem li", function() {
+        var agendaItem1Li = currentConsensusView.find('li:contains("' + agendaItem1.body() + '")').view();
 
-        expect(answer1Li.body.html()).toBe($.markdown(answer1.body()));
+        expect(agendaItem1Li.body.html()).toBe($.markdown(agendaItem1.body()));
 
-        answer1.remotelyUpdated({body: 'rockets!'});
+        agendaItem1.remotelyUpdated({body: 'rockets!'});
 
-        expect(answer1Li.body.html()).toBe($.markdown(answer1.body()));
+        expect(agendaItem1Li.body.html()).toBe($.markdown(agendaItem1.body()));
       });
     });
   });
 
   describe("icons", function() {
-    var user2, answer3, answer1Li, answer2Li, answer3Li;
+    var user2, agendaItem3, agendaItem1Li, agendaItem2Li, agendaItem3Li;
 
     beforeEach(function() {
-      answer3 = question.answers().createFromRemote({id: 3, body: "Deer", position: 3});
+      agendaItem3 = question.agendaItems().createFromRemote({id: 3, body: "Deer", position: 3});
       user2 = User.createFromRemote({id: 2});
-      user1.rankingsForQuestion(question).createFromRemote({answerId: answer1.id(), position: 64});
-      user1.rankingsForQuestion(question).createFromRemote({answerId: answer2.id(), position: -64});
-      user2.rankingsForQuestion(question).createFromRemote({answerId: answer2.id(), position: 64});
-      user2.rankingsForQuestion(question).createFromRemote({answerId: answer3.id(), position: -64});
+      user1.rankingsForQuestion(question).createFromRemote({agendaItemId: agendaItem1.id(), position: 64});
+      user1.rankingsForQuestion(question).createFromRemote({agendaItemId: agendaItem2.id(), position: -64});
+      user2.rankingsForQuestion(question).createFromRemote({agendaItemId: agendaItem2.id(), position: 64});
+      user2.rankingsForQuestion(question).createFromRemote({agendaItemId: agendaItem3.id(), position: -64});
 
-      answer1.remotelyUpdated({commentCount: 1});
-      answer2.remotelyUpdated({details: "Arcata's full of nimby cryers"});
+      agendaItem1.remotelyUpdated({commentCount: 1});
+      agendaItem2.remotelyUpdated({details: "Arcata's full of nimby cryers"});
 
-      currentConsensusView.answers(question.answers());
-      answer1Li = currentConsensusView.list.elementForRecord(answer1);
-      answer2Li = currentConsensusView.list.elementForRecord(answer2);
-      answer3Li = currentConsensusView.list.elementForRecord(answer3);
+      currentConsensusView.agendaItems(question.agendaItems());
+      agendaItem1Li = currentConsensusView.list.elementForRecord(agendaItem1);
+      agendaItem2Li = currentConsensusView.list.elementForRecord(agendaItem2);
+      agendaItem3Li = currentConsensusView.list.elementForRecord(agendaItem3);
     });
 
-    describe("ranking status of the answer lis", function() {
-      describe("when the answers relation is assigned", function() {
-        it("assigns the ranking statuses of the answers to reflect the new user's rankings", function() {
-          expect(answer1Li.status).toHaveClass('positive');
-          expect(answer1Li.status).not.toHaveClass('negative');
-          expect(answer2Li.status).not.toHaveClass('positive');
-          expect(answer2Li.status).toHaveClass('negative');
-          expect(answer3Li.status).not.toHaveClass('positive');
-          expect(answer3Li.status).not.toHaveClass('negative');
+    describe("ranking status of the agendaItem lis", function() {
+      describe("when the agendaItems relation is assigned", function() {
+        it("assigns the ranking statuses of the agendaItems to reflect the new user's rankings", function() {
+          expect(agendaItem1Li.status).toHaveClass('positive');
+          expect(agendaItem1Li.status).not.toHaveClass('negative');
+          expect(agendaItem2Li.status).not.toHaveClass('positive');
+          expect(agendaItem2Li.status).toHaveClass('negative');
+          expect(agendaItem3Li.status).not.toHaveClass('positive');
+          expect(agendaItem3Li.status).not.toHaveClass('negative');
         });
       });
 
       describe("when the current user changes", function() {
-        it("updates the ranking statuses of the answers to reflect the new user's rankings", function() {
+        it("updates the ranking statuses of the agendaItems to reflect the new user's rankings", function() {
           Application.currentUser(user2);
 
-          expect(answer1Li.status).not.toHaveClass('positive');
-          expect(answer1Li.status).not.toHaveClass('negative');
-          expect(answer2Li.status).toHaveClass('positive');
-          expect(answer2Li.status).not.toHaveClass('negative');
-          expect(answer3Li.status).not.toHaveClass('positive');
-          expect(answer3Li.status).toHaveClass('negative');
+          expect(agendaItem1Li.status).not.toHaveClass('positive');
+          expect(agendaItem1Li.status).not.toHaveClass('negative');
+          expect(agendaItem2Li.status).toHaveClass('positive');
+          expect(agendaItem2Li.status).not.toHaveClass('negative');
+          expect(agendaItem3Li.status).not.toHaveClass('positive');
+          expect(agendaItem3Li.status).toHaveClass('negative');
         });
 
         it("listens for updates to the new user's rankings", function() {
           Application.currentUser(user2);
 
-          user2.rankings().createFromRemote({answerId: answer1.id(), position: -128});
-          user2.rankings().find({answerId: answer2.id()}).remotelyDestroyed();
-          user2.rankings().find({answerId: answer3.id()}).remotelyUpdated({position: 128});
+          user2.rankings().createFromRemote({agendaItemId: agendaItem1.id(), position: -128});
+          user2.rankings().find({agendaItemId: agendaItem2.id()}).remotelyDestroyed();
+          user2.rankings().find({agendaItemId: agendaItem3.id()}).remotelyUpdated({position: 128});
 
-          expect(answer1Li.status).not.toHaveClass('positive');
-          expect(answer1Li.status).toHaveClass('negative');
-          expect(answer2Li.status).not.toHaveClass('positive');
-          expect(answer2Li.status).not.toHaveClass('negative');
-          expect(answer3Li.status).toHaveClass('positive');
-          expect(answer3Li.status).not.toHaveClass('negative');
+          expect(agendaItem1Li.status).not.toHaveClass('positive');
+          expect(agendaItem1Li.status).toHaveClass('negative');
+          expect(agendaItem2Li.status).not.toHaveClass('positive');
+          expect(agendaItem2Li.status).not.toHaveClass('negative');
+          expect(agendaItem3Li.status).toHaveClass('positive');
+          expect(agendaItem3Li.status).not.toHaveClass('negative');
         });
       });
 
-      describe("when the current user creates, updates or destroys rankings for these answers", function() {
-        it("updates the ranking statuses of the answers to reflect the new user's rankings", function() {
-          user1.rankings().find({answerId: answer1.id()}).remotelyUpdated({position: -128});
-          user1.rankings().find({answerId: answer2.id()}).remotelyDestroyed();
-          user1.rankings().createFromRemote({answerId: answer3.id(), position: 128});
+      describe("when the current user creates, updates or destroys rankings for these agendaItems", function() {
+        it("updates the ranking statuses of the agendaItems to reflect the new user's rankings", function() {
+          user1.rankings().find({agendaItemId: agendaItem1.id()}).remotelyUpdated({position: -128});
+          user1.rankings().find({agendaItemId: agendaItem2.id()}).remotelyDestroyed();
+          user1.rankings().createFromRemote({agendaItemId: agendaItem3.id(), position: 128});
 
-          expect(answer1Li.status).not.toHaveClass('positive');
-          expect(answer1Li.status).toHaveClass('negative');
-          expect(answer2Li.status).not.toHaveClass('positive');
-          expect(answer2Li.status).not.toHaveClass('negative');
-          expect(answer3Li.status).toHaveClass('positive');
-          expect(answer3Li.status).not.toHaveClass('negative');
+          expect(agendaItem1Li.status).not.toHaveClass('positive');
+          expect(agendaItem1Li.status).toHaveClass('negative');
+          expect(agendaItem2Li.status).not.toHaveClass('positive');
+          expect(agendaItem2Li.status).not.toHaveClass('negative');
+          expect(agendaItem3Li.status).toHaveClass('positive');
+          expect(agendaItem3Li.status).not.toHaveClass('negative');
         });
       });
 
-      describe("when a ranking is destroyed *AFTER* its answer is destroyed", function() {
-        it("does not raise an exception trying to access the missing answer", function() {
+      describe("when a ranking is destroyed *AFTER* its agendaItem is destroyed", function() {
+        it("does not raise an exception trying to access the missing agendaItem", function() {
           var ranking = user1.rankings().first();
-          ranking.answer().remotelyDestroyed();
+          ranking.agendaItem().remotelyDestroyed();
           ranking.remotelyDestroyed();
         });
       });
     });
 
     describe("showing and hiding of the ellipsis", function() {
-      describe("when the answers relation is assigned", function() {
-        it("shows the ellipsis for only those answers that have details or comments", function() {
-          expect(answer1Li.ellipsis).toBeVisible();
-          expect(answer2Li.ellipsis).toBeVisible();
-          expect(answer3Li.ellipsis).not.toBeVisible();
+      describe("when the agendaItems relation is assigned", function() {
+        it("shows the ellipsis for only those agendaItems that have details or comments", function() {
+          expect(agendaItem1Li.ellipsis).toBeVisible();
+          expect(agendaItem2Li.ellipsis).toBeVisible();
+          expect(agendaItem3Li.ellipsis).not.toBeVisible();
         });
       });
 
-      describe("when answers' details are updated", function() {
-        it("shows the ellipsis for only those answers that have details or comments", function() {
-          answer2.remotelyUpdated({details: ""});
-          answer3.remotelyUpdated({details: "Deer always die in car accidents."});
+      describe("when agendaItems' details are updated", function() {
+        it("shows the ellipsis for only those agendaItems that have details or comments", function() {
+          agendaItem2.remotelyUpdated({details: ""});
+          agendaItem3.remotelyUpdated({details: "Deer always die in car accidents."});
 
-          expect(answer1Li.ellipsis).toBeVisible();
-          expect(answer2Li.ellipsis).not.toBeVisible();
-          expect(answer3Li.ellipsis).toBeVisible();
+          expect(agendaItem1Li.ellipsis).toBeVisible();
+          expect(agendaItem2Li.ellipsis).not.toBeVisible();
+          expect(agendaItem3Li.ellipsis).toBeVisible();
         });
       });
 
-      describe("when answer comments are created or removed", function() {
-        it("shows the ellipsis for only those answers that have details or comments", function() {
-          answer1.remotelyUpdated({commentCount: 0});
-          answer3.remotelyUpdated({commentCount: 1});
+      describe("when agendaItem comments are created or removed", function() {
+        it("shows the ellipsis for only those agendaItems that have details or comments", function() {
+          agendaItem1.remotelyUpdated({commentCount: 0});
+          agendaItem3.remotelyUpdated({commentCount: 1});
 
-          expect(answer1Li.ellipsis).not.toBeVisible();
-          expect(answer2Li.ellipsis).toBeVisible();
-          expect(answer3Li.ellipsis).toBeVisible();
+          expect(agendaItem1Li.ellipsis).not.toBeVisible();
+          expect(agendaItem2Li.ellipsis).toBeVisible();
+          expect(agendaItem3Li.ellipsis).toBeVisible();
         });
       });
     });

@@ -1,38 +1,38 @@
-_.constructor('Views.Lightboxes.FullScreenAnswer', Views.Lightboxes.Lightbox, {
-  id: "full-screen-answer",
+_.constructor('Views.Lightboxes.FullScreenAgendaItem', Views.Lightboxes.Lightbox, {
+  id: "full-screen-agendaItem",
 
   lightboxContent: function() { with(this.builder) {
     a({'class': "nav link"}, "↖ Back to List").ref('backLink').click(function() {
-      History.pushState(null, null, this.answer().question().fullScreenUrl());
+      History.pushState(null, null, this.agendaItem().question().fullScreenUrl());
     });
     a({'class': "next nav link"}, "Next →").ref('nextLink').click('goToNext');
     a({'class': "prev nav link"}, "← Previous").ref('prevLink').click('goToPrevious');
     span({'class': "nav counter"}).ref('counter');
-    subview('answerDetails', Views.Pages.Question.AnswerDetails, {fullScreen: true});
+    subview('agendaItemDetails', Views.Pages.Question.AgendaItemDetails, {fullScreen: true});
   }},
 
   viewProperties: {
-    answer: {
-      change: function(answer) {
-        this.answerDetails.answer(answer);
-        this.answerDetails.comments.comments(answer.comments());
+    agendaItem: {
+      change: function(agendaItem) {
+        this.agendaItemDetails.agendaItem(agendaItem);
+        this.agendaItemDetails.comments.comments(agendaItem.comments());
 
-        var question = answer.question();
-        var total = question.answers().size();
+        var question = agendaItem.question();
+        var total = question.agendaItems().size();
 
-        if (answer.position() > 1) {
+        if (agendaItem.position() > 1) {
           this.prevLink.show();
         } else {
           this.prevLink.hide();
         }
 
-        if (answer.position() < total) {
+        if (agendaItem.position() < total) {
           this.nextLink.css('visibility', 'visible');
         } else {
           this.nextLink.css('visibility', 'hidden');
         }
 
-        this.counter.text(answer.position() +  " of " + total);
+        this.counter.text(agendaItem.position() +  " of " + total);
       }
     },
 
@@ -48,15 +48,15 @@ _.constructor('Views.Lightboxes.FullScreenAnswer', Views.Lightboxes.Lightbox, {
 
     close: function($super) {
       $super();
-      History.replaceState(null, null, this.answer().url());
+      History.replaceState(null, null, this.agendaItem().url());
     },
 
     goToPrevious: function() {
-      History.replaceState(null, null, this.answer().previous().fullScreenUrl());
+      History.replaceState(null, null, this.agendaItem().previous().fullScreenUrl());
     },
 
     goToNext: function() {
-      History.replaceState(null, null, this.answer().next().fullScreenUrl());
+      History.replaceState(null, null, this.agendaItem().next().fullScreenUrl());
     }
   }
 });

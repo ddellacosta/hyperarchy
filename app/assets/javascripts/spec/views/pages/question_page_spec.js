@@ -10,8 +10,8 @@ describe("Views.Pages.Question", function() {
   });
 
   describe("when the params hash is assigned", function() {
-    var currentUser, question, answer1, answer2, currentUserRanking1, currentUserRanking2;
-    var otherUser, otherUser2, questionCommentCreator, answerCommentCreator, otherUserRanking1, otherUserRanking2;
+    var currentUser, question, agendaItem1, agendaItem2, currentUserRanking1, currentUserRanking2;
+    var otherUser, otherUser2, questionCommentCreator, agendaItemCommentCreator, otherUserRanking1, otherUserRanking2;
 
     beforeEach(function() {
       enableAjax();
@@ -25,21 +25,21 @@ describe("Views.Pages.Question", function() {
         otherUser = User.create();
         otherUser2 = User.create();
         questionCommentCreator = User.create();
-        answerCommentCreator = User.create();
+        agendaItemCommentCreator = User.create();
         currentUser.memberships().create({organizationId: question.organizationId()});
         otherUser.memberships().create({organizationId: question.organizationId()});
         questionCommentCreator.memberships().create({organizationId: question.organizationId()});
-        answerCommentCreator.memberships().create({organizationId: question.organizationId()});
+        agendaItemCommentCreator.memberships().create({organizationId: question.organizationId()});
         var questionComment = question.comments().create();
         questionComment.update({creatorId: questionCommentCreator.id()});
-        answer1 = question.answers().create();
-        var answerComment = answer1.comments().create();
-        answerComment.update({creatorId: answerCommentCreator.id()});
-        answer2 = question.answers().create({creatorId: otherUser2.id()});
-        currentUserRanking1 = question.rankings().create({userId: currentUser.id(), position: 64, answerId: answer1.id()});
-        currentUserRanking2 = question.rankings().create({userId: currentUser.id(), position: -64, answerId: answer2.id()});
-        otherUserRanking1 = question.rankings().create({userId: otherUser.id(), position: 64, answerId: answer1.id()});
-        otherUserRanking2 = question.rankings().create({userId: otherUser.id(), position: -64, answerId: answer2.id()});
+        agendaItem1 = question.agendaItems().create();
+        var agendaItemComment = agendaItem1.comments().create();
+        agendaItemComment.update({creatorId: agendaItemCommentCreator.id()});
+        agendaItem2 = question.agendaItems().create({creatorId: otherUser2.id()});
+        currentUserRanking1 = question.rankings().create({userId: currentUser.id(), position: 64, agendaItemId: agendaItem1.id()});
+        currentUserRanking2 = question.rankings().create({userId: currentUser.id(), position: -64, agendaItemId: agendaItem2.id()});
+        otherUserRanking1 = question.rankings().create({userId: otherUser.id(), position: 64, agendaItemId: agendaItem1.id()});
+        otherUserRanking2 = question.rankings().create({userId: otherUser.id(), position: -64, agendaItemId: agendaItem2.id()});
       });
       fetchInitialRepositoryContents();
     });
@@ -48,8 +48,8 @@ describe("Views.Pages.Question", function() {
       function expectQuestionDataFetched() {
         expect(Question.find(question.id())).toEqual(question);
         expect(question.creator()).toBeDefined();
-        expect(question.answers().size()).toBe(2);
-        expect(question.answers().join(User).on(User.id.eq(Answer.creatorId)).size()).toBe(2);
+        expect(question.agendaItems().size()).toBe(2);
+        expect(question.agendaItems().join(User).on(User.id.eq(AgendaItem.creatorId)).size()).toBe(2);
         expect(question.rankings().size()).toBeGreaterThan(0);
         expect(question.votes().size()).toBeGreaterThan(0);
         expect(question.voters().size()).toBe(question.votes().size());
@@ -60,12 +60,12 @@ describe("Views.Pages.Question", function() {
       function expectQuestionDataAssigned() {
         expect(Application.currentOrganizationId()).toBe(question.organizationId());
         expect(questionPage.question()).toEqual(question);
-        expect(questionPage.currentConsensus.answers()).toEqual(question.answers());
+        expect(questionPage.currentConsensus.agendaItems()).toEqual(question.agendaItems());
         expect(questionPage.votes.votes().tuples()).toEqual(question.votes().tuples());
         expect(questionPage.comments.comments().tuples()).toEqual(question.comments().tuples());
       }
 
-      describe("if no voterId or answerId is specified", function() {
+      describe("if no voterId or agendaItemId is specified", function() {
         it("fetches the question data before assigning relations to the subviews and the current org id", function() {
           waitsFor("fetch to complete", function(complete) {
             questionPage.params({ questionId: question.id() }).success(complete);
@@ -84,12 +84,12 @@ describe("Views.Pages.Question", function() {
             expect(questionPage.columns).toBeVisible();
             expect(questionPage.spinner).toBeHidden();
 
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(question.rankings().where({userId: currentUser.id()}).tuples());
-            expect(questionPage.rankedAnswers).toBeVisible();
-            expect(questionPage.answerDetails).not.toHaveClass('active');
+            expect(questionPage.rankedAgendaItems.rankings().tuples()).toEqual(question.rankings().where({userId: currentUser.id()}).tuples());
+            expect(questionPage.rankedAgendaItems).toBeVisible();
+            expect(questionPage.agendaItemDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toBe(Application.currentUserId());
-            expect(questionPage.rankedAnswersHeader.text()).toBe("Your Ranking");
-            expect(questionPage.newAnswerLink).not.toHaveClass('active');
+            expect(questionPage.rankedAgendaItemsHeader.text()).toBe("Your Ranking");
+            expect(questionPage.newAgendaItemLink).not.toHaveClass('active');
             expect(questionPage.backLink).toBeHidden();
           });
         });
@@ -99,7 +99,7 @@ describe("Views.Pages.Question", function() {
         it("fetches the question data and the specified voter's rankings before assigning relations to the subviews", function() {
           waitsFor("fetch to complete", function(complete) {
             questionPage.params({ questionId: question.id(), voterId: otherUser.id() }).success(complete);
-            expect(questionPage.rankedAnswers.sortingEnabled()).toBeFalsy();
+            expect(questionPage.rankedAgendaItems.sortingEnabled()).toBeFalsy();
             expect(questionPage.votes.selectedVoterId()).toEqual(otherUser.id());
           });
 
@@ -109,51 +109,51 @@ describe("Views.Pages.Question", function() {
 
             expect(question.rankingsForUser(otherUser).size()).toBeGreaterThan(0);
 
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(question.rankingsForUser(otherUser).tuples());
-            expect(questionPage.rankedAnswersHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
-            expect(questionPage.rankedAnswers).toBeVisible();
-            expect(questionPage.answerDetails).not.toHaveClass('active');
-            expect(questionPage.newAnswerLink).not.toHaveClass('active');
+            expect(questionPage.rankedAgendaItems.rankings().tuples()).toEqual(question.rankingsForUser(otherUser).tuples());
+            expect(questionPage.rankedAgendaItemsHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
+            expect(questionPage.rankedAgendaItems).toBeVisible();
+            expect(questionPage.agendaItemDetails).not.toHaveClass('active');
+            expect(questionPage.newAgendaItemLink).not.toHaveClass('active');
             expect(questionPage.backLink).toBeVisible();
           });
         });
       });
 
-      describe("if the answerId is specified", function() {
-        describe("if the answer exists", function() {
-          it("fetches the question data along with the answer's comments and commenters before assigning relations to the subviews and the selectedAnswer to the currentConsensus and answerDetails", function() {
+      describe("if the agendaItemId is specified", function() {
+        describe("if the agendaItem exists", function() {
+          it("fetches the question data along with the agendaItem's comments and commenters before assigning relations to the subviews and the selectedAgendaItem to the currentConsensus and agendaItemDetails", function() {
             waitsFor("fetch to complete", function(complete) {
-              questionPage.params({ questionId: question.id(), answerId: answer1.id() }).success(complete);
+              questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id() }).success(complete);
               expect(questionPage.votes.selectedVoterId()).toBeFalsy();
             });
 
             runs(function() {
               expectQuestionDataFetched();
-              expect(answer1.comments().size()).toBeGreaterThan(0);
-              expect(answer1.commenters().size()).toBe(answer1.comments().size());
+              expect(agendaItem1.comments().size()).toBeGreaterThan(0);
+              expect(agendaItem1.commenters().size()).toBe(agendaItem1.comments().size());
 
               expectQuestionDataAssigned();
 
-              expect(questionPage.currentConsensus.selectedAnswer()).toEqual(answer1);
-              expect(questionPage.answerDetails.answer()).toEqual(answer1);
-              expect(questionPage.rankedAnswers).not.toHaveClass('active');
-              expect(questionPage.answerDetails).toBeVisible();
+              expect(questionPage.currentConsensus.selectedAgendaItem()).toEqual(agendaItem1);
+              expect(questionPage.agendaItemDetails.agendaItem()).toEqual(agendaItem1);
+              expect(questionPage.rankedAgendaItems).not.toHaveClass('active');
+              expect(questionPage.agendaItemDetails).toBeVisible();
               expect(questionPage.votes.selectedVoterId()).toBeFalsy();
-              expect(questionPage.newAnswerLink).not.toHaveClass('active');
+              expect(questionPage.newAgendaItemLink).not.toHaveClass('active');
               expect(questionPage.backLink).toBeVisible();
             });
           });
         });
 
-        describe("if the answer does NOT exist", function() {
+        describe("if the agendaItem does NOT exist", function() {
           it("navigates to the current user's ranking", function() {
             beforeEach(function() {
               spyOn(Application, 'showPage');
             });
 
             waitsFor("fetch to complete", function(complete) {
-              var nonExistentAnswerId = 1029341234;
-              questionPage.params({ questionId: question.id(), answerId: nonExistentAnswerId }).success(complete);
+              var nonExistentAgendaItemId = 1029341234;
+              questionPage.params({ questionId: question.id(), agendaItemId: nonExistentAgendaItemId }).success(complete);
             });
 
             runs(function() {
@@ -163,13 +163,13 @@ describe("Views.Pages.Question", function() {
         });
       });
 
-      describe("if 'new' is specified as the answerId", function() {
-        it("fetches the question data assigning relations to the subviews and showing the answer details form in 'new' mode", function() {
+      describe("if 'new' is specified as the agendaItemId", function() {
+        it("fetches the question data assigning relations to the subviews and showing the agendaItem details form in 'new' mode", function() {
 
           waitsFor("fetch to complete", function(complete) {
-            expect(questionPage.newAnswerLink).not.toHaveClass('active');
-            questionPage.params({ questionId: question.id(), answerId: 'new' }).success(complete);
-            expect(questionPage.newAnswerLink).toHaveClass('active');
+            expect(questionPage.newAgendaItemLink).not.toHaveClass('active');
+            questionPage.params({ questionId: question.id(), agendaItemId: 'new' }).success(complete);
+            expect(questionPage.newAgendaItemLink).toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toBeFalsy();
           });
 
@@ -177,22 +177,22 @@ describe("Views.Pages.Question", function() {
             expectQuestionDataFetched();
             expectQuestionDataAssigned();
 
-            expect(questionPage.answerDetails).toHaveClass('active');
-            expect(questionPage.answerDetails.form).toBeVisible();
-            expect(questionPage.answerDetails.answer()).toBeFalsy();
-            expect(questionPage.currentConsensus.selectedAnswer()).toBeFalsy();
+            expect(questionPage.agendaItemDetails).toHaveClass('active');
+            expect(questionPage.agendaItemDetails.form).toBeVisible();
+            expect(questionPage.agendaItemDetails.agendaItem()).toBeFalsy();
+            expect(questionPage.currentConsensus.selectedAgendaItem()).toBeFalsy();
             expect(questionPage.votes.selectedVoterId()).toBeFalsy();
             expect(questionPage.backLink).toBeVisible();
 
-            // now the new answer link actually submits the answer instead of showing the form
-            expect(questionPage.newAnswerLink).toHaveClass('active');
+            // now the new agendaItem link actually submits the agendaItem instead of showing the form
+            expect(questionPage.newAgendaItemLink).toHaveClass('active');
             useFakeServer();
 
-            questionPage.answerDetails.editableBody.val("Answer Body");
+            questionPage.agendaItemDetails.editableBody.val("AgendaItem Body");
 
-            questionPage.newAnswerLink.click();
+            questionPage.newAgendaItemLink.click();
             expect(Server.creates.length).toBe(1);
-            expect(Server.lastCreate.record.body()).toBe("Answer Body");
+            expect(Server.lastCreate.record.body()).toBe("AgendaItem Body");
             Server.lastCreate.simulateSuccess({creatorId: Application.currentUser().id()});
 
             expect(Path.routes.current).toBe(question.url());
@@ -201,7 +201,7 @@ describe("Views.Pages.Question", function() {
       });
 
       describe("if the fullScreen param is true", function() {
-        describe("if no answerId is specified", function() {
+        describe("if no agendaItemId is specified", function() {
           it("shows the full screen consensus after fetching data", function() {
             waitsFor("fetch to complete", function(complete) {
               questionPage.params({ questionId: question.id(), fullScreen: true }).success(complete);
@@ -217,19 +217,19 @@ describe("Views.Pages.Question", function() {
           });
         });
 
-        describe("if an answerId is specified", function() {
+        describe("if an agendaItemId is specified", function() {
           it("shows the full screen consensus after fetching data", function() {
             waitsFor("fetch to complete", function(complete) {
-              questionPage.params({ questionId: question.id(), answerId: answer1.id(), fullScreen: true }).success(complete);
+              questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id(), fullScreen: true }).success(complete);
             });
 
             runs(function() {
               expectQuestionDataFetched();
               expectQuestionDataAssigned();
 
-              expect(Application.fullScreenAnswer).toBeVisible();
-              expect(Application.fullScreenAnswer.answer()).toEqual(answer1);
-              expect(Application.fullScreenAnswer.answer()).toEqual(answer1);
+              expect(Application.fullScreenAgendaItem).toBeVisible();
+              expect(Application.fullScreenAgendaItem.agendaItem()).toEqual(agendaItem1);
+              expect(Application.fullScreenAgendaItem.agendaItem()).toEqual(agendaItem1);
             });
           });
 
@@ -237,10 +237,10 @@ describe("Views.Pages.Question", function() {
       });
 
       describe("if the question is already present in the repository", function() {
-        it("assigns the question and answers before fetching additional data, and puts spinners on the ranking and votes", function() {
+        it("assigns the question and agendaItems before fetching additional data, and puts spinners on the ranking and votes", function() {
           synchronously(function() {
             question.fetch();
-            question.answers().fetch();
+            question.agendaItems().fetch();
             User.fetch(question.creatorId());
           });
 
@@ -248,15 +248,15 @@ describe("Views.Pages.Question", function() {
             questionPage.params({questionId: question.id()}).success(complete);
             expect(Application.currentOrganizationId()).toBe(question.organizationId());
             expect(questionPage.question()).toEqual(question);
-            expect(questionPage.currentConsensus.answers().tuples()).toEqual(question.answers().tuples());
-            expect(questionPage.rankedAnswers.loading()).toBeTruthy();
+            expect(questionPage.currentConsensus.agendaItems().tuples()).toEqual(question.agendaItems().tuples());
+            expect(questionPage.rankedAgendaItems.loading()).toBeTruthy();
             expect(questionPage.votes.loading()).toBeTruthy();
             expect(questionPage.comments.loading()).toBeTruthy();
           });
 
           runs(function() {
-            expect(questionPage.rankedAnswers.rankings()).toBeDefined();
-            expect(questionPage.rankedAnswers.loading()).toBeFalsy();
+            expect(questionPage.rankedAgendaItems.rankings()).toBeDefined();
+            expect(questionPage.rankedAgendaItems.loading()).toBeFalsy();
             expect(questionPage.votes.loading()).toBeFalsy();
             expect(questionPage.comments.loading()).toBeFalsy();
           })
@@ -283,25 +283,25 @@ describe("Views.Pages.Question", function() {
         });
       });
 
-      describe("if no voterId or answerId is specified", function() {
-        it("hides the answer details and assigns relations to the subviews, shows the current user's rankings and enables sorting", function() {
+      describe("if no voterId or agendaItemId is specified", function() {
+        it("hides the agendaItem details and assigns relations to the subviews, shows the current user's rankings and enables sorting", function() {
           waitsFor("fetch to complete", function(complete) {
-            questionPage.params({ questionId: question.id(), answerId: answer2.id() }).success(complete);
+            questionPage.params({ questionId: question.id(), agendaItemId: agendaItem2.id() }).success(complete);
           });
 
           runs(function() {
             questionPage.params({ questionId: question.id() });
 
-            expect(questionPage.answerDetails).not.toHaveClass('active');
+            expect(questionPage.agendaItemDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toBe(Application.currentUserId());
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(currentUser.rankingsForQuestion(question).tuples());
-            expect(questionPage.currentConsensus.selectedAnswer()).toBeFalsy();
-            expect(questionPage.rankedAnswers.sortingEnabled()).toBeTruthy();
-            expect(questionPage.rankedAnswersHeader.text()).toBe("Your Ranking");
-            expect(questionPage.rankedAnswers).toBeVisible();
-            expect(questionPage.answerDetails).not.toHaveClass('active');
+            expect(questionPage.rankedAgendaItems.rankings().tuples()).toEqual(currentUser.rankingsForQuestion(question).tuples());
+            expect(questionPage.currentConsensus.selectedAgendaItem()).toBeFalsy();
+            expect(questionPage.rankedAgendaItems.sortingEnabled()).toBeTruthy();
+            expect(questionPage.rankedAgendaItemsHeader.text()).toBe("Your Ranking");
+            expect(questionPage.rankedAgendaItems).toBeVisible();
+            expect(questionPage.agendaItemDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toBe(Application.currentUserId());
-            expect(questionPage.rankedAnswersHeader.text()).toBe("Your Ranking");
+            expect(questionPage.rankedAgendaItemsHeader.text()).toBe("Your Ranking");
             expect(questionPage.backLink).toBeHidden();
           });
         });
@@ -311,24 +311,24 @@ describe("Views.Pages.Question", function() {
         it("fetches the specified voter's rankings in addition to the current user's before assigning relations to the subviews and disables sorting because they won't be the current user", function() {
           waitsFor("fetch to complete", function(complete) {
             questionPage.params({ questionId: question.id(), voterId: otherUser.id() }).success(complete);
-            expect(questionPage.rankedAnswersHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
-            expect(questionPage.currentConsensus.selectedAnswer()).toBeFalsy();
-            expect(questionPage.rankedAnswers.sortingEnabled()).toBeFalsy();
+            expect(questionPage.rankedAgendaItemsHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
+            expect(questionPage.currentConsensus.selectedAgendaItem()).toBeFalsy();
+            expect(questionPage.rankedAgendaItems.sortingEnabled()).toBeFalsy();
 
-            expect(questionPage.rankedAnswers.loading()).toBeTruthy();
+            expect(questionPage.rankedAgendaItems.loading()).toBeTruthy();
             expect(questionPage.comments.loading()).toBeFalsy();
             expect(questionPage.votes.loading()).toBeFalsy();
           });
 
           runs(function() {
-            expect(questionPage.rankedAnswers.loading()).toBeFalsy();
+            expect(questionPage.rankedAgendaItems.loading()).toBeFalsy();
 
             expect(currentUser.rankings().size()).toBeGreaterThan(0);
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(otherUser.rankingsForQuestion(question).tuples());
-            expect(questionPage.rankedAnswers).toBeVisible();
-            expect(questionPage.answerDetails).not.toHaveClass('active');
+            expect(questionPage.rankedAgendaItems.rankings().tuples()).toEqual(otherUser.rankingsForQuestion(question).tuples());
+            expect(questionPage.rankedAgendaItems).toBeVisible();
+            expect(questionPage.agendaItemDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toEqual(otherUser.id());
-            expect(questionPage.rankedAnswersHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
+            expect(questionPage.rankedAgendaItemsHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
             expect(questionPage.backLink).toBeVisible();
           });
         });
@@ -336,49 +336,49 @@ describe("Views.Pages.Question", function() {
         it("still enables sorting on the votes list and sets the correct header if the voter id matches the current user id", function() {
           stubAjax();
           questionPage.params({ questionId: question.id(), voterId: currentUser.id() });
-          expect(questionPage.rankedAnswers.sortingEnabled()).toBeTruthy();
-          expect(questionPage.rankedAnswersHeader.text()).toBe('Your Ranking');
+          expect(questionPage.rankedAgendaItems.sortingEnabled()).toBeTruthy();
+          expect(questionPage.rankedAgendaItemsHeader.text()).toBe('Your Ranking');
         });
       });
 
-      describe("if the answerId is specified", function() {
-        describe("if the answer exists", function() {
-          it("assigns the selectedAnswer to the currentConsensus and answerDetails, then fetches the answers comments and assigns those later", function() {
+      describe("if the agendaItemId is specified", function() {
+        describe("if the agendaItem exists", function() {
+          it("assigns the selectedAgendaItem to the currentConsensus and agendaItemDetails, then fetches the agendaItems comments and assigns those later", function() {
             waitsFor("comments and commenters to be fetched", function(complete) {
-              questionPage.params({ questionId: question.id(), answerId: answer1.id() }).success(complete);
+              questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id() }).success(complete);
 
-              expect(questionPage.answerDetails.loading()).toBeTruthy();
+              expect(questionPage.agendaItemDetails.loading()).toBeTruthy();
 
-              expect(questionPage.answerDetails).toHaveClass('active');
-              expect(questionPage.currentConsensus.selectedAnswer()).toEqual(answer1);
-              expect(questionPage.answerDetails.answer()).toEqual(answer1);
+              expect(questionPage.agendaItemDetails).toHaveClass('active');
+              expect(questionPage.currentConsensus.selectedAgendaItem()).toEqual(agendaItem1);
+              expect(questionPage.agendaItemDetails.agendaItem()).toEqual(agendaItem1);
               expect(questionPage.votes.selectedVoterId()).toBeFalsy();
 
-              expect(questionPage.rankedAnswers.loading()).toBeFalsy();
+              expect(questionPage.rankedAgendaItems.loading()).toBeFalsy();
               expect(questionPage.comments.loading()).toBeFalsy();
               expect(questionPage.votes.loading()).toBeFalsy();
             });
 
             runs(function() {
-              expect(questionPage.answerDetails.loading()).toBeFalsy();
+              expect(questionPage.agendaItemDetails.loading()).toBeFalsy();
 
-              expect(answer1.comments().size()).toBeGreaterThan(0);
-              expect(answer1.commenters().size()).toBe(answer1.comments().size());
-              expect(questionPage.answerDetails.comments.comments().tuples()).toEqual(answer1.comments().tuples());
+              expect(agendaItem1.comments().size()).toBeGreaterThan(0);
+              expect(agendaItem1.commenters().size()).toBe(agendaItem1.comments().size());
+              expect(questionPage.agendaItemDetails.comments.comments().tuples()).toEqual(agendaItem1.comments().tuples());
               expect(questionPage.backLink).toBeVisible();
             });
           });
         });
 
-        describe("if the answer does NOT exist", function() {
+        describe("if the agendaItem does NOT exist", function() {
           beforeEach(function() {
             spyOn(Application, 'showPage');
           });
 
           it("navigates to the current user's ranking", function() {
             waitsFor("fetch to complete", function(complete) {
-              var nonExistentAnswerId = 102934;
-              questionPage.params({ questionId: question.id(), answerId: nonExistentAnswerId }).success(complete);
+              var nonExistentAgendaItemId = 102934;
+              questionPage.params({ questionId: question.id(), agendaItemId: nonExistentAgendaItemId }).success(complete);
             });
 
             runs(function() {
@@ -400,32 +400,32 @@ describe("Views.Pages.Question", function() {
           });
         });
 
-        it("fetches the new user's rankings and displays them in the ranked answers view", function() {
+        it("fetches the new user's rankings and displays them in the ranked agendaItems view", function() {
           waitsFor("new rankings to be fetched", function(complete) {
             Application.currentUser(otherUser).success(complete);
           });
 
           runs(function() {
             expect(otherUser.rankings().size()).toBeGreaterThan(0);
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(otherUser.rankings().tuples());
+            expect(questionPage.rankedAgendaItems.rankings().tuples()).toEqual(otherUser.rankings().tuples());
           });
         });
       });
 
       describe("when not displaying the current user's ranking", function() {
         it("fetches the new user's rankings for this question but does not change the view", function() {
-          waitsFor("fetching of answer data", function(complete) {
-            questionPage.params({ questionId: question.id(), answerId: answer1.id()}).success(complete);
+          waitsFor("fetching of agendaItem data", function(complete) {
+            questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id()}).success(complete);
           });
 
           waitsFor("new rankings to be fetched", function(complete) {
-            expect(questionPage.answerDetails).toHaveClass('active');
+            expect(questionPage.agendaItemDetails).toHaveClass('active');
             Application.currentUser(otherUser).success(complete);
           });
 
           runs(function() {
             expect(otherUser.rankings().size()).toBeGreaterThan(0);
-            expect(questionPage.answerDetails).toHaveClass('active'); // we don't change the view
+            expect(questionPage.agendaItemDetails).toHaveClass('active'); // we don't change the view
           });
         });
       });
@@ -434,27 +434,27 @@ describe("Views.Pages.Question", function() {
     describe("when the params hash differs by the time the fetch completes", function() {
       it("does not populate data for the old params", function() {
         waitsFor("fetch to complete", function(complete) {
-          questionPage.params({ questionId: question.id(), answerId: answer1.id() }).success(complete);
+          questionPage.params({ questionId: question.id(), agendaItemId: agendaItem1.id() }).success(complete);
           stubAjax();
           questionPage.params({ questionId: 999 });
         });
 
         runs(function() {
-          expect(questionPage.answerDetails.answer()).not.toBeDefined();
+          expect(questionPage.agendaItemDetails.agendaItem()).not.toBeDefined();
         });
       });
     });
   });
 
   describe("local logic (no fetching)", function() {
-    var currentUser, creator, organization, question, answer1, question2, editableByCurrentUser, mockedRandomString;
+    var currentUser, creator, organization, question, agendaItem1, question2, editableByCurrentUser, mockedRandomString;
     var headlineTextWhenAdjustColumnTopWasCalled;
 
     beforeEach(function() {
       creator = User.createFromRemote({id: 1, firstName: "animal", lastName: "eater"});
       organization = Organization.createFromRemote({id: 1, name: "Neurotic designers", privacy: "public"});
       question = creator.questions().createFromRemote({id: 1, body: "What's a body?", details: "aoeu!", createdAt: 91234, organizationId: organization.id()});
-      answer1 = question.answers().createFromRemote({id: 1, body: "Answer 1", position: 1, creatorId: creator.id(), createdAt: 2345});
+      agendaItem1 = question.agendaItems().createFromRemote({id: 1, body: "AgendaItem 1", position: 1, creatorId: creator.id(), createdAt: 2345});
       question2 = creator.questions().createFromRemote({id: 2, body: 'short body', details: "woo!", organizationId: organization.id(), createdAt: 91234});
       currentUser = organization.makeMember({id: 1, firstName: "John", lastName: "Five"});
       Application.currentUser(currentUser);
@@ -705,11 +705,11 @@ describe("Views.Pages.Question", function() {
       });
     });
 
-    describe("when the 'suggest an answer' button is clicked", function() {
-      it("navigates to the url for new answers for the current question", function() {
+    describe("when the 'suggest an agendaItem' button is clicked", function() {
+      it("navigates to the url for new agendaItems for the current question", function() {
         questionPage.question(question);
-        questionPage.newAnswerLink.click();
-        expect(Path.routes.current).toBe(question.url() + "/answers/new");
+        questionPage.newAgendaItemLink.click();
+        expect(Path.routes.current).toBe(question.url() + "/agenda_items/new");
       });
     });
 
@@ -854,19 +854,19 @@ describe("Views.Pages.Question", function() {
       }
     });
 
-    describe("showing and hiding of answer details based on clicking on different elements of the page", function() {
-      var answer1Li, answer2Li;
+    describe("showing and hiding of agendaItem details based on clicking on different elements of the page", function() {
+      var agendaItem1Li, agendaItem2Li;
 
       beforeEach(function() {
-        question.answers().createFromRemote({id: 2, body: "Answer 2", position: 2, creatorId: creator.id(), createdAt: 2345});
-        answer1Li = questionPage.find('li.answer:contains("Answer 1")');
-        answer2Li = questionPage.find('li.answer:contains("Answer 2")');
-        expect(answer1Li).toExist();
-        expect(answer2Li).toExist();
+        question.agendaItems().createFromRemote({id: 2, body: "AgendaItem 2", position: 2, creatorId: creator.id(), createdAt: 2345});
+        agendaItem1Li = questionPage.find('li.agendaItem:contains("AgendaItem 1")');
+        agendaItem2Li = questionPage.find('li.agendaItem:contains("AgendaItem 2")');
+        expect(agendaItem1Li).toExist();
+        expect(agendaItem2Li).toExist();
       });
 
-      describe("when clicking outside of the answers", function() {
-        it("navigates back to the base question url to hide any currently displayed ranking / answer details", function() {
+      describe("when clicking outside of the agendaItems", function() {
+        it("navigates back to the base question url to hide any currently displayed ranking / agendaItem details", function() {
           spyOn(History, 'replaceState');
           var selectionString = "";
           spyOn(window, 'getSelection').andReturn({ toString: function() { return selectionString }});
@@ -881,22 +881,22 @@ describe("Views.Pages.Question", function() {
           questionPage.editableBody.click();
           expect(History.replaceState).not.toHaveBeenCalled();
 
-          answer1Li.click();
+          agendaItem1Li.click();
           expect(History.replaceState).not.toHaveBeenCalledWith(null, null, question.url());
           History.replaceState.reset();
 
-          answer2Li.click();
+          agendaItem2Li.click();
           expect(History.replaceState).not.toHaveBeenCalledWith(null, null, question.url());
           History.replaceState.reset();
 
-          answer1Li.children().click();
+          agendaItem1Li.children().click();
           expect(History.replaceState).not.toHaveBeenCalledWith(null, null, question.url());
           History.replaceState.reset();
 
-          questionPage.answerDetails.click();
+          questionPage.agendaItemDetails.click();
           expect(History.replaceState).not.toHaveBeenCalled();
 
-          questionPage.answerDetails.find(':not(.close,.destroy,.more,.less)').click();
+          questionPage.agendaItemDetails.find(':not(.close,.destroy,.more,.less)').click();
           expect(History.replaceState).not.toHaveBeenCalledWith(null, null, question.url());
           History.replaceState.reset();
 
@@ -907,12 +907,12 @@ describe("Views.Pages.Question", function() {
         });
       });
 
-      describe("when clicking on a selected answer a second time", function() {
-        it("navigates back to the base question url to hide the answer details", function() {
-          answer1Li.click();
+      describe("when clicking on a selected agendaItem a second time", function() {
+        it("navigates back to the base question url to hide the agendaItem details", function() {
+          agendaItem1Li.click();
 
           spyOn(History, 'replaceState');
-          answer1Li.click();
+          agendaItem1Li.click();
           expect(History.replaceState).toHaveBeenCalledWith(null, null, question.url());
         });
       });

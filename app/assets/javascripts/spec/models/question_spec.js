@@ -1,14 +1,14 @@
 //= require spec/spec_helper
 
 describe("Question", function() {
-  var creator, question, answer1, answer2, answer3, answer4;
+  var creator, question, agendaItem1, agendaItem2, agendaItem3, agendaItem4;
   beforeEach(function() {
     creator = User.createFromRemote({id: 1, firstName: "Question", lastName: "Creator"});
     question = creator.questions().createFromRemote({id: 22, voteCount: 0, body: "What's your favorite color?"});
-    answer1 = question.answers().createFromRemote({id: 1, body: "Red"});
-    answer2 = question.answers().createFromRemote({id: 2, body: "Green"});
-    answer3 = question.answers().createFromRemote({id: 3, body: "Blue"});
-    answer4 = question.answers().createFromRemote({id: 4, body: "Yellow"});
+    agendaItem1 = question.agendaItems().createFromRemote({id: 1, body: "Red"});
+    agendaItem2 = question.agendaItems().createFromRemote({id: 2, body: "Green"});
+    agendaItem3 = question.agendaItems().createFromRemote({id: 3, body: "Blue"});
+    agendaItem4 = question.agendaItems().createFromRemote({id: 4, body: "Yellow"});
 
     Question.SCORE_EXTRA_VOTES = 1;
     Question.SCORE_EXTRA_HOURS = 2;
@@ -45,7 +45,7 @@ describe("Question", function() {
     
     describe("if the current user has 1 positive ranking for this question ", function() {
       it("opens the share dialog with question and the appropriate plurality on the caption", function() {
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer1.id(), position: 64});
+        question.rankingsForCurrentUser().createFromRemote({agendaItemId: agendaItem1.id(), position: 64});
 
         question.shareOnFacebook();
 
@@ -56,18 +56,18 @@ describe("Question", function() {
         expect(uiOptions.name).toBe(question.body());
         expect(uiOptions.link).toBe(question.absoluteUrl() + "?s=sharecode");
         expect(uiOptions.caption).toContain(currentUser.fullName());
-        expect(uiOptions.caption).toContain("answer");
-        expect(uiOptions.caption).not.toContain("answers");
-        expect(uiOptions.description).toContain(answer1.body());
+        expect(uiOptions.caption).toContain("agendaItem");
+        expect(uiOptions.caption).not.toContain("agendaItems");
+        expect(uiOptions.description).toContain(agendaItem1.body());
       });
     });
     
     describe("if the current user has more than 3 positive rankings for this question", function() {
-      it("opens the share dialog, only including the first 3 answers in the descriptions", function() {
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer1.id(), position: 300});
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer2.id(), position: 200});
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer3.id(), position: 100});
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer4.id(), position: 50});
+      it("opens the share dialog, only including the first 3 agendaItems in the descriptions", function() {
+        question.rankingsForCurrentUser().createFromRemote({agendaItemId: agendaItem1.id(), position: 300});
+        question.rankingsForCurrentUser().createFromRemote({agendaItemId: agendaItem2.id(), position: 200});
+        question.rankingsForCurrentUser().createFromRemote({agendaItemId: agendaItem3.id(), position: 100});
+        question.rankingsForCurrentUser().createFromRemote({agendaItemId: agendaItem4.id(), position: 50});
 
         question.shareOnFacebook();
         expect(FB.ui).toHaveBeenCalled()
@@ -78,11 +78,11 @@ describe("Question", function() {
         expect(uiOptions.name).toBe(question.body());
         expect(uiOptions.link).toBe(question.absoluteUrl() + "?s=sharecode");
         expect(uiOptions.caption).toContain(currentUser.fullName());
-        expect(uiOptions.caption).toContain("answers");
-        expect(uiOptions.description).toContain(answer1.body());
-        expect(uiOptions.description).toContain(answer2.body());
-        expect(uiOptions.description).toContain(answer3.body());
-        expect(uiOptions.description).not.toContain(answer4.body());
+        expect(uiOptions.caption).toContain("agendaItems");
+        expect(uiOptions.description).toContain(agendaItem1.body());
+        expect(uiOptions.description).toContain(agendaItem2.body());
+        expect(uiOptions.description).toContain(agendaItem3.body());
+        expect(uiOptions.description).not.toContain(agendaItem4.body());
       });
     });
 

@@ -2,7 +2,7 @@ _.constructor("Ranking", Model.Record, {
   constructorProperties: {
     initialize: function() {
       this.columns({
-        answerId: 'key',
+        agendaItemId: 'key',
         questionId: 'key',
         voteId: 'key',
         userId: 'key',
@@ -11,12 +11,12 @@ _.constructor("Ranking", Model.Record, {
 
       this.defaultOrderBy('position desc');
 
-      this.belongsTo('answer');
+      this.belongsTo('agendaItem');
       this.belongsTo('question');
       this.belongsTo('user');
     },
 
-    createOrUpdate: function(user, answer, position) {
+    createOrUpdate: function(user, agendaItem, position) {
       var future = new Monarch.Http.AjaxFuture();
 
       $.ajax({
@@ -25,8 +25,8 @@ _.constructor("Ranking", Model.Record, {
         dataType: 'data+records',
         data: {
           user_id: user.id(),
-          question_id: answer.questionId(),
-          answer_id: answer.id(),
+          question_id: agendaItem.questionId(),
+          agendaItem_id: agendaItem.id(),
           position: position
         },
         success: function(data) {
@@ -39,6 +39,6 @@ _.constructor("Ranking", Model.Record, {
   },
 
   mixpanelNote: function() {
-    return this.answer().body();
+    return this.agendaItem().body();
   }
 });

@@ -1,4 +1,4 @@
-_.constructor("Answer", Model.Record, {
+_.constructor("AgendaItem", Model.Record, {
   constructorInitialize: function() {
     this.columns({
       questionId: 'key',
@@ -13,11 +13,11 @@ _.constructor("Answer", Model.Record, {
     this.defaultOrderBy('position asc');
 
     this.hasMany('rankings');
-    this.hasMany('comments', {constructorName: "AnswerComment"});
+    this.hasMany('comments', {constructorName: "AgendaItemComment"});
     this.belongsTo('question');
     this.belongsTo('creator', {constructorName: "User"});
     this.relatesToMany('commenters', function() {
-      return this.comments().join(User).on(AnswerComment.creatorId.eq(User.id));
+      return this.comments().join(User).on(AgendaItemComment.creatorId.eq(User.id));
     });
   },
 
@@ -59,7 +59,7 @@ _.constructor("Answer", Model.Record, {
   },
 
   url: function() {
-    return "/questions/" + this.questionId() + "/answers/" + this.id();
+    return "/questions/" + this.questionId() + "/agenda_items/" + this.id();
   },
 
   fullScreenUrl: function() {
@@ -71,10 +71,10 @@ _.constructor("Answer", Model.Record, {
   },
 
   previous: function() {
-    return this.question().answers().where(Answer.position.lt(this.position())).last();
+    return this.question().agendaItems().where(AgendaItem.position.lt(this.position())).last();
   },
 
   next: function() {
-    return this.question().answers().where(Answer.position.gt(this.position())).first();
+    return this.question().agendaItems().where(AgendaItem.position.gt(this.position())).first();
   }
 });

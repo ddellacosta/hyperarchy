@@ -32,10 +32,10 @@ describe BackdoorController do
     it "inserts / updates the given records after filling in their missing properties with blueprints" do
       freeze_time
 
-      existing_answer = Answer.make(:id => 2, :body => "Overwrite me!")
+      existing_agenda_item = AgendaItem.make(:id => 2, :body => "Overwrite me!")
 
       records_json = {
-        "answers" => {
+        "agenda_items" => {
           "1" => { "id" => 1, "question_id" => 1, "creator_id" => 2},
           "2" => { "id" => 2, "body" => "La la" }
         }
@@ -43,15 +43,15 @@ describe BackdoorController do
 
       post :upload_repository, :records => records_json
 
-      new_answer = Answer.find(1)
-      new_answer.body.should_not be_blank
+      new_agenda_item = AgendaItem.find(1)
+      new_agenda_item.body.should_not be_blank
 
-      existing_answer.reload.body.should == "La la"
+      existing_agenda_item.reload.body.should == "La la"
 
       response_json.should == {
-        "answers" => {
-          "1" => new_answer.wire_representation,
-          "2" => existing_answer.wire_representation
+        "agenda_items" => {
+          "1" => new_agenda_item.wire_representation,
+          "2" => existing_agenda_item.wire_representation
         }
       }
     end

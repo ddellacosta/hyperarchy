@@ -1,6 +1,6 @@
-_.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.AgendaItemDetails', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
-    div({id: "answer-details"}, function() {
+    div({id: "agendaItem-details"}, function() {
       div({'class': "non-editable"}, function() {
         div({'class': "body"}).ref("body");
         span({'class': "details"}).ref("details");
@@ -29,7 +29,7 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
         .ref('form');
       a({'class': 'update button', tabindex: 203}, "Save").ref('updateButton').click('update');
       a({'class': 'cancel button', tabindex: 204}, "Cancel").ref('cancelEditButton').click('cancelEdit');
-      a({'class': 'create button'}, "Add Answer").ref('createButton').click('create');
+      a({'class': 'create button'}, "Add AgendaItem").ref('createButton').click('create');
 
       div({'class': "creator"}, function() {
         subview('avatar', Views.Components.Avatar, {imageSize: params.fullScreen ? 46 : 34});
@@ -57,26 +57,26 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
       }));
     },
 
-    answer: {
-      change: function(answer) {
-        if (!answer) return;
-        this.body.bindMarkdown(answer, 'body');
-        this.avatar.user(answer.creator());
-        this.creatorName.bindText(answer.creator(), 'fullName');
-        this.createdAt.text(answer.formattedCreatedAt());
+    agendaItem: {
+      change: function(agendaItem) {
+        if (!agendaItem) return;
+        this.body.bindMarkdown(agendaItem, 'body');
+        this.avatar.user(agendaItem.creator());
+        this.creatorName.bindText(agendaItem.creator(), 'fullName');
+        this.createdAt.text(agendaItem.formattedCreatedAt());
         this.showOrHideMutateButtons();
 
-        answer.trackView();
+        agendaItem.trackView();
 
-        this.registerInterest(answer, 'onDestroy', function() {
-          History.pushState(null, null, answer.question().url());
+        this.registerInterest(agendaItem, 'onDestroy', function() {
+          History.pushState(null, null, agendaItem.question().url());
         });
-        this.registerInterest(answer, 'onUpdate', this.hitch('handleAnswerUpdate'));
-        this.handleAnswerUpdate();
+        this.registerInterest(agendaItem, 'onUpdate', this.hitch('handleAgendaItemUpdate'));
+        this.handleAgendaItemUpdate();
         this.expanded(false);
       },
 
-      write: function(answer) {
+      write: function(agendaItem) {
         this.cancelEdit();
       }
     },
@@ -86,8 +86,8 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
 
       var fieldValues = this.form.fieldValues();
       Application.promptSignup().success(function() {
-        this.parentView.question().answers().create(fieldValues).success(function(answer) {
-          answer.trackCreate();
+        this.parentView.question().agendaItems().create(fieldValues).success(function(agendaItem) {
+          agendaItem.trackCreate();
         });
         History.pushState(null, null, this.parentView.question().url());
       }, this);
@@ -98,15 +98,15 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
       e.preventDefault();
       if ($.trim(this.editableBody.val()) === '') return;
       if (this.editableBody.val().length > 140) return;
-      this.answer().update(this.form.fieldValues()).success(this.bind(function(answer) {
-        answer.trackUpdate();
+      this.agendaItem().update(this.form.fieldValues()).success(this.bind(function(agendaItem) {
+        agendaItem.trackUpdate();
         this.cancelEdit();
       }));
     },
 
     destroy: function() {
-      if (window.confirm("Are you sure you want to delete this answer?")) {
-        this.answer().destroy();
+      if (window.confirm("Are you sure you want to delete this agendaItem?")) {
+        this.agendaItem().destroy();
       }
     },
 
@@ -116,9 +116,9 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
       this.form.show();
       this.updateButton.show();
       this.cancelEditButton.show();
-      if (this.answer()) {
-        this.editableBody.val(this.answer().body()).keyup();
-        this.editableDetails.val(this.answer().details()).keyup();
+      if (this.agendaItem()) {
+        this.editableBody.val(this.agendaItem().body()).keyup();
+        this.editableDetails.val(this.agendaItem().details()).keyup();
       }
 
       this.editableBody.focus();
@@ -151,7 +151,7 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
     },
 
     showOrHideMutateButtons: function() {
-      if (this.answer() && this.answer().editableByCurrentUser()) {
+      if (this.agendaItem() && this.agendaItem().editableByCurrentUser()) {
         this.addClass('mutable');
       } else {
         this.removeClass('mutable');
@@ -189,9 +189,9 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
 
     shouldShowMoreLink: function() {
       if (this.expanded()) return false;
-      if (!(this.answer() && this.answer().details())) return false;
+      if (!(this.agendaItem() && this.agendaItem().details())) return false;
 
-      return this.answer().details().length > this.maxDetailsLength;
+      return this.agendaItem().details().length > this.maxDetailsLength;
     },
 
     truncate: function(string, maxChars) {
@@ -205,11 +205,11 @@ _.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
 
     maxDetailsLength: 200,
 
-    handleAnswerUpdate: function() {
-      var answer = this.answer();
-      this.details.markdown(this.truncate(answer.details() || "", this.maxDetailsLength));
-      this.expandedDetails.markdown(answer.details());
-      if (answer.details()) {
+    handleAgendaItemUpdate: function() {
+      var agendaItem = this.agendaItem();
+      this.details.markdown(this.truncate(agendaItem.details() || "", this.maxDetailsLength));
+      this.expandedDetails.markdown(agendaItem.details());
+      if (agendaItem.details()) {
         this.detailsClearDiv.show();
       } else {
         this.detailsClearDiv.hide();

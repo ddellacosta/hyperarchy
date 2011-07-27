@@ -22,7 +22,7 @@ class User < Prequel::Record
   has_many :votes
   has_many :rankings
   has_many :questions
-  has_many :answers, :foreign_key => :creator_id
+  has_many :agenda_items, :foreign_key => :creator_id
   belongs_to :referring_share, :class_name => "Share"
 
   def organizations
@@ -42,9 +42,9 @@ class User < Prequel::Record
   def self.users_to_notify(period)
     Membership.where_any(
       :notify_of_new_questions => period,
-      :notify_of_new_answers => period,
-      :notify_of_new_comments_on_own_answers => period,
-      :notify_of_new_comments_on_ranked_answers => period
+      :notify_of_new_agenda_items => period,
+      :notify_of_new_comments_on_own_agenda_items => period,
+      :notify_of_new_comments_on_ranked_agenda_items => period
     ).join_through(User).where(:guest => false, :email_enabled => true).distinct
   end
 

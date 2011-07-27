@@ -19,8 +19,8 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
       });
 
       div({'class': "email-preference"}, function() {
-        label("Email me about new answers to questions on which I voted: ");
-        select({name: "notifyOfNewAnswers"}, function() {
+        label("Email me about new agendaItems to questions on which I voted: ");
+        select({name: "notifyOfNewAgendaItems"}, function() {
           option({value: "immediately"}, "Immediately");
           option({value: "every5"}, "Every 5 Minutes");
           option({value: "hourly"}, "Hourly");
@@ -31,8 +31,8 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
       });
 
       div({'class': "email-preference"}, function() {
-        label("Email me about new comments on answers I suggested: ");
-        select({name: "notifyOfNewCommentsOnOwnAnswers"}, function() {
+        label("Email me about new comments on agendaItems I suggested: ");
+        select({name: "notifyOfNewCommentsOnOwnAgendaItems"}, function() {
           option({value: "immediately"}, "Immediately");
           option({value: "every5"}, "Every 5 Minutes");
           option({value: "hourly"}, "Hourly");
@@ -43,8 +43,8 @@ _.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Templa
       });
 
       div({'class': "email-preference"}, function() {
-        label("Email me about new comments on answers I have ranked: ");
-        select({name: "notifyOfNewCommentsOnRankedAnswers"}, function() {
+        label("Email me about new comments on agendaItems I have ranked: ");
+        select({name: "notifyOfNewCommentsOnRankedAgendaItems"}, function() {
           option({value: "immediately"}, "Immediately");
           option({value: "every5"}, "Every 5 Minutes");
           option({value: "hourly"}, "Hourly");

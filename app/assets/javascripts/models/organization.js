@@ -14,8 +14,8 @@ _.constructor("Organization", Model.Record, {
       });
 
       this.hasMany("questions");
-      this.relatesToMany("answers", function() {
-        return this.questions().joinThrough(Answer);
+      this.relatesToMany("agendaItems", function() {
+        return this.questions().joinThrough(AgendaItem);
       });
       this.relatesToMany("votes", function() {
         return this.questions().joinThrough(Vote);

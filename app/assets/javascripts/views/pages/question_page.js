@@ -11,13 +11,13 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       div({id: "headline"}, function() {
         a({'class': "new button"}, function() {
           div({'class': "plus"}, "+");
-          text("Add An Answer");
-        }).ref('newAnswerLink')
+          text("Add An AgendaItem");
+        }).ref('newAgendaItemLink')
           .click(function() {
-            if (this.params().answerId === 'new') {
-              this.answerDetails.createButton.click();
+            if (this.params().agendaItemId === 'new') {
+              this.agendaItemDetails.createButton.click();
             } else {
-              this.navigateToNewAnswerForm();
+              this.navigateToNewAgendaItemForm();
             }
           });
         a({'class': "facebook button"}, function() {
@@ -53,7 +53,7 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
 
       subview('spinner', Views.Components.Spinner);
     }).click(function(e) {
-        if ($(e.target).is('a,textarea,li,li *,#answer-details,#answer-details *')) return;
+        if ($(e.target).is('a,textarea,li,li *,#agendaItem-details,#agendaItem-details *')) return;
         if (window.getSelection().toString() !== "") return;
         History.replaceState(null, null, this.question().url());
       });
@@ -93,12 +93,12 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
     a({id: "back-to-your-ranking", 'class': "link"}, "← Back").ref('backLink').click(function() {
       History.replaceState(null,null,this.question().url());
     });
-    h2("Your Ranking").ref('rankedAnswersHeader');
-    h2("Answer Details").ref('answerDetailsHeader');
+    h2("Your Ranking").ref('rankedAgendaItemsHeader');
+    h2("AgendaItem Details").ref('agendaItemDetailsHeader');
 
     div({id: "rankings-and-details"}, function() {
-      subview('answerDetails', Views.Pages.Question.AnswerDetails);
-      subview('rankedAnswers', Views.Pages.Question.RankedAnswers);
+      subview('agendaItemDetails', Views.Pages.Question.AgendaItemDetails);
+      subview('rankedAgendaItems', Views.Pages.Question.RankedAgendaItems);
     });
   }},
 
@@ -155,12 +155,12 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       var question = Question.find(params.questionId);
       if (question) {
         this.question(question);
-        this.currentConsensus.answers(question.answers());
+        this.currentConsensus.agendaItems(question.agendaItems());
       } else {
         this.loading(true);
       }
 
-      if (params.voterId || params.answerId) {
+      if (params.voterId || params.agendaItemId) {
         this.backLink.show();
       } else {
         this.backLink.hide();
@@ -168,25 +168,25 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
 
       var voterId;
 
-      if (params.answerId) {
-        this.showAnswerDetails();
-        var answer = Answer.find(params.answerId);
-        if (answer) {
-          this.currentConsensus.selectedAnswer(answer);
-          this.answerDetails.answer(answer);
+      if (params.agendaItemId) {
+        this.showAgendaItemDetails();
+        var agendaItem = AgendaItem.find(params.agendaItemId);
+        if (agendaItem) {
+          this.currentConsensus.selectedAgendaItem(agendaItem);
+          this.agendaItemDetails.agendaItem(agendaItem);
         }
       } else {
-        this.answerDetails.removeClass('active');
-        this.currentConsensus.selectedAnswer(null);
+        this.agendaItemDetails.removeClass('active');
+        this.currentConsensus.selectedAgendaItem(null);
         voterId = params.voterId || Application.currentUserId();
-        this.rankedAnswers.sortingEnabled(!voterId || voterId === Application.currentUserId());
-        this.populateRankedAnswersHeader(voterId);
+        this.rankedAgendaItems.sortingEnabled(!voterId || voterId === Application.currentUserId());
+        this.populateRankedAgendaItemsHeader(voterId);
       }
 
-      if (params.answerId === 'new') {
-        this.newAnswerLink.addClass('active');
+      if (params.agendaItemId === 'new') {
+        this.newAgendaItemLink.addClass('active');
       } else {
-        this.newAnswerLink.removeClass('active');
+        this.newAgendaItemLink.removeClass('active');
       }
 
       this.votes.selectedVoterId(voterId);
@@ -197,7 +197,7 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
 
       if (!oldParams || params.questionId !== oldParams.questionId) {
         if (!Question.find(params.questionId)) relationsToFetch.push(Question.where({id: params.questionId}).join(User).on(User.id.eq(Question.creatorId))); // question
-        relationsToFetch.push(Answer.where({questionId: params.questionId}).join(User).on(Answer.creatorId.eq(User.id))); // answers
+        relationsToFetch.push(AgendaItem.where({questionId: params.questionId}).join(User).on(AgendaItem.creatorId.eq(User.id))); // agendaItems
         relationsToFetch.push(Vote.where({questionId: params.questionId}).joinTo(User)); // votes
         relationsToFetch.push(Application.currentUser().rankings().where({questionId: params.questionId})); // current user's rankings
         relationsToFetch.push(QuestionComment.where({questionId: params.questionId}).join(User).on(QuestionComment.creatorId.eq(User.id))); // question comments and commenters
@@ -210,11 +210,11 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
         relationsToFetch.push(Ranking.where({questionId: params.questionId, userId: params.voterId})); // additional rankings
       }
 
-      if (params.answerId && params.answerId !== "new") {
-        relationsToFetch.push(AnswerComment.where({answerId: params.answerId}).join(User).on(AnswerComment.creatorId.eq(User.id))); // answer comments and commenters
-        this.answerDetails.loading(true);
+      if (params.agendaItemId && params.agendaItemId !== "new") {
+        relationsToFetch.push(AgendaItemComment.where({agendaItemId: params.agendaItemId}).join(User).on(AgendaItemComment.creatorId.eq(User.id))); // agendaItem comments and commenters
+        this.agendaItemDetails.loading(true);
       } else {
-        this.rankedAnswers.loading(true);
+        this.rankedAgendaItems.loading(true);
       }
 
       return Server.fetch(relationsToFetch);
@@ -224,8 +224,8 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       if (!_.isEqual(params, this.params())) return;
 
       this.loading(false);
-      this.rankedAnswers.loading(false);
-      this.answerDetails.loading(false);
+      this.rankedAgendaItems.loading(false);
+      this.agendaItemDetails.loading(false);
       this.votes.loading(false);
       this.comments.loading(false);
 
@@ -237,26 +237,26 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       }
 
       this.question(question);
-      this.currentConsensus.answers(question.answers());
+      this.currentConsensus.agendaItems(question.agendaItems());
       this.votes.votes(question.votes());
       this.comments.comments(question.comments());
 
-      if (params.answerId) {
-        var answer = Answer.find(params.answerId);
-        this.currentConsensus.selectedAnswer(answer);
-        this.answerDetails.answer(answer);
-        if (answer) {
-          this.answerDetails.comments.comments(answer.comments());
-        } else if (params.answerId === 'new') {
-          this.answerDetails.showNewForm();
+      if (params.agendaItemId) {
+        var agendaItem = AgendaItem.find(params.agendaItemId);
+        this.currentConsensus.selectedAgendaItem(agendaItem);
+        this.agendaItemDetails.agendaItem(agendaItem);
+        if (agendaItem) {
+          this.agendaItemDetails.comments.comments(agendaItem.comments());
+        } else if (params.agendaItemId === 'new') {
+          this.agendaItemDetails.showNewForm();
         } else {
           History.replaceState(null, null, question.url());
         }
       } else {
         var rankings = Ranking.where({questionId: params.questionId, userId: params.voterId || Application.currentUserId()});
-        this.showRankedAnswers();
-        this.populateRankedAnswersHeader(params.voterId);
-        this.rankedAnswers.rankings(rankings);
+        this.showRankedAgendaItems();
+        this.populateRankedAgendaItemsHeader(params.voterId);
+        this.rankedAgendaItems.rankings(rankings);
       }
 
       if (params.fullScreen) this.enterFullScreenMode();
@@ -327,26 +327,26 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       }
     },
 
-    populateRankedAnswersHeader: function(voterId) {
+    populateRankedAgendaItemsHeader: function(voterId) {
       if (!voterId || voterId === Application.currentUserId()) {
-        this.rankedAnswersHeader.text('Your Ranking');
+        this.rankedAgendaItemsHeader.text('Your Ranking');
         return;
       }
 
       var voter = User.find(voterId);
-      if (voter) this.rankedAnswersHeader.text(voter.fullName() + "'s Ranking");
+      if (voter) this.rankedAgendaItemsHeader.text(voter.fullName() + "'s Ranking");
     },
 
-    showRankedAnswers: function() {
-      this.answerDetailsHeader.hide();
-      this.rankedAnswersHeader.show();
-      this.answerDetails.removeClass('active');
+    showRankedAgendaItems: function() {
+      this.agendaItemDetailsHeader.hide();
+      this.rankedAgendaItemsHeader.show();
+      this.agendaItemDetails.removeClass('active');
     },
 
-    showAnswerDetails: function() {
-      this.rankedAnswersHeader.hide();
-      this.answerDetailsHeader.show();
-      this.answerDetails.addClass('active');
+    showAgendaItemDetails: function() {
+      this.rankedAgendaItemsHeader.hide();
+      this.agendaItemDetailsHeader.show();
+      this.agendaItemDetails.addClass('active');
     },
 
     handleQuestionUpdate: function() {
@@ -375,8 +375,8 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
       }
     },
 
-    navigateToNewAnswerForm: function() {
-      History.replaceState(null, null, this.question().newAnswerUrl());
+    navigateToNewAgendaItemForm: function() {
+      History.replaceState(null, null, this.question().newAgendaItemUrl());
     },
 
     adjustColumnTop: function() {
@@ -409,9 +409,9 @@ _.constructor('Views.Pages.Question', Monarch.View.Template, {
     },
 
     enterFullScreenMode: function() {
-      if (this.params().answerId) {
-        Application.fullScreenAnswer.show();
-        Application.fullScreenAnswer.answer(this.answerDetails.answer());
+      if (this.params().agendaItemId) {
+        Application.fullScreenAgendaItem.show();
+        Application.fullScreenAgendaItem.agendaItem(this.agendaItemDetails.agendaItem());
       } else {
         Application.fullScreenConsensus.show();
         Application.fullScreenConsensus.question(this.question());

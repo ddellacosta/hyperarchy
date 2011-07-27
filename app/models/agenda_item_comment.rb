@@ -1,24 +1,24 @@
-class AnswerComment < Prequel::Record
+class AgendaItemComment < Prequel::Record
   column :id, :integer
   column :body, :string
-  column :answer_id, :integer
+  column :agenda_item_id, :integer
   column :creator_id, :integer
   column :created_at, :datetime
   column :updated_at, :datetime
 
-  belongs_to :answer
+  belongs_to :agenda_item
   belongs_to :creator, :class_name => "User"
   attr_accessor :suppress_current_user_membership_check
-  delegate :organization, :to => :answer
+  delegate :organization, :to => :agenda_item
 
   include SupportsNotifications
 
   def organization_ids
-    answer ? answer.organization_ids : []
+    agenda_item ? agenda_item.organization_ids : []
   end
 
   def question
-    answer.question
+    agenda_item.question
   end
 
   def can_create?
@@ -32,7 +32,7 @@ class AnswerComment < Prequel::Record
   alias can_destroy? can_update_or_destroy?
 
   def create_whitelist
-    [:body, :answer_id]
+    [:body, :agenda_item_id]
   end
 
   def update_whitelist
@@ -46,28 +46,28 @@ class AnswerComment < Prequel::Record
 
   def after_create
     send_immediate_notifications
-    answer.increment(:comment_count)
+    agenda_item.increment(:comment_count)
   end
 
   def after_destroy
-    answer.decrement(:comment_count)
+    agenda_item.decrement(:comment_count)
   end
 
   def users_to_notify_immediately
-    users_who_ranked_my_answer = answer.
+    users_who_ranked_my_agenda_item = agenda_item.
       rankings.
       join(User).
       join(organization.memberships).
-      where(:notify_of_new_comments_on_ranked_answers => "immediately").
+      where(:notify_of_new_comments_on_ranked_agenda_items => "immediately").
       where(Membership[:user_id].neq(creator_id)).
       project(User)
 
-    user_who_created_my_answer = answer.
+    user_who_created_my_agenda_item = agenda_item.
       organization.
-        memberships.where(:user_id => answer.creator_id, :notify_of_new_comments_on_own_answers => "immediately").
+        memberships.where(:user_id => agenda_item.creator_id, :notify_of_new_comments_on_own_agenda_items => "immediately").
         join_through(User)
 
-    users_who_ranked_my_answer | user_who_created_my_answer
+    users_who_ranked_my_agenda_item | user_who_created_my_agenda_item
   end
 
   def extra_records_for_create_events

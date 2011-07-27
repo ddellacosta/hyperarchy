@@ -33,7 +33,7 @@ module Models
           new_membership.can_create?.should be_false
           membership.can_update?.should be_true
           membership.can_destroy?.should be_false
-          membership.can_update_columns?([:role, :notify_of_new_questions, :notify_of_new_answers]).should be_false
+          membership.can_update_columns?([:role, :notify_of_new_questions, :notify_of_new_agenda_items]).should be_false
           membership.can_update_columns?([:last_visited]).should be_true
 
           set_current_user(owner)

@@ -2,10 +2,10 @@ class RankingsController < ApplicationController
   def create
     raise SecurityError if !current_user || current_user.guest?
 
-    organization = Answer.find(params[:answer_id]).question.organization
+    organization = AgendaItem.find(params[:agenda_item_id]).question.organization
     new_membership = organization.ensure_current_user_is_member
 
-    attributes = { :user_id => current_user.id, :answer_id => params[:answer_id] }
+    attributes = { :user_id => current_user.id, :agenda_item_id => params[:agenda_item_id] }
 
     if ranking = Ranking.find(attributes)
       ranking.update(:position => params[:position])

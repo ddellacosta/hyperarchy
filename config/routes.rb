@@ -5,8 +5,8 @@ Actionitems::Application.routes.draw do
   match 'organizations/:id/settings' => 'home#show', :as => "organization_settings"
   match 'questions/:id' => 'home#show', :as => "question"
   match 'questions/:id/full_screen' => 'home#show', :as => "full_screen_question"
-  match 'questions/:id/answers/:selected_answer_id' => 'home#show', :as => "question_answer"
-  match 'questions/:id/answers/:selected_answer_id/full_screen' => 'home#show', :as => "full_screen_question_answer"
+  match 'questions/:id/agenda_items/:selected_agenda_item_id' => 'home#show', :as => "question_agenda_item"
+  match 'questions/:id/agenda_items/:selected_agenda_item_id/full_screen' => 'home#show', :as => "full_screen_question_agenda_item"
   match 'questions/:id/votes/:selected_voter_id' => 'home#show', :as => "question_voter"
   match 'account' => 'home#show', :as => "account"
 

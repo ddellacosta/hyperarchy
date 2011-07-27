@@ -66,7 +66,7 @@ describe("Routes", function() {
   });
 
   describe("/questions/:questionId/votes/:voterId", function() {
-    it("shows only the questionsPage, assigns the id on it, and assigns the specified user's rankings relation on the ranked answers list", function() {
+    it("shows only the questionsPage, assigns the id on it, and assigns the specified user's rankings relation on the ranked agendaItems list", function() {
       Application.questionPage.show();
       History.pushState(null, null, '/questions/12/votes/29');
       expect(Application.organizationPage).toBeHidden();
@@ -78,41 +78,41 @@ describe("Routes", function() {
     });
   });
 
-  describe("/questions/:questionId/answers/new", function() {
-    it("shows only the questionsPage assigns the question id, and shows the new answer form", function() {
+  describe("/questions/:questionId/agenda_items/new", function() {
+    it("shows only the questionsPage assigns the question id, and shows the new agendaItem form", function() {
       Application.questionPage.show();
-      History.pushState(null, null, '/questions/12/answers/new');
+      History.pushState(null, null, '/questions/12/agenda_items/new');
       expect(Application.organizationPage).toBeHidden();
       expect(Application.questionPage).toBeVisible();
       expect(Application.questionPage.params()).toEqual({
         questionId: 12,
-        answerId: 'new'
+        agendaItemId: 'new'
       });
     });
   });
 
-  describe("/questions/:questionId/answers/:answerId", function() {
-    it("shows only the questionsPage and assigns the id and selectedAnswerId on it", function() {
+  describe("/questions/:questionId/agenda_items/:agendaItemId", function() {
+    it("shows only the questionsPage and assigns the id and selectedAgendaItemId on it", function() {
       Application.organizationPage.show();
-      History.pushState(null, null, '/questions/12/answers/33');
+      History.pushState(null, null, '/questions/12/agenda_items/33');
       expect(Application.organizationPage).toBeHidden();
       expect(Application.questionPage).toBeVisible();
       expect(Application.questionPage.params()).toEqual({
         questionId: 12,
-        answerId: 33
+        agendaItemId: 33
       });
     });
   });
 
-  describe("/questions/:questionId/answers/:answerId/full_screen", function() {
-    it("shows only the questionsPage and assigns questionId, answerId, and fullScreen = true", function() {
+  describe("/questions/:questionId/agenda_items/:agendaItemId/full_screen", function() {
+    it("shows only the questionsPage and assigns questionId, agendaItemId, and fullScreen = true", function() {
       Application.organizationPage.show();
-      History.pushState(null, null, '/questions/12/answers/33/full_screen');
+      History.pushState(null, null, '/questions/12/agenda_items/33/full_screen');
       expect(Application.organizationPage).toBeHidden();
       expect(Application.questionPage).toBeVisible();
       expect(Application.questionPage.params()).toEqual({
         questionId: 12,
-        answerId: 33,
+        agendaItemId: 33,
         fullScreen: true
       });
     });
