@@ -9,22 +9,22 @@ describe("Views.Layout", function() {
     it("connects to the socket server and sets up the client to send mutation messages to the repository", function() {
       expect(socketClient.connect).toHaveBeenCalled();
 
-      var createCommand = ['create', 'questions', {id: 1, body: "What up now?"}];
+      var createCommand = ['create', 'meetings', {id: 1, body: "What up now?"}];
       socketClient.emit('message', [JSON.stringify([createCommand])]);
 
-      expect(Question.find(1).body()).toBe("What up now?");
+      expect(Meeting.find(1).body()).toBe("What up now?");
 
-      var updateCommand = ['update', 'questions', 1, {body: "What up later?"}];
+      var updateCommand = ['update', 'meetings', 1, {body: "What up later?"}];
       socketClient.emit('message', [JSON.stringify([updateCommand])]);
-      expect(Question.find(1).body()).toBe("What up later?");
+      expect(Meeting.find(1).body()).toBe("What up later?");
 
-      var updateCommand = ['destroy', 'questions', 1];
+      var updateCommand = ['destroy', 'meetings', 1];
       socketClient.emit('message', [JSON.stringify([updateCommand])]);
-      expect(Question.find(1)).toBeUndefined();
+      expect(Meeting.find(1)).toBeUndefined();
     });
 
-    it("sets up the question scores to be updated periodically", function() {
-      expect(Question.updateScoresPeriodically).toHaveBeenCalled();
+    it("sets up the meeting scores to be updated periodically", function() {
+      expect(Meeting.updateScoresPeriodically).toHaveBeenCalled();
     });
   });
 
@@ -156,9 +156,7 @@ describe("Views.Layout", function() {
     });
 
     describe("#currentTeam", function() {
-      it("it changes the team name or hides it when viewing social", function() {
-        var social = Team.createFromRemote({id: 3, name: "Actionitems Social", social: true, privacy: "public"});
-
+      it("it changes the team name or hides it when the current team is null", function() {
         $('#jasmine_content').html(Application);
 
         Application.currentTeamId(team1.id());
@@ -166,7 +164,7 @@ describe("Views.Layout", function() {
         expect(Application.teamNameSeparator).toBeVisible();
         expect(Application.teamName.text()).toBe(team1.name());
 
-        Application.currentTeamId(social.id());
+        Application.currentTeamId(null);
         expect(Application.teamName).toBeHidden();
         expect(Application.teamNameSeparator).toBeHidden();
 
@@ -267,35 +265,6 @@ describe("Views.Layout", function() {
       $("#jasmine_content").html(Application);
       Application.feedbackLink.click();
       expect(Application.feedbackForm).toBeVisible();
-    });
-  });
-
-  describe("the invite link", function() {
-    it("shows the invite link only for private teams, and shows the invite box with the org's secret url when it is clicked", function() {
-      $('#jasmine_content').html(Application);
-      var privateOrg = Team.createFromRemote({id: 1, name: "Private Eyes", privacy: "private"});
-      var publicOrg = Team.createFromRemote({id: 2, name: "Public Enemies", privacy: "public"});
-      var user = privateOrg.makeMember({id: 1});
-      spyOn(privateOrg, 'secretUrl').andReturn('/this_is_so_secret');
-      Application.currentUser(user);
-
-      Application.currentTeam(publicOrg);
-      expect(Application.inviteLink).not.toBeVisible();
-
-      Application.currentTeam(privateOrg);
-      expect(Application.inviteLink).toBeVisible();
-
-      Application.inviteLink.click();
-      var inviteBox = Application.inviteBox
-      expect(inviteBox).toBeVisible();
-      expect(inviteBox.secretUrl.val()).toBe(privateOrg.secretUrl());
-      expect(inviteBox.secretUrl).toHaveFocus();
-
-      privateOrg.remotelyUpdated({privacy: "public"});
-      expect(Application.inviteLink).not.toBeVisible();
-
-      privateOrg.remotelyUpdated({privacy: "private"});
-      expect(Application.inviteLink).toBeVisible();
     });
   });
 

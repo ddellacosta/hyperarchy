@@ -31,153 +31,102 @@ describe("Routes", function() {
         Team.createFromRemote({id: 23});
         History.pushState(null, null, '/teams/23');
 
-        expect(Application.questionPage).toBeHidden();
+        expect(Application.meetingPage).toBeHidden();
         expect(Application.teamPage).toBeVisible();
         expect(Application.teamPage.params()).toEqual({teamId: 23});
       });
     });
   });
 
-  describe("/questions/:questionId", function() {
-    it("shows only the questionsPage and assigns the questionId param", function() {
+  describe("/meetings/:meetingId", function() {
+    it("shows only the meetingsPage and assigns the meetingId param", function() {
       Application.teamPage.show();
-      History.pushState(null, null, '/questions/12');
+      History.pushState(null, null, '/meetings/12');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
+      expect(Application.meetingPage).toBeVisible();
 
-      expect(Application.questionPage.params()).toEqual({
-        questionId: 12
+      expect(Application.meetingPage.params()).toEqual({
+        meetingId: 12
       });
     });
   });
 
-  describe("/questions/:questionId/full_screen", function() {
-    it("shows only the questionsPage and assigns fullScreen = true, ", function() {
+  describe("/meetings/:meetingId/full_screen", function() {
+    it("shows only the meetingsPage and assigns fullScreen = true, ", function() {
       Application.teamPage.show();
-      History.pushState(null, null, '/questions/12/full_screen');
+      History.pushState(null, null, '/meetings/12/full_screen');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
+      expect(Application.meetingPage).toBeVisible();
 
-      expect(Application.questionPage.params()).toEqual({
-        questionId: 12,
+      expect(Application.meetingPage.params()).toEqual({
+        meetingId: 12,
         fullScreen: true
       });
     });
   });
 
-  describe("/questions/:questionId/votes/:voterId", function() {
-    it("shows only the questionsPage, assigns the id on it, and assigns the specified user's rankings relation on the ranked agendaItems list", function() {
-      Application.questionPage.show();
-      History.pushState(null, null, '/questions/12/votes/29');
+  describe("/meetings/:meetingId/votes/:voterId", function() {
+    it("shows only the meetingsPage, assigns the id on it, and assigns the specified user's rankings relation on the ranked agendaItems list", function() {
+      Application.meetingPage.show();
+      History.pushState(null, null, '/meetings/12/votes/29');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
-      expect(Application.questionPage.params()).toEqual({
-        questionId: 12,
+      expect(Application.meetingPage).toBeVisible();
+      expect(Application.meetingPage.params()).toEqual({
+        meetingId: 12,
         voterId: 29
       });
     });
   });
 
-  describe("/questions/:questionId/agenda_items/new", function() {
-    it("shows only the questionsPage assigns the question id, and shows the new agendaItem form", function() {
-      Application.questionPage.show();
-      History.pushState(null, null, '/questions/12/agenda_items/new');
+  describe("/meetings/:meetingId/agenda_items/new", function() {
+    it("shows only the meetingsPage assigns the meeting id, and shows the new agendaItem form", function() {
+      Application.meetingPage.show();
+      History.pushState(null, null, '/meetings/12/agenda_items/new');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
-      expect(Application.questionPage.params()).toEqual({
-        questionId: 12,
+      expect(Application.meetingPage).toBeVisible();
+      expect(Application.meetingPage.params()).toEqual({
+        meetingId: 12,
         agendaItemId: 'new'
       });
     });
   });
 
-  describe("/questions/:questionId/agenda_items/:agendaItemId", function() {
-    it("shows only the questionsPage and assigns the id and selectedAgendaItemId on it", function() {
+  describe("/meetings/:meetingId/agenda_items/:agendaItemId", function() {
+    it("shows only the meetingsPage and assigns the id and selectedAgendaItemId on it", function() {
       Application.teamPage.show();
-      History.pushState(null, null, '/questions/12/agenda_items/33');
+      History.pushState(null, null, '/meetings/12/agenda_items/33');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
-      expect(Application.questionPage.params()).toEqual({
-        questionId: 12,
+      expect(Application.meetingPage).toBeVisible();
+      expect(Application.meetingPage.params()).toEqual({
+        meetingId: 12,
         agendaItemId: 33
       });
     });
   });
 
-  describe("/questions/:questionId/agenda_items/:agendaItemId/full_screen", function() {
-    it("shows only the questionsPage and assigns questionId, agendaItemId, and fullScreen = true", function() {
+  describe("/meetings/:meetingId/agenda_items/:agendaItemId/full_screen", function() {
+    it("shows only the meetingsPage and assigns meetingId, agendaItemId, and fullScreen = true", function() {
       Application.teamPage.show();
-      History.pushState(null, null, '/questions/12/agenda_items/33/full_screen');
+      History.pushState(null, null, '/meetings/12/agenda_items/33/full_screen');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
-      expect(Application.questionPage.params()).toEqual({
-        questionId: 12,
+      expect(Application.meetingPage).toBeVisible();
+      expect(Application.meetingPage.params()).toEqual({
+        meetingId: 12,
         agendaItemId: 33,
         fullScreen: true
       });
     });
   });
 
-  describe("/teams/:questionId/questions/new", function() {
-    it("shows the questionsPage in new mode", function() {
+  describe("/teams/:meetingId/meetings/new", function() {
+    it("shows the meetingsPage in new mode", function() {
       Application.teamPage.show();
-      History.pushState(null, null, '/teams/1/questions/new');
+      History.pushState(null, null, '/teams/1/meetings/new');
       expect(Application.teamPage).toBeHidden();
-      expect(Application.questionPage).toBeVisible();
-      expect(Application.questionPage.params()).toEqual({
+      expect(Application.meetingPage).toBeVisible();
+      expect(Application.meetingPage.params()).toEqual({
         teamId: 1,
-        questionId: 'new'
-      });
-    });
-  });
-
-  describe("/account", function() {
-    describe("if the current user is not a guest", function() {
-      beforeEach(function() {
-        Application.currentUser(member);
-      });
-
-      it("shows only the accountPage and assigns its user", function() {
-        Application.teamPage.show();
-        History.pushState(null, null, '/account');
-        expect(Application.teamPage).toBeHidden();
-        expect(Application.accountPage).toBeVisible();
-        expect(Application.accountPage.params()).toEqual({userId: member.id()});
-      });
-    });
-
-    describe("if the current user is a guest", function() {
-      describe("if they log in / sign up at the prompt", function() {
-        it("shows the account page and assigns its params", function() {
-          Application.teamPage.show();
-          History.pushState(null, null, '/account');
-          expect(Application.teamPage).toBeVisible();
-
-          expect(Application.loginForm).toBeVisible();
-          Application.loginForm.emailAddress.val("dude@example.com");
-          Application.loginForm.password.val("wicked");
-          Application.loginForm.form.submit();
-          expect($.ajax).toHaveBeenCalled();
-          simulateAjaxSuccess({ current_user_id: member.id() });
-
-          expect(Application.teamPage).toBeHidden();
-          expect(Application.accountPage).toBeVisible();
-          expect(Application.accountPage.params()).toEqual({userId: member.id()});
-        });
-      });
-
-      describe("if they cancel at the prompt", function() {
-        it("navigates them to their default team", function() {
-          Application.teamPage.show();
-          History.pushState(null, null, '/account');
-          expect(Application.teamPage).toBeVisible();
-
-          expect(Application.loginForm).toBeVisible();
-          spyOn(Application, 'showPage');
-          Application.loginForm.close();
-
-          expect(Path.routes.current).toBe(defaultGuest.defaultTeam().url());
-        });
+        meetingId: 'new'
       });
     });
   });

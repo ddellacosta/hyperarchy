@@ -21,11 +21,11 @@ _.constructor("AgendaItemNote", Model.Record, {
   },
 
   team: function() {
-    return this.question().team();
+    return this.meeting().team();
   },
 
-  question: function() {
-    return this.agendaItem().question();
+  meeting: function() {
+    return this.agendaItem().meeting();
   },
 
   formattedCreatedAt: function() {

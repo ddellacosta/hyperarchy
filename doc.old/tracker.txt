@@ -1,8 +1,8 @@
-make questions and candidates editable by their creator
+make meetings and candidates editable by their creator
 
-clarify that you can drill down into questions (rank, details, add answers)
+clarify that you can drill down into meetings (rank, details, add answers)
 limit the number of candidates to 5 with a "more" link
-when there are no questions, "raise a question" should be open
+when there are no meetings, "raise a meeting" should be open
 
 users can create their own teams
 users can navigate to teams they are a member of
@@ -44,7 +44,7 @@ longer term
 release foundation.js
 document and release screw unit
 
-deferred issues / open questions
+deferred issues / open meetings
 ---------------
 should Record#update allow id to be assigned?
 when an update is performed on a relation, records in the identity map can become stale. should I implement relation#reload for relations that have records (not just tuples), which reloads any records in the id map? could be expensive. may want to implement in memory?

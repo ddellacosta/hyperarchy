@@ -1,18 +1,18 @@
 require 'spec_helper'
 
 describe RankingsController do
-  attr_reader :team, :member, :non_member, :question, :c1, :c2
+  attr_reader :team, :member, :non_member, :meeting, :c1, :c2
 
   before do
     @team = Team.make
-    @question = team.questions.make
-    @c1 = question.agenda_items.make
-    @c2 = question.agenda_items.make
+    @meeting = team.meetings.make
+    @c1 = meeting.agenda_items.make
+    @c2 = meeting.agenda_items.make
     @member = team.make_member
     @non_member = User.make
   end
 
-  context "when authenticated as a member of the ranked question's team" do
+  context "when authenticated as a member of the ranked meeting's team" do
     before do
       login_as member
     end
@@ -47,7 +47,7 @@ describe RankingsController do
     end
   end
 
-  context "when authenticated as a user that is not a member of the ranked question's team" do
+  context "when authenticated as a user that is not a member of the ranked meeting's team" do
     before do
       login_as(non_member)
     end

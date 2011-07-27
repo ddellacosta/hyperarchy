@@ -18,10 +18,10 @@ class User < Prequel::Record
   synthetic_column :email_hash, :string
 
   has_many :memberships
-  has_many :question_visits
+  has_many :meeting_visits
   has_many :votes
   has_many :rankings
-  has_many :questions
+  has_many :meetings
   has_many :agenda_items, :foreign_key => :creator_id
   belongs_to :referring_share, :class_name => "Share"
 
@@ -41,7 +41,7 @@ class User < Prequel::Record
 
   def self.users_to_notify(period)
     Membership.where_any(
-      :notify_of_new_questions => period,
+      :notify_of_new_meetings => period,
       :notify_of_new_agenda_items => period,
       :notify_of_new_notes_on_own_agenda_items => period,
       :notify_of_new_notes_on_ranked_agenda_items => period

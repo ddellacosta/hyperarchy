@@ -181,9 +181,9 @@ module Models
           User.users_to_notify('hourly').all.map(&:id).should =~ [m1, m2, m3, m4].map(&:user).map(&:id)
         end
 
-        def make_membership(questions, agenda_items, notes_on_ranked, notes_on_own, additional_attrs = {})
+        def make_membership(meetings, agenda_items, notes_on_ranked, notes_on_own, additional_attrs = {})
           Membership.make(additional_attrs.merge(
-            :notify_of_new_questions => questions,
+            :notify_of_new_meetings => meetings,
             :notify_of_new_agenda_items => agenda_items,
             :notify_of_new_notes_on_own_agenda_items => notes_on_ranked,
             :notify_of_new_notes_on_ranked_agenda_items => notes_on_own

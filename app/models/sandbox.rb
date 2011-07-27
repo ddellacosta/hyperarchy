@@ -20,28 +20,28 @@ class Sandbox < Prequel::Sandbox
     User.table
   end
 
-  expose :questions do
-    teams.join_through(Question)
+  expose :meetings do
+    teams.join_through(Meeting)
   end
 
-  expose :question_notes do
-    questions.join_through(QuestionNote)
+  expose :meeting_notes do
+    meetings.join_through(MeetingNote)
   end
 
   expose :agenda_items do
-    questions.join_through(AgendaItem)
+    meetings.join_through(AgendaItem)
   end
 
   expose :votes do
-    questions.join_through(Vote)
+    meetings.join_through(Vote)
   end
 
-  expose :question_visits do
-    user.question_visits
+  expose :meeting_visits do
+    user.meeting_visits
   end
 
   expose :rankings do
-    questions.join_through(Ranking)
+    meetings.join_through(Ranking)
   end
 
   expose :agenda_item_notes do

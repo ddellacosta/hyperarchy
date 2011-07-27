@@ -3,7 +3,7 @@ _.constructor("Ranking", Model.Record, {
     initialize: function() {
       this.columns({
         agendaItemId: 'key',
-        questionId: 'key',
+        meetingId: 'key',
         voteId: 'key',
         userId: 'key',
         position: 'float'
@@ -12,7 +12,7 @@ _.constructor("Ranking", Model.Record, {
       this.defaultOrderBy('position desc');
 
       this.belongsTo('agendaItem');
-      this.belongsTo('question');
+      this.belongsTo('meeting');
       this.belongsTo('user');
     },
 
@@ -25,7 +25,7 @@ _.constructor("Ranking", Model.Record, {
         dataType: 'data+records',
         data: {
           user_id: user.id(),
-          question_id: agendaItem.questionId(),
+          meeting_id: agendaItem.meetingId(),
           agendaItem_id: agendaItem.id(),
           position: position
         },

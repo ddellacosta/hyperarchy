@@ -1,12 +1,12 @@
 class Vote < Prequel::Record
   column :id, :integer
   column :user_id, :integer
-  column :question_id, :integer
+  column :meeting_id, :integer
   column :created_at, :datetime
   column :updated_at, :datetime
 
   belongs_to :user
-  belongs_to :question
+  belongs_to :meeting
 
   def can_mutate?
     false
@@ -16,20 +16,20 @@ class Vote < Prequel::Record
   alias can_destroy? can_mutate?
 
   def team_ids
-    question ? question.team_ids : []
+    meeting ? meeting.team_ids : []
   end
 
   # note: this approach to incrementing / decrementing is not atomic!
-  # but currently plan to serialize all operations per question so it's ok
+  # but currently plan to serialize all operations per meeting so it's ok
   # we want to go through the record so the update gets broadcast
   def after_create
-    question.vote_count = question.vote_count + 1
-    question.save
+    meeting.vote_count = meeting.vote_count + 1
+    meeting.save
   end
 
   def after_destroy
-    question.vote_count -= 1
-    question.save
+    meeting.vote_count -= 1
+    meeting.save
   end
 
   def updated

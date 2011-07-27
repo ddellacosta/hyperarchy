@@ -4,7 +4,7 @@ class Membership < Prequel::Record
   column :user_id, :integer
   column :role, :string, :default => "member"
   column :last_visited, :datetime
-  column :notify_of_new_questions, :string, :default => "daily"
+  column :notify_of_new_meetings, :string, :default => "daily"
   column :notify_of_new_agenda_items, :string, :default => "daily"
   column :notify_of_new_notes_on_own_agenda_items, :string, :default => "daily"
   column :notify_of_new_notes_on_ranked_agenda_items, :string, :default => "daily"
@@ -33,7 +33,7 @@ class Membership < Prequel::Record
 
   def create_whitelist
     [:team_id, :user_id, :role, :first_name, :last_name, :email_address,
-     :notify_of_new_questions, :notify_of_new_agenda_items,
+     :notify_of_new_meetings, :notify_of_new_agenda_items,
      :notify_of_new_notes_on_ranked_agenda_items,
      :notify_of_new_notes_on_own_agenda_items]
   end
@@ -41,11 +41,11 @@ class Membership < Prequel::Record
   def update_whitelist
     if current_user_is_admin_or_team_owner?
       [:first_name, :last_name, :role, :last_visited,
-       :notify_of_new_questions, :notify_of_new_agenda_items,
+       :notify_of_new_meetings, :notify_of_new_agenda_items,
        :notify_of_new_notes_on_ranked_agenda_items,
        :notify_of_new_notes_on_own_agenda_items]
     else
-      [:last_visited, :notify_of_new_questions, :notify_of_new_agenda_items,
+      [:last_visited, :notify_of_new_meetings, :notify_of_new_agenda_items,
        :notify_of_new_notes_on_ranked_agenda_items,
        :notify_of_new_notes_on_own_agenda_items]
     end
@@ -90,7 +90,7 @@ class Membership < Prequel::Record
   end
 
   def wants_notifications?(period)
-     wants_question_notifications?(period) ||
+     wants_meeting_notifications?(period) ||
        wants_agenda_item_notifications?(period) ||
        wants_ranked_agenda_item_note_notifications?(period) ||
        wants_own_agenda_item_note_notifications?(period)
@@ -101,8 +101,8 @@ class Membership < Prequel::Record
     notify_of_new_agenda_items == period
   end
 
-  def wants_question_notifications?(period)
-    notify_of_new_questions == period
+  def wants_meeting_notifications?(period)
+    notify_of_new_meetings == period
   end
 
   def wants_ranked_agenda_item_note_notifications?(period)
@@ -113,22 +113,22 @@ class Membership < Prequel::Record
     notify_of_new_notes_on_own_agenda_items == period
   end
 
-  def new_questions_in_period(period)
-    team.questions.
-      where(Question[:created_at].gt(last_notified_or_visited_at(period))).
-      where(Question[:creator_id].neq(user_id))
+  def new_meetings_in_period(period)
+    team.meetings.
+      where(Meeting[:created_at].gt(last_notified_or_visited_at(period))).
+      where(Meeting[:creator_id].neq(user_id))
   end
 
   def new_agenda_items_in_period(period)
     user.votes.
-      join(team.questions).
+      join(team.meetings).
       join_through(AgendaItem).
       where(AgendaItem[:created_at].gt(last_notified_or_visited_at(period))).
       where(AgendaItem[:creator_id].neq(user_id))
   end
 
   def new_notes_on_ranked_agenda_items_in_period(period)
-    team.questions.
+    team.meetings.
       join(user.rankings).
       join(AgendaItem, Ranking[:agenda_item_id] => AgendaItem[:id]).
       where(AgendaItem[:creator_id].neq(user_id)).
@@ -138,7 +138,7 @@ class Membership < Prequel::Record
   end
 
   def new_notes_on_own_agenda_items_in_period(period)
-    team.questions.
+    team.meetings.
       join(user.agenda_items).
       join_through(AgendaItemNote).
       where(AgendaItemNote[:created_at].gt((last_notified_or_visited_at(period)))).

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sandbox do
 
-  attr_reader :question, :repository, :user_1, :user_2, :agenda_item_1, :agenda_item_2
+  attr_reader :meeting, :repository, :user_1, :user_2, :agenda_item_1, :agenda_item_2
 
   before do
     org = Team.make
@@ -11,14 +11,14 @@ describe Sandbox do
     @user_1 = org.make_member
     @user_2 = org.make_member
 
-    @question = org.questions.make
-    @agenda_item_1 = question.agenda_items.make(:creator => user_1)
-    @agenda_item_2 = question.agenda_items.make(:creator => user_2)
+    @meeting = org.meetings.make
+    @agenda_item_1 = meeting.agenda_items.make(:creator => user_1)
+    @agenda_item_2 = meeting.agenda_items.make(:creator => user_2)
 
     @repository = Sandbox.new(current_user)
   end
 
-  it "correctly interprets a join from agenda_items on a given question to their users" do
+  it "correctly interprets a join from agenda_items on a given meeting to their users" do
     wire_reps = [
       {"type" => "inner_join",
        "left_operand" =>
@@ -26,8 +26,8 @@ describe Sandbox do
          "operand" => {"type" => "table", "name" => "agenda_items"},
          "predicate" =>
           {"type" => "eq",
-           "left_operand" => {"type" => "column", "table" => "agenda_items", "name" => "question_id"},
-           "right_operand" => {"type" => "scalar", "value" => question.id}}},
+           "left_operand" => {"type" => "column", "table" => "agenda_items", "name" => "meeting_id"},
+           "right_operand" => {"type" => "scalar", "value" => meeting.id}}},
        "right_operand" => {"type" => "table", "name" => "users"},
        "predicate" =>
         {"type" => "eq",

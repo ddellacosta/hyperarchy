@@ -50,7 +50,6 @@ describe("Views.Lightboxes.SignupForm", function() {
       it("creates a user and logs them in according to the information entered and hides the form", function() {
         fetchInitialRepositoryContents();
         spyOn(Application, 'showPage');
-        History.pushState(null, null, Team.findSocial().url());
 
         var signupForm = Application.signupForm;
         signupForm.firstName.val("Richard");
@@ -70,8 +69,6 @@ describe("Views.Lightboxes.SignupForm", function() {
           expect(user.lastName()).toEqual("Nixon");
           expect(user.emailAddress()).toEqual("dick@hell.de");
           expect(user.teams().size()).toBe(1);
-          expect(user.teams().first().social()).toBeTruthy();
-          expect(Path.routes.current).toEqual(Team.findSocial().url());
           expect(signupForm).toBeHidden();
           expect(Application.darkenedBackground).toBeHidden();
         });
@@ -102,7 +99,6 @@ describe("Views.Lightboxes.SignupForm", function() {
       it("signs them up and directs them to the main page of their new team", function() {
         fetchInitialRepositoryContents();
         spyOn(Application, 'showPage');
-        History.pushState(null, null, Team.findSocial().url());
 
         var signupForm = Application.signupForm;
         signupForm.teamSection.show();

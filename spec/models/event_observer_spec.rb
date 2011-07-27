@@ -11,7 +11,7 @@ describe EventObserver do
     let(:events) { [] }
 
     it "causes all events on the given model classes to be sent to the appropriate channels on the socket server" do
-      EventObserver.observe(User, Team, Question)
+      EventObserver.observe(User, Team, Meeting)
 
       freeze_time
       org1 = Team.make
@@ -23,14 +23,14 @@ describe EventObserver do
       events.shift.should == ["update", "teams", org1.id, {"name"=>"New Org Name", "description"=>"New Org Description", 'updated_at' => Time.now.to_millis}]
 
       expect_event(org1)
-      question = org1.questions.make
-      events.shift.should == ["create", "questions", question.wire_representation, {}]
+      meeting = org1.meetings.make
+      events.shift.should == ["create", "meetings", meeting.wire_representation, {}]
 
-      expect_event(org1) # 2 events, 1 for the question count update and 1 for the destroy
+      expect_event(org1) # 2 events, 1 for the meeting count update and 1 for the destroy
       expect_event(org1)
-      question.destroy
-      events.shift.should == ["update", "teams", org1.id, {"question_count"=>0}]
-      events.shift.should == ["destroy", "questions", question.id]
+      meeting.destroy
+      events.shift.should == ["update", "teams", org1.id, {"meeting_count"=>0}]
+      events.shift.should == ["destroy", "meetings", meeting.id]
 
       user = org1.make_member
       org2.memberships.make(:user => user)
@@ -45,18 +45,18 @@ describe EventObserver do
     end
 
     it "sends extra records for create events if desired" do
-      extra_question = Question.make
+      extra_meeting = Meeting.make
       org1 = Team.make
-      instance_of(Question).extra_records_for_create_events { [extra_question] }
+      instance_of(Meeting).extra_records_for_create_events { [extra_meeting] }
 
-      EventObserver.observe(Question)
+      EventObserver.observe(Meeting)
 
       freeze_time
 
       expect_event(org1)
-      question = org1.questions.make
+      meeting = org1.meetings.make
       extra_records = RecordsWrapper.new(events.shift.last)
-      extra_records.should include(extra_question)
+      extra_records.should include(extra_meeting)
     end
 
     def expect_event(team)

@@ -25,20 +25,20 @@ module Views
           h1 "#{presenter.team.name}", :style => "font-size: 22px;"
         end
         h2 presenter.headline
-        presenter.question_presenters.each do |question_presenter|
-          question_section(question_presenter)
+        presenter.meeting_presenters.each do |meeting_presenter|
+          meeting_section(meeting_presenter)
         end
       end
 
-      def question_section(presenter)
-        question = presenter.question
+      def meeting_section(presenter)
+        meeting = presenter.meeting
 
-        color = presenter.question_is_new ? "black" : "#888"
+        color = presenter.meeting_is_new ? "black" : "#888"
 
         div :style => "background: #eee; border: 1px solid #DDD; margin-bottom: 10px; max-width: 500px; color: #{color};" do
           div :style => "margin: 8px;" do
-            a "View Question", :href => question_url(question), :style => "float: right; padding: 5px 15px; background: white; margin-left: 10px; color: #000094;"
-            div question.body, :style => "padding: 0px; padding-top: 5px;"
+            a "View Meeting", :href => meeting_url(meeting), :style => "float: right; padding: 5px 15px; background: white; margin-left: 10px; color: #000094;"
+            div meeting.body, :style => "padding: 0px; padding-top: 5px;"
             div :style => "clear: both;"
           end
 

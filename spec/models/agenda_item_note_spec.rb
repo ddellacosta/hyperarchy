@@ -5,11 +5,11 @@ module Models
     attr_reader :agenda_item, :team, :agenda_item_creator, :note_creator, :note
     before do
       @team = Team.make
-      question = team.questions.make
+      meeting = team.meetings.make
       @agenda_item_creator = team.make_member
       @note_creator = team.make_member
       set_current_user(note_creator)
-      @agenda_item = question.agenda_items.make(:creator => agenda_item_creator)
+      @agenda_item = meeting.agenda_items.make(:creator => agenda_item_creator)
       @note = agenda_item.notes.make(:creator => note_creator)
     end
     

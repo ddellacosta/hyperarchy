@@ -1,39 +1,39 @@
 require 'spec_helper'
 
 describe SandboxController do
-  attr_reader :team, :other_team, :question, :user
+  attr_reader :team, :other_team, :meeting, :user
 
   before do
     @team = Team.make(:privacy => 'public')
     @other_team = Team.make(:privacy => 'private')
     @user = login_as team.make_member
-    @question = team.questions.make(:creator => user)
+    @meeting = team.meetings.make(:creator => user)
   end
 
   describe "#fetch" do
     it "calls #fetch on the sandbox object with the given relations, parsed from json and returns the result as json" do
-      get :fetch, :relations => [Question.wire_representation].to_json
-      JSON.parse(response.body)['questions'][question.to_param].should == question.wire_representation
+      get :fetch, :relations => [Meeting.wire_representation].to_json
+      JSON.parse(response.body)['meetings'][meeting.to_param].should == meeting.wire_representation
     end
   end
 
   describe "#create" do
     context "when creating a legal record" do
       it "creates the record and returns its wire representation" do
-        Question.count.should == 1
-        post :create, :relation => "questions", :field_values => Question.plan(:team => team)
+        Meeting.count.should == 1
+        post :create, :relation => "meetings", :field_values => Meeting.plan(:team => team)
         response.should be_success
-        Question.count.should == 2
+        Meeting.count.should == 2
         json = JSON.parse(response.body)
-        json.should == Question.find(json['id']).wire_representation
+        json.should == Meeting.find(json['id']).wire_representation
       end
     end
 
     context "when creating an illegal record" do
       it "returns '403 forbidden'" do
-        Question.count.should == 1
-        post :create, :relation => "questions", :field_values => Question.plan(:team => other_team)
-        Question.count.should == 1
+        Meeting.count.should == 1
+        post :create, :relation => "meetings", :field_values => Meeting.plan(:team => other_team)
+        Meeting.count.should == 1
         response.should be_forbidden
       end
     end
@@ -61,11 +61,11 @@ describe SandboxController do
   describe "#update" do
     describe "when performing a legal update" do
       it "updates the record and returns its new wire representation" do
-        put :update, :relation => "questions", :id => question.to_param, :field_values => { :body => "New body" }
+        put :update, :relation => "meetings", :id => meeting.to_param, :field_values => { :body => "New body" }
         response.should be_success
         json = JSON.parse(response.body)
-        json.should == question.wire_representation
-        question.body.should == "New body"
+        json.should == meeting.wire_representation
+        meeting.body.should == "New body"
       end
     end
 
@@ -85,7 +85,7 @@ describe SandboxController do
 
     describe "when performing an update against a record that is not in the relation" do
       it "returns '404 not found'" do
-        put :update, :relation => "questions", :id => '909', :field_values => { :body => "New body" }
+        put :update, :relation => "meetings", :id => '909', :field_values => { :body => "New body" }
         response.status.should == 404
       end
     end
@@ -94,15 +94,15 @@ describe SandboxController do
   describe "#destroy" do
     describe "when destroying a record that exists" do
       it "destroys the record and returns 200 ok" do
-        delete :destroy, :relation => "questions", :id => question.to_param
+        delete :destroy, :relation => "meetings", :id => meeting.to_param
         response.should be_success
-        Question.find(question.id).should be_nil
+        Meeting.find(meeting.id).should be_nil
       end
     end
 
     describe "when destroying a record that doesn't exist" do
       it "returns '404 not found'" do
-        delete :destroy, :relation => "questions", :id => '909'
+        delete :destroy, :relation => "meetings", :id => '909'
         response.status.should == 404
       end
     end

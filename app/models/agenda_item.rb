@@ -2,14 +2,14 @@ class AgendaItem < Prequel::Record
   column :id, :integer
   column :body, :string
   column :details, :string, :default => ""
-  column :question_id, :integer
+  column :meeting_id, :integer
   column :creator_id, :integer
   column :position, :integer
   column :created_at, :datetime
   column :updated_at, :datetime
   column :note_count, :integer, :default => 0
 
-  belongs_to :question
+  belongs_to :meeting
   belongs_to :creator, :class_name => "User"
   has_many :rankings
   has_many :notes, :class_name => "AgendaItemNote"
@@ -17,10 +17,10 @@ class AgendaItem < Prequel::Record
   include SupportsNotifications
 
   attr_accessor :suppress_current_user_membership_check
-  delegate :team, :to => :question
+  delegate :team, :to => :meeting
 
   def team_ids
-    question ? question.team_ids : []
+    meeting ? meeting.team_ids : []
   end
 
   def can_create?
@@ -28,13 +28,13 @@ class AgendaItem < Prequel::Record
   end
 
   def can_update_or_destroy?
-    current_user.admin? || creator_id == current_user.id || question.team.has_owner?(current_user)
+    current_user.admin? || creator_id == current_user.id || meeting.team.has_owner?(current_user)
   end
   alias can_update? can_update_or_destroy?
   alias can_destroy? can_update_or_destroy?
 
   def create_whitelist
-    [:body, :details, :question_id]
+    [:body, :details, :meeting_id]
   end
 
   def update_whitelist
@@ -44,7 +44,7 @@ class AgendaItem < Prequel::Record
   def before_create
     ensure_body_within_limit
     team.ensure_current_user_is_member unless suppress_current_user_membership_check
-    question.lock
+    meeting.lock
     self.creator ||= current_user
   end
 
@@ -59,24 +59,24 @@ class AgendaItem < Prequel::Record
   def after_create
     update(:position => 1) if other_agenda_items.empty?
     other_agenda_items.each do |other_agenda_item|
-      Majority.create({:winner => self, :loser => other_agenda_item, :question_id => question_id})
-      Majority.create({:winner => other_agenda_item, :loser => self, :question_id => question_id})
+      Majority.create({:winner => self, :loser => other_agenda_item, :meeting_id => meeting_id})
+      Majority.create({:winner => other_agenda_item, :loser => self, :meeting_id => meeting_id})
     end
 
-    victories_over(question.negative_agenda_item_ranking_counts).update(:pro_count => :times_ranked)
-    victories_over(question.positive_agenda_item_ranking_counts).update(:con_count => :times_ranked)
-    defeats_by(question.positive_agenda_item_ranking_counts).update(:pro_count => :times_ranked)
-    defeats_by(question.negative_agenda_item_ranking_counts).update(:con_count => :times_ranked)
+    victories_over(meeting.negative_agenda_item_ranking_counts).update(:pro_count => :times_ranked)
+    victories_over(meeting.positive_agenda_item_ranking_counts).update(:con_count => :times_ranked)
+    defeats_by(meeting.positive_agenda_item_ranking_counts).update(:pro_count => :times_ranked)
+    defeats_by(meeting.negative_agenda_item_ranking_counts).update(:con_count => :times_ranked)
 
-    question.compute_global_ranking
-    question.unlock
+    meeting.compute_global_ranking
+    meeting.unlock
 
     send_immediate_notifications
   end
 
   def before_destroy
     notes.each(&:destroy)
-    question.lock
+    meeting.lock
     rankings.each do |ranking|
       ranking.suppress_vote_update = true
       ranking.destroy
@@ -86,11 +86,11 @@ class AgendaItem < Prequel::Record
   end
 
   def after_destroy
-    question.unlock
+    meeting.unlock
   end
 
   def other_agenda_items
-    question.agenda_items.where(AgendaItem[:id].neq(id))
+    meeting.agenda_items.where(AgendaItem[:id].neq(id))
   end
 
   def victories_over(other_agenda_item_ranking_counts)
@@ -104,16 +104,16 @@ class AgendaItem < Prequel::Record
   end
 
   def winning_majorities
-    question.majorities.where(:winner_id => id)
+    meeting.majorities.where(:winner_id => id)
   end
 
   def losing_majorities
-    question.majorities.where(:loser_id => id)
+    meeting.majorities.where(:loser_id => id)
   end
 
   def users_to_notify_immediately
-    question.votes.
-      join(Membership.where(:team_id => question.team_id), Vote[:user_id].eq(Membership[:user_id])).
+    meeting.votes.
+      join(Membership.where(:team_id => meeting.team_id), Vote[:user_id].eq(Membership[:user_id])).
       where(:notify_of_new_agenda_items => "immediately").
       where(Membership[:user_id].neq(creator_id)).
       join_through(User)

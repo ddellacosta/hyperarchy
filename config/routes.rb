@@ -1,13 +1,13 @@
 Actionitems::Application.routes.draw do
   root :to => 'home#show'
   match 'teams/:id' => 'home#show', :as => "organanization"
-  match 'teams/:id/questions/new' => 'home#show', :as => "new_team_question"
+  match 'teams/:id/meetings/new' => 'home#show', :as => "new_team_meeting"
   match 'teams/:id/settings' => 'home#show', :as => "team_settings"
-  match 'questions/:id' => 'home#show', :as => "question"
-  match 'questions/:id/full_screen' => 'home#show', :as => "full_screen_question"
-  match 'questions/:id/agenda_items/:selected_agenda_item_id' => 'home#show', :as => "question_agenda_item"
-  match 'questions/:id/agenda_items/:selected_agenda_item_id/full_screen' => 'home#show', :as => "full_screen_question_agenda_item"
-  match 'questions/:id/votes/:selected_voter_id' => 'home#show', :as => "question_voter"
+  match 'meetings/:id' => 'home#show', :as => "meeting"
+  match 'meetings/:id/full_screen' => 'home#show', :as => "full_screen_meeting"
+  match 'meetings/:id/agenda_items/:selected_agenda_item_id' => 'home#show', :as => "meeting_agenda_item"
+  match 'meetings/:id/agenda_items/:selected_agenda_item_id/full_screen' => 'home#show', :as => "full_screen_meeting_agenda_item"
+  match 'meetings/:id/votes/:selected_voter_id' => 'home#show', :as => "meeting_voter"
   match 'account' => 'home#show', :as => "account"
 
   match 'login' => 'sessions#new', :via => 'get', :as => "login"
@@ -36,16 +36,16 @@ Actionitems::Application.routes.draw do
 
   # TODO: delete?
   resources :teams do
-    resources :questions
+    resources :meetings
   end
 
   resources :users
   resources :memberships do
     get :confirm, :on => :member
   end
-  resources :questions
+  resources :meetings
   resources :rankings
-  resources :question_visits
+  resources :meeting_visits
   resources :password_reset_requests
   resources :password_resets
 

@@ -1,7 +1,7 @@
 class Ranking < Prequel::Record
   column :id, :integer
   column :user_id, :integer
-  column :question_id, :integer
+  column :meeting_id, :integer
   column :agenda_item_id, :integer
   column :vote_id, :integer
   column :position, :float
@@ -10,7 +10,7 @@ class Ranking < Prequel::Record
 
   belongs_to :user
   belongs_to :agenda_item
-  belongs_to :question
+  belongs_to :meeting
   belongs_to :vote
 
   attr_accessor :suppress_vote_update
@@ -26,13 +26,13 @@ class Ranking < Prequel::Record
   end
 
   def team_ids
-    question ? question.team_ids : []
+    meeting ? meeting.team_ids : []
   end
 
   def before_create
-    self.question_id = agenda_item.question_id
-    question.lock
-    self.vote = question.votes.find_or_create(:user_id => user_id)
+    self.meeting_id = agenda_item.meeting_id
+    meeting.lock
+    self.vote = meeting.votes.find_or_create(:user_id => user_id)
     vote.updated
   end
 
@@ -47,12 +47,12 @@ class Ranking < Prequel::Record
       increment_defeats_by(agenda_items_not_ranked_by_same_user)
     end
 
-    question.compute_global_ranking
-    question.unlock
+    meeting.compute_global_ranking
+    meeting.unlock
   end
 
   def before_update(changeset)
-    question.lock
+    meeting.lock
   end
 
   def after_update(changeset)
@@ -64,9 +64,9 @@ class Ranking < Prequel::Record
       after_ranking_moved_down(old_position)
     end
 
-    question.votes.find(:user_id => user_id).updated
-    question.compute_global_ranking
-    question.unlock
+    meeting.votes.find(:user_id => user_id).updated
+    meeting.compute_global_ranking
+    meeting.unlock
   end
 
   def after_ranking_moved_up(old_position)
@@ -93,7 +93,7 @@ class Ranking < Prequel::Record
   end
 
   def before_destroy
-    question.lock
+    meeting.lock
   end
 
   def after_destroy
@@ -112,8 +112,8 @@ class Ranking < Prequel::Record
     elsif !suppress_vote_update
       vote.updated
     end
-    question.compute_global_ranking
-    question.unlock
+    meeting.compute_global_ranking
+    meeting.unlock
   end
 
   def increment_victories_over(rankings_or_agenda_items)
@@ -151,7 +151,7 @@ class Ranking < Prequel::Record
   end
 
   def rankings_by_same_user
-    Ranking.where(:user_id => user_id, :question_id => question_id)
+    Ranking.where(:user_id => user_id, :meeting_id => meeting_id)
   end
 
   def higher_rankings_by_same_user
@@ -198,12 +198,12 @@ class Ranking < Prequel::Record
     Ranking.where(:agenda_item_id => agenda_item_id)
   end
 
-  def all_agenda_items_in_question
-    AgendaItem.where(:question_id => question_id)
+  def all_agenda_items_in_meeting
+    AgendaItem.where(:meeting_id => meeting_id)
   end
 
   def agenda_items_not_ranked_by_same_user
-    all_agenda_items_in_question.
+    all_agenda_items_in_meeting.
       left_join(rankings_by_same_user).
       where(Ranking[:id] => nil).
       project(AgendaItem)

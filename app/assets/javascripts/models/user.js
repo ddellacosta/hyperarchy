@@ -22,9 +22,9 @@ _.constructor("User", Model.Record, {
     this.hasMany('votes');
     this.hasMany('rankings');
     this.hasMany('agendaItems', {key: 'creatorId'});
-    this.hasMany('questions', {key: 'creatorId'});
+    this.hasMany('meetings', {key: 'creatorId'});
     this.hasMany('memberships');
-    this.hasMany('questionVisits');
+    this.hasMany('meetingVisits');
 
     this.relatesToMany('teams', function() {
       return this.memberships().joinThrough(Team);
@@ -81,8 +81,8 @@ _.constructor("User", Model.Record, {
     return this.memberships().orderBy(Membership.lastVisited.desc()).first().team();
   },
 
-  rankingsForQuestion: function(question) {
-    return this.rankings().where({questionId: question.id()});
+  rankingsForMeeting: function(meeting) {
+    return this.rankings().where({meetingId: meeting.id()});
   },
 
   trackIdentity: function() {

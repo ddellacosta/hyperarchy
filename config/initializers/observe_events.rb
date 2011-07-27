@@ -1,3 +1,3 @@
 unless Rails.env.test?
-  EventObserver.observe(AgendaItem, AgendaItemNote, Question, QuestionNote, Membership, Team, Ranking, User, Vote)
+  EventObserver.observe(AgendaItem, AgendaItemNote, Meeting, MeetingNote, Membership, Team, Ranking, User, Vote)
 end

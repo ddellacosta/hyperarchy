@@ -8,7 +8,7 @@ _.constructor("Membership", Model.Record, {
       lastName: "string",
       emailAddress: "string",
       lastVisited: "datetime",
-      notifyOfNewQuestions: "string",
+      notifyOfNewMeetings: "string",
       notifyOfNewAgendaItems: "string",
       notifyOfNewNotesOnOwnAgendaItems: "string",
       notifyOfNewNotesOnRankedAgendaItems: "string"

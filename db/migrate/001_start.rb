@@ -12,7 +12,7 @@ Sequel.migration do
     create_table(:agenda_items) do
       primary_key :id
       String :body, :size=>255
-      Integer :question_id
+      Integer :meeting_id
       Integer :position
       Integer :creator_id
       String :details, :default=>"", :text=>true
@@ -30,7 +30,7 @@ Sequel.migration do
     
     create_table(:majorities) do
       primary_key :id
-      Integer :question_id
+      Integer :meeting_id
       Integer :winner_id
       Integer :loser_id
       Integer :pro_count
@@ -46,7 +46,7 @@ Sequel.migration do
       column :last_visited, 'timestamp with time zone'
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
-      String :notify_of_new_questions, :text=>true
+      String :notify_of_new_meetings, :text=>true
       String :notify_of_new_agenda_items, :text=>true
       String :notify_of_new_notes_on_own_agenda_items, :text=>true
       String :notify_of_new_notes_on_ranked_agenda_items, :text=>true
@@ -62,31 +62,31 @@ Sequel.migration do
       TrueClass :use_ssl, :default=>true
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
-      Integer :question_count, :default=>0
+      Integer :meeting_count, :default=>0
       TrueClass :social, :default=>false
       String :privacy, :default=>"private", :text=>true
       String :membership_code, :text=>true
       Integer :member_count, :default=>0
     end
     
-    create_table(:question_notes) do
+    create_table(:meeting_notes) do
       primary_key :id
       String :body, :text=>true
-      Integer :question_id
+      Integer :meeting_id
       Integer :creator_id
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
     end
     
-    create_table(:question_visits) do
+    create_table(:meeting_visits) do
       primary_key :id
-      Integer :question_id
+      Integer :meeting_id
       Integer :user_id
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
     end
     
-    create_table(:questions) do
+    create_table(:meetings) do
       primary_key :id
       Integer :team_id
       String :body, :text=>true
@@ -101,7 +101,7 @@ Sequel.migration do
     create_table(:rankings) do
       primary_key :id
       Integer :user_id
-      Integer :question_id
+      Integer :meeting_id
       Integer :agenda_item_id
       Float :position
       Integer :vote_id
@@ -113,7 +113,7 @@ Sequel.migration do
       primary_key :id
       String :code, :text=>true, :null=>false
       Integer :user_id, :null=>false
-      Integer :question_id, :null=>false
+      Integer :meeting_id, :null=>false
       column :created_at, 'timestamp with time zone', :null=>false
       String :service, :text=>true, :null=>false
     end
@@ -143,7 +143,7 @@ Sequel.migration do
     
     create_table(:votes) do
       primary_key :id
-      Integer :question_id
+      Integer :meeting_id
       Integer :user_id
       column :created_at, 'timestamp with time zone'
       column :updated_at, 'timestamp with time zone'
@@ -151,6 +151,6 @@ Sequel.migration do
   end
   
   down do
-    drop_table(:agenda_item_notes, :agenda_items, :mailing_list_entries, :majorities, :memberships, :teams, :question_notes, :question_visits, :questions, :rankings, :schema_info, :shares, :users, :votes)
+    drop_table(:agenda_item_notes, :agenda_items, :mailing_list_entries, :majorities, :memberships, :teams, :meeting_notes, :meeting_visits, :meetings, :rankings, :schema_info, :shares, :users, :votes)
   end
 end

@@ -1,7 +1,7 @@
 _.constructor("AgendaItem", Model.Record, {
   constructorInitialize: function() {
     this.columns({
-      questionId: 'key',
+      meetingId: 'key',
       creatorId: 'key',
       body: 'string',
       details: 'string',
@@ -14,7 +14,7 @@ _.constructor("AgendaItem", Model.Record, {
 
     this.hasMany('rankings');
     this.hasMany('notes', {constructorName: "AgendaItemNote"});
-    this.belongsTo('question');
+    this.belongsTo('meeting');
     this.belongsTo('creator', {constructorName: "User"});
     this.relatesToMany('noters', function() {
       return this.notes().join(User).on(AgendaItemNote.creatorId.eq(User.id));
@@ -51,7 +51,7 @@ _.constructor("AgendaItem", Model.Record, {
   },
 
   team: function() {
-    return this.question().team();
+    return this.meeting().team();
   },
 
   formattedCreatedAt: function() {
@@ -59,7 +59,7 @@ _.constructor("AgendaItem", Model.Record, {
   },
 
   url: function() {
-    return "/questions/" + this.questionId() + "/agenda_items/" + this.id();
+    return "/meetings/" + this.meetingId() + "/agenda_items/" + this.id();
   },
 
   fullScreenUrl: function() {
@@ -71,10 +71,10 @@ _.constructor("AgendaItem", Model.Record, {
   },
 
   previous: function() {
-    return this.question().agendaItems().where(AgendaItem.position.lt(this.position())).last();
+    return this.meeting().agendaItems().where(AgendaItem.position.lt(this.position())).last();
   },
 
   next: function() {
-    return this.question().agendaItems().where(AgendaItem.position.gt(this.position())).first();
+    return this.meeting().agendaItems().where(AgendaItem.position.gt(this.position())).first();
   }
 });

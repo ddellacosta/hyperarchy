@@ -4,15 +4,15 @@ module Views
       include HeadlineGeneration
 
       attr_reader :membership, :period, :item
-      attr_reader :question_presenters_by_question, :agenda_item_presenters_by_agenda_item
-      attr_accessor :new_question_count, :new_agenda_item_count, :new_note_count
+      attr_reader :meeting_presenters_by_meeting, :agenda_item_presenters_by_agenda_item
+      attr_accessor :new_meeting_count, :new_agenda_item_count, :new_note_count
       delegate :team, :to => :membership
 
       def initialize(membership, period, item)
         @membership, @period, @item = membership, period, item
-        @question_presenters_by_question = {}
+        @meeting_presenters_by_meeting = {}
         @agenda_item_presenters_by_agenda_item = {}
-        @new_question_count = 0
+        @new_meeting_count = 0
         @new_agenda_item_count = 0
         @new_note_count = 0
 
@@ -25,8 +25,8 @@ module Views
 
       def build_immediate_notification
         case item
-          when Question
-            add_new_question(item)
+          when Meeting
+            add_new_meeting(item)
           when AgendaItem
             add_new_agenda_item(item)
           when AgendaItemNote
@@ -37,9 +37,9 @@ module Views
       end
 
       def build_periodic_notification
-        if membership.wants_question_notifications?(period)
-          membership.new_questions_in_period(period).each do |question|
-            add_new_question(question)
+        if membership.wants_meeting_notifications?(period)
+          membership.new_meetings_in_period(period).each do |meeting|
+            add_new_meeting(meeting)
           end
         end
 
@@ -62,32 +62,32 @@ module Views
         end
       end
 
-      def add_new_question(question)
-        self.new_question_count += 1
-        question_presenters_by_question[question] = QuestionPresenter.new(question, true)
+      def add_new_meeting(meeting)
+        self.new_meeting_count += 1
+        meeting_presenters_by_meeting[meeting] = MeetingPresenter.new(meeting, true)
       end
 
       def add_new_agenda_item(agenda_item)
         self.new_agenda_item_count += 1
-        question = agenda_item.question
-        build_question_presenter_if_needed(question)
-        question_presenters_by_question[question].add_new_agenda_item(agenda_item)
+        meeting = agenda_item.meeting
+        build_meeting_presenter_if_needed(meeting)
+        meeting_presenters_by_meeting[meeting].add_new_agenda_item(agenda_item)
       end
 
       def add_new_note(note)
         self.new_note_count += 1
-        question = note.question
-        build_question_presenter_if_needed(question)
-        question_presenters_by_question[question].add_new_note(note)
+        meeting = note.meeting
+        build_meeting_presenter_if_needed(meeting)
+        meeting_presenters_by_meeting[meeting].add_new_note(note)
       end
 
-      def build_question_presenter_if_needed(question)
-        return if question_presenters_by_question.has_key?(question)
-        question_presenters_by_question[question] = QuestionPresenter.new(question, false)
+      def build_meeting_presenter_if_needed(meeting)
+        return if meeting_presenters_by_meeting.has_key?(meeting)
+        meeting_presenters_by_meeting[meeting] = MeetingPresenter.new(meeting, false)
       end
 
-      def question_presenters
-        question_presenters_by_question.values.sort_by(&:score).reverse!
+      def meeting_presenters
+        meeting_presenters_by_meeting.values.sort_by(&:score).reverse!
       end
 
       def headline
@@ -95,13 +95,13 @@ module Views
       end
 
       def empty?
-        new_question_count == 0 && new_agenda_item_count == 0 && new_note_count == 0
+        new_meeting_count == 0 && new_agenda_item_count == 0 && new_note_count == 0
       end
 
       def add_lines(template, lines)
         lines.push(headline, "")
 
-        question_presenters.each do |presenter|
+        meeting_presenters.each do |presenter|
           presenter.add_lines(template, lines)
         end
       end

@@ -12,7 +12,7 @@ jQuery.ajax = function() {
 
 var originalServer = window.Server;
 
-Views.Pages.Question.AgendaItemLi.prototype.viewProperties.dragDelay = null;
+Views.Pages.Meeting.AgendaItemLi.prototype.viewProperties.dragDelay = null;
 
 var mpq;
 var _gaq;
@@ -23,7 +23,7 @@ beforeEach(function() {
   window.History.reset();
   Repository.clear();
   stubAjax();
-  spyOn(Question, 'updateScoresPeriodically');
+  spyOn(Meeting, 'updateScoresPeriodically');
   mpq = []
   _gaq = [];
   T.reset();
@@ -48,8 +48,7 @@ function attachLayout(render) {
   window.Application = Views.Layout.toView();
   if (render) $("#jasmine_content").html(window.Application = Views.Layout.toView());
   Application.attach();
-  var socialOrg = Team.createFromRemote({id: 999, social: true, name: "Actionitems Social"});
-  var defaultGuest = socialOrg.makeMember({id: 999, guest: true, defaultGuest: true, firstName: "Default", lastName: "Guest"});
+  var defaultGuest = User.createFromRemote({id: 999, guest: true, defaultGuest: true, firstName: "Default", lastName: "Guest"});
   Application.currentUser(defaultGuest);
   Path.listen();
   return Application;

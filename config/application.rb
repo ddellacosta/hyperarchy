@@ -64,7 +64,7 @@ module Actionitems
 end
 
 ACTIONITEMS_BLURB =       %{Actionitems helps your team track its own collective opinion.
-It lets you put any issue to a vote by raising questions, then allows members to suggest and rank agenda_items to these questions.
+It lets you put any issue to a vote by raising meetings, then allows members to suggest and rank agenda_items to these meetings.
 As individuals change their rankings, Actionitems computes and broadcasts the evolving consensus in real time, making it easier to communicate and make decisions.}
 
 SOCKET_SERVER_HOST = 'localhost:8082'

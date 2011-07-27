@@ -2,23 +2,23 @@ require 'spec_helper'
 
 module Jobs
   describe SendImmediateNotifications do
-    let(:question) { Question.make }
-    let(:job) { SendImmediateNotifications.new('job_id', 'class_name' => 'Question', 'id' => question.id) }
+    let(:meeting) { Meeting.make }
+    let(:job) { SendImmediateNotifications.new('job_id', 'class_name' => 'Meeting', 'id' => meeting.id) }
 
     describe "#perform" do
       it "sends a NotificationMailer.notification for every user to notify immediately" do
-        team = question.team
+        team = meeting.team
         user1 = team.make_member
         user2 = team.make_member
         user3 = team.make_member
         user1_membership = team.memberships.find(:user => user1)
         user2_membership = team.memberships.find(:user => user2)
         user3_membership = team.memberships.find(:user => user3)
-        user1_membership.update!(:notify_of_new_questions => 'immediately')
-        user2_membership.update!(:notify_of_new_questions => 'immediately')
-        user3_membership.update!(:notify_of_new_questions => 'never')
+        user1_membership.update!(:notify_of_new_meetings => 'immediately')
+        user2_membership.update!(:notify_of_new_meetings => 'immediately')
+        user3_membership.update!(:notify_of_new_meetings => 'never')
 
-        question.users_to_notify_immediately.should_not be_empty
+        meeting.users_to_notify_immediately.should_not be_empty
 
         mock(NotificationMailer).notification(user1, is_a(Views::NotificationMailer::NotificationPresenter)).mock!.deliver
         mock(NotificationMailer).notification(user2, is_a(Views::NotificationMailer::NotificationPresenter)).mock!.deliver
@@ -32,11 +32,11 @@ module Jobs
       end
 
       it "doesn't send notifications to users with email disabled" do
-        team = question.team
+        team = meeting.team
         user1 = team.make_member
         user1.update!(:email_enabled => false)
         user1_membership = team.memberships.find(:user => user1)
-        user1_membership.update!(:notify_of_new_questions => 'immediately')
+        user1_membership.update!(:notify_of_new_meetings => 'immediately')
 
         dont_allow(NotificationMailer).notification
 

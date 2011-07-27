@@ -15,16 +15,16 @@ module Jobs
         user2_membership = user2.memberships.first
         user3_membership = user3.memberships.first
         user4_membership = user4.memberships.first
-        user1_membership.update!(:notify_of_new_questions => period)
-        user2_membership.update!(:notify_of_new_questions => period)
-        user3_membership.update!(:notify_of_new_questions => period)
-        user4_membership.update!(:notify_of_new_questions => 'never', :notify_of_new_agenda_items => period)
+        user1_membership.update!(:notify_of_new_meetings => period)
+        user2_membership.update!(:notify_of_new_meetings => period)
+        user3_membership.update!(:notify_of_new_meetings => period)
+        user4_membership.update!(:notify_of_new_meetings => 'never', :notify_of_new_agenda_items => period)
 
-        new_question = Team.social.questions.make
+        new_meeting = Team.social.meetings.make
 
-        mock(user1.memberships.first).new_questions_in_period(period) { [new_question] }
-        mock(user2.memberships.first).new_questions_in_period(period) { [new_question] }
-        mock(user3.memberships.first).new_questions_in_period(period) { [new_question] }
+        mock(user1.memberships.first).new_meetings_in_period(period) { [new_meeting] }
+        mock(user2.memberships.first).new_meetings_in_period(period) { [new_meeting] }
+        mock(user3.memberships.first).new_meetings_in_period(period) { [new_meeting] }
 
         mock(NotificationMailer).notification(user1, is_a(Views::NotificationMailer::NotificationPresenter)).mock!.deliver
         mock(NotificationMailer).notification(user2, is_a(Views::NotificationMailer::NotificationPresenter)).mock!.deliver { raise "Email failed "}
@@ -43,12 +43,12 @@ module Jobs
       it "doesn't send notifications to users with email disabled" do
         user1 = User.make
         user1_membership = user1.memberships.first
-        user1_membership.update!(:notify_of_new_questions => period)
+        user1_membership.update!(:notify_of_new_meetings => period)
 
-        new_question = Team.social.questions.make
+        new_meeting = Team.social.meetings.make
         user1.update!(:email_enabled => false)
 
-        stub(user1.memberships.first).new_questions_in_period(period) { [new_question] }
+        stub(user1.memberships.first).new_meetings_in_period(period) { [new_meeting] }
         dont_allow(NotificationMailer).notification
 
         mock(job).completed

@@ -2,7 +2,7 @@ _.constructor("Vote", Model.Record, {
   constructorInitialize: function() {
     this.columns({
       userId: 'key',
-      questionId: 'key',
+      meetingId: 'key',
       updatedAt: 'datetime'
     });
 
@@ -12,13 +12,13 @@ _.constructor("Vote", Model.Record, {
       });
     });
 
-    this.belongsTo('question');
+    this.belongsTo('meeting');
     this.belongsTo('user');
     this.hasMany('rankings');
   },
 
   url: function() {
-    var url = "/questions/" + this.questionId();
+    var url = "/meetings/" + this.meetingId();
     if (this.userId() !== Application.currentUserId()) url += '/votes/' + this.userId();
     return url;
   },

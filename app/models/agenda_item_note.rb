@@ -17,8 +17,8 @@ class AgendaItemNote < Prequel::Record
     agenda_item ? agenda_item.team_ids : []
   end
 
-  def question
-    agenda_item.question
+  def meeting
+    agenda_item.meeting
   end
 
   def can_create?
@@ -26,7 +26,7 @@ class AgendaItemNote < Prequel::Record
   end
 
   def can_update_or_destroy?
-    current_user.admin? || creator_id == current_user.id || question.team.has_owner?(current_user)
+    current_user.admin? || creator_id == current_user.id || meeting.team.has_owner?(current_user)
   end
   alias can_update? can_update_or_destroy?
   alias can_destroy? can_update_or_destroy?

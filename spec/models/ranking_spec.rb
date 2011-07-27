@@ -2,24 +2,24 @@ require 'spec_helper'
 
 describe Ranking do
   describe "after create, update, or destroy" do
-    attr_reader :user, :question, :agenda_item_1, :agenda_item_2, :agenda_item_3
+    attr_reader :user, :meeting, :agenda_item_1, :agenda_item_2, :agenda_item_3
 
     before do
       @user = User.make
-      @question = Question.make
-      @agenda_item_1 = question.agenda_items.make(:body => "1")
-      @agenda_item_2 = question.agenda_items.make(:body => "2")
-      @agenda_item_3 = question.agenda_items.make(:body => "3")
+      @meeting = Meeting.make
+      @agenda_item_1 = meeting.agenda_items.make(:body => "1")
+      @agenda_item_2 = meeting.agenda_items.make(:body => "2")
+      @agenda_item_3 = meeting.agenda_items.make(:body => "3")
     end
 
-    specify "majorities are updated accordingly and #compute_global_ranking is called on the ranking's question" do
-      question.majorities.each do |majority|
+    specify "majorities are updated accordingly and #compute_global_ranking is called on the ranking's meeting" do
+      meeting.majorities.each do |majority|
         majority.pro_count.should == 0
       end
 
       # 1, (2, 3)
-      mock.proxy(question).compute_global_ranking
-      ranking_1 = question.rankings.create(:user => user, :agenda_item => agenda_item_1, :position => 64)
+      mock.proxy(meeting).compute_global_ranking
+      ranking_1 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_1, :position => 64)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 0
       find_majority(agenda_item_2, agenda_item_1).pro_count.should == 0
@@ -31,8 +31,8 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).con_count.should == 1
 
       # 1, 2, (3)
-      mock.proxy(question).compute_global_ranking
-      ranking_2 = question.rankings.create(:user => user, :agenda_item => agenda_item_2, :position => 32)
+      mock.proxy(meeting).compute_global_ranking
+      ranking_2 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_2, :position => 32)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 0
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 1
@@ -47,8 +47,8 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_2).con_count.should == 1
 
       # 1, 3, 2
-      mock.proxy(question).compute_global_ranking
-      ranking_3 = question.rankings.create(:user => user, :agenda_item => agenda_item_3, :position => 48)
+      mock.proxy(meeting).compute_global_ranking
+      ranking_3 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_3, :position => 48)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 0
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 1
@@ -63,7 +63,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_2).con_count.should == 0
 
       # 1, 2, 3
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_2.update(:position => 56)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 0
@@ -79,7 +79,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).con_count.should == 1
 
       # 2, 1, 3
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_1.update(:position => 52)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 1
@@ -95,7 +95,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_2).con_count.should == 1
 
       # 3, 2, 1
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_3.update(:position => 128)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 1
@@ -111,7 +111,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_2).con_count.should == 0
 
       # 3, 1, (2)
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_2.destroy
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 0
@@ -127,7 +127,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_2).con_count.should == 0
 
       # 1, (2, 3)
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_3.destroy
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 0
@@ -142,11 +142,11 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_3, agenda_item_2).con_count.should == 0
 
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
 
       ranking_1.destroy
 
-      question.majorities.each do |majority|
+      meeting.majorities.each do |majority|
         majority.reload
         majority.pro_count.should == 0
         majority.con_count.should == 0
@@ -154,13 +154,13 @@ describe Ranking do
     end
 
     specify "negatively ranked agenda_items are counted as losing to unranked agenda_items" do
-      question.majorities.each do |majority|
+      meeting.majorities.each do |majority|
         majority.pro_count.should == 0
       end
 
       # (2, 3), 1
-      mock.proxy(question).compute_global_ranking
-      ranking_1 = question.rankings.create(:user => user, :agenda_item => agenda_item_1, :position => -64)
+      mock.proxy(meeting).compute_global_ranking
+      ranking_1 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_1, :position => -64)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_1, agenda_item_2).con_count.should == 1
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 0
@@ -175,8 +175,8 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).con_count.should == 0
 
       # (3), 1, 2
-      mock.proxy(question).compute_global_ranking
-      ranking_2 = question.rankings.create(:user => user, :agenda_item => agenda_item_2, :position => -128)
+      mock.proxy(meeting).compute_global_ranking
+      ranking_2 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_2, :position => -128)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 0
       find_majority(agenda_item_2, agenda_item_1).pro_count.should == 0
@@ -185,7 +185,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).pro_count.should == 1
 
       # (3), 2, 1
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_2.update(:position => -32)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 0
@@ -195,7 +195,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).pro_count.should == 1
 
       # 1, (3), 2
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_1.update(:position => 64)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 1
@@ -205,7 +205,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).pro_count.should == 0
 
       # (3), 1, 2
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_1.update(:position => -16)
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 1
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 0
@@ -215,7 +215,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).pro_count.should == 1
 
       # (3, 2), 1
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_2.destroy
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 0
@@ -225,7 +225,7 @@ describe Ranking do
       find_majority(agenda_item_3, agenda_item_1).pro_count.should == 1
 
       # (1, 2, 3) -- all unranked
-      mock.proxy(question).compute_global_ranking
+      mock.proxy(meeting).compute_global_ranking
       ranking_1.destroy
       find_majority(agenda_item_1, agenda_item_2).pro_count.should == 0
       find_majority(agenda_item_1, agenda_item_3).pro_count.should == 0
@@ -237,21 +237,21 @@ describe Ranking do
 
     specify "it creates, updates, or destroys the associated vote as appropriate" do
       freeze_time
-      users_votes = question.votes.where(:user => user)
+      users_votes = meeting.votes.where(:user => user)
 
       users_votes.should be_empty
 
-      ranking_1 = question.rankings.create(:user => user, :agenda_item => agenda_item_1, :position => 64)
+      ranking_1 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_1, :position => 64)
 
       users_votes.size.should == 1
-      vote = question.votes.find(:user => user)
+      vote = meeting.votes.find(:user => user)
       ranking_1.vote.should == vote
       vote.created_at.should == Time.now
       vote.updated_at.should == Time.now
 
       jump(1.minute)
 
-      ranking_2 = question.rankings.create(:user => user, :agenda_item => agenda_item_2, :position => 32)
+      ranking_2 = meeting.rankings.create(:user => user, :agenda_item => agenda_item_2, :position => 32)
       users_votes.size.should == 1
       ranking_2.vote.should == vote
       vote.updated_at.should == Time.now
@@ -276,10 +276,10 @@ describe Ranking do
   describe "security" do
     attr_reader :creator, :other_member, :ranking, :agenda_item
     before do
-      question = Question.make
-      @agenda_item = question.agenda_items.make
-      @creator = agenda_item.question.team.make_member
-      @other_member = agenda_item.question.team.make_member
+      meeting = Meeting.make
+      @agenda_item = meeting.agenda_items.make
+      @creator = agenda_item.meeting.team.make_member
+      @other_member = agenda_item.meeting.team.make_member
       @ranking = Ranking.create!(:user => creator, :agenda_item => agenda_item, :position => 64)
     end
 

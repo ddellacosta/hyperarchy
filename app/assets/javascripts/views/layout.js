@@ -6,7 +6,7 @@ _.constructor("Views.Layout", View.Template, {
         div({id: "header"}, function() {
           a(function() {
             div({id: "logo"})
-            h1("ACTIONITEMS");
+            h1("Action Items");
             h2("/").ref('teamNameSeparator');
             h2().ref('teamName');
           }).ref('logoAndTitle').click('navigateToCurrentTeam');
@@ -24,10 +24,9 @@ _.constructor("Views.Layout", View.Template, {
         });
 
         div({id: "body"}, function() {
-          subview('accountPage', Views.Pages.Account);
           subview('teamPage', Views.Pages.Team);
           subview('teamSettingsPage', Views.Pages.TeamSettings);
-          subview('questionPage', Views.Pages.Question);
+          subview('meetingPage', Views.Pages.Meeting);
         }).ref("body");
       }).ref("bodyWrapper");
 
@@ -35,13 +34,10 @@ _.constructor("Views.Layout", View.Template, {
         subview("loginForm", Views.Lightboxes.LoginForm);
         subview("feedbackForm", Views.Lightboxes.FeedbackForm);
         subview("signupForm", Views.Lightboxes.SignupForm);
-        subview("newQuestion", Views.Lightboxes.NewQuestion);
+        subview("newMeeting", Views.Lightboxes.NewMeeting);
         subview("disconnectDialog", Views.Lightboxes.DisconnectDialog);
         subview("inviteBox", Views.Lightboxes.InviteBox);
         subview("addTeamForm", Views.Lightboxes.AddTeamForm);
-
-        subview("fullScreenConsensus", Views.Lightboxes.FullScreenConsensus);
-        subview("fullScreenAgendaItem", Views.Lightboxes.FullScreenAgendaItem);
       }).ref("lightboxes");
 
       div({id: "darkened-background"}).ref("darkenedBackground");
@@ -54,7 +50,7 @@ _.constructor("Views.Layout", View.Template, {
     initialize: function() {
       this.currentUserChangeNode = new Monarch.SubscriptionNode();
       this.connectToSocketServer();
-      Question.updateScoresPeriodically();
+      Meeting.updateScoresPeriodically();
 
       $(document).bind('keydown', 'ctrl+g', function() {
         $('body').toggleClass('grid');
@@ -188,7 +184,7 @@ _.constructor("Views.Layout", View.Template, {
 
     currentTeamId: {
       change: function(currentTeamId) {
-        var team = Team.find(currentTeamId);
+        var team = currentTeamId ? Team.find(currentTeamId) : null;
         this.socketConnectionFuture.success(function(sessionId) {
           team.subscribe({session_id: sessionId});
         });
@@ -198,20 +194,19 @@ _.constructor("Views.Layout", View.Template, {
 
     currentTeam: {
       change: function(team) {
-        if (!team) return;
-        this.currentTeamId(team.id());
-        if (team.social()) {
-          this.teamNameSeparator.hide();
-          this.teamName.hide();
-        } else {
+        if (team) {
+          this.currentTeamId(team.id());
           this.teamNameSeparator.show();
           this.teamName.show();
           this.teamName.bindText(team, 'name');
+          this.inviteLink.show();
+          this.recordTeamVisit();
+        } else {
+          this.currentTeamId(null);
+          this.teamNameSeparator.hide();
+          this.teamName.hide();
+          this.inviteLink.hide();
         }
-
-        this.registerInterest(team, 'onUpdate', this.showOrHideIniviteLink);
-        this.showOrHideIniviteLink();
-        this.recordTeamVisit();
       }
     },
 
@@ -334,14 +329,6 @@ _.constructor("Views.Layout", View.Template, {
       this.inviteBox.show();
     },
 
-    showOrHideIniviteLink: function() {
-      if (this.currentTeam().isPrivate()) {
-        this.inviteLink.show();
-      } else {
-        this.inviteLink.hide();
-      }
-    },
-
     origin: function() {
       return window.location.protocol + "//" + window.location.host;
     },
@@ -363,7 +350,7 @@ _.constructor("Views.Layout", View.Template, {
         });
       });
 
-      $.getScript("http://platform.twitter.com/widgets.js", function() {
+      $.getScript("https://platform.twitter.com/widgets.js", function() {
         widgetsLoaded = true;
         if (anywhereLoaded) {
           Application.twitterInitialized();

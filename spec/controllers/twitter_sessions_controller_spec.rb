@@ -58,7 +58,7 @@ describe TwitterSessionsController do
           describe "when a share code is assigned in the session" do
             it "associates the user with the referring share corresponding to the code" do
               session[:share_code] = "sharecode87"
-              share = Share.create!(:code => "sharecode87", :question_id => 99, :service => "twitter", :user_id => User.make.id)
+              share = Share.create!(:code => "sharecode87", :meeting_id => 99, :service => "twitter", :user_id => User.make.id)
 
               expect {
                 post :create, :name => "Max Brunsfeld"

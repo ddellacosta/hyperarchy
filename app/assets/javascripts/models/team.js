@@ -5,45 +5,40 @@ _.constructor("Team", Model.Record, {
         name: "string",
         description: "string",
         membersCanInvite: "boolean",
-        questionCount: 'integer',
+        meetingCount: 'integer',
         memberCount: 'integer',
         useSsl: 'boolean',
-        social: 'boolean',
         privacy: 'string',
         membershipCode: 'string'
       });
 
-      this.hasMany("questions");
+      this.hasMany("meetings");
       this.relatesToMany("agendaItems", function() {
-        return this.questions().joinThrough(AgendaItem);
+        return this.meetings().joinThrough(AgendaItem);
       });
       this.relatesToMany("votes", function() {
-        return this.questions().joinThrough(Vote);
+        return this.meetings().joinThrough(Vote);
       });
 
       this.hasMany("memberships", {orderBy: ["firstName asc", "emailAddress asc"]});
       this.relatesToMany("members", function() {
         return this.memberships().joinThrough(User);
       });
-    },
-
-    findSocial: function() {
-      return this.find({social: true});
     }
   },
 
   afterInitialize: function() {
-    this.numQuestionsFetched = 0;
+    this.numMeetingsFetched = 0;
   },
 
   subscribe: function(data) {
     $.post('/channel_subscriptions/teams/' + this.id(), data);
   },
 
-  fetchMoreQuestions: function() {
+  fetchMoreMeetings: function() {
     if (this.fetchInProgressFuture) return this.fetchInProgressFuture;
 
-    if (this.numQuestionsFetched >= this.questionCount()) {
+    if (this.numMeetingsFetched >= this.meetingCount()) {
       var promise = new Monarch.Promise();
       promise.triggerSuccess();
       return promise;
@@ -51,8 +46,8 @@ _.constructor("Team", Model.Record, {
 
     // if we already fetched some, fetch 8 positions back to account for unseen swapping at the fringe
     var offset, limit;
-    if (this.numQuestionsFetched > 0) {
-      offset = this.numQuestionsFetched - 8;
+    if (this.numMeetingsFetched > 0) {
+      offset = this.numMeetingsFetched - 8;
       limit = 24;
     } else {
       offset = 0;
@@ -60,7 +55,7 @@ _.constructor("Team", Model.Record, {
     }
 
     var promise = $.ajax({
-      url: "/questions",
+      url: "/meetings",
       data: {
         team_id: this.id(),
         offset: offset,
@@ -72,7 +67,7 @@ _.constructor("Team", Model.Record, {
     this.fetchInProgressFuture = promise;
     promise.success(this.bind(function() {
       delete this.fetchInProgressFuture;
-      this.numQuestionsFetched += 16;
+      this.numMeetingsFetched += 16;
     }));
 
     return promise;
@@ -131,8 +126,8 @@ _.constructor("Team", Model.Record, {
     return this.privacy() === "private";
   },
 
-  hasNonAdminQuestions: function() {
-    return !this.questions().where(Question.creatorId.neq(1)).empty();
+  hasNonAdminMeetings: function() {
+    return !this.meetings().where(Meeting.creatorId.neq(1)).empty();
   },
 
   url: function() {
@@ -143,8 +138,8 @@ _.constructor("Team", Model.Record, {
     return this.url() + "/settings";
   },
 
-  newQuestionUrl: function() {
-    return this.url() + "/questions/new";
+  newMeetingUrl: function() {
+    return this.url() + "/meetings/new";
   },
 
   secretUrl: function() {

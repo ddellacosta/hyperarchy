@@ -6,7 +6,7 @@ module Views
       def item_counts
         items = []
 
-        items.push(pluralize(new_question_count, 'new question')) if new_question_count > 0
+        items.push(pluralize(new_meeting_count, 'new meeting')) if new_meeting_count > 0
         items.push(pluralize(new_agenda_item_count, 'new agenda_item')) if new_agenda_item_count > 0
         items.push(pluralize(new_note_count, 'new note')) if new_note_count > 0
 

@@ -2,13 +2,13 @@ require 'spec_helper'
 
 module Models
   describe AgendaItem do
-    attr_reader :question, :team, :creator, :agenda_item
+    attr_reader :meeting, :team, :creator, :agenda_item
     before do
-      @question = Question.make
-      @team = question.team
+      @meeting = Meeting.make
+      @team = meeting.team
       @creator = team.make_member
       set_current_user(creator)
-      @agenda_item = question.agenda_items.make
+      @agenda_item = meeting.agenda_items.make
     end
 
     describe "life-cycle hooks" do
@@ -19,9 +19,9 @@ module Models
       describe "before create" do
         it "assigns the creator to the Model::Record.current_user" do
           set_current_user(User.make)
-          question.team.memberships.make(:user => current_user)
+          meeting.team.memberships.make(:user => current_user)
 
-          agenda_item = question.agenda_items.create(:body => "foo")
+          agenda_item = meeting.agenda_items.create(:body => "foo")
           agenda_item.creator.should == current_user
         end
 
@@ -31,68 +31,68 @@ module Models
 
           team.update(:privacy => "private")
           expect do
-            question.agenda_items.create(:body => "foo")
+            meeting.agenda_items.create(:body => "foo")
           end.should raise_error(SecurityError)
 
           team.update(:privacy => "public")
-          agenda_item = question.agenda_items.create(:body => "foo")
+          agenda_item = meeting.agenda_items.create(:body => "foo")
 
           current_user.memberships.where(:team => team).size.should == 1
         end
       end
 
       describe "after create" do
-        def verify_majority(winner, loser, question)
-          majority = Majority.find(:winner => winner, :loser => loser, :question => question)
+        def verify_majority(winner, loser, meeting)
+          majority = Majority.find(:winner => winner, :loser => loser, :meeting => meeting)
           majority.should_not be_nil
           majority.winner_created_at.to_i.should == winner.created_at.to_i
         end
 
         it "creates a winning and losing majority every pairing of the created agenda_item with other agenda_items" do
-          question.agenda_items.should be_empty
+          meeting.agenda_items.should be_empty
 
-          falafel = question.agenda_items.make(:body => "Falafel")
-          tacos = question.agenda_items.make(:body => "Tacos")
+          falafel = meeting.agenda_items.make(:body => "Falafel")
+          tacos = meeting.agenda_items.make(:body => "Tacos")
 
-          verify_majority(falafel, tacos, question)
-          verify_majority(tacos, falafel, question)
+          verify_majority(falafel, tacos, meeting)
+          verify_majority(tacos, falafel, meeting)
 
-          fish = question.agenda_items.make(:body => "Fish")
+          fish = meeting.agenda_items.make(:body => "Fish")
 
-          verify_majority(falafel, fish, question)
-          verify_majority(tacos, fish, question)
-          verify_majority(fish, falafel, question)
-          verify_majority(fish, tacos, question)
+          verify_majority(falafel, fish, meeting)
+          verify_majority(tacos, fish, meeting)
+          verify_majority(fish, falafel, meeting)
+          verify_majority(fish, tacos, meeting)
         end
 
-        it "makes the new agenda_item lose to every positively ranked agenda_item and win over every negatively ranked one, then recomputes the question results" do
+        it "makes the new agenda_item lose to every positively ranked agenda_item and win over every negatively ranked one, then recomputes the meeting results" do
           user_1 = User.make
           user_2 = User.make
           user_3 = User.make
 
-          _3_up_0_down = question.agenda_items.make(:body => "3 Up - 0 Down")
-          _2_up_1_down = question.agenda_items.make(:body => "2 Up - 1 Down")
-          _1_up_2_down = question.agenda_items.make(:body => "1 Up - 2 Down")
-          _0_up_3_down = question.agenda_items.make(:body => "0 Up - 3 Down")
-          unranked     = question.agenda_items.make(:body => "Unranked")
+          _3_up_0_down = meeting.agenda_items.make(:body => "3 Up - 0 Down")
+          _2_up_1_down = meeting.agenda_items.make(:body => "2 Up - 1 Down")
+          _1_up_2_down = meeting.agenda_items.make(:body => "1 Up - 2 Down")
+          _0_up_3_down = meeting.agenda_items.make(:body => "0 Up - 3 Down")
+          unranked     = meeting.agenda_items.make(:body => "Unranked")
 
-          question.rankings.create(:user => user_1, :agenda_item => _3_up_0_down, :position => 64)
-          question.rankings.create(:user => user_1, :agenda_item => _2_up_1_down, :position => 32)
-          question.rankings.create(:user => user_1, :agenda_item => _1_up_2_down, :position => 16)
-          question.rankings.create(:user => user_1, :agenda_item => _0_up_3_down, :position => -64)
+          meeting.rankings.create(:user => user_1, :agenda_item => _3_up_0_down, :position => 64)
+          meeting.rankings.create(:user => user_1, :agenda_item => _2_up_1_down, :position => 32)
+          meeting.rankings.create(:user => user_1, :agenda_item => _1_up_2_down, :position => 16)
+          meeting.rankings.create(:user => user_1, :agenda_item => _0_up_3_down, :position => -64)
 
-          question.rankings.create(:user => user_2, :agenda_item => _3_up_0_down, :position => 64)
-          question.rankings.create(:user => user_2, :agenda_item => _2_up_1_down, :position => 32)
-          question.rankings.create(:user => user_2, :agenda_item => _1_up_2_down, :position => -32)
-          question.rankings.create(:user => user_2, :agenda_item => _0_up_3_down, :position => -64)
+          meeting.rankings.create(:user => user_2, :agenda_item => _3_up_0_down, :position => 64)
+          meeting.rankings.create(:user => user_2, :agenda_item => _2_up_1_down, :position => 32)
+          meeting.rankings.create(:user => user_2, :agenda_item => _1_up_2_down, :position => -32)
+          meeting.rankings.create(:user => user_2, :agenda_item => _0_up_3_down, :position => -64)
 
-          question.rankings.create(:user => user_3, :agenda_item => _3_up_0_down, :position => 64)
-          question.rankings.create(:user => user_3, :agenda_item => _2_up_1_down, :position => -16)
-          question.rankings.create(:user => user_3, :agenda_item => _1_up_2_down, :position => -32)
-          question.rankings.create(:user => user_3, :agenda_item => _0_up_3_down, :position => -64)
+          meeting.rankings.create(:user => user_3, :agenda_item => _3_up_0_down, :position => 64)
+          meeting.rankings.create(:user => user_3, :agenda_item => _2_up_1_down, :position => -16)
+          meeting.rankings.create(:user => user_3, :agenda_item => _1_up_2_down, :position => -32)
+          meeting.rankings.create(:user => user_3, :agenda_item => _0_up_3_down, :position => -64)
 
-          mock.proxy(question).compute_global_ranking
-          agenda_item = question.agenda_items.make(:body => "Alpaca")
+          mock.proxy(meeting).compute_global_ranking
+          agenda_item = meeting.agenda_items.make(:body => "Alpaca")
           # new agenda_item is tied with 'Unranked' so could go either before it or after it
           # until we handle ties, but it should be less than the negatively ranked agenda_items
           agenda_item.position.should be < 5
@@ -124,8 +124,8 @@ module Models
         end
 
         it "gives the agenda_item a position of 1 if they are the only agenda_item" do
-          agenda_item = question.agenda_items.make(:body => "Only")
-          question.agenda_items.size.should == 1
+          agenda_item = meeting.agenda_items.make(:body => "Only")
+          meeting.agenda_items.size.should == 1
           agenda_item.position.should == 1
         end
 
@@ -135,7 +135,7 @@ module Models
             job_params = params
           end
 
-          agenda_item = question.agenda_items.create!(:body => "Turkey.")
+          agenda_item = meeting.agenda_items.create!(:body => "Turkey.")
           job_params.should ==  { :class_name => "AgendaItem", :id => agenda_item.id }
         end
       end
@@ -145,25 +145,25 @@ module Models
           user_1 = User.make
           user_2 = User.make
 
-          agenda_item_1 = question.agenda_items.make(:body => "foo")
-          agenda_item_2 = question.agenda_items.make(:body => "bar")
+          agenda_item_1 = meeting.agenda_items.make(:body => "foo")
+          agenda_item_2 = meeting.agenda_items.make(:body => "bar")
           note_1 = agenda_item_1.notes.make
           note_2 = agenda_item_1.notes.make
 
           freeze_time
           voting_time = Time.now
 
-          question.rankings.create(:user => user_1, :agenda_item => agenda_item_1, :position => 64)
-          question.rankings.create(:user => user_1, :agenda_item => agenda_item_2, :position => 32)
-          question.rankings.create(:user => user_2, :agenda_item => agenda_item_1, :position => 32)
+          meeting.rankings.create(:user => user_1, :agenda_item => agenda_item_1, :position => 64)
+          meeting.rankings.create(:user => user_1, :agenda_item => agenda_item_2, :position => 32)
+          meeting.rankings.create(:user => user_2, :agenda_item => agenda_item_1, :position => 32)
 
           Ranking.where(:agenda_item_id => agenda_item_1.id).size.should == 2
           Majority.where(:winner_id => agenda_item_1.id).size.should == 1
           Majority.where(:loser_id => agenda_item_1.id).size.should == 1
           AgendaItemNote.where(:agenda_item_id => agenda_item_1.id).size.should == 2
 
-          question.votes.size.should == 2
-          question.votes.each do |vote|
+          meeting.votes.size.should == 2
+          meeting.votes.each do |vote|
             vote.updated_at.should == Time.now
           end
 
@@ -176,24 +176,24 @@ module Models
           Majority.where(:loser_id => agenda_item_1.id).should be_empty
           AgendaItemNote.where(:agenda_item_id => agenda_item_1.id).should be_empty
 
-          question.votes.size.should == 1
-          question.votes.first.updated_at.should == voting_time
+          meeting.votes.size.should == 1
+          meeting.votes.first.updated_at.should == voting_time
         end
       end
     end
 
     describe "#users_to_notify_immediately" do
       it "returns the members of the agenda_item's team who have their agenda_item notifaction preference set to 'immediately' " +
-          "and who voted on the agenda_item's question and who did not create the agenda_item" do
+          "and who voted on the agenda_item's meeting and who did not create the agenda_item" do
         notify1 = User.make
         notify2 = User.make
         dont_notify1 = User.make
         dont_notify2 = User.make
 
-        notify1.votes.create!(:question => question)
-        notify2.votes.create!(:question => question)
-        dont_notify1.votes.create!(:question => question)
-        creator.votes.create!(:question => question)
+        notify1.votes.create!(:meeting => meeting)
+        notify2.votes.create!(:meeting => meeting)
+        dont_notify1.votes.create!(:meeting => meeting)
+        creator.votes.create!(:meeting => meeting)
 
         team.memberships.make(:user => notify1, :notify_of_new_agenda_items => 'immediately')
         team.memberships.make(:user => notify2, :notify_of_new_agenda_items => 'immediately')
@@ -215,11 +215,11 @@ module Models
       attr_reader :member, :owner, :non_member, :membership, :agenda_item
 
       before do
-        @member = question.team.make_member
-        @owner = question.team.make_owner
+        @member = meeting.team.make_member
+        @owner = meeting.team.make_owner
         @non_member = User.make
-        @membership = question.team.memberships.make(:user => member)
-        @agenda_item = question.agenda_items.make(:body => "Hey you!")
+        @membership = meeting.team.memberships.make(:user => member)
+        @agenda_item = meeting.agenda_items.make(:body => "Hey you!")
       end
 
       describe "body length limit" do
@@ -249,30 +249,30 @@ module Models
 
       describe "#can_create?" do
         before do
-          question.team.update(:privacy => "read_only")
+          meeting.team.update(:privacy => "read_only")
         end
 
-        context "if the given question's team is non-public" do
+        context "if the given meeting's team is non-public" do
           specify "only members create agenda_items" do
             set_current_user(member)
-            question.agenda_items.make_unsaved.can_create?.should be_true
+            meeting.agenda_items.make_unsaved.can_create?.should be_true
 
             set_current_user(non_member)
-            question.agenda_items.make_unsaved.can_create?.should be_false
+            meeting.agenda_items.make_unsaved.can_create?.should be_false
           end
         end
 
-        context "if the given question's team is public" do
+        context "if the given meeting's team is public" do
           before do
-            question.team.update(:privacy => "public")
+            meeting.team.update(:privacy => "public")
           end
 
           specify "non-guest users can create agenda_items" do
             set_current_user(User.default_guest)
-            question.agenda_items.make_unsaved.can_create?.should be_false
+            meeting.agenda_items.make_unsaved.can_create?.should be_false
 
             set_current_user(non_member)
-            question.agenda_items.make_unsaved.can_create?.should be_true
+            meeting.agenda_items.make_unsaved.can_create?.should be_true
           end
         end
       end
@@ -301,7 +301,7 @@ module Models
           agenda_item.can_destroy?.should be_true
 
           # no one can update properties other than body and details
-          agenda_item.can_update_columns?([:question_id, :creator_id, :position]).should be_false
+          agenda_item.can_update_columns?([:meeting_id, :creator_id, :position]).should be_false
         end
       end
     end
