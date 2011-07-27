@@ -5,8 +5,8 @@ Sequel.migration do
       String :body, :text=>true
       Integer :answer_id
       Integer :creator_id
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
     end
     
     create_table(:answers) do
@@ -16,8 +16,8 @@ Sequel.migration do
       Integer :position
       Integer :creator_id
       String :details, :default=>"", :text=>true
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
       Integer :comment_count, :default=>0
     end
     
@@ -25,7 +25,7 @@ Sequel.migration do
       primary_key :id
       String :email_address, :text=>true
       String :comments, :text=>true
-      DateTime :created_at
+      column :created_at, 'timestamp with time zone'
     end
     
     create_table(:majorities) do
@@ -35,7 +35,7 @@ Sequel.migration do
       Integer :loser_id
       Integer :pro_count
       Integer :con_count
-      DateTime :winner_created_at
+      column :winner_created_at, 'timestamp with time zone'
     end
     
     create_table(:memberships) do
@@ -43,9 +43,9 @@ Sequel.migration do
       Integer :organization_id
       Integer :user_id
       String :role, :size=>255
-      DateTime :last_visited
-      DateTime :created_at
-      DateTime :updated_at
+      column :last_visited, 'timestamp with time zone'
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
       String :notify_of_new_questions, :text=>true
       String :notify_of_new_answers, :text=>true
       String :notify_of_new_comments_on_own_answers, :text=>true
@@ -60,8 +60,8 @@ Sequel.migration do
       TrueClass :dismissed_welcome_guide, :default=>false
       TrueClass :members_can_invite, :default=>false
       TrueClass :use_ssl, :default=>true
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
       Integer :question_count, :default=>0
       TrueClass :social, :default=>false
       String :privacy, :default=>"private", :text=>true
@@ -74,24 +74,24 @@ Sequel.migration do
       String :body, :text=>true
       Integer :question_id
       Integer :creator_id
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
     end
     
     create_table(:question_visits) do
       primary_key :id
       Integer :question_id
       Integer :user_id
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
     end
     
     create_table(:questions) do
       primary_key :id
       Integer :organization_id
       String :body, :text=>true
-      DateTime :updated_at
-      DateTime :created_at
+      column :updated_at, 'timestamp with time zone'
+      column :created_at, 'timestamp with time zone'
       Integer :creator_id
       Integer :vote_count, :default=>0
       Float :score
@@ -105,8 +105,8 @@ Sequel.migration do
       Integer :answer_id
       Float :position
       Integer :vote_id
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
     end
     
     create_table(:shares) do
@@ -114,7 +114,7 @@ Sequel.migration do
       String :code, :text=>true, :null=>false
       Integer :user_id, :null=>false
       Integer :question_id, :null=>false
-      DateTime :created_at, :null=>false
+      column :created_at, 'timestamp with time zone', :null=>false
       String :service, :text=>true, :null=>false
     end
     
@@ -127,10 +127,10 @@ Sequel.migration do
       TrueClass :dismissed_welcome_blurb
       TrueClass :admin, :default=>false
       TrueClass :dismissed_welcome_guide, :default=>false
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
       String :password_reset_token, :text=>true
-      DateTime :password_reset_token_generated_at
+      column :password_reset_token_generated_at, 'timestamp with time zone'
       TrueClass :guest, :default=>false
       TrueClass :email_enabled, :default=>true
       TrueClass :default_guest, :default=>false
@@ -145,8 +145,8 @@ Sequel.migration do
       primary_key :id
       Integer :question_id
       Integer :user_id
-      DateTime :created_at
-      DateTime :updated_at
+      column :created_at, 'timestamp with time zone'
+      column :updated_at, 'timestamp with time zone'
     end
   end
   
