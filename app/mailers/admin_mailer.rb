@@ -1,8 +1,8 @@
 class AdminMailer < ActionMailer::Base
-  default :from => "Hyperarchy Admin <admin@hyperarchy.com>"
+  default :from => "Actionitems Admin <admin@actionitems.us>"
 
   def notify_addresses
-    ['max@hyperarchy.com', 'nathan@hyperarchy.com']
+    ['max@actionitems.us', 'nathan@actionitems.us']
   end
 
   def feedback(user, feedback)
@@ -12,7 +12,7 @@ class AdminMailer < ActionMailer::Base
   end
 
   def new_user(user)
-    mail :to => ['max@hyperarchy.com', 'nathan@hyperarchy.com'],
+    mail :to => ['max@actionitems.us', 'nathan@actionitems.us'],
          :subject => "New user on #{Rails.env}",
          :body => "#{user.full_name}\n#{user.email_address}\n"
   end

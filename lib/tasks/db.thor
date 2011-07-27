@@ -10,7 +10,7 @@ class Db < Thor
       return
     end
 
-    system "createdb hyperarchy_#{env} --encoding utf8 --username=hyperarchy"
+    system "createdb actionitems_#{env} --encoding utf8 --username=actionitems"
   end
 
   desc "drop [env=development,test]", "drop the database for the specified environment"
@@ -22,7 +22,7 @@ class Db < Thor
       return
     end
 
-    system "dropdb hyperarchy_#{env} --username=hyperarchy"
+    system "dropdb actionitems_#{env} --username=actionitems"
   end
 
   desc "reset [env=development,test]", "drop, create, and migrate the database for the specified environment"
@@ -74,7 +74,7 @@ class Db < Thor
     system "scp root@#{source_server.hostname}:#{dump_file_path} #{dump_file_path}"
     system "gunzip #{dump_file_path}"
     dump_file_path = dump_file_path.gsub(/\.gz$/, '')
-    system "pg_restore #{dump_file_path} --dbname=hyperarchy_development --clean"
+    system "pg_restore #{dump_file_path} --dbname=actionitems_development --clean"
   end
 
   protected

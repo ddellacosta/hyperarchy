@@ -157,7 +157,7 @@ describe("Views.Layout", function() {
 
     describe("#currentOrganization", function() {
       it("it changes the organization name or hides it when viewing social", function() {
-        var social = Organization.createFromRemote({id: 3, name: "Hyperarchy Social", social: true, privacy: "public"});
+        var social = Organization.createFromRemote({id: 3, name: "Actionitems Social", social: true, privacy: "public"});
 
         $('#jasmine_content').html(Application);
 

@@ -3,7 +3,7 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Hyperarchy::Application.load_tasks
+Actionitems::Application.load_tasks
 
 require 'resque/tasks'
 require 'resque_scheduler/tasks'

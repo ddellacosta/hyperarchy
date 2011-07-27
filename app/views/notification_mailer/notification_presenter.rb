@@ -41,7 +41,7 @@ module Views
       end
 
       def subject
-        "#{item_counts} on Hyperarchy"
+        "#{item_counts} on Actionitems"
       end
 
       def empty?

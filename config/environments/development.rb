@@ -1,4 +1,4 @@
-Hyperarchy::Application.configure do
+Actionitems::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -16,7 +16,7 @@ Hyperarchy::Application.configure do
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { :host => "local.hyperarchy.com" }
+  config.action_mailer.default_url_options = { :host => "local.actionitems.us" }
   config.action_mailer.smtp_settings = {
     :host => "localhost",
     :port => 2525
@@ -29,5 +29,5 @@ Hyperarchy::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # TODO: This should use a more Rails-approved mechanism
-  HTTP_HOST = "local.hyperarchy.com"
+  HTTP_HOST = "local.actionitems.us"
 end

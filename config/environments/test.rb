@@ -1,4 +1,4 @@
-Hyperarchy::Application.configure do
+Actionitems::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # The test environment is used exclusively to run your application's
@@ -28,7 +28,7 @@ Hyperarchy::Application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
-  config.action_mailer.default_url_options = { :host => "test.hyperarchy.com" }
+  config.action_mailer.default_url_options = { :host => "test.actionitems.us" }
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -41,5 +41,5 @@ Hyperarchy::Application.configure do
   RunLater.run_now = true
 
   # TODO: This should use a more Rails-approved mechanism
-  HTTP_HOST = "test.hyperarchy.com"
+  HTTP_HOST = "test.actionitems.us"
 end

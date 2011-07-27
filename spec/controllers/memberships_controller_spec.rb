@@ -42,7 +42,7 @@ describe MembershipsController do
     end
 
     context "if the membership_code is not valid" do
-      context "if the user is logged in and has a default_organization other than hyperarchy social" do
+      context "if the user is logged in and has a default_organization other than actionitems social" do
         it "redirects the user to their default organization" do
           login_as(user)
           default_org = Organization.make
@@ -53,7 +53,7 @@ describe MembershipsController do
       end
 
       context "if the user is not logged in" do
-        it "redirects them to hyperarchy social" do
+        it "redirects them to actionitems social" do
           current_user.should == User.default_guest
           get :create, :organization_id => organization.id, :code => "garbage"
           current_user.should == User.default_guest

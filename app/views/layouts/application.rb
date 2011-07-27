@@ -26,7 +26,7 @@ module Views
       def content
         html(html_attributes)  do
           head do
-            title "Hyperarchy"
+            title "Actionitems"
 
             stylesheet_link_tag 'application'
             link :rel => "shortcut icon", :href => "/images/icon.png"
@@ -94,11 +94,11 @@ module Views
 
       def open_graph_properties
         {
-          'og:title' => "Hyperarchy",
+          'og:title' => "Actionitems",
           'og:type' => "article",
           'og:image' => logo_image_url,
           'og:url' => request.url,
-          'og:site_name' => "Hyperarchy",
+          'og:site_name' => "Actionitems",
           'fb:app_id' => FB_ID
         }
       end

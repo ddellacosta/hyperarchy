@@ -1,9 +1,9 @@
 class UserMailer < ActionMailer::Base
-  default :from => "Hyperarchy <admin@hyperarchy.com>"
+  default :from => "Actionitems <admin@actionitems.us>"
 
   def password_reset(user)
     @user = user
     mail :to => user.email_address,
-         :subject => "Reset your Hyperarchy password"
+         :subject => "Reset your Actionitems password"
   end
 end

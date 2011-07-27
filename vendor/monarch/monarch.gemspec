@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Monarch::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nathan Sobo", "Max Brunsfeld"]
-  s.email       = ["nathan@hyperarchy.com", "max@hyperarchi.com"]
+  s.email       = ["nathan@actionitems.us", "max@hyperarchi.com"]
   s.homepage    = ""
   s.summary     = %q{TODO: Write a gem summary}
   s.description = %q{TODO: Write a gem description}

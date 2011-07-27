@@ -44,7 +44,7 @@ describe TwitterSessionsController do
           end
 
           it "handles names with no last name" do
-            post :create, :name => "Hyperarchy"
+            post :create, :name => "Actionitems"
             new_user = User.find(:twitter_id => twitter_id)
             new_user.last_name.should == ""
           end

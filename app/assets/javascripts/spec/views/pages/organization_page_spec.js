@@ -11,7 +11,7 @@ describe("Views.Pages.Organization", function() {
   describe("when the params are assigned", function() {
     var organization;
     beforeEach(function() {
-      Organization.createFromRemote({id: 1, social: true, name: "Hyperarchy Social"});
+      Organization.createFromRemote({id: 1, social: true, name: "Actionitems Social"});
       organization = Organization.createFromRemote({id: 100, name: "Watergate"});
     });
 
@@ -23,7 +23,7 @@ describe("Views.Pages.Organization", function() {
     });
 
     describe("when the organization does not exist in the local repository", function() {
-      it("navigates to the organization page for Hyperarchy Social", function() {
+      it("navigates to the organization page for Actionitems Social", function() {
         spyOn(Application, 'showPage');
         organizationPage.params({organizationId: -1});
         expect(Path.routes.current).toBe(Application.currentUser().defaultOrganization().url());

@@ -14,7 +14,7 @@ describe FeedbacksController do
       }
       response.should be_success
 
-      last_delivery.to.should == ["max@hyperarchy.com", "nathan@hyperarchy.com"]
+      last_delivery.to.should == ["max@actionitems.us", "nathan@actionitems.us"]
       last_delivery.body.should include("hi. this is feedback.")
       last_delivery.body.should include(current_user.full_name)
       last_delivery.body.should include(current_user.email_address)

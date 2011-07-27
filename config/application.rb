@@ -15,7 +15,7 @@ FB_SECRET = '1cdc8ebd9c410a0ca605504eef38413c'
 TWITTER_ID = 'ksD9F3aSHfzGAK3wgpRm1A'
 TWITTER_SECRET = 'sDSCpag7203JPANNH1HDnV0NdEqbVzDSSsjYZwFTvw'
 
-module Hyperarchy
+module Actionitems
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -54,7 +54,7 @@ module Hyperarchy
 
     # Enable the asset pipeline
     config.assets.enabled = true
-    config.assets.precompile = ['application.js', 'hyperarchy.css']
+    config.assets.precompile = ['application.js', 'actionitems.css']
     config.assets.js_compressor = :uglifier
     config.assets.js_compressor_options = { :except => ['$super'] }
 
@@ -63,8 +63,8 @@ module Hyperarchy
   end
 end
 
-HYPERARCHY_BLURB =       %{Hyperarchy helps your organization track its own collective opinion.
+ACTIONITEMS_BLURB =       %{Actionitems helps your organization track its own collective opinion.
 It lets you put any issue to a vote by raising questions, then allows members to suggest and rank answers to these questions.
-As individuals change their rankings, Hyperarchy computes and broadcasts the evolving consensus in real time, making it easier to communicate and make decisions.}
+As individuals change their rankings, Actionitems computes and broadcasts the evolving consensus in real time, making it easier to communicate and make decisions.}
 
 SOCKET_SERVER_HOST = 'localhost:8082'

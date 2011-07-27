@@ -17,8 +17,8 @@ exports.listen = function(publicPort, privatePort, nonSecure, callback) {
     public = http.createServer();
   } else {
     public = https.createServer({
-      key: fs.readFileSync('/etc/ssl/private/hyperarchy.key'),
-      cert: fs.readFileSync('/etc/ssl/certs/hyperarchy.crt')
+      key: fs.readFileSync('/etc/ssl/private/actionitems.key'),
+      cert: fs.readFileSync('/etc/ssl/certs/actionitems.crt')
     });
   }
   socket = io.listen(public);

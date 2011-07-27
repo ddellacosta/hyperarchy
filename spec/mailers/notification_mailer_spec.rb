@@ -44,13 +44,13 @@ describe NotificationMailer do
   end
 
   describe "#notification" do
-    it "is from admin@hyperarchy.com, to the user's email address" do
-      email.from.should == ["admin@hyperarchy.com"]
+    it "is from admin@actionitems.us, to the user's email address" do
+      email.from.should == ["admin@actionitems.us"]
       email.to.should == [user.email_address]
     end
 
     it "gives counts for each new item in the subject" do
-      email.subject.should == "1 new question, 2 new answers, and 3 new comments on Hyperarchy"
+      email.subject.should == "1 new question, 2 new answers, and 3 new comments on Actionitems"
     end
 
     it "includes all questions, answers, and comments that are new for the notification period" do

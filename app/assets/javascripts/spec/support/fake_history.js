@@ -25,7 +25,7 @@ window.History = {
   },
 
   getRootUrl: function() {
-    return "http://test.hyperarchy.com:3000/";
+    return "http://test.actionitems.us:3000/";
   },
 
   getShortUrl: function(url) {
@@ -38,7 +38,7 @@ window.History = {
   reset: function() {
     this.states = [{
       state: {},
-      url: "http://test.hyperarchy.com:3000/initial_url"
+      url: "http://test.actionitems.us:3000/initial_url"
     }];
   }
 }

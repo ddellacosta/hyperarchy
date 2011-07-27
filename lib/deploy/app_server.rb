@@ -7,9 +7,9 @@ class AppServer
   def hostname
     case stage.to_sym
       when :demo
-        'demo.hyperarchy.com'
+        'demo.actionitems.us'
       when :production
-        'hyperarchy.com'
+        'actionitems.us'
       when :vm
         '192.168.0.192'
     end
@@ -24,14 +24,14 @@ class AppServer
   end
 
   def repository
-    "git@github.com:nathansobo/hyperarchy.git"
+    "git@github.com:nathansobo/actionitems.git"
   end
 
   def deploy(ref, options={})
     nuke_local_assets
     run_locally "env RAILS_ENV=#{rails_env} bundle exec rake assets:precompile"
 
-    as('hyperarchy', '/app') do
+    as('actionitems', '/app') do
       run "git fetch origin"
     end
 
@@ -39,7 +39,7 @@ class AppServer
     maintenance_page_up
     nuke_remote_assets
     upload_assets
-    as 'hyperarchy', '/app' do
+    as 'actionitems', '/app' do
       run "git checkout --force", ref
       unpack_secrets if options[:unpack_secrets]
       run "source .rvmrc"
@@ -60,7 +60,7 @@ class AppServer
 
   def provision
     update_packages
-    create_hyperarchy_user
+    create_actionitems_user
     create_log_directory
     upload_bashrc
     source_bashrc
@@ -86,8 +86,8 @@ class AppServer
     run 'mkdir -p ~/.ssh'
     public_key = File.read(public_key_path).chomp
     run "echo '#{public_key}' >> ~/.ssh/authorized_keys"
-    run "echo '#{public_key}' >> /home/hyperarchy/.ssh/authorized_keys"
-    run "chown -R hyperarchy:hyperarchy /home/hyperarchy"
+    run "echo '#{public_key}' >> /home/actionitems/.ssh/authorized_keys"
+    run "chown -R actionitems:actionitems /home/actionitems"
     puts
     system "ssh-add #{private_key_path}"
   end
@@ -126,7 +126,7 @@ class AppServer
   end
 
   def as(username, dir=nil)
-    run "ssh -AY -o StrictHostKeyChecking=no hyperarchy@localhost"
+    run "ssh -AY -o StrictHostKeyChecking=no actionitems@localhost"
     run "cd #{dir}" if dir
     yield
     run! "exit"
@@ -154,27 +154,27 @@ class AppServer
     run "DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y"
   end
 
-  def create_hyperarchy_user
+  def create_actionitems_user
     run! "groupadd ssl-cert"
     run "chown root:ssl-cert /etc/ssl/private"
-    run "mkdir -p /home/hyperarchy"
-    unless run?('id hyperarchy')
-      run "useradd -G ssl-cert -d /home/hyperarchy -s /bin/bash hyperarchy"
+    run "mkdir -p /home/actionitems"
+    unless run?('id actionitems')
+      run "useradd -G ssl-cert -d /home/actionitems -s /bin/bash actionitems"
     end
-    run "cp -r /root/.ssh /home/hyperarchy/.ssh"
-    run "chown -R hyperarchy:hyperarchy /home/hyperarchy/.ssh"
+    run "cp -r /root/.ssh /home/actionitems/.ssh"
+    run "chown -R actionitems:actionitems /home/actionitems/.ssh"
   end
 
   def create_log_directory
     run "mkdir -p /log"
-    run "chown hyperarchy /log"
+    run "chown actionitems /log"
   end
 
   def upload_bashrc
     upload 'lib/deploy/resources/.bashrc', '/root/.bashrc'
-    run 'cp /root/.bashrc /home/hyperarchy/'
-    run 'cp /root/.profile /home/hyperarchy/'
-    run 'chown -R hyperarchy:hyperarchy /home/hyperarchy'
+    run 'cp /root/.bashrc /home/actionitems/'
+    run 'cp /root/.profile /home/actionitems/'
+    run 'chown -R actionitems:actionitems /home/actionitems'
   end
 
   def source_bashrc
@@ -224,8 +224,8 @@ class AppServer
     run "su - postgres"
     run "pg_dropcluster --stop 8.4 main"
     run "pg_createcluster --start -e UTF-8 8.4 main"
-    run "createuser hyperarchy --createdb --no-superuser --no-createrole"
-    run "createdb --encoding utf8 --owner hyperarchy hyperarchy_#{rails_env}"
+    run "createuser actionitems --createdb --no-superuser --no-createrole"
+    run "createdb --encoding utf8 --owner actionitems actionitems_#{rails_env}"
     run "exit"
   end
 
@@ -242,11 +242,11 @@ class AppServer
     run "ln -s /opt/nginx/sbin/nginx /usr/local/sbin/nginx"
     upload_template 'lib/deploy/resources/nginx/nginx.conf.erb', '/opt/nginx/conf/nginx.conf'
     upload 'lib/deploy/resources/nginx/htpasswd', '/opt/nginx/conf/htpasswd'
-    upload 'lib/deploy/resources/nginx/hyperarchy.crt', '/etc/ssl/certs/hyperarchy.crt'
-    upload 'lib/deploy/resources/nginx/hyperarchy.key', '/etc/ssl/private/hyperarchy.key'
+    upload 'lib/deploy/resources/nginx/actionitems.crt', '/etc/ssl/certs/actionitems.crt'
+    upload 'lib/deploy/resources/nginx/actionitems.key', '/etc/ssl/private/actionitems.key'
     upload 'lib/deploy/resources/nginx/nginx_upstart.conf', '/etc/init/nginx.conf'
-    run "chmod 640 /etc/ssl/private/hyperarchy.key"
-    run "chown root:ssl-cert /etc/ssl/private/hyperarchy.key"
+    run "chmod 640 /etc/ssl/private/actionitems.key"
+    run "chown root:ssl-cert /etc/ssl/private/actionitems.key"
     run "start nginx"
   end
 
@@ -302,16 +302,16 @@ class AppServer
     upload "keys/deploy", "/root/.ssh/id_rsa"
     upload "keys/deploy.pub", "/root/.ssh/id_rsa.pub"
     run "chmod 600 /root/.ssh/id_rsa*"
-    run "cp /root/.ssh/id_rsa* /home/hyperarchy/.ssh"
-    run "chown -R hyperarchy /home/hyperarchy/.ssh"
-    run "chgrp -R hyperarchy /home/hyperarchy/.ssh"
+    run "cp /root/.ssh/id_rsa* /home/actionitems/.ssh"
+    run "chown -R actionitems /home/actionitems/.ssh"
+    run "chgrp -R actionitems /home/actionitems/.ssh"
   end
 
   def clone_repository
     run "mkdir -p /app"
-    run "chown hyperarchy:hyperarchy /app"
+    run "chown actionitems:actionitems /app"
 
-    as "hyperarchy" do
+    as "actionitems" do
       run! "ssh -o StrictHostKeyChecking=no git@github.com"
       run "yes | git clone", repository, "/app"
       run "ln -s /log /app/log"
@@ -343,7 +343,7 @@ class AppServer
     end
     install_service 'resque_worker', :QUEUE => '*', :VVERBOSE => 1
     install_service 'resque_scheduler'
-    install_service 'resque_web', :HOME => '/home/hyperarchy'
+    install_service 'resque_web', :HOME => '/home/actionitems'
   end
 
   def reinstall_services
@@ -376,9 +376,9 @@ class AppServer
   end
 
   def dump_database
-    db_name = "hyperarchy_#{rails_env}"
+    db_name = "actionitems_#{rails_env}"
     dump_file_path = "/tmp/#{db_name}_#{Time.now.to_i}.tar"
-    as 'hyperarchy' do
+    as 'actionitems' do
       run "pg_dump #{db_name} --file=#{dump_file_path} --format=tar"
       run "gzip #{dump_file_path}"
     end
@@ -394,8 +394,8 @@ class AppServer
     stop_service 'unicorn'
     sleep 1 while port_listening?(8080) 
 
-    as 'hyperarchy' do
-      run! "pg_restore #{dump_file_path} --dbname=hyperarchy_#{rails_env} --clean"
+    as 'actionitems' do
+      run! "pg_restore #{dump_file_path} --dbname=actionitems_#{rails_env} --clean"
     end
 
     start_service 'unicorn'

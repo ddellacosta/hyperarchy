@@ -35,7 +35,7 @@ module Models
     describe "#after_create" do
       it "if on production, sends admin an email about the new user" do
         user = expect_delivery { User.make }
-        last_delivery.to.map(&:to_s).should =~ ["max@hyperarchy.com", "nathan@hyperarchy.com"]
+        last_delivery.to.map(&:to_s).should =~ ["max@actionitems.us", "nathan@actionitems.us"]
         last_delivery.body.should include(user.full_name)
         last_delivery.body.should include(user.email_address)
       end

@@ -24,7 +24,7 @@ RSpec.configure do |config|
     stub(Resque).enqueue
     Sham.reset
 
-    Organization.make(:name => "Hyperarchy Social", :suppress_membership_creation => true, :social => true)
+    Organization.make(:name => "Actionitems Social", :suppress_membership_creation => true, :social => true)
     User.make(:first_name => "Guest", :last_name => "User", :guest => true, :default_guest => true)
     clear_deliveries
   end
@@ -34,7 +34,7 @@ RSpec.configure do |config|
   end
 
   # TODO: Why doesn't a block taking a block work with RR?
-  def Hyperarchy.defer
+  def Actionitems.defer
     yield
   end
 end

@@ -36,7 +36,7 @@ disallow updates to columns not exposed in a projection
 why does Tuple#define_field_reader restrict definition of ? methods to concrete (not synthetic) columns?
 convert screw unit to use underscore.js _.isEqual for equal matcher?
 make relations work with beEmpty matcher, possibly by tying into or creating some general underscore facility for determining emptyness
-add the suite keyword to screw unit so that hyperarchy and monarch spec suites can be run together on a single page
+add the suite keyword to screw unit so that actionitems and monarch spec suites can be run together on a single page
 
 
 longer term

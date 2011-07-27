@@ -47,7 +47,7 @@ describe Organization do
     end
 
     describe "#after_create" do
-      it "creates a special guest with a membership to the organization and to hyperarchy social" do
+      it "creates a special guest with a membership to the organization and to actionitems social" do
         organization = Organization.make
         special_guest = organization.guest
         special_guest.should_not be_nil
@@ -118,8 +118,8 @@ describe Organization do
     end
 
     describe "#guest" do
-      context "for Hyperarchy Social" do
-        it "returns the guest who is ONLY a member of Hyperarchy Social" do
+      context "for Actionitems Social" do
+        it "returns the guest who is ONLY a member of Actionitems Social" do
           org = Organization.make
           guest = Organization.social.guest
           guest.should_not == org.guest

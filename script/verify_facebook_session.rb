@@ -19,4 +19,4 @@ def verify(session_json)
   signature == computed_signature
 end
 
-p verify('{"access_token":"207827675895197|2.AQCB91eFE4vCUaUo.3600.1310497200.1-650539382|ieAmpWbKULRfjnv2-AwaGY4RelA","base_domain":"hyperarchy.com","expires":1310497200,"secret":"5wPTlEulSDQXzLXrwP7djg__","session_key":"2.AQCB91eFE4vCUaUo.3600.1310497200.1-650539382","sig":"cc19f214b9677e604e4e75c79362e82c","uid":"650539382"}')
+p verify('{"access_token":"207827675895197|2.AQCB91eFE4vCUaUo.3600.1310497200.1-650539382|ieAmpWbKULRfjnv2-AwaGY4RelA","base_domain":"actionitems.us","expires":1310497200,"secret":"5wPTlEulSDQXzLXrwP7djg__","session_key":"2.AQCB91eFE4vCUaUo.3600.1310497200.1-650539382","sig":"cc19f214b9677e604e4e75c79362e82c","uid":"650539382"}')

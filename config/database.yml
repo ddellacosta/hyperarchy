@@ -1,24 +1,24 @@
 development:
   adapter: postgres
-  database: hyperarchy_development
-  username: hyperarchy
+  database: actionitems_development
+  username: actionitems
 
 test:
   adapter: postgres
-  database: hyperarchy_test
-  username: hyperarchy
+  database: actionitems_test
+  username: actionitems
 
 jasmine:
   adapter: postgres
-  database: hyperarchy_jasmine
-  username: hyperarchy
+  database: actionitems_jasmine
+  username: actionitems
 
 demo:
   adapter: postgres
-  database: hyperarchy_demo
-  username: hyperarchy
+  database: actionitems_demo
+  username: actionitems
 
 production:
   adapter: postgres
-  database: hyperarchy_production
-  username: hyperarchy
+  database: actionitems_production
+  username: actionitems

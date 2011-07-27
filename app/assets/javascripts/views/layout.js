@@ -6,13 +6,13 @@ _.constructor("Views.Layout", View.Template, {
         div({id: "header"}, function() {
           a(function() {
             div({id: "logo"})
-            h1("HYPERARCHY");
+            h1("ACTIONITEMS");
             h2("/").ref('organizationNameSeparator');
             h2().ref('organizationName');
           }).ref('logoAndTitle').click('navigateToCurrentOrganization');
 
           div({id: "menu-items"}, function() {
-            a({id: "blog-link", href: "http://blog.hyperarchy.com"}, "Blog / About");
+            a({id: "blog-link", href: "http://blog.actionitems.us"}, "Blog / About");
             a({id: "feedback-link"}, "Feedback").ref('feedbackLink').click('showFeedbackForm');
             a({id: "invite-link"}, "Invite Your Team").ref('inviteLink').click('showInviteBox');
             

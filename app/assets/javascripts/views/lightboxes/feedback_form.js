@@ -5,7 +5,7 @@ _.constructor('Views.Lightboxes.FeedbackForm', Views.Lightboxes.Lightbox, {
     form(function() {
       div({id: "feedback-explanation"}, function() {
         text("Thanks for taking the time to talk to us! Feel free to get in touch with us via email at ");
-        a({href: "mailto:admin@hyperarchy.com", 'class': "link"}, "admin@hyperarchy.com");
+        a({href: "mailto:admin@actionitems.us", 'class': "link"}, "admin@actionitems.us");
       });
       textarea().ref('textarea').bind('keyup paste cut', 'enableOrDisableSubmitButton');
       input({type: "submit", value: "Send Feedback", 'class': "button"}).ref('submitButton');

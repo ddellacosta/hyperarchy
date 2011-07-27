@@ -1,4 +1,4 @@
-Hyperarchy::Application.routes.draw do
+Actionitems::Application.routes.draw do
   root :to => 'home#show'
   match 'organizations/:id' => 'home#show', :as => "organanization"
   match 'organizations/:id/questions/new' => 'home#show', :as => "new_organization_question"

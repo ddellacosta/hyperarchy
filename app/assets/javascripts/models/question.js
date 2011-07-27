@@ -185,7 +185,7 @@ _.constructor("Question", Model.Record, {
     var shareCode = Application.randomString();
     var queryString = $.param({
       url: this.absoluteUrl() + "?s=" + shareCode,
-      related: "hyperarchy",
+      related: "actionitems",
       text: this.body()
     });
 

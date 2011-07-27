@@ -56,7 +56,7 @@ class User < Prequel::Record
     self.create!(:guest => true,
                  :first_name => "Guest",
                  :last_name  => "User#{organization_id}",
-                 :email_address => "guest#{organization_id}@hyperarchy.com",
+                 :email_address => "guest#{organization_id}@actionitems.us",
                  :email_enabled => false,
                  :password => "guest_password")
   end

@@ -142,8 +142,8 @@ describe("Question", function() {
 
   describe("#absoluteUrl", function() {
     it("appends the Application.origin to the url", function() {
-      spyOn(Application, 'origin').andReturn('https://hyperarchy.com')
-      expect(question.absoluteUrl()).toBe('https://hyperarchy.com/questions/22');
+      spyOn(Application, 'origin').andReturn('https://actionitems.us')
+      expect(question.absoluteUrl()).toBe('https://actionitems.us/questions/22');
     });
   });
 
