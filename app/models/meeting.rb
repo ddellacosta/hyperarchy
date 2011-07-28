@@ -2,6 +2,7 @@ class Meeting < Prequel::Record
   column :id, :integer
   column :team_id, :integer
   column :creator_id, :integer
+  column :starts_at, :datetime
   column :body, :string
   column :details, :string
   column :vote_count, :integer, :default => 0
@@ -40,7 +41,11 @@ class Meeting < Prequel::Record
   INITIAL_SCORE = compute_score(0, 0)
 
   def can_create?
-    team.current_user_can_create_items?
+    if team
+      team.current_user_can_create_items?
+    else
+      true
+    end
   end
 
   def can_update_or_destroy?
@@ -50,11 +55,11 @@ class Meeting < Prequel::Record
   alias can_destroy? can_update_or_destroy?
 
   def create_whitelist
-    [:team_id, :body, :details]
+    [:team_id, :body, :details, :starts_at]
   end
 
   def update_whitelist
-    [:body, :details]
+    [:body, :details, :starts_at]
   end
 
   def team_ids
@@ -62,18 +67,13 @@ class Meeting < Prequel::Record
   end
 
   def before_create
-    ensure_body_within_limit
+    self.team ||= Team.create!(:name => "#{current_user.full_name}'s Team")
     team.ensure_current_user_is_member unless suppress_current_user_membership_check
     self.creator ||= current_user
     self.score = INITIAL_SCORE
   end
 
-  def ensure_body_within_limit
-    raise SecurityError, "Body exceeds 140 characters" if body.length > 140
-  end
-
   def before_update(changeset)
-    ensure_body_within_limit if changeset[:body]
     self.score = compute_score if changeset.changed?(:vote_count)
   end
 

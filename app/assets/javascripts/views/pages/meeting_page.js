@@ -11,7 +11,7 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
       div({id: "headline"}, function() {
         a({'class': "new button"}, function() {
           div({'class': "plus"}, "+");
-          text("Add An AgendaItem");
+          text("Add An Agenda Item");
         }).ref('newAgendaItemLink')
           .click(function() {
             if (this.params().agendaItemId === 'new') {
@@ -53,7 +53,7 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
 
       subview('spinner', Views.Components.Spinner);
     }).click(function(e) {
-        if ($(e.target).is('a,textarea,li,li *,#agendaItem-details,#agendaItem-details *')) return;
+        if ($(e.target).is('a,textarea,li,li *,#agenda-item-details,#agenda-item-details *')) return;
         if (window.getSelection().toString() !== "") return;
         History.replaceState(null, null, this.meeting().url());
       });
@@ -94,7 +94,7 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
       History.replaceState(null,null,this.meeting().url());
     });
     h2("Your Ranking").ref('rankedAgendaItemsHeader');
-    h2("AgendaItem Details").ref('agendaItemDetailsHeader');
+    h2("Agenda Item Details").ref('agendaItemDetailsHeader');
 
     div({id: "rankings-and-details"}, function() {
       subview('agendaItemDetails', Views.Pages.Meeting.AgendaItemDetails);

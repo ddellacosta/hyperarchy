@@ -61,6 +61,8 @@ class Membership < Prequel::Record
   end
 
   def current_user_can_read_email_address?
+    p self.inspect
+    p user.inspect
     return false unless current_user
     user == current_user || current_user.admin? || team.current_user_is_owner?
   end

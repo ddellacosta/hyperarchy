@@ -4,6 +4,7 @@ _.constructor("Meeting", Model.Record, {
       this.columns({
         teamId: 'key',
         creatorId: 'key',
+        startsAt: 'datetime',
         body: 'string',
         details: 'string',
         voteCount: 'integer',
@@ -150,10 +151,10 @@ _.constructor("Meeting", Model.Record, {
         caption = this.noRankingsShareCaption;
         break;
       case 1:
-        caption = currentUserName + "'s top agendaItem:";
+        caption = currentUserName + "'s top agenda item:";
         break;
       default:
-        caption = currentUserName + "'s top agendaItems:";
+        caption = currentUserName + "'s top agenda items:";
     }
 
     if (numAgendaItems > 0) {
@@ -204,5 +205,5 @@ _.constructor("Meeting", Model.Record, {
     return this.body()
   },
 
-  noRankingsShareCaption: "Click on this meeting to suggest and rank agendaItems."
+  noRankingsShareCaption: "Click on this meeting to suggest and rank agenda items."
 });

@@ -1,6 +1,6 @@
 _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
-    div({id: "agendaItem-details"}, function() {
+    div({id: "agenda-item-details"}, function() {
       div({'class': "non-editable"}, function() {
         div({'class': "body"}).ref("body");
         span({'class': "details"}).ref("details");
@@ -29,7 +29,7 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
         .ref('form');
       a({'class': 'update button', tabindex: 203}, "Save").ref('updateButton').click('update');
       a({'class': 'cancel button', tabindex: 204}, "Cancel").ref('cancelEditButton').click('cancelEdit');
-      a({'class': 'create button'}, "Add AgendaItem").ref('createButton').click('create');
+      a({'class': 'create button'}, "Add Agenda Item").ref('createButton').click('create');
 
       div({'class': "creator"}, function() {
         subview('avatar', Views.Components.Avatar, {imageSize: params.fullScreen ? 46 : 34});
@@ -105,7 +105,7 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
     },
 
     destroy: function() {
-      if (window.confirm("Are you sure you want to delete this agendaItem?")) {
+      if (window.confirm("Are you sure you want to delete this agenda item?")) {
         this.agendaItem().destroy();
       }
     },

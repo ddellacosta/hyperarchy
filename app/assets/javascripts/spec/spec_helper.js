@@ -1,3 +1,4 @@
+//= require ./support/fake_date
 //= require application
 //= require_directory ./support
 //= require monarch/http/fake_server

@@ -1,5 +1,5 @@
 _.constructor('Views.Lightboxes.FullScreenAgendaItem', Views.Lightboxes.Lightbox, {
-  id: "full-screen-agendaItem",
+  id: "full-screen-agenda-item",
 
   lightboxContent: function() { with(this.builder) {
     a({'class': "nav link"}, "↖ Back to List").ref('backLink').click(function() {

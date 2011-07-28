@@ -1,6 +1,6 @@
 _.constructor('Views.Pages.Meeting.RankedAgendaItems', Monarch.View.Template, {
   content: function() { with(this.builder) {
-    div({id: "ranked-agendaItems"}, function() {
+    div({id: "ranked-agenda-items"}, function() {
       ol(function() {
         li({id: "positive-drag-target"}, function() {
           span("Drag ideas you like here").ref('positiveDragExplanation');

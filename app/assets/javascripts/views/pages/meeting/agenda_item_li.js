@@ -1,6 +1,6 @@
 _.constructor('Views.Pages.Meeting.AgendaItemLi', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
-    li({'class': "agendaItem"}, function() {
+    li({'class': "agenda-item"}, function() {
       div({'class': "more"}, '…').ref('ellipsis');
       if (!params.fullScreen) div({'class': "status "}).ref('status');
       div({'class': "position"}, params.agendaItem.position()).ref('position');
@@ -20,7 +20,7 @@ _.constructor('Views.Pages.Meeting.AgendaItemLi', Monarch.View.Template, {
         }));
       } else {
         this.draggable({
-          connectToSortable: '#ranked-agendaItems ol',
+          connectToSortable: '#ranked-agenda-items ol',
           appendTo: '#meeting',
           revert: 'invalid',
           delay: this.dragDelay,

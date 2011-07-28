@@ -4,10 +4,10 @@ _.constructor('Views.Pages.Team.MeetingLi', Monarch.View.Template, {
       div(function() {
         subview('avatar', Views.Components.Avatar, {imageSize: 50});
         div({'class': "body"}).ref('body')
-        subview('agendaItems', Views.Components.SortedList, {
+        subview('agenda-items', Views.Components.SortedList, {
           buildElement: function(agendaItem, index) {
             return Monarch.View.build(function(b) { with(b) {
-              li({'class': "agendaItem"}, function() {
+              li({'class': "agenda-item"}, function() {
                 div({'class': "position"}, agendaItem.position()).ref('position');
                 div({'class': "body"}, function() {
                   raw($.markdown(agendaItem.body()));

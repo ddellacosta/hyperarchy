@@ -34,9 +34,11 @@ class Db < Thor
       return
     end
 
-    drop(env)
-    create(env)
-    migrate(env)
+    begin
+      perform_migrate(env, 0)
+    rescue
+    end
+    perform_migrate(env, nil)
   end
 
   desc "migrate [env=development,test] [--target=target]", "migrate the database, optionally to a specific version"
@@ -49,11 +51,8 @@ class Db < Thor
       return
     end
 
-    require 'sequel'
-    require 'sequel/extensions/migration'
-
     target = options[:target] ? options[:target].to_i : nil
-    Sequel::Migrator.run(connection(env), rails_root.join('db', 'migrate'), :target => target)
+    perform_migrate(env, target)
   end
 
   desc "transfer source_stage target_stage", "dump the contents of source's database and load them into target's database"
@@ -94,6 +93,12 @@ class Db < Thor
 
   def rails_root
     @rails_root ||= Pathname.new(File.expand_path('../../..', __FILE__))
+  end
+
+  def perform_migrate(env, target)
+    require 'sequel'
+    require 'sequel/extensions/migration'
+    Sequel::Migrator.run(connection(env), rails_root.join('db', 'migrate'), :target => target)
   end
 end
 

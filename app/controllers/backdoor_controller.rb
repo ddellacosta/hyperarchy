@@ -37,11 +37,8 @@ class BackdoorController < SandboxController
     clear_current_user
     Prequel.clear_tables
     Sham.reset
-    org = Team.make(:id => 1, :name => "Actionitems Social", :suppress_membership_creation => true, :social => true, :privacy => "public")
     User.clear
     User.create!(:id => 1, :first_name => "Guest", :last_name => "User", :password => "password", :email_address => "guest@example.com", :default_guest => true, :guest => true)
-    Membership.clear
-    org.memberships.create!(:id => 1, :user_id => 1)
     head :ok
   end
 

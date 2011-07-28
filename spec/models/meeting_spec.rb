@@ -39,6 +39,13 @@ module Models
     end
 
     describe "before create" do
+      it "creates a team if none has been provided" do
+        set_current_user(User.make)
+        meeting = Meeting.create!(:starts_at => 5.days.from_now)
+        meeting.team.name.should == "#{current_user.full_name}'s Team"
+        meeting.team.current_user_is_member?.should be_true
+      end
+
       it "if the creator is not a member of the meeting's team, makes them one (as long as the org is public)" do
         set_current_user(User.make)
         current_user.memberships.where(:team => team).should be_empty
@@ -248,6 +255,12 @@ module Models
           @meeting = team.meetings.make_unsaved
         end
 
+        context "if the meeting has no team" do
+          it "return true (the meeting will be associated with a new team before it is created)" do
+            Meeting.make_unsaved(:team => nil).can_create?.should be_true
+          end
+        end
+
         context "if the meeting's team is non-public" do
           before do
             meeting.team.update(:privacy => "read_only")
@@ -262,7 +275,7 @@ module Models
           end
         end
 
-        context "if the given meeting's team is public" do
+        context "if the meeting's team is public" do
           before do
             meeting.team.update(:privacy => "public")
           end

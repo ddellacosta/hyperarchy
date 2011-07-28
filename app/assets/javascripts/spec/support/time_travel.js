@@ -1,28 +1,37 @@
-var mockedDate, originalDate;
+window.OriginalDate = Date;
+var mockedDate;
 
-beforeEach(function() {
+window.Date = function() {
+  if (mockedDate) {
+    return mockedDate;
+  } else {
+    return new OriginalDate();
+  }
+};
+
+Date.__proto__ = OriginalDate;
+Date.prototype = new OriginalDate();
+Date.prototype.constructor = Date;
+
+
+afterEach(function() {
   mockedDate = undefined;
 });
 
 function freezeTime() {
-  mockDateIfNeeded();
-  mockedDate = new originalDate();
+  mockedDate = new Date();
 }
 
 function timeTravelTo(date) {
-  if (_.isNumber(date)) date = new originalDate(date);
-  mockedDate = date;
+  if (_.isNumber(date)) {
+    mockedDate = new OriginalDate(date);
+  } else if (_.isString(date)) {
+    mockedDate = Date.parse(date);
+  } else {
+    mockedDate = date;
+  }
 }
 
 function jump(milliseconds) {
   timeTravelTo(new Date().getTime() + milliseconds);
-}
-
-function mockDateIfNeeded() {
-  if (!mockedDate) {
-    originalDate = Date
-    spyOn(window, 'Date').andCallFake(function() {
-      return mockedDate;
-    });
-  }
 }

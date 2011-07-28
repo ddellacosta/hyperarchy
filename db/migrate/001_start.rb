@@ -89,6 +89,7 @@ Sequel.migration do
     create_table(:meetings) do
       primary_key :id
       Integer :team_id
+      column :starts_at, 'timestamp with time zone'
       String :body, :text=>true
       column :updated_at, 'timestamp with time zone'
       column :created_at, 'timestamp with time zone'
@@ -149,6 +150,6 @@ Sequel.migration do
   end
   
   down do
-    drop_table(:agenda_item_notes, :agenda_items, :mailing_list_entries, :majorities, :memberships, :teams, :meeting_notes, :meeting_visits, :meetings, :rankings, :schema_info, :shares, :users, :votes)
+    drop_table(:agenda_item_notes, :agenda_items, :mailing_list_entries, :majorities, :memberships, :teams, :meeting_notes, :meeting_visits, :meetings, :rankings, :shares, :users, :votes)
   end
 end

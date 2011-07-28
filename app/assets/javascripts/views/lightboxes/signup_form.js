@@ -59,6 +59,7 @@ _.constructor('Views.Lightboxes.SignupForm', Views.Lightboxes.Lightbox, {
         success: Application.hitch('currentUserEstablished', promise),
         error: this.hitch('handleError', promise)
       });
+
       return promise;
     },
 

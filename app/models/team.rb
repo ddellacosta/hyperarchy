@@ -53,8 +53,8 @@ class Team < Prequel::Record
   end
 
   def after_create
-    special_guest = User.create_guest(id)
-    memberships.create(:user => special_guest)
+    #special_guest = User.create_guest(id)
+    #memberships.create(:user => special_guest)
     memberships.create(:user => current_user, :role => "owner") unless suppress_membership_creation
   end
 
