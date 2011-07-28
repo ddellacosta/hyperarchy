@@ -127,7 +127,7 @@ _.constructor('Views.Pages.Meeting.RankedAgendaItems', Monarch.View.Template, {
     },
 
     currentUserCanRank: function() {
-      return Application.currentTeam().currentUserCanParticipate()
+      return Application.currentTeam().currentUserCanParticipate();
     },
 
     handleListReceive: function(event, ui) {
@@ -153,7 +153,7 @@ _.constructor('Views.Pages.Meeting.RankedAgendaItems', Monarch.View.Template, {
           this.insertRankingLi(agendaItem, {isPositive: isPositive});
         }, this)
         .invalid(function() {
-          this.list.find('.agendaItem').remove();
+          this.list.find('.agenda-item').remove();
           this.showOrHideDragTargets();
         }, this);
     },

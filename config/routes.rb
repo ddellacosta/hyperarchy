@@ -55,6 +55,7 @@ Actionitems::Application.routes.draw do
     post '/backdoor/clear_tables' => 'backdoor#clear_tables'
     post '/backdoor/upload_repository' => 'backdoor#upload_repository'
     post '/backdoor/login' => 'backdoor#login'
+    post '/backdoor/login_as_special_guest' => 'backdoor#login_as_special_guest'
     post '/backdoor/:relation/multiple' => 'backdoor#create_multiple'
     get '/backdoor/initial_repository_contents' => 'backdoor#initial_repository_contents'
     get '/backdoor' => 'backdoor#fetch'

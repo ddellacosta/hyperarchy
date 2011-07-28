@@ -1,11 +1,15 @@
 window.OriginalDate = Date;
 var mockedDate;
 
-window.Date = function() {
+window.Date = function(millis) {
   if (mockedDate) {
     return mockedDate;
   } else {
-    return new OriginalDate();
+    if (millis) {
+      return new OriginalDate(millis);
+    } else {
+      return new OriginalDate();
+    }
   }
 };
 

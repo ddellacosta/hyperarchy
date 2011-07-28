@@ -51,7 +51,7 @@ _.constructor('Views.Pages.Team', Monarch.View.Template, {
 
       change: function(params) {
         var team = Team.find(params.teamId);
-        if (!team) History.replaceState(null,  null, Application.currentUser().defaultTeam().url());
+        if (!team) History.replaceState(null,  null, Application.currentUser().defaultPageUrl());
         this.team(team);
       }
     },

@@ -6,6 +6,28 @@ describe("User", function() {
     user = User.createFromRemote({id: 1, emailHash: 'fake-email-hash'});
   });
 
+  describe("defaultPageUrl", function() {
+    describe("if the user has no memberships", function() {
+      it("returns '/'", function() {
+        expect(user.defaultPageUrl()).toBe('/');
+      });
+    });
+
+    describe("if the user has memberships", function() {
+      var team2;
+      beforeEach(function() {
+        var team1 = Team.createFromRemote({id: 1});
+        team2 = Team.createFromRemote({id: 2});
+        team1.memberships().createFromRemote({id: 1, userId: user.id(), lastVisited: 1});
+        team2.memberships().createFromRemote({id: 1, userId: user.id(), lastVisited: 100});
+      });
+
+      it("returns the url of the most recently visited team", function() {
+        expect(user.defaultPageUrl()).toBe(team2.url());
+      });
+    });
+  });
+
   describe("#fetchAvatarUrl(size)", function() {
     describe("if the user has a twitter id and no facebook id", function() {
       beforeEach(function() {

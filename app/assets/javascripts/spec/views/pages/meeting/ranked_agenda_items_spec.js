@@ -1,12 +1,13 @@
 //= require spec/spec_helper
 
 describe("Views.Pages.Meeting.RankedAgendaItems", function() {
-  var team, meetingPage, rankedAgendaItems, currentUser, meeting, agendaItem1, agendaItem2, agendaItem3, ranking1, ranking2, rankingsRelation, lastCreateOrUpdatePromise;
+  var team, specialGuest, meetingPage, rankedAgendaItems, currentUser, meeting, agendaItem1, agendaItem2, agendaItem3, ranking1, ranking2, rankingsRelation, lastCreateOrUpdatePromise;
   
   beforeEach(function() {
     team = Team.createFromRemote({id: 1})
-    currentUser = team.makeMember({id: 2, emailAddress: "foo@example.com"});
-    meeting = Meeting.createFromRemote({id: 1, creatorId: 2, createdAt: 234234234, teamId: team.id()});
+    specialGuest = team.makeMember({id: 2, emailAddress: "guest.user2@actionitems.us", guest: true});
+    currentUser = team.makeMember({id: 3, emailAddress: "foo@example.com"});
+    meeting = team.meetings().createFromRemote({id: 1, creatorId: 2, createdAt: 234234234});
     agendaItem1 = meeting.agendaItems().createFromRemote({id: 1, body: "AgendaItem 1", createdAt: 1308352736162, creatorId: 2});
     agendaItem2 = meeting.agendaItems().createFromRemote({id: 2, body: "AgendaItem 2", createdAt: 1308352736162, creatorId: 2});
     agendaItem3 = meeting.agendaItems().createFromRemote({id: 3, body: "AgendaItem 3", createdAt: 1308352736162, creatorId: 2});
@@ -254,7 +255,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           meetingPage.params({meetingId: meeting.id()});
         });
 
-        describe("when receiving a agendaItem that has not yet been ranked", function() {
+        describe("when receiving an agenda item that has not yet been ranked", function() {
           it("adds a new RankingLi for the agendaItem and associates it with a position", function() {
             var agendaItem3Li = meetingPage.currentConsensus.find('li:contains("AgendaItem 3")');
             var ranking1Li = rankedAgendaItems.find('li:contains("AgendaItem 1")');
@@ -291,7 +292,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           });
         });
 
-        describe("when receiving a agendaItem that has already been ranked", function() {
+        describe("when receiving an agenda item that has already been ranked", function() {
           it("removes the previous RankingLi for the agendaItem and adds a new one, associating it with a position", function() {
             Server.auto = false;
 
@@ -319,7 +320,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           });
         });
 
-        describe("when receiving a agendaItem in the positive region above the drag target", function() {
+        describe("when receiving an agenda item in the positive region above the drag target", function() {
           it("computes the position correctly", function() {
             var agendaItem3Li = meetingPage.currentConsensus.find('li:contains("AgendaItem 3")');
             ranking1.remotelyDestroyed();
@@ -338,24 +339,26 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           unspy(rankedAgendaItems, 'currentUserCanRank');
 
           uploadRepository();
-          fetchInitialRepositoryContents();
+          loginAsSpecialGuest(team);
 
           expect(Application.currentUserId()).toBeDefined();
           expect(Application.currentUser()).toBeDefined();
-          expect(Application.currentUser().defaultGuest()).toBeTruthy();
-          expect(team.social()).toBeTruthy();
-          expect(team.isPublic()).toBeTruthy();
+          expect(Application.currentUser().guest()).toBeTruthy();
+          expect(team.currentUserIsMember()).toBeTruthy();
 
           synchronously(function() {
             meetingPage.params({meetingId: meeting.id()});
           });
 
+          expect(meeting.agendaItems()).not.toBeEmpty();
+
           agendaItem3Li = meetingPage.currentConsensus.find('li:contains("AgendaItem 3")');
+          expect(agendaItem3Li).toExist();
 
           expect(rankedAgendaItems.list.find('li.ranking')).not.toExist();
         });
 
-        describe("when the user drags a agendaItem above the separator", function() {
+        describe("when the user drags an agenda item above the separator", function() {
           beforeEach(function() {
             agendaItem3Li.dragAbove(rankedAgendaItems.separator);
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
@@ -367,6 +370,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           describe("and then signs up at the prompt", function() {
             it("creates a positive ranking once they have signed up", function() {
               runs(function() {
+                expect(Application.signupForm).toBeVisible();
                 Application.signupForm.firstName.val("Max");
                 Application.signupForm.lastName.val("Brunsfeld");
                 Application.signupForm.emailAddress.val("maxbruns@example.com");
@@ -431,7 +435,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           });
         });
 
-        describe("when the user drags a agendaItem below the separator", function() {
+        describe("when the user drags an agenda item below the separator", function() {
           beforeEach(function() {
             agendaItem3Li.dragAbove(rankedAgendaItems.negativeDragTarget);
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
@@ -467,8 +471,6 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
                 expect(ranking.position()).toBe(-64);
                 expect(ranking.agendaItem()).toEqual(agendaItem3);
                 expect(ranking.user()).toEqual(Application.currentUser());
-
-                Application.currentUser(currentUser);
               });
             });
           });
@@ -514,9 +516,9 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
             expect(Application.signupForm).toBeVisible();
 
-            expect(rankedAgendaItems.list.find('li.agendaItem')).toExist();
+            expect(rankedAgendaItems.list.find('li.agenda-item')).toExist();
             Application.darkenedBackground.click();
-            expect(rankedAgendaItems.list.find('li.agendaItem')).not.toExist();
+            expect(rankedAgendaItems.list.find('li.agenda-item')).not.toExist();
             expect(rankedAgendaItems.positiveDragTarget).toBeVisible();
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
 
@@ -534,9 +536,9 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
             expect(Application.signupForm).toBeVisible();
             Application.signupForm.loginFormLink.click();
 
-            expect(rankedAgendaItems.list.find('li.agendaItem')).toExist();
+            expect(rankedAgendaItems.list.find('li.agenda-item')).toExist();
             Application.darkenedBackground.click();
-            expect(rankedAgendaItems.list.find('li.agendaItem')).not.toExist();
+            expect(rankedAgendaItems.list.find('li.agenda-item')).not.toExist();
             expect(rankedAgendaItems.positiveDragTarget).toBeVisible();
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
 

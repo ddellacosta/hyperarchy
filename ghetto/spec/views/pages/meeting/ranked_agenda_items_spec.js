@@ -254,7 +254,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           meetingPage.params({meetingId: meeting.id()});
         });
 
-        describe("when receiving a agendaItem that has not yet been ranked", function() {
+        describe("when receiving an agenda item that has not yet been ranked", function() {
           it("adds a new RankingLi for the agendaItem and associates it with a position", function() {
             var agendaItem3Li = meetingPage.currentConsensus.find('li:contains("AgendaItem 3")');
             var ranking1Li = rankedAgendaItems.find('li:contains("AgendaItem 1")');
@@ -291,7 +291,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           });
         });
 
-        describe("when receiving a agendaItem that has already been ranked", function() {
+        describe("when receiving an agenda item that has already been ranked", function() {
           it("removes the previous RankingLi for the agendaItem and adds a new one, associating it with a position", function() {
             Server.auto = false;
 
@@ -319,7 +319,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           });
         });
 
-        describe("when receiving a agendaItem in the positive region above the drag target", function() {
+        describe("when receiving an agenda item in the positive region above the drag target", function() {
           it("computes the position correctly", function() {
             var agendaItem3Li = meetingPage.currentConsensus.find('li:contains("AgendaItem 3")');
             ranking1.remotelyDestroyed();
@@ -355,7 +355,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           expect(rankedAgendaItems.list.find('li.ranking')).not.toExist();
         });
 
-        describe("when the user drags a agendaItem above the separator", function() {
+        describe("when the user drags an agenda item above the separator", function() {
           beforeEach(function() {
             agendaItem3Li.dragAbove(rankedAgendaItems.separator);
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
@@ -431,7 +431,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
           });
         });
 
-        describe("when the user drags a agendaItem below the separator", function() {
+        describe("when the user drags an agenda item below the separator", function() {
           beforeEach(function() {
             agendaItem3Li.dragAbove(rankedAgendaItems.negativeDragTarget);
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();

@@ -11,7 +11,6 @@ describe("Views.Pages.Team", function() {
   describe("when the params are assigned", function() {
     var team;
     beforeEach(function() {
-      Team.createFromRemote({id: 1, social: true, name: "Actionitems Social"});
       team = Team.createFromRemote({id: 100, name: "Watergate"});
     });
 
@@ -23,10 +22,10 @@ describe("Views.Pages.Team", function() {
     });
 
     describe("when the team does not exist in the local repository", function() {
-      it("navigates to the team page for Actionitems Social", function() {
+      it("navigates to the user's default page", function() {
         spyOn(Application, 'showPage');
         teamPage.params({teamId: -1});
-        expect(Path.routes.current).toBe(Application.currentUser().defaultTeam().url());
+        expect(Path.routes.current).toBe(Application.currentUser().defaultPageUrl());
       });
     });
 

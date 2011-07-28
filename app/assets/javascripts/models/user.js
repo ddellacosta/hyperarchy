@@ -82,6 +82,11 @@ _.constructor("User", Model.Record, {
     return this.memberships().orderBy(Membership.lastVisited.desc()).first().team();
   },
 
+  defaultPageUrl: function() {
+    var defaultTeam = this.defaultTeam();
+    return defaultTeam ? defaultTeam.url() : "/";
+  },
+
   rankingsForMeeting: function(meeting) {
     return this.rankings().where({meetingId: meeting.id()});
   },

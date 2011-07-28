@@ -37,7 +37,7 @@ describe("Views.Pages.Meeting.CurrentConsensus", function() {
       });
     });
 
-    describe("when the position of a agendaItem changes", function() {
+    describe("when the position of an agenda item changes", function() {
       it("updates the position on the agendaItem li", function() {
         var agendaItem1Li = currentConsensusView.find('li:contains("' + agendaItem1.body() + '")').view();
         var agendaItem2Li = currentConsensusView.find('li:contains("' + agendaItem2.body() + '")').view();
@@ -53,7 +53,7 @@ describe("Views.Pages.Meeting.CurrentConsensus", function() {
       });
     });
 
-    describe("when the body of a agendaItem changes", function()  {
+    describe("when the body of an agenda item changes", function()  {
       it("updates the body in the agendaItem li", function() {
         var agendaItem1Li = currentConsensusView.find('li:contains("' + agendaItem1.body() + '")').view();
 

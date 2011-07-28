@@ -68,7 +68,6 @@ describe("Views.Lightboxes.SignupForm", function() {
           expect(user.firstName()).toEqual("Richard");
           expect(user.lastName()).toEqual("Nixon");
           expect(user.emailAddress()).toEqual("dick@hell.de");
-          expect(user.teams().size()).toBe(1);
           expect(signupForm).toBeHidden();
           expect(Application.darkenedBackground).toBeHidden();
         });
@@ -118,7 +117,7 @@ describe("Views.Lightboxes.SignupForm", function() {
           expect(user.firstName()).toEqual("Richard");
           expect(user.lastName()).toEqual("Nixon");
           expect(user.emailAddress()).toEqual("dick@hell.de");
-          expect(user.teams().size()).toBe(2);
+          expect(user.teams().size()).toBe(1);
 
           var org = user.teams().find({name: "dick's group"});
           expect(Path.routes.current).toEqual(org.url());

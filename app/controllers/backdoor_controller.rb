@@ -14,6 +14,14 @@ class BackdoorController < SandboxController
     initial_repository_contents
   end
 
+  def login_as_special_guest
+    team = Team.find(params[:team_id])
+    raise "No team found by that id" unless team
+    raise "Team has not guest" unless team.guest
+    set_current_user(team.guest)
+    initial_repository_contents
+  end
+
   def initial_repository_contents
     render :json => {
       :data => { :current_user_id => current_user_id },
@@ -57,7 +65,8 @@ class BackdoorController < SandboxController
           record.raw_update(blueprint_field_values)
           records << record
         else
-          records << record_class.raw_create(blueprint_field_values)
+          record = record_class.raw_create(blueprint_field_values)
+          records << record
         end
       end
     end

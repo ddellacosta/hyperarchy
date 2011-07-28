@@ -51,8 +51,6 @@ describe("Views.Lightboxes.LoginForm", function() {
       enableAjax();
       usingBackdoor(function() {
         user = User.create();
-        user.memberships().joinTo(Team).fetch();
-        History.pushState(null, null, user.defaultTeam().url());
         Repository.clear();
       });
       loginForm.show();

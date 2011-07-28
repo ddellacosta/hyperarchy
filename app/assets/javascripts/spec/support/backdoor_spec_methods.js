@@ -6,7 +6,6 @@ function clearServerTables() {
 
 function login(user) {
   return synchronously(function() {
-    var currentUser;
     var data;
     if (user) data = { user_id: user.id() };
     $.ajax({
@@ -16,6 +15,21 @@ function login(user) {
       dataType: 'data+records!'
     }).success(function(data) {
       Application.currentUserId(data.current_user_id)
+    });
+    return Application.currentUser();
+  });
+}
+
+function loginAsSpecialGuest(team) {
+  return synchronously(function() {
+    $.ajax({
+      type: 'post',
+      data: { team_id: team.id() },
+      url: "/backdoor/login_as_special_guest",
+      dataType: 'data+records!',
+      success: function(data) {
+        Application.currentUserId(data.current_user_id);
+      }
     });
     return Application.currentUser();
   });

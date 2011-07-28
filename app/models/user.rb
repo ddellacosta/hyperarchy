@@ -157,15 +157,14 @@ class User < Prequel::Record
 
   def default_team
     if memberships.empty?
-      Team.find(:social => true)
+      nil
     else
       memberships.order_by(Membership[:last_visited].desc).first.team
     end
   end
 
   def guest_team
-    return nil unless guest?
-    teams.find(:social => false)
+    teams.first if guest?
   end
 
   def memberships_to_notify(period)
