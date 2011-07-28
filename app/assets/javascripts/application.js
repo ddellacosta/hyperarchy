@@ -7,7 +7,6 @@
 //= require jquery-ui/jquery.ui.draggable
 //= require jquery-ui/jquery.ui.droppable
 //= require jquery-ui/jquery.ui.sortable
-//= require jquery-ui/jquery.ui.autocomplete
 //= require jquery-ui/jquery.effects.core
 //= require jquery-ui/jquery.effects.highlight
 //= require jquery-ui/jquery.effects.scale
@@ -19,6 +18,8 @@
 //= require jquery.tooltip.v.1.1
 //= require jquery.hotkeys
 //= require showdown
+//= require date
+//= require jquery.calendrical
 //= require jquery.markdown
 //= require monarch_extensions
 //= require socket.io
