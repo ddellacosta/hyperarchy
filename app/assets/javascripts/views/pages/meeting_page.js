@@ -20,22 +20,8 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
               this.navigateToNewAgendaItemForm();
             }
           });
-        a({'class': "facebook button"}, function() {
-          div({'class': "logo"});
-          span("Share");
-        }).ref('facebookButton')
-          .click(function() {
-            this.meeting().shareOnFacebook();
-          });
-
-        a({'class': "twitter button", 'data-text': "Check it out yo!", href: ""}, function() {
-          div({'class': "logo"});
-          span("Tweet");
-        }).ref('twitterButton');
 
         div({'class': "body"}).ref('body');
-        textarea({name: "body", 'class': "body"}).ref("editableBody");
-        subview('charsRemaining', Views.Components.CharsRemaining, { limit: 140 });
       }).ref('headline');
 
       div({id: "columns"}, function() {
@@ -60,31 +46,10 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
   }},
 
   column1: function() { with(this.builder) {
-    h2({id: "details-header"}, "Details").ref('detailsHeader');
-    textarea({name: 'details', 'class': "details"}).ref("editableDetails");
-    a({'class': 'update button'}, "Save").ref('updateButton').click('update');
-    a({'class': 'cancel button'}, "Cancel").ref('cancelEditButton').click('cancelEdit');
-
-    div({'class': "non-editable"}, function() {
-      div({'class': 'details'}).ref('details');
-
-      a({'class': "edit"}, "✎ edit").ref('editButton').click('edit');
-      a({'class': "destroy"}, "✕ delete").ref('destroyButton').click('destroy');
-    });
-
-    div({'class': 'creator'}, function() {
-      subview('avatar', Views.Components.Avatar, {imageSize: 34});
-      div({'class': 'name'}).ref('creatorName');
-      div({'class': 'date'}).ref('createdAt');
-    }).ref('creator');
-
     subview('notes', Views.Pages.Meeting.Notes);
   }},
 
   column2: function() { with(this.builder) {
-    a({'class': "full-screen link"}, "Full Screen").click(function() {
-      History.replaceState(null, null, this.meeting().fullScreenUrl());
-    });
     h2("Current Consensus");
     subview('currentConsensus', Views.Pages.Meeting.CurrentConsensus);
   }},
@@ -112,18 +77,9 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
     attach: function($super) {
       $super();
 
-      this.charsRemaining.field(this.editableBody);
-      this.editableBody.elastic();
-      this.editableDetails.elastic();
-      this.editableBody.bind('elastic', this.hitch('adjustColumnTop'));
-      this.editableDetails.bind('elastic', this.hitch('adjustNotesHeight'));
       $(window).resize(this.hitch('adjustNotesHeight'));
 
       Application.onCurrentUserChange(function(currentUser) {
-        if (this.meeting()) {
-          this.showOrHideMutateButtons();
-        }
-
         var params = this.params();
         if (params) {
           return currentUser
@@ -132,10 +88,6 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
             .fetch()
             .success(this.hitch('populateContentAfterFetch', params));
         }
-      }, this);
-
-      Application.twitterInitialized(function() {
-        twttr.events.bind('tweet', this.hitch('recordTweet'));
       }, this);
     },
 
@@ -258,36 +210,17 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
         this.populateRankedAgendaItemsHeader(params.voterId);
         this.rankedAgendaItems.rankings(rankings);
       }
-
-      if (params.fullScreen) this.enterFullScreenMode();
     },
 
     meeting: {
       change: function(meeting) {
-        this.avatar.user(meeting.creator());
         this.body.bindMarkdown(meeting, 'body');
 
         var team = meeting.team();
         Application.currentTeam(team);
-        if (team.isPublic()) {
-          this.facebookButton.show();
-          this.twitterButton.show();
-        } else {
-          this.facebookButton.hide();
-          this.twitterButton.hide();
-        }
 
-        this.details.bindMarkdown(meeting, 'details');
         this.notes.notes(meeting.notes());
-        this.avatar.user(meeting.creator());
-        this.creatorName.bindText(meeting.creator(), 'fullName');
-        this.createdAt.text(meeting.formattedCreatedAt());
 
-        this.showOrHideMutateButtons();
-        this.cancelEdit();
-
-        this.registerInterest(meeting, 'onUpdate', this.handleMeetingUpdate);
-        this.handleMeetingUpdate();
         this.registerInterest(meeting, 'onDestroy', this.bind(function() {
           if (this.is(':visible')) History.pushState(null, null, Application.currentTeam().url());
         }));
@@ -295,30 +228,6 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
         this.adjustNotesHeight();
         meeting.trackView();
       }
-    },
-
-    edit: function() {
-      this.addClass('edit-mode');
-      this.editableBody.focus();
-      this.editableBody.val(this.meeting().body()).keyup();
-      this.editableDetails.val(this.meeting().details()).keyup();
-      this.adjustColumnTop();
-    },
-
-    cancelEdit: function() {
-      this.removeClass('edit-mode');
-      this.showOrHideDetails();
-      this.adjustColumnTop();
-    },
-
-    update: function(e) {
-      e.preventDefault();
-      if ($.trim(this.editableBody.val()) === "") return false;
-      if (this.editableBody.val().length > 140) return false;
-      this.meeting().update({body: this.editableBody.val(), details: this.editableDetails.val()}).success(this.bind(function(meeting) {
-        meeting.trackUpdate();
-        this.cancelEdit();
-      }));
     },
 
     destroy: function() {
@@ -349,32 +258,6 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
       this.agendaItemDetails.addClass('active');
     },
 
-    handleMeetingUpdate: function() {
-      this.showOrHideDetails();
-      this.adjustColumnTop();
-      this.updateTwitterIntentsUrl();
-    },
-
-    updateTwitterIntentsUrl: function() {
-      var urlAndCode = this.meeting().twitterIntentsUrlAndCode();
-      this.twitterButton.attr('href', urlAndCode[0]);
-      this.twitterShareCode = urlAndCode[1];
-    },
-
-    recordTweet: function() {
-      this.meeting().recordShare('twitter', this.twitterShareCode);
-      this.updateTwitterIntentsUrl();
-      mpq.push(['track', 'Tweet', _.extend(this.meeting().mixpanelProperties(), {type: "Meeting"})])
-    },
-
-    showOrHideDetails: function() {
-      if (this.meeting().details()) {
-        this.details.show()
-      } else {
-        this.details.hide()
-      }
-    },
-
     navigateToNewAgendaItemForm: function() {
       History.replaceState(null, null, this.meeting().newAgendaItemUrl());
     },
@@ -396,26 +279,6 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
 
     adjustNotesHeight: function() {
       this.notes.fillVerticalSpace(this.columns);
-    },
-
-    showOrHideMutateButtons: function() {
-      if (this.meeting().editableByCurrentUser()) {
-        this.addClass('mutable');
-        this.column1.addClass('mutable');
-      } else {
-        this.removeClass('mutable');
-        this.column1.removeClass('mutable');
-      }
-    },
-
-    enterFullScreenMode: function() {
-      if (this.params().agendaItemId) {
-        Application.fullScreenAgendaItem.show();
-        Application.fullScreenAgendaItem.agendaItem(this.agendaItemDetails.agendaItem());
-      } else {
-        Application.fullScreenConsensus.show();
-        Application.fullScreenConsensus.meeting(this.meeting());
-      }
     },
 
     loading: {

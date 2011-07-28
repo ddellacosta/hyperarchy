@@ -9,7 +9,7 @@ module Models
 
       @team = Team.make
       @creator = team.make_member
-      @meeting = team.meetings.make(:body => "Where should the capital of Tennesee be?", :creator => creator)
+      @meeting = team.meetings.make(:creator => creator, :starts_at => Time.new(2011, 7, 29, 14, 30))
       @memphis = meeting.agenda_items.make(:body => "Memphis")
       @knoxville = meeting.agenda_items.make(:body => "Knoxville")
       @chattanooga = meeting.agenda_items.make(:body => "Chattanooga")

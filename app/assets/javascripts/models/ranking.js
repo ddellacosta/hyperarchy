@@ -26,7 +26,7 @@ _.constructor("Ranking", Model.Record, {
         data: {
           user_id: user.id(),
           meeting_id: agendaItem.meetingId(),
-          agendaItem_id: agendaItem.id(),
+          agenda_item_id: agendaItem.id(),
           position: position
         },
         success: function(data) {

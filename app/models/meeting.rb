@@ -3,7 +3,7 @@ class Meeting < Prequel::Record
   column :team_id, :integer
   column :creator_id, :integer
   column :starts_at, :datetime
-  column :body, :string
+  column :body, :string, :default => "Meeting"
   column :details, :string
   column :vote_count, :integer, :default => 0
   column :score, :float
