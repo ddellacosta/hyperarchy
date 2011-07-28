@@ -8,7 +8,6 @@ class Team < Prequel::Record
   column :meeting_count, :integer, :default => 0
   column :created_at, :datetime
   column :updated_at, :datetime
-  column :social, :boolean, :default => false
   column :privacy, :string, :default => "private"
   column :membership_code, :string
 
@@ -18,20 +17,12 @@ class Team < Prequel::Record
   attr_accessor :suppress_membership_creation
   validates_presence_of :name, :message => "Team name must not be blank"
 
-  def self.social
-    find(:social => true)
-  end
-
   def members
     memberships.join_through(User)
   end
 
   def guest
-    if social?
-      User.default_guest
-    else
-      members.find(:guest => true)
-    end
+    members.find(:guest => true)
   end
 
   def can_create?
@@ -43,10 +34,6 @@ class Team < Prequel::Record
   end
   alias can_update? can_update_or_destroy?
   alias can_destroy? can_update_or_destroy?
-
-  def write_blacklist
-    [:social]
-  end
 
   def before_create
     self.membership_code = SecureRandom.hex(8)

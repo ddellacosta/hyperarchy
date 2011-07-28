@@ -97,7 +97,6 @@ class User < Prequel::Record
     run_later do
       AdminMailer.new_user(self).deliver
     end
-    memberships.create!(:team => Team.social)
   end
 
   def team_ids
