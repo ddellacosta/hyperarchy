@@ -4,7 +4,7 @@ _.constructor('Views.Pages.Team.MeetingLi', Monarch.View.Template, {
       div(function() {
         subview('avatar', Views.Components.Avatar, {imageSize: 50});
         div({'class': "body"}).ref('body')
-        subview('agenda-items', Views.Components.SortedList, {
+        subview('agendaItems', Views.Components.SortedList, {
           buildElement: function(agendaItem, index) {
             return Monarch.View.build(function(b) { with(b) {
               li({'class': "agenda-item"}, function() {
