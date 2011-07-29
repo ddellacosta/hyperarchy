@@ -5,10 +5,8 @@ _.constructor("Views.Layout", View.Template, {
       div({id: "body-wrapper"}, function() {
         div({id: "header"}, function() {
           a(function() {
-            div({id: "logo"})
+            div({id: "logo"});
             h1("Action Items");
-            h2("/").ref('teamNameSeparator');
-            h2().ref('teamName');
           }).ref('logoAndTitle').click('navigateToCurrentTeam');
 
           div({id: "menu-items"}, function() {
@@ -196,15 +194,10 @@ _.constructor("Views.Layout", View.Template, {
       change: function(team) {
         if (team) {
           this.currentTeamId(team.id());
-          this.teamNameSeparator.show();
-          this.teamName.show();
-          this.teamName.bindText(team, 'name');
           this.inviteLink.show();
           this.recordTeamVisit();
         } else {
           this.currentTeamId(null);
-          this.teamNameSeparator.hide();
-          this.teamName.hide();
           this.inviteLink.hide();
         }
       }

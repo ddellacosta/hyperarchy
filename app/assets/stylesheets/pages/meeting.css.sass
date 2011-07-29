@@ -18,7 +18,7 @@
     @include box-sizing('border-box')
     padding: ($subheader-height - $line-height)/2 (2*$padding-x)
     margin-bottom: 2 * $line-height
-    font-size: $s-1
+    font-size: $s0
     @include background-image(linear-gradient(top, white, darken(white, 5%)))
     border-bottom: 1px solid #ccc
     height: $subheader-height
@@ -28,11 +28,20 @@
       color: transparentize(black, 0.3)
       &:hover
         color: black
+    h2
+      display: inline
+      &.body
+        font-weight: $semibold
+        font-size: $s1
+        margin-right: $s0
+      &.starts-at
+        font-weight: normal
+
 
   > #columns
     padding: 0 $line-height
     position: absolute
-    top: $line-height * 3
+    top: $subheader-height + $line-height
     bottom: 2 * $line-height
     left: 0
     right: 0

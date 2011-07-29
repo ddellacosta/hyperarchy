@@ -31,6 +31,12 @@ _.constructor("Meeting", Model.Record, {
 
       this.belongsTo('team');
       this.belongsTo('creator', {constructorName: 'User'});
+
+      this.syntheticColumn('formattedStartsAt', function() {
+        return this.signal('startsAt', function(startsAt) {
+          return $.PHPDate("l, M j @ g:ia", startsAt);
+        });
+      });
     },
 
     scoreUpdateInterval: 60000,

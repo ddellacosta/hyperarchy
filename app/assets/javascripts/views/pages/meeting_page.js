@@ -2,11 +2,12 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "meeting"}, function() {
       div({id: "subheader"}, function() {
-        a({href: "javascript:void"}, "Team Dashboard").ref('teamLink').click(function() {
+        a({href: "javascript:void"}, "Nathan Sobo's Team").ref('teamLink').click(function() {
           History.pushState(null, null, this.meeting().team().url());
           return false;
         });
-        h2().ref('body');
+        h2({'class': "body"}).ref('body');
+        h2({'class': "starts-at"}).ref('startsAt');
       });
 
       div({id: "columns"}, function() {
@@ -202,7 +203,8 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
 
     meeting: {
       change: function(meeting) {
-        this.body.bindMarkdown(meeting, 'body');
+        this.body.bindText(meeting, 'body');
+        this.startsAt.bindText(meeting, 'formattedStartsAt');
 
         var team = meeting.team();
         Application.currentTeam(team);
