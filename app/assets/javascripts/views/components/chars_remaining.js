@@ -1,6 +1,6 @@
 _.constructor('Views.Components.CharsRemaining', Monarch.View.Template, {
   content: function() { with(this.builder) {
-    div({class: 'chars-remaining'});
+    div({'class': 'chars-remaining'});
   }},
 
   viewProperties: {

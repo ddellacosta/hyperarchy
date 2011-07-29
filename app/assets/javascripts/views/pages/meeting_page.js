@@ -6,7 +6,7 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
           History.pushState(null, null, this.meeting().team().url());
           return false;
         });
-        h2({'class': "body"}).ref('body');
+        h2({'class': "name"}).ref('name');
         h2({'class': "starts-at"}).ref('startsAt');
       });
 
@@ -55,28 +55,8 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
         div({'class': "right"}, function() {
           subview('votes', Views.Pages.Meeting.Votes);
           subview('notes', Views.Pages.Meeting.Notes);
-        });
-      });
-
-
-
-      div({id: "ghetto-columns"}, function() {
-        div(function() {
-          div({'class': "column"}, function() {
-
-            div({id: "agenda"}, function() {
-              div({'class': "header"}, function() {
-              });
-
-              div({'class': "body"}, function() {
-              });
-            });
-          });
-
-          div({'id': "votes-and-discussion", 'class': "column"}, function() {
-          });
-        });
-      }).ref('columns');
+        }).ref('rightColumn');
+      }).ref('body');
 
       subview('spinner', Views.Components.Spinner);
 
@@ -226,7 +206,7 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
 
     meeting: {
       change: function(meeting) {
-        this.body.bindText(meeting, 'body');
+        this.name.bindText(meeting, 'body');
         this.startsAt.bindText(meeting, 'formattedStartsAt');
 
         var team = meeting.team();
@@ -276,16 +256,16 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
     },
 
     adjustNotesHeight: function() {
-      this.notes.fillVerticalSpace(this.columns);
+      this.notes.fillVerticalSpace(this.rightColumn);
     },
 
     loading: {
       change: function(loading) {
         if (loading) {
-          this.columns.hide();
+          this.body.hide();
           this.spinner.show();
         } else {
-          this.columns.show();
+          this.body.show();
           this.spinner.hide();
         }
       }
