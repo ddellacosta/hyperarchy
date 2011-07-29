@@ -156,24 +156,6 @@ describe("Views.Layout", function() {
     });
 
     describe("#currentTeam", function() {
-      it("it changes the team name or hides it when the current team is null", function() {
-        $('#jasmine_content').html(Application);
-
-        Application.currentTeamId(team1.id());
-        expect(Application.teamName).toBeVisible();
-        expect(Application.teamNameSeparator).toBeVisible();
-        expect(Application.teamName.text()).toBe(team1.name());
-
-        Application.currentTeamId(null);
-        expect(Application.teamName).toBeHidden();
-        expect(Application.teamNameSeparator).toBeHidden();
-
-        Application.currentTeamId(team2.id());
-        expect(Application.teamName).toBeVisible();
-        expect(Application.teamNameSeparator).toBeVisible();
-        expect(Application.teamName.text()).toBe(team2.name());
-      });
-
       it("updates the visited_at field of the current user's membership to this team if they aren't a guest", function() {
         freezeTime();
         useFakeServer();

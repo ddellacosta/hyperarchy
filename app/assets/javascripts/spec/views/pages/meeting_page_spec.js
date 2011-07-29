@@ -71,7 +71,7 @@ describe("Views.Pages.Meeting", function() {
             meetingPage.params({ meetingId: meeting.id() }).success(complete);
             expect(meetingPage.votes.selectedVoterId()).toBe(Application.currentUserId());
 
-            expect(meetingPage.columns).toBeHidden();
+            expect(meetingPage.body).toBeHidden();
             expect(meetingPage.spinner).toBeVisible();
           });
 
@@ -79,7 +79,7 @@ describe("Views.Pages.Meeting", function() {
             expectMeetingDataFetched();
             expectMeetingDataAssigned();
 
-            expect(meetingPage.columns).toBeVisible();
+            expect(meetingPage.body).toBeVisible();
             expect(meetingPage.spinner).toBeHidden();
 
             expect(meetingPage.rankedAgendaItems.rankings().tuples()).toEqual(meeting.rankings().where({userId: currentUser.id()}).tuples());
@@ -434,21 +434,21 @@ describe("Views.Pages.Meeting", function() {
 
     describe("when a meeting is assigned", function() {
       it("assigns the meeting's body, date, and notes relation, and keeps the body and the date up to date when they change", function() {
-        expect(meetingPage.body.html()).toEqual($.markdown(meeting.body()));
+        expect(meetingPage.name.text()).toEqual(meeting.body());
         expect(meetingPage.startsAt.text()).toBe(meeting.formattedStartsAt());
         meeting.remotelyUpdated({body: "Let's talk about chips."});
         meeting.remotelyUpdated({startsAt: 9875});
-        expect(meetingPage.body.html()).toEqual($.markdown(meeting.body()));
+        expect(meetingPage.name.text()).toEqual(meeting.body());
         expect(meetingPage.startsAt.text()).toEqual(meeting.formattedStartsAt());
         expect(meetingPage.notes.notes()).toBe(meeting.notes());
 
         meetingPage.meeting(meeting2);
-        expect(meetingPage.body.text()).toEqual(meeting2.body());
+        expect(meetingPage.name.text()).toEqual(meeting2.body());
         expect(meetingPage.startsAt.text()).toEqual(meeting2.formattedStartsAt());
 
         meeting.remotelyUpdated({body: "what would you do for a klondike bar?", details: "jhjyg"});
         meeting.remotelyUpdated({startsAt: 983745});
-        expect(meetingPage.body.text()).toEqual(meeting2.body());
+        expect(meetingPage.name.text()).toEqual(meeting2.body());
         expect(meetingPage.startsAt.text()).toEqual(meeting2.formattedStartsAt());
       });
     });

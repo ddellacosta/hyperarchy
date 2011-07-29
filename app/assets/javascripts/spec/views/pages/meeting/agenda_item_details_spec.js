@@ -11,7 +11,7 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
     team = Team.createFromRemote({id: 42});
     creator = team.makeMember({id: 999, emailHash: 'blas', firstName: "Mr.", lastName: "Creator"});
     Application.currentUser(creator);
-    meeting = team.meetings().createFromRemote({id: 1, creatorId: 999, createdAt: 12});
+    meeting = team.meetings().createFromRemote({id: 1, creatorId: 999, createdAt: 12, startsAt: 23456});
     agendaItem = creator.agendaItems().createFromRemote({id: 1, meetingId: 1, body: "Mustard.", details: "Pardon me. Do you have any Gray Poupon?", createdAt: 1308352736162});
 
     Application.meetingPage.show();

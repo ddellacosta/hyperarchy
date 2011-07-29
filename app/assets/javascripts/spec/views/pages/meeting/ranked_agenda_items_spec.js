@@ -7,7 +7,7 @@ describe("Views.Pages.Meeting.RankedAgendaItems", function() {
     team = Team.createFromRemote({id: 1})
     specialGuest = team.makeMember({id: 2, emailAddress: "guest.user2@actionitems.us", guest: true});
     currentUser = team.makeMember({id: 3, emailAddress: "foo@example.com"});
-    meeting = team.meetings().createFromRemote({id: 1, creatorId: 2, createdAt: 234234234});
+    meeting = team.meetings().createFromRemote({id: 1, creatorId: 2, createdAt: 234234234, startsAt: 23452345});
     agendaItem1 = meeting.agendaItems().createFromRemote({id: 1, body: "AgendaItem 1", createdAt: 1308352736162, creatorId: 2});
     agendaItem2 = meeting.agendaItems().createFromRemote({id: 2, body: "AgendaItem 2", createdAt: 1308352736162, creatorId: 2});
     agendaItem3 = meeting.agendaItems().createFromRemote({id: 3, body: "AgendaItem 3", createdAt: 1308352736162, creatorId: 2});

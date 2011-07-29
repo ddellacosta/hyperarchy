@@ -34,7 +34,7 @@ _.constructor("Meeting", Model.Record, {
 
       this.syntheticColumn('formattedStartsAt', function() {
         return this.signal('startsAt', function(startsAt) {
-          return $.PHPDate("l, M j @ g:ia", startsAt);
+          if (startsAt) return $.PHPDate("l, M j @ g:ia", startsAt);
         });
       });
     },
