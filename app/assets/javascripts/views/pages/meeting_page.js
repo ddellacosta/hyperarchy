@@ -10,62 +10,82 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
         h2({'class': "starts-at"}).ref('startsAt');
       });
 
-      div({id: "columns"}, function() {
-        div(function() {
-          for (var i = 1; i <= 3; i++) {
-            div({'class': "column", id: "column" + i}, function() {
-              div(function() {
-                div({style: "height: 0"}, function() { raw("&nbsp;") }); // hack to allow textareas first
-                template['column' + i]();
+      div({'class': "body"}, function() {
+        div({'class': "left"}, function() {
+          div({id: "agenda"}, function() {
+
+            div({'class': "header"}, function() {
+              div({'class': "left"}, function() {
+                a({'class': "new button"}, function() {
+                  div({'class': "plus"}, "+");
+                  text("New Item");
+                }).ref('newAgendaItemLink')
+                  .click(function() {
+                    if (this.params().agendaItemId === 'new') {
+                      this.agendaItemDetails.createButton.click();
+                    } else {
+                      this.navigateToNewAgendaItemForm();
+                    }
+                  });
+
+                h2("Collective Agenda");
               });
-            }).ref('column' + i);
-          }
+              div({'class': "right"}, function() {
+                a({id: "back-to-your-ranking", 'class': "link"}, "← Back").ref('backLink').click(function() {
+                  History.replaceState(null,null,this.meeting().url());
+                });
+                h2("").ref('rankedAgendaItemsHeader');
+              });
+            });
+
+            div({'class': "body"}, function() {
+              div({'class': "left"}, function() {
+                subview('currentConsensus', Views.Pages.Meeting.CurrentConsensus);
+              });
+              div({'class': "right"}, function() {
+                div({id: "ranking-and-details"}, function() {
+                  subview('agendaItemDetails', Views.Pages.Meeting.AgendaItemDetails);
+                  subview('rankedAgendaItems', Views.Pages.Meeting.RankedAgendaItems);
+                });
+              });
+            });
+          });
+        });
+
+        div({'class': "right"}, function() {
+          subview('votes', Views.Pages.Meeting.Votes);
+          subview('notes', Views.Pages.Meeting.Notes);
+        });
+      });
+
+
+
+      div({id: "ghetto-columns"}, function() {
+        div(function() {
+          div({'class': "column"}, function() {
+
+            div({id: "agenda"}, function() {
+              div({'class': "header"}, function() {
+              });
+
+              div({'class': "body"}, function() {
+              });
+            });
+          });
+
+          div({'id': "votes-and-discussion", 'class': "column"}, function() {
+          });
         });
       }).ref('columns');
 
       subview('spinner', Views.Components.Spinner);
+
     }).click(function(e) {
         if ($(e.target).is('a,textarea,li,li *,#agenda-item-details,#agenda-item-details *')) return;
         if (window.getSelection().toString() !== "") return;
         History.replaceState(null, null, this.meeting().url());
       });
   }},
-
-  column1: function() { with(this.builder) {
-    div({'class': "header"}, function() {
-      a({'class': "new button"}, function() {
-        div({'class': "plus"}, "+");
-        text("New Item");
-      }).ref('newAgendaItemLink')
-        .click(function() {
-          if (this.params().agendaItemId === 'new') {
-            this.agendaItemDetails.createButton.click();
-          } else {
-            this.navigateToNewAgendaItemForm();
-          }
-        });
-      h2("Collective Agenda");
-    });
-    subview('currentConsensus', Views.Pages.Meeting.CurrentConsensus);
-  }},
-
-  column2: function() { with(this.builder) {
-    div({'class': "header"}, function() {
-      a({id: "back-to-your-ranking", 'class': "link"}, "← Back").ref('backLink').click(function() {
-        History.replaceState(null,null,this.meeting().url());
-      });
-      h2("").ref('rankedAgendaItemsHeader');
-    });
-    div({id: "rankings-and-details"}, function() {
-      subview('agendaItemDetails', Views.Pages.Meeting.AgendaItemDetails);
-      subview('rankedAgendaItems', Views.Pages.Meeting.RankedAgendaItems);
-    });
-  }},
-
-  column3: function() {
-    this.builder.subview('votes', Views.Pages.Meeting.Votes);
-    this.builder.subview('notes', Views.Pages.Meeting.Notes);
-  },
 
   viewProperties: {
     fixedHeight: true,

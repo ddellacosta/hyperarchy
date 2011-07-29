@@ -24,13 +24,17 @@ body
   height: 100%
 
 #header
+  @include background-image(linear-gradient(top, #4c4c4c, #333))
+
+
+#header-content
   height: $header-height
   @include background-image(linear-gradient(top, #4c4c4c, #333))
   margin: 0 auto
   @include box-sizing('border-box')
   min-width: $min-width
   max-width: $max-width
-  padding: 0 (2 * $padding-x)
+  padding: 0 (2 * $line-height)
   color: transparentize(white, 0.15)
 
   a
@@ -124,15 +128,14 @@ body
       background: #f8f8f8
 
 #body-wrapper
-  margin: 0 auto
-  //min-height: 100%
-  height: 100%
+  height:u 100%
   background: white
   position: relative
   min-width: $min-width
   max-width: $max-width
   max-height: $max-height
   @include box-shadow(#666 0 0 5px)
+  margin: 0 auto
 
   > #body
     @include box-sizing('border-box')
@@ -140,6 +143,7 @@ body
     bottom: 0
     width: 100%
     position: absolute
+    max-width: $max-width
     > *
       display: none
 

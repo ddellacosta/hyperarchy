@@ -1,0 +1,27 @@
+#meeting
+  #votes
+    max-height: 50%
+    margin-bottom: $line-height
+    ol
+      border-top: 1px solid #ccc
+      padding-top: $line-height/2
+      overflow-y: auto
+      bottom: 0
+      width: 100%
+      li
+        padding-right: $s-2
+        overflow: hidden
+        *
+          white-space: nowrap
+        .avatar
+          margin-top: 1px
+          margin-right: 6px
+          float: left
+        .name
+          font-size: 15px
+          color: #333
+        .date
+          font-size: $s-2
+          color: #999
+        &.selected
+          @include background-image(linear-gradient(right, rgb(255,235,113), rgb(255, 247, 203)))

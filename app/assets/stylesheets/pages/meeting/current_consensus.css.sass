@@ -1,0 +1,12 @@
+#meeting
+  #current-consensus // located in #agenda > .body > .left
+    ol
+      height: 100%
+      width: 100%
+      overflow-y: auto
+      li.agenda-item
+        border-left: none
+        border-top: none
+        border-right: none
+        &.selected
+          @include background-image(linear-gradient(left, rgb(255,235,113), rgb(255, 247, 203)))

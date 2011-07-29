@@ -1,0 +1,129 @@
+#meeting
+  #agenda-item-details
+    position: absolute
+    right: 100%
+    left: -100%
+    height: 100%
+    @include transition('right left', 150ms, 'ease-in')
+    overflow: hidden
+    padding: $line-height/2
+    padding-bottom: 0
+    z-index: 1
+    background-color: white
+    &.active
+      right: 0
+      left: 0
+    &.expanded
+      overflow-y: auto
+
+    .chars-remaining
+      position: relative
+      top: -$line-height - 4px
+      right: 5px
+      font-size: $s-1
+
+    .notes .textarea-and-button // padding on agenda-item-details div itself causes chrome problems when it scrolls and notes resizes
+      padding-bottom: $line-height/2
+
+
+    .creator
+      height: 2 * $line-height
+      margin-bottom: 2 * $line-height
+      .avatar
+        margin-top: 1px
+        float: left
+        margin-right: 6px
+      .date
+        font-size: $s-2
+        color: #999
+
+    .body, .details
+      margin-bottom: $line-height
+    .details
+      font-size: 15px
+      p:last-child
+        display: inline
+        //margin: 0
+
+    .more, .less
+      margin-left: $s-2
+      font-size: $s-1
+      cursor: pointer
+      word-spacing: -1px
+      &:hover
+        text-decoration: none
+    .more
+      color: #888
+      &:hover
+        color: #333
+    .less
+      margin-top: $line-height
+      float: right
+
+    .clear
+      clear: both
+      height: $line-height
+
+    // showing and hiding edit links based on mutability, styling below
+    .non-editable
+      .edit,.destroy
+        display: none
+    &.mutable
+      .non-editable
+        .edit, .destroy
+          display: block
+
+    .non-editable
+      .edit, .destroy
+        line-height: $line-height
+        height: $line-height
+        float: right
+        font-size: $s-1
+        border-color: white
+        background: white
+        margin-left: 6px
+        color: #888
+        word-spacing: -1px
+        @include border-radius(2px)
+        &:hover
+          color: black
+      .edit
+        padding: 0 4px
+        &:hover
+          background: $pale-blue
+      .destroy
+        padding-left: 1px
+        padding-right: 2px
+        &:hover
+          background: $pale-red
+
+    form
+      display: none
+
+      textarea
+        padding: 2px
+        width: 100%
+        &.body
+          min-height: 4 * $line-height
+          margin-top: -3px
+          margin-bottom: 3px
+        &.details
+          margin-top: -2px
+          padding-top: 1px
+          margin-bottom: $line-height + 2
+          min-height: 6 * $line-height
+
+      label
+        font-size: $s-1
+        display: block
+        &.chars-remaining
+          margin-bottom: $line-height
+          float: right
+        &[for='details']
+          clear: right
+          position: relative
+          top: -1px
+
+    .button
+      float: right
+      margin-left: $s-3

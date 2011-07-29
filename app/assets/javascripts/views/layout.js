@@ -4,18 +4,20 @@ _.constructor("Views.Layout", View.Template, {
       div({id: 'gradient-background'});
       div({id: "body-wrapper"}, function() {
         div({id: "header"}, function() {
-          a(function() {
-            div({id: "logo"});
-            h1("Action Items");
-          }).ref('logoAndTitle').click('navigateToCurrentTeam');
+          div({id: "header-content"}, function() {
+            a(function() {
+              div({id: "logo"});
+              h1("Action Items");
+            }).ref('logoAndTitle').click('navigateToCurrentTeam');
 
-          div({id: "menu-items"}, function() {
-            a({id: "feedback-link"}, "Feedback").ref('feedbackLink').click('showFeedbackForm');
-            a({id: "invite-link"}, "Invite Your Team").ref('inviteLink').click('showInviteBox');
-            
-            div({id: "team-and-account"}, function() {
-              subview('teamsMenu', Views.Layout.TeamsMenu);
-              subview('accountMenu', Views.Layout.AccountMenu);
+            div({id: "menu-items"}, function() {
+              a({id: "feedback-link"}, "Feedback").ref('feedbackLink').click('showFeedbackForm');
+              a({id: "invite-link"}, "Invite Your Team").ref('inviteLink').click('showInviteBox');
+
+              div({id: "team-and-account"}, function() {
+                subview('teamsMenu', Views.Layout.TeamsMenu);
+                subview('accountMenu', Views.Layout.AccountMenu);
+              });
             });
           });
         });

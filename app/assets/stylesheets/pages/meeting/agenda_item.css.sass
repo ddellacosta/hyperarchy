@@ -1,0 +1,51 @@
+#meeting
+  .agenda-item, .ranking
+    padding: (ceil($line-height/2) - 1) ($line-height/2) ($line-height/2) ($line-height/2)
+    background: white
+    border: 1px solid #ccc
+    @include box-shadow(#aaa 0 0 3px)
+    cursor: default
+    a
+      pointer-events: none
+      cursor: default
+
+  .agenda-item
+    @include clearfix
+    position: relative
+
+    .position
+      float: left
+      text-align: right
+      width: $s0
+      color: #888
+      letter-spacing: $s-11
+      font-weight: $semibold
+
+    .body
+      margin-left: 2 * $s0
+      margin-right: 2 * $s0
+
+    .more
+      font-size: 17px
+      color: #aaa
+      position: absolute
+      right: 6px
+      bottom: $line-height / 4
+
+    .status
+      @include box-sizing(border-box)
+      border: 1px solid #ccc
+      margin-right: -1px
+      float: right
+      color: white
+      font-weight: $bold
+      text-align: center
+      width:  8px
+      height: 8px
+      background: transparentize(white, .5)
+      &.positive
+        background: darken($pale-green, 7%)
+        border-color: desaturate(darken($pale-green, 20%), 40%)
+      &.negative
+        background: darken($pale-red, 7%)
+        border-color: desaturate(darken($pale-red, 20%), 40%)

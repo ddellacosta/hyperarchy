@@ -1,0 +1,60 @@
+#meeting
+  .notes
+    position: relative
+    h2
+      margin-bottom: $line-height / 2
+    ol
+      overflow-y: auto
+      overflow-x: hidden
+      border-top: 1px solid #eee
+      border-bottom: 1px solid #eee
+      margin-bottom: $line-height / 2 - 1
+      &:empty
+        border: none
+
+    .textarea-and-button
+      textarea
+        width: 100%
+        font-size: $s-1
+        padding: ($line-height/3 - 1)
+        display: block
+        margin-bottom: ceil($line-height/3)
+        height: 2 * $line-height
+      .button
+        float:right
+
+  .note
+    font-size: $s-1
+    margin-top: ceil($line-height/3)
+    padding: ($line-height/3 - 1)
+    background: #f8f8f8
+    background: white
+    border: 1px solid #eee
+    &:first-child
+      border-top: none
+      margin-top: 0
+    &:last-child
+      border-bottom: none
+    .avatar
+      float: left
+      margin-right: $line-height/3
+    .destroy
+      font-size: $line-height
+      display: none
+      float: right
+      margin: 0 2px 0 5px
+      color: #888
+      &:hover
+        color: #333
+    .name
+      margin-right: $s-3
+      font-weight: $semibold
+      color: #666
+    .date
+      float: right
+      font-size: $s-2
+      color: #888
+
+  [class="note destroyable"]:hover // help firefox
+    .destroy
+      display: block
