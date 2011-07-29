@@ -12,7 +12,6 @@ _.constructor("Views.Layout", View.Template, {
           }).ref('logoAndTitle').click('navigateToCurrentTeam');
 
           div({id: "menu-items"}, function() {
-            a({id: "blog-link", href: "http://blog.actionitems.us"}, "Blog / About");
             a({id: "feedback-link"}, "Feedback").ref('feedbackLink').click('showFeedbackForm');
             a({id: "invite-link"}, "Invite Your Team").ref('inviteLink').click('showInviteBox');
             

@@ -14,7 +14,6 @@
     margin-top: -50px
     margin-left: -50px
 
-
   #subheader
     @include box-sizing('border-box')
     padding: ($subheader-height - $line-height)/2 (2*$padding-x)
@@ -25,62 +24,10 @@
     height: $subheader-height
     color: transparentize(black, 0.3)
     a
+      float: right
       color: transparentize(black, 0.3)
       &:hover
         color: black
-
-  > #headline
-    position: relative
-    padding: 0 ($padding-x + $line-height)
-    .facebook.button, .twitter.button, .new.button
-      float: right
-      font-size: $s0
-      padding: $line-height / 2
-      margin-left: $s0
-      position: relative
-      padding-left: $s1 + $line-height
-    .new.button
-      &.active
-        background: $pale-green
-        &:hover
-          background: darken($pale-green, 7%)
-      .plus
-        position: absolute
-        left: $line-height / 2
-        top: ((2 * $line-height) - $s1) / 2
-        font-weight: $semibold
-        font-size: $s2
-        color: white
-        background: darken(#409C3B, 5%)
-        width: $s1
-        height: $s1
-        @include border-radius(2)
-        line-height: $s1
-    .facebook.button, .twitter.button
-      .logo
-        position: absolute
-        height: $s1
-        width: $s1
-        left: $line-height / 2
-        top: ((2 * $line-height) - $s1) / 2
-    .facebook.button .logo
-      background-image: url(/images/facebook_23.png)
-    .twitter.button .logo
-      background-image: url(/images/twitter_23.png)
-
-
-
-    .body
-      width: 600px
-      line-height: 1.5 * $line-height
-      font-size: $s2
-    textarea.body
-      display: none
-      position: relative
-    > .chars-remaining
-      width: 592px
-      position: absolute
-      bottom: 4px
 
   > #columns
     padding: 0 $line-height
@@ -101,27 +48,11 @@
         width: 33%
         height: 100%
         &:last-child
-          width: $s10 + 10
+          width: $s11
         > div // because display table-cell divs can't be position: relative
           height: 100%
           width: 100%
           position: relative
-
-#column1
-  position: relative
-  padding-right: $padding-x
-  textarea.details
-    width: 100%
-    height: 6 * $line-height
-    display: none
-  .details
-    font-size: $s0
-
-#column2
-  .full-screen
-    float: right
-    font-size: $s-1
-
 
 #ranked-agenda-items
   height: 100%
@@ -182,7 +113,7 @@
     padding-bottom: $line-height/2
 
 
-#agenda-item-details, #column1
+#agenda-item-details
   .creator
     height: 2 * $line-height
     margin-bottom: 2 * $line-height
@@ -345,7 +276,33 @@
   .destroy
     display: block
 
-#column1, #column2
+#column1
+  .new
+    float: right
+    font-size: $s0
+    height: $line-height
+    margin-left: $s0
+    position: relative
+    padding-right: $line-height/4
+    padding-left: $s0 + $line-height/2
+    position: relative
+    &.active
+      background: $pale-green
+      &:hover
+        background: darken($pale-green, 7%)
+    .plus
+      position: absolute
+      left: $line-height / 4
+      top: 3px
+      font-weight: $semibold
+      font-size: $s1
+      color: white
+      background: darken(#409C3B, 5%)
+      width: $s0
+      height: $s0
+      @include border-radius(2)
+      line-height: $s0
+
   a.button
     float: right
 
@@ -366,7 +323,7 @@
       &.selected
         @include background-image(linear-gradient(left, rgb(255,235,113), rgb(255, 247, 203)))
 
-#column3
+#column2
   > h2
     display: inline
   #back-to-your-ranking
@@ -386,12 +343,12 @@
     @include box-shadow(#aaa 0 0 3px inset)
 
 #votes
+  max-height: 50%
+  margin-bottom: $line-height
   ol
     border-top: 1px solid #ccc
     padding-top: $line-height/2
     overflow-y: auto
-    position: absolute
-    top: 1.5 * $line-height
     bottom: 0
     width: 100%
     li
@@ -482,28 +439,6 @@
       display: none
     .chars-remaining
       display: none
-  #column1
-    #details-header, textarea.details, .update.button, .cancel.button
-      display: none
-
-#meeting.edit-mode
-  #headline
-    div.body
-      display: none
-    textarea.body
-      display: block
-    .chars-remaining
-      display: block
-  #column1
-    #details-header
-      display: block
-    div.details
-      display: none !important
-    .edit, .destroy
-      display: none
-    textarea.details, .update.button, .cancel.button
-      display: block
-
 
 .details
   p

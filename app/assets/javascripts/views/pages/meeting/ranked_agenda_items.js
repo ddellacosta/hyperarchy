@@ -6,8 +6,8 @@ _.constructor('Views.Pages.Meeting.RankedAgendaItems', Monarch.View.Template, {
           span("Drag ideas you like here").ref('positiveDragExplanation');
         }).ref('positiveDragTarget');
         li({id: 'separator'}, function() {
-          span({id: "agree"}, "⬆  Agree");
-          span({id: "disagree"}, "Disagree ⬇");
+          span({id: "agree"}, "⬆  Important");
+          span({id: "disagree"}, "Not Important ⬇");
         }).ref('separator');
         li({id: "negative-drag-target"},function() {
           span("Drag ideas you dislike here").ref('negativeDragExplanation');

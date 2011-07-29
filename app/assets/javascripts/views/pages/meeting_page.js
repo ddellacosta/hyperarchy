@@ -2,31 +2,16 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "meeting"}, function() {
       div({id: "subheader"}, function() {
-        a({href: "javascript:void"}, "Back to Meetings").ref('teamLink').click(function() {
+        a({href: "javascript:void"}, "Team Dashboard").ref('teamLink').click(function() {
           History.pushState(null, null, this.meeting().team().url());
           return false;
         });
+        h2().ref('body');
       });
-
-      div({id: "headline"}, function() {
-        a({'class': "new button"}, function() {
-          div({'class': "plus"}, "+");
-          text("Add An Agenda Item");
-        }).ref('newAgendaItemLink')
-          .click(function() {
-            if (this.params().agendaItemId === 'new') {
-              this.agendaItemDetails.createButton.click();
-            } else {
-              this.navigateToNewAgendaItemForm();
-            }
-          });
-
-        div({'class': "body"}).ref('body');
-      }).ref('headline');
 
       div({id: "columns"}, function() {
         div(function() {
-          for (var i = 1; i <= 4; i++) {
+          for (var i = 1; i <= 3; i++) {
             div({'class': "column", id: "column" + i}, function() {
               div(function() {
                 div({style: "height: 0"}, function() { raw("&nbsp;") }); // hack to allow textareas first
@@ -46,20 +31,26 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
   }},
 
   column1: function() { with(this.builder) {
-    subview('notes', Views.Pages.Meeting.Notes);
-  }},
-
-  column2: function() { with(this.builder) {
-    h2("Current Consensus");
+    a({'class': "new button"}, function() {
+      div({'class': "plus"}, "+");
+      text("New Item");
+    }).ref('newAgendaItemLink')
+      .click(function() {
+        if (this.params().agendaItemId === 'new') {
+          this.agendaItemDetails.createButton.click();
+        } else {
+          this.navigateToNewAgendaItemForm();
+        }
+      });
+    h2("Collective Agenda");
     subview('currentConsensus', Views.Pages.Meeting.CurrentConsensus);
   }},
 
-  column3: function() { with(this.builder) {
+  column2: function() { with(this.builder) {
     a({id: "back-to-your-ranking", 'class': "link"}, "← Back").ref('backLink').click(function() {
       History.replaceState(null,null,this.meeting().url());
     });
-    h2("Your Ranking").ref('rankedAgendaItemsHeader');
-    h2("Agenda Item Details").ref('agendaItemDetailsHeader');
+    h2("").ref('rankedAgendaItemsHeader');
 
     div({id: "rankings-and-details"}, function() {
       subview('agendaItemDetails', Views.Pages.Meeting.AgendaItemDetails);
@@ -67,8 +58,9 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
     });
   }},
 
-  column4: function() {
+  column3: function() {
     this.builder.subview('votes', Views.Pages.Meeting.Votes);
+    this.builder.subview('notes', Views.Pages.Meeting.Notes);
   },
 
   viewProperties: {
@@ -89,10 +81,6 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
             .success(this.hitch('populateContentAfterFetch', params));
         }
       }, this);
-    },
-
-    afterShow: function() {
-      this.adjustColumnTop();
     },
 
     params: {
@@ -225,7 +213,9 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
           if (this.is(':visible')) History.pushState(null, null, Application.currentTeam().url());
         }));
 
-        this.adjustNotesHeight();
+        this.defer(function() {
+          this.adjustNotesHeight();
+        });
         meeting.trackView();
       }
     },
@@ -247,34 +237,17 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
     },
 
     showRankedAgendaItems: function() {
-      this.agendaItemDetailsHeader.hide();
       this.rankedAgendaItemsHeader.show();
       this.agendaItemDetails.removeClass('active');
     },
 
     showAgendaItemDetails: function() {
       this.rankedAgendaItemsHeader.hide();
-      this.agendaItemDetailsHeader.show();
       this.agendaItemDetails.addClass('active');
     },
 
     navigateToNewAgendaItemForm: function() {
       History.replaceState(null, null, this.meeting().newAgendaItemUrl());
-    },
-
-    adjustColumnTop: function() {
-      this.columns.css('top', this.columnTopPosition());
-      this.adjustNotesHeight();
-    },
-
-    columnTopPosition: function() {
-      var bigLineHeight = Application.lineHeight * 1.5;
-
-      var distanceFromHeadline = Application.lineHeight * 2;
-      var subheaderHeight = this.headline.position().top;
-      var quantizedHeadlineHeight = Math.round(this.headline.height() / bigLineHeight) * bigLineHeight;
-
-      return Math.round(quantizedHeadlineHeight + distanceFromHeadline + subheaderHeight);
     },
 
     adjustNotesHeight: function() {
@@ -284,11 +257,9 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
     loading: {
       change: function(loading) {
         if (loading) {
-          this.headline.hide();
           this.columns.hide();
           this.spinner.show();
         } else {
-          this.headline.show();
           this.columns.show();
           this.spinner.hide();
         }

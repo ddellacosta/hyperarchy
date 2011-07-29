@@ -71,7 +71,6 @@ describe("Views.Pages.Meeting", function() {
             meetingPage.params({ meetingId: meeting.id() }).success(complete);
             expect(meetingPage.votes.selectedVoterId()).toBe(Application.currentUserId());
 
-            expect(meetingPage.headline).toBeHidden();
             expect(meetingPage.columns).toBeHidden();
             expect(meetingPage.spinner).toBeVisible();
           });
@@ -80,7 +79,6 @@ describe("Views.Pages.Meeting", function() {
             expectMeetingDataFetched();
             expectMeetingDataAssigned();
 
-            expect(meetingPage.headline).toBeVisible();
             expect(meetingPage.columns).toBeVisible();
             expect(meetingPage.spinner).toBeHidden();
 
@@ -412,7 +410,6 @@ describe("Views.Pages.Meeting", function() {
 
   describe("local logic (no fetching)", function() {
     var currentUser, creator, team, meeting, agendaItem1, meeting2, editableByCurrentUser, mockedRandomString;
-    var headlineTextWhenAdjustColumnTopWasCalled;
 
     beforeEach(function() {
       creator = User.createFromRemote({id: 1, firstName: "animal", lastName: "eater"});
@@ -571,31 +568,4 @@ describe("Views.Pages.Meeting", function() {
       });
     });
   });
-
-  function expectColumnTopCorrectlyAdjusted() {
-    expect(meetingPage.columns.position().top).toBe(meetingPage.columnTopPosition());
-  }
-
-  function expectFieldsVisible() {
-    expect(meetingPage.editableBody).toBeVisible();
-    expect(meetingPage.detailsHeader).toBeVisible();
-    expect(meetingPage.editableDetails).toBeVisible();
-    expect(meetingPage.cancelEditButton).toBeVisible();
-    expect(meetingPage.updateButton).toBeVisible();
-    expect(meetingPage.editButton).toBeHidden();
-    expect(meetingPage.body).toBeHidden();
-    expect(meetingPage.details).toBeHidden();
-    expect(meetingPage.destroyButton).toBeHidden();
-  }
-
-  function expectFieldsHidden() {
-    expect(meetingPage.detailsHeader).toBeHidden();
-    expect(meetingPage.editableBody).toBeHidden();
-    expect(meetingPage.editableDetails).toBeHidden();
-    expect(meetingPage.cancelEditButton).toBeHidden();
-    expect(meetingPage.updateButton).toBeHidden();
-    expect(meetingPage.editButton).toBeVisible();
-    expect(meetingPage.body).toBeVisible();
-    expect(meetingPage.details).toBeVisible();
-  }
 });
