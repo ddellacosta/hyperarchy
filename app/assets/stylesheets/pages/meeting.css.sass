@@ -33,17 +33,17 @@
     background-color: #2b618a
     border-bottom: 1px solid #ccc
     height: $subheader-height
-    //color: transparentize(black, 0.3)
     color: white
+    //letter-spacing: 1px
     a
       float: right
-      color: transparentize(black, 0.3)
+      color: white
       &:hover
         color: black
     h2
       display: inline
       &.body
-        font-weight: $semibold
+        font-weight: normal //$semibold
         font-size: $s1
         margin-right: $s0
       &.starts-at
@@ -86,8 +86,8 @@
     > .header
       position: relative
       height: $line-height
-      padding: $line-height 0
-
+      padding-top: $line-height * 2
+      padding-bottom: $line-height
 
       > .left, > .right
         height: 100%
@@ -124,13 +124,16 @@
             width: $line-height
             height: $line-height
             @include border-radius(2)
-
-
       > .right
         left: 50%
+
+      #back-to-your-ranking
+        float: right
+
+
     > .body
       position: absolute
-      top: $line-height * 3
+      top: $line-height * 4
       bottom: 0
       width: 100%
       > .left, > .right
@@ -157,11 +160,6 @@
 
 
 
-
-//#back-to-your-ranking
-//  padding-top: 2px
-//  float: right
-//  font-size: $s-1
 //
 //#rankings-and-details
 //  overflow: hidden
