@@ -60,9 +60,9 @@
       position: absolute
     > .left
       width: 70%
-      z-index: 1
-      padding: $line-height * 2
-      padding-right: $line-height
+      z-index: 2
+      //padding: $line-height * 2
+      //padding-right: $line-height
     > .right
       left: 70%
       right: 0
@@ -70,17 +70,18 @@
       padding-left: $line-height
 
   #agenda
-    background-color: desaturate(lighten(#2b618a, 55%), 35%)
+    border-right: 1px solid desaturate(lighten(#2b618a, 50%), 35%)
+    background-color: desaturate(lighten(#2b618a, 60%), 35%)
     position: relative
     height: 100%
 
     // left and right of header AND body columns
     .left, .right
-      padding: 0 $line-height
+      padding: 0 $line-height * 2
     .left
-      padding-right: ceil($line-height / 2)
+      padding-right: $line-height / 2
     .right
-      padding-left: ceil($line-height / 2)
+      padding-left: $line-height / 2
 
     > .header
       position: relative
@@ -137,7 +138,7 @@
         width: 50%
         @include box-sizing('border-box')
         position: absolute
-        padding-bottom: $line-height
+        padding-bottom: $line-height * 2
       > .left
       > .right
         left: 50%
