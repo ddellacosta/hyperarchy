@@ -32,27 +32,30 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
   }},
 
   column1: function() { with(this.builder) {
-    a({'class': "new button"}, function() {
-      div({'class': "plus"}, "+");
-      text("New Item");
-    }).ref('newAgendaItemLink')
-      .click(function() {
-        if (this.params().agendaItemId === 'new') {
-          this.agendaItemDetails.createButton.click();
-        } else {
-          this.navigateToNewAgendaItemForm();
-        }
-      });
-    h2("Collective Agenda");
+    div({'class': "header"}, function() {
+      a({'class': "new button"}, function() {
+        div({'class': "plus"}, "+");
+        text("New Item");
+      }).ref('newAgendaItemLink')
+        .click(function() {
+          if (this.params().agendaItemId === 'new') {
+            this.agendaItemDetails.createButton.click();
+          } else {
+            this.navigateToNewAgendaItemForm();
+          }
+        });
+      h2("Collective Agenda");
+    });
     subview('currentConsensus', Views.Pages.Meeting.CurrentConsensus);
   }},
 
   column2: function() { with(this.builder) {
-    a({id: "back-to-your-ranking", 'class': "link"}, "← Back").ref('backLink').click(function() {
-      History.replaceState(null,null,this.meeting().url());
+    div({'class': "header"}, function() {
+      a({id: "back-to-your-ranking", 'class': "link"}, "← Back").ref('backLink').click(function() {
+        History.replaceState(null,null,this.meeting().url());
+      });
+      h2("").ref('rankedAgendaItemsHeader');
     });
-    h2("").ref('rankedAgendaItemsHeader');
-
     div({id: "rankings-and-details"}, function() {
       subview('agendaItemDetails', Views.Pages.Meeting.AgendaItemDetails);
       subview('rankedAgendaItems', Views.Pages.Meeting.RankedAgendaItems);

@@ -3,8 +3,12 @@ $padding-x: $line-height
 $header-height: 2 * $line-height
 $subheader-height: $line-height * 3
 $min-width: 1024px
-//$max-width: 1443px
+$max-width: 1443px
+$max-width: 1200px
+$max-height: none
+
 $max-width: 1024px
+$max-height: 768px
 
 body
   height: 100%
@@ -127,9 +131,8 @@ body
   position: relative
   min-width: $min-width
   max-width: $max-width
+  max-height: $max-height
   @include box-shadow(#666 0 0 5px)
-
-  max-height: 768
 
   > #body
     @include box-sizing('border-box')

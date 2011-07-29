@@ -37,12 +37,12 @@
       &.starts-at
         font-weight: normal
 
-
   > #columns
     padding: 0 $line-height
     position: absolute
     top: $subheader-height + $line-height
     bottom: 2 * $line-height
+    bottom: $line-height
     left: 0
     right: 0
     > div
@@ -62,6 +62,51 @@
           height: 100%
           width: 100%
           position: relative
+
+
+#meeting
+  .new.button
+    border: none
+    background: inherit
+
+  #subheader
+    background: none
+    //margin-bottom: 0
+    //padding-bottom: 0
+    border: none
+
+  #columns
+    top: $subheader-height
+
+  #column1 > div, #column2 > div
+    border: 1px solid #ccc
+    overflow: hidden
+    @include border-top-radius(4)
+    @include box-shadow(#aaa 0 0 3px inset)
+    background: #f0f0f0
+    .header
+      padding: ($line-height/2)
+      padding-top: ($line-height/2 - 1)
+      height: $line-height
+
+      @include border-top-radius(4)
+      @include clearfix
+      @include background-image(linear-gradient(top, #f4f4f4, #f0f0f0))
+      @include box-shadow(#aaa 0 0 3px)
+      border-bottom: 1px solid #ccc
+      h2
+        margin: 0
+
+  #column1 #current-consensus ol, #column2 #rankings-and-details
+    top: 2 * $line-height !important
+  #column1 #current-consensus ol, #column2 #ranked-agenda-items ol
+    li:first-child
+      border-style-top: none
+
+  #votes h2
+    padding-top: $line-height/2
+
+
 
 #ranked-agenda-items
   height: 100%
@@ -322,9 +367,9 @@
     bottom: 0
     width: 100%
     overflow-y: auto
-    background: #f0f0f0
-    border: 1px solid #ccc
-    @include box-shadow(#aaa 0 0 3px inset)
+    //background: #f0f0f0
+    //border: 1px solid #ccc
+    //@include box-shadow(#aaa 0 0 3px inset)
     li.agenda-item
       border-left: none
       border-top: none
@@ -347,9 +392,9 @@
     top: 1.5 * $line-height
     bottom: 0
     width: 100%
-    border: 1px solid #ccc
-    background: #f0f0f0
-    @include box-shadow(#aaa 0 0 3px inset)
+    //border: 1px solid #ccc
+    //background: #f0f0f0
+    //@include box-shadow(#aaa 0 0 3px inset)
 
 #votes
   max-height: 50%
