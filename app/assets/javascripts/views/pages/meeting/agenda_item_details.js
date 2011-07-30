@@ -138,9 +138,5 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
     loading: function(loading) {
       return this.notes.loading.apply(this.notes, arguments);
     }
-
-//    scrollToBottom: function() {
-//      this.scrollTop(this.attr('scrollHeight') - this.height());
-//    }
   }
 });
