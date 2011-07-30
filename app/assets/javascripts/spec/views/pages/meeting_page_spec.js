@@ -554,6 +554,65 @@ describe("Views.Pages.Meeting", function() {
         expect(History.replaceState).toHaveBeenCalledWith(null,null,meeting.url());
       });
     });
+
+
+
+
+    describe("adjustment of the notes height", function() {
+      var longDetails = "";
+      beforeEach(function() {
+        longDetails = "";
+        for (var i = 0; i < 10; i++) longDetails += "Bee bee boo boo ";
+      });
+
+      function createManyVotes() {
+        _.times(6, function(i) {
+          var user = team.makeMember({id: 100 + i, firstName: "Joe", lastName: i.toString()});
+          meeting.votes().createFromRemote({id: 100 + i, userId: user.id(), updatedAt: 2345325});
+        });
+      }
+
+      describe("when the window is resized", function() {
+        it("adjusts notes to fill remaining vertical space", function() {
+          createManyVotes();
+
+          Application.width(1000);
+          meeting.remotelyUpdated({details: longDetails});
+
+          Application.width(700);
+          $(window).resize();
+          expectNotesToHaveFullHeight();
+        });
+      });
+
+      function expectNotesToHaveFullHeight(expectedBottom) {
+        console.log(meetingPage.notes.position().top, meetingPage.notes.height());
+        var notesBottom =
+            meetingPage.notes.position().top +
+            meetingPage.notes.height();
+
+        var bottomOfRightColumnInsidePadding =
+          meetingPage.rightColumn.height() +
+            parseInt(meetingPage.rightColumn.css('padding-top'));
+
+        expect(notesBottom).toBe(expectedBottom || bottomOfRightColumnInsidePadding);
+      }
+    });
+
+
+    describe("adjustment of the notes height", function() {
+      describe("when the window is resized", function() {
+
+      });
+
+      describe("when the meeting is assigned", function() {
+
+      });
+
+      describe("when the votes are created or destroyed", function() {
+
+      });
+    });
   });
 
   describe("mixpanel tracking", function() {
