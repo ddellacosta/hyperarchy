@@ -565,19 +565,11 @@ describe("Views.Pages.Meeting", function() {
         for (var i = 0; i < 10; i++) longDetails += "Bee bee boo boo ";
       });
 
-      function createManyVotes() {
-        _.times(6, function(i) {
-          var user = team.makeMember({id: 100 + i, firstName: "Joe", lastName: i.toString()});
-          meeting.votes().createFromRemote({id: 100 + i, userId: user.id(), updatedAt: 2345325});
-        });
-      }
 
       describe("when the window is resized", function() {
         it("adjusts notes to fill remaining vertical space", function() {
-          createManyVotes();
-
           Application.width(1000);
-          meeting.remotelyUpdated({details: longDetails});
+          createManyVotes();
 
           Application.width(700);
           $(window).resize();
@@ -585,8 +577,40 @@ describe("Views.Pages.Meeting", function() {
         });
       });
 
+      describe("when the votes are created or destroyed", function() {
+        it("adjusts notes to fill remaining vertical space", function() {
+          var vote;
+          runs(function() {
+            vote = meeting.votes().createFromRemote({id: 101, userId: creator.id(), updatedAt: 2345325});
+          });
+          waits();
+
+          runs(function() {
+            expectNotesToHaveFullHeight();
+            vote.remotelyDestroyed();
+          });
+          waits();
+
+          runs(function() {
+            expectNotesToHaveFullHeight();
+          });
+        });
+      });
+
+      function createManyVotes() {
+        _.times(6, function(i) {
+          var user = team.makeMember({id: 100 + i, firstName: "Joe", lastName: i.toString()});
+          meeting.votes().createFromRemote({id: 100 + i, userId: user.id(), updatedAt: 2345325});
+        });
+      }
+
       function expectNotesToHaveFullHeight(expectedBottom) {
-        console.log(meetingPage.notes.position().top, meetingPage.notes.height());
+        console.log("position top of notes", meetingPage.notes.position().top);
+        console.log("height of notes", meetingPage.notes.height());
+
+        console.log("height of right col", meetingPage.rightColumn.height());
+        console.log("padding top of right col", meetingPage.rightColumn.css('padding-top'));
+
         var notesBottom =
             meetingPage.notes.position().top +
             meetingPage.notes.height();
@@ -609,9 +633,6 @@ describe("Views.Pages.Meeting", function() {
 
       });
 
-      describe("when the votes are created or destroyed", function() {
-
-      });
     });
   });
 

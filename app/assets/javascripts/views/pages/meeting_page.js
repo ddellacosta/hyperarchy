@@ -218,6 +218,14 @@ _.constructor('Views.Pages.Meeting', Monarch.View.Template, {
           if (this.is(':visible')) History.pushState(null, null, Application.currentTeam().url());
         }));
 
+        this.registerInterest(meeting.votes(), 'onInsert', function() {
+          this.defer(this.adjustNotesHeight);
+        });
+
+        this.registerInterest(meeting.votes(), 'onRemove', function() {
+          this.defer(this.adjustNotesHeight);
+        });
+
         this.defer(function() {
           this.adjustNotesHeight();
         });
