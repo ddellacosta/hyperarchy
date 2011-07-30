@@ -279,6 +279,8 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
 
       agendaItemDetails.editButton.click();
 
+      expect(agendaItemDetails.editButton).toBeHidden();
+      expect(agendaItemDetails.destroyButton).toBeHidden();
       expect(agendaItemDetails.form).toBeVisible();
       expect(agendaItemDetails.updateButton).toBeVisible();
       expect(agendaItemDetails.cancelEditButton).toBeVisible();
@@ -289,6 +291,8 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
 
       agendaItemDetails.cancelEditButton.click();
 
+      expect(agendaItemDetails.editButton).toBeVisible();
+      expect(agendaItemDetails.destroyButton).toBeVisible();
       expect(agendaItemDetails.form).toBeHidden();
       expect(agendaItemDetails.updateButton).toBeHidden();
       expect(agendaItemDetails.cancelEditButton).toBeHidden();

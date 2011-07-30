@@ -3,18 +3,19 @@
     position: absolute
     right: 100%
     left: -100%
-    height: 100%
+
+    top: 0
+    bottom: 0
     @include transition('right left', 150ms, 'ease-in')
     overflow: hidden
     padding: $line-height/2
     padding-bottom: 0
     z-index: 1
     background-color: white
+
     &.active
       right: 0
       left: 0
-    &.expanded
-      overflow-y: auto
 
     .chars-remaining
       position: relative
@@ -25,10 +26,9 @@
     .notes .textarea-and-button // padding on agenda-item-details div itself causes chrome problems when it scrolls and notes resizes
       padding-bottom: $line-height/2
 
-
     .creator
       height: 2 * $line-height
-      margin-bottom: 2 * $line-height
+      margin-bottom: $line-height
       .avatar
         margin-top: 1px
         float: left
@@ -36,33 +36,6 @@
       .date
         font-size: $s-2
         color: #999
-
-    .body, .details
-      margin-bottom: $line-height
-    .details
-      font-size: 15px
-      p:last-child
-        display: inline
-        //margin: 0
-
-    .more, .less
-      margin-left: $s-2
-      font-size: $s-1
-      cursor: pointer
-      word-spacing: -1px
-      &:hover
-        text-decoration: none
-    .more
-      color: #888
-      &:hover
-        color: #333
-    .less
-      margin-top: $line-height
-      float: right
-
-    .clear
-      clear: both
-      height: $line-height
 
     &.mutable
       .edit, .destroy
@@ -96,17 +69,10 @@
       display: none
 
       textarea
-        padding: 2px
+        padding: $line-height / 2
         width: 100%
-        &.body
-          min-height: 4 * $line-height
-          margin-top: -3px
-          margin-bottom: 3px
-        &.details
-          margin-top: -2px
-          padding-top: 1px
-          margin-bottom: $line-height + 2
-          min-height: 6 * $line-height
+        min-height: 2 * $line-height
+        margin-bottom: 0
 
       label
         font-size: $s-1

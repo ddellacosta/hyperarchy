@@ -88,6 +88,7 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
     },
 
     edit: function() {
+      this.removeClass('mutable');
       this.form.show();
       this.updateButton.show();
       this.cancelEditButton.show();
@@ -118,6 +119,7 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
       this.updateButton.hide();
       this.cancelEditButton.hide();
       this.createButton.hide();
+      this.showOrHideMutateButtons();
       this.adjustNotesHeight();
     },
 
