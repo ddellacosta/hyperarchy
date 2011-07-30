@@ -21,6 +21,7 @@ module EventObserver
   end
 
   def post_event(team_ids, event)
+    return if Rails.env.jasmine?
     team_ids.each do |org_id|
       post("http://#{SOCKET_SERVER_HOST}/channel_events/teams/#{org_id}", :params => { :message => event.to_json })
     end
