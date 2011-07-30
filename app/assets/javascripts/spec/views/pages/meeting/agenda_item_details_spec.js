@@ -12,7 +12,7 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
     creator = team.makeMember({id: 999, emailHash: 'blas', firstName: "Mr.", lastName: "Creator"});
     Application.currentUser(creator);
     meeting = team.meetings().createFromRemote({id: 1, creatorId: 999, createdAt: 12, startsAt: 23456});
-    agendaItem = creator.agendaItems().createFromRemote({id: 1, meetingId: 1, body: "Mustard.", details: "Pardon me. Do you have any Gray Poupon?", createdAt: 1308352736162});
+    agendaItem = creator.agendaItems().createFromRemote({id: 1, meetingId: 1, body: "Buy more mustard.", createdAt: 1308352736162});
 
     Application.meetingPage.show();
     Application.meetingPage.showAgendaItemDetails();
@@ -21,12 +21,7 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
   });
 
   describe("when the agendaItem is assigned", function() {
-    it("populates the body, details, and avatar", function() {
-      expect(agendaItemDetails.body.html()).toEqual($.markdown(agendaItem.body()));
-      expect(agendaItemDetails.details.html()).toEqual($.markdown(agendaItem.details()));
-      agendaItem.remotelyUpdated({body: "Catsup", details: "37 flavors"});
-      expect(agendaItemDetails.body.html()).toEqual($.markdown(agendaItem.body()));
-      expect(agendaItemDetails.details.html()).toEqual($.markdown(agendaItem.details()));
+    it("populates the avatar, creator name, and created date", function() {
       expect(agendaItemDetails.avatar.user()).toBe(agendaItem.creator());
       expect(agendaItemDetails.creatorName.text()).toBe(creator.fullName());
       expect(agendaItemDetails.createdAt.text()).toBe(agendaItem.formattedCreatedAt());
@@ -51,12 +46,10 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
       agendaItemDetails.editButton.click();
 
       expect(agendaItemDetails.form).toBeVisible();
-      expect(agendaItemDetails.nonEditableContent).toBeHidden();
 
       agendaItemDetails.agendaItem(agendaItem);
 
       expect(agendaItemDetails.form).toBeHidden();
-      expect(agendaItemDetails.nonEditableContent).toBeVisible();
     });
 
     it("handles null agendaItems", function() {
@@ -108,105 +101,9 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
     });
   });
 
-  describe("handling of long details", function() {
-    var longDetails = "It is ", longAgendaItem;
-
-    beforeEach(function() {
-      _.times(100, function() { longDetails += "so " });
-      longDetails += "good.";
-      longAgendaItem = creator.agendaItems().createFromRemote({id: 1, meetingId: 1, body: "Sourkraut", details: longDetails, createdAt: 1308352736162});
-    });
-
-    describe("when an agendaItem is assigned or updated", function() {
-      it("truncates the details and shows and hides the expand button as appropriate", function() {
-        expect(agendaItemDetails.expandedDetails).toBeHidden();
-        expect(agendaItemDetails.details).toBeVisible();
-
-        // assign agendaItem w/ long details
-        agendaItemDetails.agendaItem(longAgendaItem);
-
-        expect(agendaItemDetails.moreLink).toBeVisible();
-        expect(agendaItemDetails.details.text()).toContain(longAgendaItem.details().substring(0, 100));
-        expect(agendaItemDetails.details.text()).toContain("…");
-
-        // update agendaItem w/ short details
-        longAgendaItem.remotelyUpdated({details: "I like it."});
-
-        expect(agendaItemDetails.moreLink).toBeHidden();
-        expect(agendaItemDetails.details.text()).toContain(longAgendaItem.details());
-        expect(agendaItemDetails.details.text()).not.toContain("…");
-
-        // update agendaItem w/ long details
-        longDetails = "I just ";
-        _.times(100, function() { longDetails += "really " });
-        longDetails += "love it.";
-        longAgendaItem.remotelyUpdated({details: longDetails});
-
-        expect(agendaItemDetails.moreLink).toBeVisible();
-        expect(agendaItemDetails.details.text()).toContain(longAgendaItem.details().substring(0, 100));
-        expect(agendaItemDetails.details.text()).toContain("…");
-
-        // assign agendaItem w/ short details
-        agendaItemDetails.agendaItem(agendaItem);
-
-        expect(agendaItemDetails.moreLink).toBeHidden();
-        expect(agendaItemDetails.details.text()).toContain(agendaItem.details());
-        expect(agendaItemDetails.details.text()).not.toContain("…");
-      });
-
-      it("exits expanded mode when a different agendaItem is assigned", function() {
-        agendaItemDetails.agendaItem(agendaItem);
-        agendaItemDetails.moreLink.click();
-
-        agendaItemDetails.agendaItem(longAgendaItem);
-
-        expect(agendaItemDetails.details).toBeVisible();
-        expect(agendaItemDetails.moreLink).toBeVisible();
-        expect(agendaItemDetails.expandedDetails).toBeHidden();
-        expect(agendaItemDetails.lessLink).toBeHidden();
-        expect(agendaItemDetails).not.toHaveClass('expanded');
-      });
-    });
-    
-    describe("when the 'more' and 'less' buttons are clicked", function() {
-      it("switches between the expanded and non-expanded details, and shows and hides the 'more' and 'less' buttons as appropriate", function() {
-        agendaItemDetails.agendaItem(longAgendaItem);
-
-        expect(agendaItemDetails.details).toBeVisible();
-        expect(agendaItemDetails.moreLink).toBeVisible();
-        expect(agendaItemDetails.expandedDetails).toBeHidden();
-        expect(agendaItemDetails.lessLink).toBeHidden();
-
-        agendaItemDetails.moreLink.click();
-
-        expect(agendaItemDetails.details).toBeHidden();
-        expect(agendaItemDetails.moreLink).toBeHidden();
-        expect(agendaItemDetails.expandedDetails).toBeVisible();
-        expect(agendaItemDetails.lessLink).toBeVisible();
-        expect(agendaItemDetails).toHaveClass('expanded');
-
-        agendaItemDetails.lessLink.click();
-
-        expect(agendaItemDetails.details).toBeVisible();
-        expect(agendaItemDetails.moreLink).toBeVisible();
-        expect(agendaItemDetails.expandedDetails).toBeHidden();
-        expect(agendaItemDetails.lessLink).toBeHidden();
-        expect(agendaItemDetails).not.toHaveClass('expanded');
-
-        // when you contract after the agendaItem gets shorter in background while expanded, the expand button is hidden
-        agendaItemDetails.moreLink.click();
-        longAgendaItem.remotelyUpdated({details: "I like it."});
-        agendaItemDetails.lessLink.click();
-        expect(agendaItemDetails.moreLink).toBeHidden();
-        expect(agendaItemDetails.lessLink).toBeHidden();
-      });
-    });
-  });
-
   describe("showing and hiding the new form", function() {
     it("hides notes and empties out and shows the form fields & create button when #showNewForm is called", function() {
       agendaItemDetails.editableBody.val("woweee!");
-      agendaItemDetails.editableDetails.val("cocooo!");
       agendaItemDetails.cancelEdit();
 
       var now = new Date();
@@ -216,7 +113,6 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
       agendaItemDetails.showNewForm();
       expect(agendaItemDetails.form).toBeVisible();
       expect(agendaItemDetails.editableBody.val()).toBe('');
-      expect(agendaItemDetails.editableDetails.val()).toBe('');
       expect(agendaItemDetails.charsRemaining.text()).toBe('140');
 
       expect(agendaItemDetails.createButton).toBeVisible();
@@ -245,13 +141,9 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
       Application.meetingPage.meeting(meeting);
       useFakeServer();
       agendaItemDetails.showNewForm();
-      fieldValues = {
-        body: "Relish",
-        details: "That green stuff..."
-      };
+      fieldValues = { body: "Relish" };
 
       agendaItemDetails.editableBody.val(fieldValues.body);
-      agendaItemDetails.editableDetails.val(fieldValues.details);
     });
 
     describe("when the current user is a member", function() {
@@ -296,7 +188,6 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
         Application.meetingPage.params({meetingId: meeting.id(), agendaItemId: 'new'});
 
         agendaItemDetails.editableBody.val(fieldValues.body);
-        agendaItemDetails.editableDetails.val(fieldValues.details);
       });
 
       describe("when the guest signs up at the prompt", function() {
@@ -383,30 +274,24 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
   });
 
   describe("showing and hiding of the edit form", function() {
-    it("shows and populates the form fields and sets focus when edit is clicked and hides them when cancel is clicked", function() {
+    it("when edit is clicked, shows and populates the body field and sets focus, then hides them when cancel is clicked", function() {
       expect(agendaItemDetails.form).toBeHidden();
-      expect(agendaItemDetails.nonEditableContent).toBeVisible();
 
       agendaItemDetails.editButton.click();
 
       expect(agendaItemDetails.form).toBeVisible();
       expect(agendaItemDetails.updateButton).toBeVisible();
       expect(agendaItemDetails.cancelEditButton).toBeVisible();
-      expect(agendaItemDetails.nonEditableContent).toBeHidden();
 
       expect(agendaItemDetails.editableBody.val()).toBe(agendaItem.body());
       expect(agendaItemDetails.editableBody[0]).toBe(document.activeElement);
       expect(agendaItemDetails.charsRemaining.text()).toBe((140 - agendaItem.body().length).toString());
-      expect(agendaItemDetails.editableDetails.val()).toBe(agendaItem.details());
-      expect(agendaItemDetails.expanded()).toBeTruthy();
 
       agendaItemDetails.cancelEditButton.click();
 
       expect(agendaItemDetails.form).toBeHidden();
       expect(agendaItemDetails.updateButton).toBeHidden();
       expect(agendaItemDetails.cancelEditButton).toBeHidden();
-      expect(agendaItemDetails.nonEditableContent).toBeVisible();
-      expect(agendaItemDetails.expanded()).toBeFalsy();
     });
 
     it("does not show the notes if they are still loading", function() {
@@ -423,13 +308,9 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
     beforeEach(function() {
       useFakeServer();
       agendaItemDetails.editButton.click();
-      fieldValues = {
-        body: "Relish",
-        details: "That green stuff..."
-      }
+      fieldValues = { body: "Relish" };
 
       agendaItemDetails.editableBody.val(fieldValues.body);
-      agendaItemDetails.editableDetails.val(fieldValues.details);
     });
 
     it("updates the record's body and details on the server and hides the form", function() {
@@ -441,10 +322,6 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
       Server.lastUpdate.simulateSuccess();
 
       expect(agendaItemDetails.form).toBeHidden();
-      expect(agendaItemDetails.nonEditableContent).toBeVisible();
-      
-      expect(agendaItemDetails.body.text()).toBe(fieldValues.body);
-      expect(agendaItemDetails.details.text()).toBe(fieldValues.details);
     });
 
     it("wires the form submit event to save", function() {
@@ -509,32 +386,13 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
   });
   
   describe("adjustment of the notes height", function() {
-    var longText;
-
-    beforeEach(function() {
-      longText = "";
-      for (var i = 0; i < 10; i++) longText += "Bee bee boo boo ";
-    });
-
-    describe("when the details/body are assigned and when they change", function() {
-      it("adjusts the notes to fill the remaining available height", function() {
-        Application.meetingPage.showAgendaItemDetails();
-        expectNotesToHaveFullHeight();
-
-        agendaItem.remotelyUpdated({body: longText});
-        expectNotesToHaveFullHeight();
-
-        agendaItem.remotelyUpdated({details: longText});
-        expectNotesToHaveFullHeight();
-      });
-    });
-
     describe("when the window is resized", function() {
       it("adjusts the notes to fill the remaining available height", function() {
-        Application.meetingPage.width(1200);
-        agendaItem.remotelyUpdated({details: longText});
+        Application.meetingPage.height(400);
+        $(window).resize();
+        expectNotesToHaveFullHeight();
 
-        Application.meetingPage.width(800);
+        Application.meetingPage.height(800);
         $(window).resize();
         expectNotesToHaveFullHeight();
       });
@@ -544,14 +402,6 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
       var notesBottom = agendaItemDetails.notes.position().top + agendaItemDetails.notes.outerHeight();
       expect(notesBottom).toBe(agendaItemDetails.outerHeight() - parseInt(agendaItemDetails.css('padding-bottom')));
     }
-  });
-
-  describe("showing and hiding of the details clearing div", function() {
-    it("only shows the clearing div if there are details", function() {
-      expect(agendaItemDetails.detailsClearDiv).toBeVisible();
-      agendaItem.remotelyUpdated({details: ""});
-      expect(agendaItemDetails.detailsClearDiv).toBeHidden();
-    });
   });
 
   describe("loading", function() {
@@ -588,7 +438,6 @@ describe("Views.Pages.Meeting.AgendaItemDetails", function() {
         Application.meetingPage.meeting(meeting);
         agendaItemDetails.showNewForm();
         agendaItemDetails.editableBody.val("muesli");
-        agendaItemDetails.editableDetails.val("non-vegan, plz");
         mpq = [];
       });
 

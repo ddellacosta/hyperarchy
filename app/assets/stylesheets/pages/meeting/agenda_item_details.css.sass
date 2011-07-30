@@ -64,38 +64,33 @@
       clear: both
       height: $line-height
 
-    // showing and hiding edit links based on mutability, styling below
-    .non-editable
-      .edit,.destroy
-        display: none
     &.mutable
-      .non-editable
-        .edit, .destroy
-          display: block
-
-    .non-editable
       .edit, .destroy
-        line-height: $line-height
-        height: $line-height
-        float: right
-        font-size: $s-1
-        border-color: white
-        background: white
-        margin-left: 6px
-        color: #888
-        word-spacing: -1px
-        @include border-radius(2px)
-        &:hover
-          color: black
-      .edit
-        padding: 0 4px
-        &:hover
-          background: $pale-blue
-      .destroy
-        padding-left: 1px
-        padding-right: 2px
-        &:hover
-          background: $pale-red
+        display: block
+
+    .edit, .destroy
+      display: none
+      line-height: $line-height
+      height: $line-height
+      float: right
+      font-size: $s-1
+      border-color: white
+      background: white
+      margin-left: 6px
+      color: #888
+      word-spacing: -1px
+      @include border-radius(2px)
+      &:hover
+        color: black
+    .edit
+      padding: 0 4px
+      &:hover
+        background: $pale-blue
+    .destroy
+      padding-left: 1px
+      padding-right: 2px
+      &:hover
+        background: $pale-red
 
     form
       display: none

@@ -71,9 +71,6 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
         this.registerInterest(agendaItem, 'onDestroy', function() {
           History.pushState(null, null, agendaItem.meeting().url());
         });
-        this.registerInterest(agendaItem, 'onUpdate', this.hitch('handleAgendaItemUpdate'));
-        this.handleAgendaItemUpdate();
-        this.expanded(false);
       },
 
       write: function(agendaItem) {
@@ -192,30 +189,6 @@ _.constructor('Views.Pages.Meeting.AgendaItemDetails', Monarch.View.Template, {
       if (!(this.agendaItem() && this.agendaItem().details())) return false;
 
       return this.agendaItem().details().length > this.maxDetailsLength;
-    },
-
-    truncate: function(string, maxChars) {
-      if (string.length < maxChars) {
-        return string
-      } else {
-        var lastSpacePosition = string.lastIndexOf(" ", maxChars);
-        return string.substring(0, lastSpacePosition) + "…";
-      }
-    },
-
-    maxDetailsLength: 200,
-
-    handleAgendaItemUpdate: function() {
-      var agendaItem = this.agendaItem();
-      this.details.markdown(this.truncate(agendaItem.details() || "", this.maxDetailsLength));
-      this.expandedDetails.markdown(agendaItem.details());
-      if (agendaItem.details()) {
-        this.detailsClearDiv.show();
-      } else {
-        this.detailsClearDiv.hide();
-      }
-      this.showOrHideMoreButton();
-      this.adjustNotesHeight();
     },
 
     adjustNotesHeight: function() {
