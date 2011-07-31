@@ -2,10 +2,13 @@ _.constructor('Views.Pages.Meeting.Notes', Monarch.View.Template, {
   content: function(params) { with(this.builder) {
     div({'class': "notes"}, function() {
       h2("Notes").ref('header');
-      subview('list', Views.Components.SortedList, {
-        buildElement: function(note) {
-          return Views.Pages.Meeting.NoteLi.toView({note: note, fullScreen: (params && params.fullScreen)});
-        }
+      div({'class': "list"}, function() {
+        div({'class': "overlay"});
+        subview('list', Views.Components.SortedList, {
+          buildElement: function(note) {
+            return Views.Pages.Meeting.NoteLi.toView({note: note, fullScreen: (params && params.fullScreen)});
+          }
+        });
       });
 
       div({'class': "textarea-and-button"}, function() {

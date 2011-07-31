@@ -28,10 +28,9 @@
     @include box-sizing('border-box')
     padding: ($subheader-height - $line-height)/2 $line-height * 2
     font-size: $s0
-    //@include background-image(linear-gradient(top, white, darken(white, 5%)))
-    //@include background-image(linear-gradient(top, white, darken(white, 5%)))
-    background-color: #2b618a
-    border-bottom: 1px solid #ccc
+    background-color: $base-color
+    @include background-image(linear-gradient(top, $base-color, darken($base-color, 3%)))
+    border-bottom: 1px solid darken($base-color, 5%)
     height: $subheader-height
     color: white
     a
@@ -60,17 +59,17 @@
     > .left
       width: 70%
       z-index: 2
-      //padding: $line-height * 2
-      //padding-right: $line-height
+      background-color: desaturate(lighten(#2b618a, 60%), 35%)
+      border-right: 1px solid desaturate(lighten(#2b618a, 50%), 35%)
     > .right
       left: 70%
       right: 0
       padding: $line-height * 2
-      padding-left: $line-height
+      padding-left: $line-height * 1.5
+      background-color: desaturate(lighten(#2b618a, 50%), 47%)
+
 
   #agenda
-    border-right: 1px solid desaturate(lighten(#2b618a, 50%), 35%)
-    background-color: desaturate(lighten(#2b618a, 60%), 35%)
     position: relative
     height: 100%
 
@@ -102,7 +101,6 @@
           height: $line-height
           margin-left: $s0
           position: relative
-          //padding-left: $s0 + $line-height/2
           position: relative
           vertical-align: top
 
@@ -111,11 +109,8 @@
             &:hover
               background: darken($pale-green, 7%)
           .plus
-            //position: absolute
             display: inline-block
             margin-right: $line-height / 4
-            //left: $line-height / 4
-            //top: 3px
             font-weight: $semibold
             font-size: $s1
             color: white
@@ -128,7 +123,6 @@
 
       #back-to-your-ranking
         float: right
-
 
     > .body
       position: absolute
