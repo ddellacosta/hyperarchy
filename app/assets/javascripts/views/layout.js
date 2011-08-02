@@ -1,7 +1,6 @@
 _.constructor("Views.Layout", View.Template, {
   content: function() { with(this.builder) {
     div({id: "layout"}, function() {
-      div({id: 'gradient-background'});
       div({id: "body-wrapper"}, function() {
         div({id: "header"}, function() {
           a(function() {

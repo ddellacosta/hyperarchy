@@ -65,7 +65,7 @@ module Views
       end
 
       def typekit_javascript
-        src = "#{request.ssl?? "https" : "http"}://use.typekit.com/tzv2czk.js"
+        src = "#{request.ssl?? "https" : "http"}://use.typekit.com/obb5xiy.js"
         script :type => "text/javascript", :src => src
         script "try{Typekit.load();}catch(e){}", :type => "text/javascript"
       end

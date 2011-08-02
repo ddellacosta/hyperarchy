@@ -8,9 +8,39 @@ module Views
       def body_content
         div :id => "fb-root"
         facebook_javascript
-        div :id => "loadingPage" do
-          div :id => "mediumLogo"
-          div :class => "bigLoading matchesBodyBackground"
+
+        div :id => "gradient-background"
+
+        div :id => "landing" do
+          div :class => "logo" do
+            div :class => "graphic"
+            h1 do
+              span "ACTION", :class => "action"
+              span "ITEMS", :class => "items"
+            end
+          end
+
+          div :class => "tagline" do
+            h2 "An app for effective meetings."
+          end
+
+
+          div :class => "body" do
+            div :class => "screenshot" do
+
+            end
+
+            div :class => "description" do
+              h3 "Keep meetings relevant and focused"
+              p "Vote on your agenda as a team, then discuss the important stuff first. Track your pace as you go."
+
+              h3 "Promote action and accountability"
+              p "Assign action items, then review them at the next meeting."
+
+              h3 "Keep everything in one place"
+              p "Access notes from past meetings. Use labels to keep things organized."
+            end
+          end
         end
       end
 
@@ -25,12 +55,12 @@ module Views
             #{store_in_repository(current_user.initial_repository_contents)}
             window.Application = Views.Layout.toView();
             Application.environment = #{Rails.env.to_json};
-            $('body').append(Application);
-            Application.attach();
-            Application.currentUserId(#{current_user_id});
-            Path.listen();
-            Application.TWITTER_ID = '#{TWITTER_ID}';
-            Application.loadTwitterJs();
+            //$('body').append(Application);
+            //Application.attach();
+            //Application.currentUserId(#{current_user_id});
+            //Path.listen();
+            //Application.TWITTER_ID = '#{TWITTER_ID}';
+            //Application.loadTwitterJs();
           });
         ]
       end
