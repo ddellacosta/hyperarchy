@@ -1,6 +1,6 @@
 //= require application
 //= require_directory ./support
-//= require monarch/http/fake_server
+//= require old_monarch/http/fake_server
 
 var ajaxRequests;
 var originalAjax = jQuery.ajax;

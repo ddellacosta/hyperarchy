@@ -1,0 +1,10 @@
+//= require old_monarch/model/relations/relation
+//= require old_monarch/model/relations/table
+//= require old_monarch/model/relations/selection
+//= require old_monarch/model/relations/inner_join
+//= require old_monarch/model/relations/ordering
+//= require old_monarch/model/relations/table_projection
+//= require old_monarch/model/relations/union
+//= require old_monarch/model/relations/difference
+//= require old_monarch/model/relations/offset
+//= require old_monarch/model/relations/limit

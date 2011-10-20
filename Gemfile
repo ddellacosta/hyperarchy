@@ -24,7 +24,7 @@ gem 'sass-rails', '3.1.4'
 gem 'compass', '0.12.alpha'
 gem 'uglifier', :path => 'vendor/uglifier'
 gem 'jquery-rails'
-gem 'monarch', :path => 'vendor/monarch'
+gem 'old_monarch', :path => 'vendor/old_monarch'
 gem 'fb_graph'
 
 

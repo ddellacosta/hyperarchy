@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "monarch/version"
+require "old_monarch/version"
 
 Gem::Specification.new do |s|
-  s.name        = "monarch"
+  s.name        = "old_monarch"
   s.version     = Monarch::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nathan Sobo", "Max Brunsfeld"]

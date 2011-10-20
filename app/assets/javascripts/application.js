@@ -1,5 +1,5 @@
-//= require monarch
-//= require monarch/add_to_global_namespace
+//= require old_monarch
+//= require old_monarch/add_to_global_namespace
 //= require jquery-ui/jquery.ui.core
 //= require jquery-ui/jquery.ui.position
 //= require jquery-ui/jquery.ui.widget
