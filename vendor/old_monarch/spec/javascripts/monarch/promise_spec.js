@@ -1,11 +1,11 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Promise", function() {
+  describe("OldMonarch.Promise", function() {
     var promise, callback;
 
     before(function() {
-      promise = new Monarch.Promise();
+      promise = new OldMonarch.Promise();
       callback = mockFunction('callback');
     });
 

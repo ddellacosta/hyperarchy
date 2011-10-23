@@ -56,7 +56,7 @@ _.constructor("Views.Layout", View.Template, {
     lineHeight: 18,
 
     initialize: function() {
-      this.currentUserChangeNode = new Monarch.SubscriptionNode();
+      this.currentUserChangeNode = new OldMonarch.SubscriptionNode();
       this.connectToSocketServer();
       Question.updateScoresPeriodically();
 
@@ -67,8 +67,8 @@ _.constructor("Views.Layout", View.Template, {
         $('body').toggleClass('grid-offset');
       });
 
-      this.facebookInitializedNode = new Monarch.SubscriptionNode();
-      this.twitterInitializedNode = new Monarch.SubscriptionNode();
+      this.facebookInitializedNode = new OldMonarch.SubscriptionNode();
+      this.twitterInitializedNode = new OldMonarch.SubscriptionNode();
     },
 
     attach: function($super) {
@@ -116,7 +116,7 @@ _.constructor("Views.Layout", View.Template, {
 
 
     facebookLogin: function() {
-      var promise = new Monarch.Promise();
+      var promise = new OldMonarch.Promise();
 
       FB.login(this.bind(function(response) {
         if (response.session) {
@@ -142,7 +142,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     twitterLogin: function() {
-      var promise = new Monarch.Promise();
+      var promise = new OldMonarch.Promise();
 
       T.one('authComplete', this.bind(function(e, user) {
         if (user.id === Application.currentUser().twitterId()) {
@@ -169,7 +169,7 @@ _.constructor("Views.Layout", View.Template, {
     currentUser: {
       write: function(newUser, oldUser) {
         if (newUser === oldUser) {
-          return new Monarch.Promise().triggerSuccess();
+          return new OldMonarch.Promise().triggerSuccess();
         } else {
           this.currentUserId(newUser.id());
           this.recordOrganizationVisit();
@@ -248,7 +248,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     connectToSocketServer: function() {
-      this.socketConnectionFuture = new Monarch.Http.AjaxFuture();
+      this.socketConnectionFuture = new OldMonarch.Http.AjaxFuture();
       var socketServerHost = window.location.hostname;
       var secure = (window.location.protocol === 'https:')
       var socket = new io.Socket(socketServerHost, {rememberTransport: false, secure: secure, port: 8081, connectTimeout: 10000});
@@ -287,7 +287,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     promptSignup: function() {
-      var promise = new Monarch.Promise();
+      var promise = new OldMonarch.Promise();
 
       if (!Application.currentUser().guest()) {
         promise.triggerSuccess();

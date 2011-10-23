@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Signal", function() {
+  describe("OldMonarch.Model.Signal", function() {
     useLocalFixtures();
     var localField, remoteField, signal, transformer;
 
@@ -12,7 +12,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     before(function() {
-      signal = new Monarch.Model.Signal(localField, remoteField, transformer);
+      signal = new OldMonarch.Model.Signal(localField, remoteField, transformer);
     });
 
 

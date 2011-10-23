@@ -1,12 +1,12 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Predicates.Eq", function() {
+  describe("OldMonarch.Model.Predicates.Eq", function() {
     useLocalFixtures();
 
     var eqPredicate, leftOperand, rightOperand, record;
     before(function() {
-      eqPredicate = new Monarch.Model.Predicates.Eq(leftOperand, rightOperand)
+      eqPredicate = new OldMonarch.Model.Predicates.Eq(leftOperand, rightOperand)
       record = User.fixture("jan");
     });
 

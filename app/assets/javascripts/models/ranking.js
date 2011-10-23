@@ -21,7 +21,7 @@ _.constructor("Ranking", Model.Record, {
     },
 
     createOrUpdate: function(user, answer, position) {
-      var future = new Monarch.Http.AjaxFuture();
+      var future = new OldMonarch.Http.AjaxFuture();
 
       $.ajax({
         type: 'post',

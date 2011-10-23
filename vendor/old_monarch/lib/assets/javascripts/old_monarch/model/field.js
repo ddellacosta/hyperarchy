@@ -1,8 +1,8 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Field", {
+_.constructor("OldMonarch.Model.Field", {
   onUpdate: function(updateCallback, context) {
-    if (!this.onUpdateNode) this.onUpdateNode = new Monarch.SubscriptionNode();
+    if (!this.onUpdateNode) this.onUpdateNode = new OldMonarch.SubscriptionNode();
     return this.onUpdateNode.subscribe(updateCallback, context);
   },
 
@@ -11,4 +11,4 @@ _.constructor("Monarch.Model.Field", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

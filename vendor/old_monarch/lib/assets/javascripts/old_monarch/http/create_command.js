@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Http.CreateCommand", Monarch.Http.Command, {
+_.constructor("OldMonarch.Http.CreateCommand", OldMonarch.Http.Command, {
   initialize: function($super, record, server) {
     $super(record, server);
     this.table = this.record.table;
@@ -21,4 +21,4 @@ _.constructor("Monarch.Http.CreateCommand", Monarch.Http.Command, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -1,10 +1,10 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Http.CometClient", function() {
+  describe("OldMonarch.Http.CometClient", function() {
     var client;
     before(function() {
-      client = new Monarch.Http.CometClient();
+      client = new OldMonarch.Http.CometClient();
     });
     
     describe("#connect()", function() {

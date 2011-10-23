@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Tuple", {
+_.constructor("OldMonarch.Model.Tuple", {
   constructorProperties: {
     initializeFieldReaders: function() {
       _.each(this.projectedColumnsByName, function(projectedColumn, name) {
@@ -26,7 +26,7 @@ _.constructor("Monarch.Model.Tuple", {
   },
 
   evaluate: function(columnOrConstant) {
-    if (columnOrConstant instanceof Monarch.Model.ProjectedColumn) {
+    if (columnOrConstant instanceof OldMonarch.Model.ProjectedColumn) {
       return this.field(columnOrConstant).value();
     } else {
       return columnOrConstant;
@@ -47,4 +47,4 @@ _.constructor("Monarch.Model.Tuple", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

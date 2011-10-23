@@ -8,8 +8,8 @@ Screw.Unit(function(c) { with(c) {
 
     before(function() {
       operand = User.table;
-      predicate = new Monarch.Model.Predicates.Eq(User.age, 31);
-      selection = new Monarch.Model.Relations.Selection(operand, predicate);
+      predicate = new OldMonarch.Model.Predicates.Eq(User.age, 31);
+      selection = new OldMonarch.Model.Relations.Selection(operand, predicate);
     });
 
     describe("#tuples", function() {

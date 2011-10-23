@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.ConcreteField", Monarch.Model.Field, {
+_.constructor("OldMonarch.Model.ConcreteField", OldMonarch.Model.Field, {
   value: {
     writer: function(value, version) {
       value = this.column.convertValueForField(value);
@@ -12,4 +12,4 @@ _.constructor("Monarch.Model.ConcreteField", Monarch.Model.Field, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

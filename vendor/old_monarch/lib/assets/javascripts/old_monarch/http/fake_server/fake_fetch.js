@@ -1,11 +1,11 @@
-_.constructor("Monarch.Http.FakeServer.FakeFetch", {
+_.constructor("OldMonarch.Http.FakeServer.FakeFetch", {
   type: 'fetch',
 
   initialize: function(url, relations, fakeServer) {
     this.url = url;
     this.relations = relations;
     this.fakeServer = fakeServer;
-    this.future = new Monarch.Http.AjaxFuture();
+    this.future = new OldMonarch.Http.AjaxFuture();
   },
 
   simulateSuccess: function(dataset) {

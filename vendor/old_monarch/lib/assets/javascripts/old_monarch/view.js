@@ -6,12 +6,12 @@
 //= require old_monarch/view/self_closing_tag
 //= require old_monarch/view/text_node
 
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.module("Monarch.View", {
+_.module("OldMonarch.View", {
   build: function(contentFn) {
-    return Monarch.View.Template.build(contentFn);
+    return OldMonarch.View.Template.build(contentFn);
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Layout.OrganizationsMenuItem', Monarch.View.Template, {
+_.constructor('Views.Layout.OrganizationsMenuItem', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     li(function() {
       a({'class': "admin link"}, "Admin").ref('adminLink').click(function() {

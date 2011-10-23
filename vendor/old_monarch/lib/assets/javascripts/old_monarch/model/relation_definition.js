@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.RelationDefinition", {
+_.constructor("OldMonarch.Model.RelationDefinition", {
   initialize: function(name, definition) {
     this.name = name;
     this.definition = definition;
@@ -18,4 +18,4 @@ _.constructor("Monarch.Model.RelationDefinition", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -1,10 +1,10 @@
-_.constructor("Monarch.Http.FakeServer.FakeRequest", {
+_.constructor("OldMonarch.Http.FakeServer.FakeRequest", {
   initialize: function(type, url, data, fakeServer) {
     this.type = type;
     this.url = url;
     this.data = data;
     this.fakeServer = fakeServer;
-    this.future = new Monarch.Http.AjaxFuture();
+    this.future = new OldMonarch.Http.AjaxFuture();
   },
 
   simulateSuccess: function(data, dataset) {

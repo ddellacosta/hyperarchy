@@ -62,7 +62,7 @@ _.constructor('Views.Lightboxes.NewQuestion', Views.Lightboxes.Lightbox, {
 
     ensureLoggedIn: function(fieldValues) {
       var currentUser = Application.currentUser();
-      var promise = new Monarch.Promise();
+      var promise = new OldMonarch.Promise();
       var shareOnFacebook = this.shareOnFacebook.attr('checked');
 
       var ensureLoggedIn = this.bind(function() {

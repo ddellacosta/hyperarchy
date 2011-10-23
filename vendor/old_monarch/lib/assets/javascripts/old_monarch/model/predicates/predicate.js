@@ -1,9 +1,9 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Predicates.Predicate", {
+_.constructor("OldMonarch.Model.Predicates.Predicate", {
   constructorProperties: {
     isPredicate: true
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -296,12 +296,12 @@ _.constructor("_.Signal", {
   },
 
   change: function(callback, context) {
-    if (!this.changeNode) this.changeNode = new Monarch.SubscriptionNode();
+    if (!this.changeNode) this.changeNode = new OldMonarch.SubscriptionNode();
     return this.changeNode.subscribe(callback, context);
   },
 
   write: function(callback, context) {
-    if (!this.writeNode) this.writeNode = new Monarch.SubscriptionNode();
+    if (!this.writeNode) this.writeNode = new OldMonarch.SubscriptionNode();
     return this.writeNode.subscribe(callback, context);
   }
 });

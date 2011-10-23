@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Http.DestroyCommand", Monarch.Http.Command, {
+_.constructor("OldMonarch.Http.DestroyCommand", OldMonarch.Http.Command, {
   initialize: function($super, record, server) {
     $super(record, server);
     this.tableName = record.table.globalName;
@@ -19,4 +19,4 @@ _.constructor("Monarch.Http.DestroyCommand", Monarch.Http.Command, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

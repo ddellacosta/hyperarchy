@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Predicates.Eq", Monarch.Model.Predicates.Binary, {
+_.constructor("OldMonarch.Model.Predicates.Eq", OldMonarch.Model.Predicates.Binary, {
   operator: function(left, right) {
     return left == right;
   },
@@ -14,4 +14,4 @@ _.constructor("Monarch.Model.Predicates.Eq", Monarch.Model.Predicates.Binary, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

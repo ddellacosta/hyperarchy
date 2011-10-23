@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.SyntheticColumn", Monarch.Model.Column, {
+_.constructor("OldMonarch.Model.SyntheticColumn", OldMonarch.Model.Column, {
   initialize: function(table, name, definition) {
     this.table = table;
     this.name = name;
@@ -8,4 +8,4 @@ _.constructor("Monarch.Model.SyntheticColumn", Monarch.Model.Column, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

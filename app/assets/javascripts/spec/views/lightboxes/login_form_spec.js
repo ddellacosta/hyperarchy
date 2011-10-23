@@ -107,7 +107,7 @@ describe("Views.Lightboxes.LoginForm", function() {
         cancelTriggered = true;
       });
 
-      facebookLoginPromise = new Monarch.Promise();
+      facebookLoginPromise = new OldMonarch.Promise();
       spyOn(Application, 'facebookLogin').andReturn(facebookLoginPromise);
     });
 
@@ -134,7 +134,7 @@ describe("Views.Lightboxes.LoginForm", function() {
         cancelTriggered = true;
       });
 
-      twitterLoginPromise = new Monarch.Promise();
+      twitterLoginPromise = new OldMonarch.Promise();
       spyOn(Application, 'twitterLogin').andReturn(twitterLoginPromise);
     });
 

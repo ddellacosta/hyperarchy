@@ -1,14 +1,14 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Relations.Union", function() {
+  describe("OldMonarch.Model.Relations.Union", function() {
     useExampleDomainModel();
 
     var leftOperand, rightOperand, union;
     before(function() {
       leftOperand = User.where({fullName: "John"});
       rightOperand = User.where({age: 32});
-      union = new Monarch.Model.Relations.Union(leftOperand, rightOperand);
+      union = new OldMonarch.Model.Relations.Union(leftOperand, rightOperand);
     });
 
 

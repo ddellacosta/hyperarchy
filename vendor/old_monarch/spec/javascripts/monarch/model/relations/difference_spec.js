@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Relations.Difference", function() {
+  describe("OldMonarch.Model.Relations.Difference", function() {
     useExampleDomainModel();
 
     describe("#tuples()", function() {
@@ -28,7 +28,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       before(function() {
-        difference = new Monarch.Model.Relations.Difference(leftOperand, rightOperand);
+        difference = new OldMonarch.Model.Relations.Difference(leftOperand, rightOperand);
 
         insertCallback = mockFunction("insertCallback");
         updateCallback = mockFunction("updateCallback");

@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Offset", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Offset", OldMonarch.Model.Relations.Relation, {
   initialize: function(operand, count) {
     this.operand = operand;
     this.count = count;
@@ -63,4 +63,4 @@ _.constructor("Monarch.Model.Relations.Offset", Monarch.Model.Relations.Relation
   }
 });
 
-})(Monarch);
+})(OldMonarch);

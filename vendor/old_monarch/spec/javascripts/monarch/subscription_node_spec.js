@@ -1,18 +1,18 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.SubscriptionNode", function() {
+  describe("OldMonarch.SubscriptionNode", function() {
     var node;
 
     before(function() {
-      node = new Monarch.SubscriptionNode();
+      node = new OldMonarch.SubscriptionNode();
     });
 
     describe("#publishForPromise", function() {
       var successCallback, promise1, promise2;
       before(function() {
-        promise1 = new Monarch.Promise();
-        promise2 = new Monarch.Promise();
+        promise1 = new OldMonarch.Promise();
+        promise2 = new OldMonarch.Promise();
 
         callback1 = mockFunction("callback1", function() {
           return promise1;
@@ -39,7 +39,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("triggers success on the promise if there are no subscriptions or if none of the subscriptions return a promise themselves to wait on", function() {
-        node = new Monarch.SubscriptionNode();
+        node = new OldMonarch.SubscriptionNode();
         node.publishForPromise("foo").success(successCallback);
         expect(successCallback).to(haveBeenCalled);
 

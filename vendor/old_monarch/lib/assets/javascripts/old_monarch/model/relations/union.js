@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Union", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Union", OldMonarch.Model.Relations.Relation, {
   numOperands: 2,
 
   initialize: function(leftOperand, rightOperand) {
@@ -29,7 +29,7 @@ _.constructor("Monarch.Model.Relations.Union", Monarch.Model.Relations.Relation,
   },
 
   isEqual: function(other) {
-    if (other.constructor !== Monarch.Model.Relations.Union) return false;
+    if (other.constructor !== OldMonarch.Model.Relations.Union) return false;
     return this.leftOperand.isEqual(other.leftOperand) && this.rightOperand.isEqual(other.rightOperand);
   },
 
@@ -77,4 +77,4 @@ _.constructor("Monarch.Model.Relations.Union", Monarch.Model.Relations.Relation,
   onRightOperandValid: function() {}
 });
 
-})(Monarch);
+})(OldMonarch);

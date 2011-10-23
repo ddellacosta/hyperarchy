@@ -1,4 +1,4 @@
-(function(Monarch) {_.constructor("Monarch.Model.Record", {
+(function(OldMonarch) {_.constructor("OldMonarch.Model.Record", {
   constructorProperties: {
     initialize: function() {
       this.delegateConstructorMethods('find', 'fetch', 'findOrFetch', 'tuples', 'first', 'last', 'each', 'onEach', 'map', 'any',
@@ -9,7 +9,7 @@
     },
 
     inherited: function(subconstructor) {
-      subconstructor.table = new Monarch.Model.Relations.Table(this.determineGlobalName(subconstructor), subconstructor);
+      subconstructor.table = new OldMonarch.Model.Relations.Table(this.determineGlobalName(subconstructor), subconstructor);
       subconstructor.generateColumnAccessors(subconstructor.table.column('id'));
       subconstructor.relationDefinitions = [];
       Repository.registerTable(subconstructor.table);
@@ -30,7 +30,7 @@
     },
 
     relatesToMany: function(name, definition) {
-      var relationDefinition = new Monarch.Model.RelationDefinition(name, definition);
+      var relationDefinition = new OldMonarch.Model.RelationDefinition(name, definition);
       this.relationDefinitions.push(relationDefinition);
       this.prototype[name] = function() {
         return this.relationsByName[name];
@@ -108,9 +108,9 @@
 
   initialize: function(fieldValuesByColumnName, table) {
     this.table = table;
-    this.remote = new Monarch.Model.RemoteFieldset(this);
-    this.local = new Monarch.Model.LocalFieldset(this, this.remote);
-    this.subscriptions = new Monarch.SubscriptionBundle();
+    this.remote = new OldMonarch.Model.RemoteFieldset(this);
+    this.local = new OldMonarch.Model.LocalFieldset(this, this.remote);
+    this.subscriptions = new OldMonarch.SubscriptionBundle();
 
     this.localVersion = 0;
     this.remoteVersion = 0;
@@ -179,7 +179,7 @@
   },
 
   onLocalUpdate: function(callback, context) {
-    if (!this.onLocalUpdateNode) this.onLocalUpdateNode = new Monarch.SubscriptionNode();
+    if (!this.onLocalUpdateNode) this.onLocalUpdateNode = new OldMonarch.SubscriptionNode();
     return this.onLocalUpdateNode.subscribe(callback, context);
   },
 
@@ -192,22 +192,22 @@
   },
 
   onDirty: function(callback, context) {
-    if (!this.onDirtyNode) this.onDirtyNode = new Monarch.SubscriptionNode();
+    if (!this.onDirtyNode) this.onDirtyNode = new OldMonarch.SubscriptionNode();
     return this.onDirtyNode.subscribe(callback, context);
   },
 
   onClean: function(callback, context) {
-    if (!this.onCleanNode) this.onCleanNode = new Monarch.SubscriptionNode();
+    if (!this.onCleanNode) this.onCleanNode = new OldMonarch.SubscriptionNode();
     return this.onCleanNode.subscribe(callback, context);
   },
 
   onInvalid: function(callback, context) {
-    if (!this.onInvalidNode) this.onInvalidNode = new Monarch.SubscriptionNode();
+    if (!this.onInvalidNode) this.onInvalidNode = new OldMonarch.SubscriptionNode();
     return this.onInvalidNode.subscribe(callback, context);
   },
 
   onValid: function(callback, context) {
-    if (!this.onValidNode) this.onValidNode = new Monarch.SubscriptionNode();
+    if (!this.onValidNode) this.onValidNode = new OldMonarch.SubscriptionNode();
     return this.onValidNode.subscribe(callback, context);
   },
 
@@ -264,7 +264,7 @@
   },
 
   evaluate: function(columnOrConstant) {
-    if (columnOrConstant instanceof Monarch.Model.Column) {
+    if (columnOrConstant instanceof OldMonarch.Model.Column) {
       return this.field(columnOrConstant).value();
     } else {
       return columnOrConstant;
@@ -312,9 +312,9 @@
 
   // private
   initializeSubscriptionNodes: function() {
-    this.onUpdateNode = new Monarch.SubscriptionNode();
-    this.onDestroyNode = new Monarch.SubscriptionNode();
-    this.onCreateNode = new Monarch.SubscriptionNode();
+    this.onUpdateNode = new OldMonarch.SubscriptionNode();
+    this.onDestroyNode = new OldMonarch.SubscriptionNode();
+    this.onCreateNode = new OldMonarch.SubscriptionNode();
 
     this.subscriptions.add(this.table.onPauseEvents(function() {
       this.pauseEvents();
@@ -348,4 +348,4 @@
   }
 });
 
-})(Monarch);
+})(OldMonarch);

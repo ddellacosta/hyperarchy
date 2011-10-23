@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Table", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Table", OldMonarch.Model.Relations.Relation, {
   numOperands: 0,
 
   initialize: function(globalName, recordConstructor) {
@@ -14,16 +14,16 @@ _.constructor("Monarch.Model.Relations.Table", Monarch.Model.Relations.Relation,
     this.tuplesById = {};
 
     this.initializeEventsSystem();
-    this.onPauseEventsNode = new Monarch.SubscriptionNode();
-    this.onResumeEventsNode = new Monarch.SubscriptionNode();
+    this.onPauseEventsNode = new OldMonarch.SubscriptionNode();
+    this.onResumeEventsNode = new OldMonarch.SubscriptionNode();
   },
 
   defineColumn: function(name, type) {
-    return this.columnsByName[name] = new Monarch.Model.Column(this, name, type);
+    return this.columnsByName[name] = new OldMonarch.Model.Column(this, name, type);
   },
 
   defineSyntheticColumn: function(name, definition) {
-    return this.syntheticColumnsByName[name] = new Monarch.Model.SyntheticColumn(this, name, definition);
+    return this.syntheticColumnsByName[name] = new OldMonarch.Model.SyntheticColumn(this, name, definition);
   },
 
   defaultOrderBy: function() {
@@ -80,7 +80,7 @@ _.constructor("Monarch.Model.Relations.Table", Monarch.Model.Relations.Relation,
   },
 
   findOrFetch: function(id, additionalRelations) {
-    var promise = new Monarch.Promise();
+    var promise = new OldMonarch.Promise();
     var record = this.find(id);
     if (record) {
       promise.triggerSuccess(record, false);
@@ -166,15 +166,15 @@ _.constructor("Monarch.Model.Relations.Table", Monarch.Model.Relations.Relation,
   clear: function() {
     this.storedTuples = this.buildSkipList();
     this.tuplesById = {}
-    this.onInsertNode = new Monarch.SubscriptionNode();
-    this.onRemoveNode = new Monarch.SubscriptionNode();
-    this.onUpdateNode = new Monarch.SubscriptionNode();
-    this.onPauseEventsNode = new Monarch.SubscriptionNode();
-    this.onResumeEventsNode = new Monarch.SubscriptionNode();
+    this.onInsertNode = new OldMonarch.SubscriptionNode();
+    this.onRemoveNode = new OldMonarch.SubscriptionNode();
+    this.onUpdateNode = new OldMonarch.SubscriptionNode();
+    this.onPauseEventsNode = new OldMonarch.SubscriptionNode();
+    this.onResumeEventsNode = new OldMonarch.SubscriptionNode();
   },
 
   cloneSchema: function() {
-    var clone = new Monarch.Model.Relations.Table(this.globalName, this.recordConstructor);
+    var clone = new OldMonarch.Model.Relations.Table(this.globalName, this.recordConstructor);
     clone.columnsByName = this.columnsByName;
     return clone;
   },
@@ -188,4 +188,4 @@ _.constructor("Monarch.Model.Relations.Table", Monarch.Model.Relations.Relation,
   }
 });
 
-})(Monarch);
+})(OldMonarch);

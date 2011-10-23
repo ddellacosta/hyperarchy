@@ -1,9 +1,9 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.SyntheticField", Monarch.Model.Field, {
+_.constructor("OldMonarch.Model.SyntheticField", OldMonarch.Model.Field, {
   initialize: function(fieldset, column, signal) {
     this.fieldset = fieldset;
-    this.local = (fieldset instanceof Monarch.Model.LocalFieldset);
+    this.local = (fieldset instanceof OldMonarch.Model.LocalFieldset);
     this.signal = signal;
     this.column = column;
     this.subscribeToFieldUpdates();
@@ -41,4 +41,4 @@ _.constructor("Monarch.Model.SyntheticField", Monarch.Model.Field, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

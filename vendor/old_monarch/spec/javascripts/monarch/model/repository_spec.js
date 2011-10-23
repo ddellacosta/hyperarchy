@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Repository", function() {
+  describe("OldMonarch.Model.Repository", function() {
     useLocalFixtures();
 
     var repository;

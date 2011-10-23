@@ -27,7 +27,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     questionPage.show();
 
     spyOn(Ranking, 'createOrUpdate').andCallFake(function() {
-      return lastCreateOrUpdatePromise = new Monarch.Promise();
+      return lastCreateOrUpdatePromise = new OldMonarch.Promise();
     });
 
     useFakeServer(true);

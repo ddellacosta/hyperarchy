@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.View.SelfClosingTag", Monarch.View.CloseTag.prototype, Monarch.View.OpenTag.prototype, {
+_.constructor("OldMonarch.View.SelfClosingTag", OldMonarch.View.CloseTag.prototype, OldMonarch.View.OpenTag.prototype, {
   toXml: function() {
     return "<" + this.name + this.attributesHtml() + "/>"
   },
@@ -12,4 +12,4 @@ _.constructor("Monarch.View.SelfClosingTag", Monarch.View.CloseTag.prototype, Mo
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Relations.TableProjection", function() {
+  describe("OldMonarch.Model.Relations.TableProjection", function() {
     var projection, operand, user, blog1, blog2, post1, post2, post3;
     useExampleDomainModel();
 

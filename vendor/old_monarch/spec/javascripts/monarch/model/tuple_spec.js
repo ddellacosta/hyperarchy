@@ -4,7 +4,7 @@ Screw.Unit(function(c) { with(c) {
 
 // projections have been removed for now. this method is not needed until we have them
 
-//  describe("Monarch.Model.Tuple", function() {
+//  describe("OldMonarch.Model.Tuple", function() {
 //    useLocalFixtures();
 //
 //    describe("#hashCode()", function() {
@@ -15,9 +15,9 @@ Screw.Unit(function(c) { with(c) {
 //      var aProjection, bProjection;
 //
 //      before(function() {
-//        _.constructor("A", Monarch.Model.Record);
+//        _.constructor("A", OldMonarch.Model.Record);
 //        A.columns({ a: "string", b: "string", c: "string", d: "string" });
-//        _.constructor("B", Monarch.Model.Record);
+//        _.constructor("B", OldMonarch.Model.Record);
 //        B.columns({ a: "string", b: "string", c: "string", d: "string" });
 //        A.create({ a: '1', b: '2', c: '3', d: '4' });
 //        B.create({ a: '1', b: '2', c: '3', d: '4' });

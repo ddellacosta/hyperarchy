@@ -58,7 +58,7 @@ _.constructor('Views.Lightboxes.LoginForm', Views.Lightboxes.Lightbox, {
     submitForm: function(e) {
       e.preventDefault();
 
-      var promise = new Monarch.Promise();
+      var promise = new OldMonarch.Promise();
 
       var fieldValues = _.underscoreKeys(this.fieldValues());
       $.ajax({

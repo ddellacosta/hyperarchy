@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Fieldset", {
+_.constructor("OldMonarch.Model.Fieldset", {
   field: function(columnOrName) {
     var columnName;
     if (typeof columnOrName == 'string') {
@@ -18,7 +18,7 @@ _.constructor("Monarch.Model.Fieldset", {
     this.syntheticFieldsByColumnName = {};
     _.each(this.record.table.syntheticColumnsByName, function(column, columnName) {
       var signal = column.definition.call(this.record);
-      this.syntheticFieldsByColumnName[columnName] = new Monarch.Model.SyntheticField(this, column, signal);
+      this.syntheticFieldsByColumnName[columnName] = new OldMonarch.Model.SyntheticField(this, column, signal);
       this[columnName] = function() {
         var field = this.field(columnName);
         return field.value.apply(field, arguments);
@@ -38,4 +38,4 @@ _.constructor("Monarch.Model.Fieldset", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

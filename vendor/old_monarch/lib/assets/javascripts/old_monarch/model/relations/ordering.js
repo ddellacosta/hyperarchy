@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Ordering", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Ordering", OldMonarch.Model.Relations.Relation, {
   constructorInitialize: function() {
     this.delegate('create', 'createFromRemote', 'operand');
   },
@@ -21,7 +21,7 @@ _.constructor("Monarch.Model.Relations.Ordering", Monarch.Model.Relations.Relati
   },
 
   evaluateInRepository: function(repository) {
-    return new Monarch.Model.Relations.Ordering(this.operand.evaluateInRepository(repository), this.sortSpecifications);
+    return new OldMonarch.Model.Relations.Ordering(this.operand.evaluateInRepository(repository), this.sortSpecifications);
   },
 
   wireRepresentation: function() {
@@ -48,4 +48,4 @@ _.constructor("Monarch.Model.Relations.Ordering", Monarch.Model.Relations.Relati
   }
 })
 
-})(Monarch);
+})(OldMonarch);

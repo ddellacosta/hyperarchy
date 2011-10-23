@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Organization', Monarch.View.Template, {
+_.constructor('Views.Pages.Organization', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "organization"}, function() {
 

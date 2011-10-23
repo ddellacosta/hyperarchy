@@ -6,7 +6,7 @@
 
 Screw.Unit(function(c) {
   c.init(function() {
-    Monarch.Model.allowStringKeys = true;
+    OldMonarch.Model.allowStringKeys = true;
     c.useFakeServer();
     window.COMET_CLIENT_ID = "fake-comet-client-id-from-monarch-spec-helper";
   });
@@ -20,7 +20,7 @@ Screw.Unit(function(c) {
 
     c.init(function() {
       originalServer = Server;
-      Server = new Monarch.Http.FakeServer(autoInteract);
+      Server = new OldMonarch.Http.FakeServer(autoInteract);
     });
 
     c.after(function() {
@@ -28,7 +28,7 @@ Screw.Unit(function(c) {
     })
   };
 
-  Monarch.Model.Relations.Table.prototype.fixture = function(id) {
+  OldMonarch.Model.Relations.Table.prototype.fixture = function(id) {
     var fixture = this.find(id);
     if (!fixture && Server.autoFetch && Server.Repository.tables[this.globalName]) {
       Server.autoFetch([this.where({id: id})]);

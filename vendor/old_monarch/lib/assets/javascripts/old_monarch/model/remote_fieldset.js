@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.RemoteFieldset", Monarch.Model.Fieldset, {
+_.constructor("OldMonarch.Model.RemoteFieldset", OldMonarch.Model.Fieldset, {
   initialize: function(record) {
     this.record = record;
     this.local = null;
@@ -41,8 +41,8 @@ _.constructor("Monarch.Model.RemoteFieldset", Monarch.Model.Fieldset, {
   // private
 
   createNewField: function(column) {
-    return new Monarch.Model.RemoteField(this, column);
+    return new OldMonarch.Model.RemoteField(this, column);
   }
 });
 
-})(Monarch);
+})(OldMonarch);

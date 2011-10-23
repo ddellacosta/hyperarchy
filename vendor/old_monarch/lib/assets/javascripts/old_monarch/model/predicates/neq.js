@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Predicates.Neq", Monarch.Model.Predicates.Binary, {
+_.constructor("OldMonarch.Model.Predicates.Neq", OldMonarch.Model.Predicates.Binary, {
   operator: function(left, right) {
     return left != right;
   },
@@ -8,4 +8,4 @@ _.constructor("Monarch.Model.Predicates.Neq", Monarch.Model.Predicates.Binary, {
   type: "neq"
 });
 
-})(Monarch);
+})(OldMonarch);

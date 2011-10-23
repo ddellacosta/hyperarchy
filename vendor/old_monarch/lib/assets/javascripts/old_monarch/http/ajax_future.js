@@ -1,13 +1,13 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Http.AjaxFuture", {
+_.constructor("OldMonarch.Http.AjaxFuture", {
   initialize: function() {
-    this.successNode = new Monarch.SubscriptionNode();
-    this.beforeEventsNode = new Monarch.SubscriptionNode();
-    this.afterEventsNode = new Monarch.SubscriptionNode();
-    this.onFailureNode = new Monarch.SubscriptionNode();
-    this.errorNode = new Monarch.SubscriptionNode();
-    this.onCompleteNode = new Monarch.SubscriptionNode();
+    this.successNode = new OldMonarch.SubscriptionNode();
+    this.beforeEventsNode = new OldMonarch.SubscriptionNode();
+    this.afterEventsNode = new OldMonarch.SubscriptionNode();
+    this.onFailureNode = new OldMonarch.SubscriptionNode();
+    this.errorNode = new OldMonarch.SubscriptionNode();
+    this.onCompleteNode = new OldMonarch.SubscriptionNode();
     this.subscriptionNodes = [
       this.successNode, this.beforeEventsNode, this.afterEventsNode, this.onFailureNode, this.onCompleteNode
     ];
@@ -136,4 +136,4 @@ _.constructor("Monarch.Http.AjaxFuture", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

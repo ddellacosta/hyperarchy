@@ -1,12 +1,12 @@
-_.constructor("Monarch.Http.FakeServer.FakeCometClient", {
+_.constructor("OldMonarch.Http.FakeServer.FakeCometClient", {
   initialize: function() {
-    this.onReceiveNode = new Monarch.SubscriptionNode();
+    this.onReceiveNode = new OldMonarch.SubscriptionNode();
     this.connected = false;
   },
   
   connect: function() {
     this.connecting = true;
-    this.connectFuture = new Monarch.Http.AjaxFuture();
+    this.connectFuture = new OldMonarch.Http.AjaxFuture();
     return this.connectFuture;
   },
 

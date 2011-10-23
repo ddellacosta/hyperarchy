@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.VoteLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.VoteLi', OldMonarch.View.Template, {
   content: function(params) { with(this.builder) {
     li({'class': "vote"}, function() {
       a(function() {

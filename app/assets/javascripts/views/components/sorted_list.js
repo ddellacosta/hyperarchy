@@ -11,7 +11,7 @@ _.constructor("Views.Components.SortedList", View.Template, {
 
   viewProperties: {
     initialize: function() {
-      this.renderQueue = new Monarch.Queue(this.renderSegmentSize || 3, this.renderDelay || 30);
+      this.renderQueue = new OldMonarch.Queue(this.renderSegmentSize || 3, this.renderDelay || 30);
     },
 
     relation: {

@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Relations.Relation (abstract superclass)", function() {
+  describe("OldMonarch.Model.Relations.Relation (abstract superclass)", function() {
     useLocalFixtures();
     var relation, insert, column1, column2, record;
 
@@ -77,7 +77,7 @@ Screw.Unit(function(c) { with(c) {
         it("returns a Selection with the receiver as its #operand and the given predicate as its #predicate", function() {
           var predicate = Blog.userId.eq('jan');
           var selection = relation.where(predicate);
-          expect(selection.constructor).to(eq, Monarch.Model.Relations.Selection);
+          expect(selection.constructor).to(eq, OldMonarch.Model.Relations.Selection);
           expect(selection.operand).to(eq, relation);
           expect(selection.predicate).to(eq, predicate);
         });
@@ -89,7 +89,7 @@ Screw.Unit(function(c) { with(c) {
             var selection = relation.where({ userId: "jan", name: "The Pain of Motorcycle Maintenance" });
 
             var predicate = selection.predicate
-            expect(predicate.constructor).to(eq, Monarch.Model.Predicates.And);
+            expect(predicate.constructor).to(eq, OldMonarch.Model.Predicates.And);
             expect(predicate.operands.length).to(eq, 2);
 
             expect(_.detect(predicate.operands, function(eqPredicate) {
@@ -119,7 +119,7 @@ Screw.Unit(function(c) { with(c) {
       it("constructs an inner join using self as the left operand, plus the given right operand and predicate", function() {
         var predicate = BlogPost.blogId.eq(Blog.id)
         var join = relation.join(BlogPost.table).on(predicate);
-        expect(join.constructor).to(eq, Monarch.Model.Relations.InnerJoin);
+        expect(join.constructor).to(eq, OldMonarch.Model.Relations.InnerJoin);
         expect(join.leftOperand).to(eq, relation);
         expect(join.rightOperand).to(eq, BlogPost.table);
         expect(join.predicate).to(eq, predicate);
@@ -137,10 +137,10 @@ Screw.Unit(function(c) { with(c) {
       it("constructs an inner join using self as the left operand, plus the given right operand and an inferred predicate", function() {
         var user = User.fixture("jan");
         var join = user.blogs().joinTo(BlogPost);
-        expect(join.constructor).to(eq, Monarch.Model.Relations.InnerJoin);
+        expect(join.constructor).to(eq, OldMonarch.Model.Relations.InnerJoin);
         expect(join.leftOperand).to(eq, user.blogs());
         expect(join.rightOperand).to(eq, BlogPost.table);
-        expect(join.predicate.constructor).to(eq, Monarch.Model.Predicates.Eq);
+        expect(join.predicate.constructor).to(eq, OldMonarch.Model.Predicates.Eq);
         expect(join.predicate.leftOperand).to(eq, Blog.id);
         expect(join.predicate.rightOperand).to(eq, BlogPost.blogId);
       });
@@ -150,13 +150,13 @@ Screw.Unit(function(c) { with(c) {
       it("constructs an inner join to the given table with #joinTo, then projects the given table", function() {
         var user = User.fixture("jan");
         var projection = user.blogs().joinThrough(BlogPost);
-        expect(projection.constructor).to(eq, Monarch.Model.Relations.TableProjection);
+        expect(projection.constructor).to(eq, OldMonarch.Model.Relations.TableProjection);
         expect(projection.projectedTable).to(eq, BlogPost.table);
         var join = projection.operand;
-        expect(join.constructor).to(eq, Monarch.Model.Relations.InnerJoin);
+        expect(join.constructor).to(eq, OldMonarch.Model.Relations.InnerJoin);
         expect(join.leftOperand).to(eq, user.blogs());
         expect(join.rightOperand).to(eq, BlogPost.table);
-        expect(join.predicate.constructor).to(eq, Monarch.Model.Predicates.Eq);
+        expect(join.predicate.constructor).to(eq, OldMonarch.Model.Predicates.Eq);
         expect(join.predicate.leftOperand).to(eq, Blog.id);
         expect(join.predicate.rightOperand).to(eq, BlogPost.blogId);
       });
@@ -198,7 +198,7 @@ Screw.Unit(function(c) { with(c) {
       context("when passed a record constructor", function() {
         it("returns a table projection based on the given constructor's table", function() {
           var projection = relation.project(BlogPost);
-          expect(projection).to(beAnInstanceOf, Monarch.Model.Relations.TableProjection);
+          expect(projection).to(beAnInstanceOf, OldMonarch.Model.Relations.TableProjection);
           expect(projection.operand).to(eq, relation);
           expect(projection.projectedTable).to(eq, BlogPost.table);
         });
@@ -207,7 +207,7 @@ Screw.Unit(function(c) { with(c) {
       context("when passed a table", function() {
         it("returns a table projection based on the given table", function() {
           var projection = relation.project(BlogPost.table);
-          expect(projection).to(beAnInstanceOf, Monarch.Model.Relations.TableProjection);
+          expect(projection).to(beAnInstanceOf, OldMonarch.Model.Relations.TableProjection);
           expect(projection.operand).to(eq, relation);
           expect(projection.projectedTable).to(eq, BlogPost.table);
         });
@@ -216,7 +216,7 @@ Screw.Unit(function(c) { with(c) {
       context("when passed a selection", function() {
         it("returns a table projection based on the given selection's table", function() {
           var projection = relation.project(BlogPost.where({blogId: "grain"}));
-          expect(projection).to(beAnInstanceOf, Monarch.Model.Relations.TableProjection);
+          expect(projection).to(beAnInstanceOf, OldMonarch.Model.Relations.TableProjection);
           expect(projection.operand).to(eq, relation);
           expect(projection.projectedTable).to(eq, BlogPost.table);
         });
@@ -227,7 +227,7 @@ Screw.Unit(function(c) { with(c) {
       it("constructs a difference with self as the #leftOperand and the given #rightOperand", function() {
         var rightOperand = Blog.where(Blog.userId.eq("jan"));
         var difference = relation.difference(rightOperand);
-        expect(difference).to(beAnInstanceOf, Monarch.Model.Relations.Difference);
+        expect(difference).to(beAnInstanceOf, OldMonarch.Model.Relations.Difference);
         expect(difference.leftOperand).to(eq, relation);
         expect(difference.rightOperand).to(eq, rightOperand);
       });

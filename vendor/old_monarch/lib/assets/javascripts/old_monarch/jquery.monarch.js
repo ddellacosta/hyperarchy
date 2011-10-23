@@ -1,4 +1,4 @@
-(function(Monarch, jQuery) {
+(function(OldMonarch, jQuery) {
 
 $.ajaxSetup({
   converters: {
@@ -23,7 +23,7 @@ $.ajaxSetup({
 
 jQuery.fn.extend({
   appendView: function(contentFn) {
-    this.append(Monarch.View.build(contentFn));
+    this.append(OldMonarch.View.build(contentFn));
     return this;
   },
 
@@ -72,4 +72,4 @@ jQuery.fn.extend({
   }
 });
 
-})(Monarch, jQuery);
+})(OldMonarch, jQuery);

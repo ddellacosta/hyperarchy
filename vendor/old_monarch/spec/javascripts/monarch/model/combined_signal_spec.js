@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.CombinedSignal", function() {
+  describe("OldMonarch.Model.CombinedSignal", function() {
     useLocalFixtures();
     var record, signalA, signalB, combinedSignal, transformer;
 
@@ -15,7 +15,7 @@ Screw.Unit(function(c) { with(c) {
       record = Blog.fixture('recipes');
       signalA = record.signal('name');
       signalB = record.signal('userId');
-      combinedSignal = new Monarch.Model.CombinedSignal(signalA, signalB, transformer);
+      combinedSignal = new OldMonarch.Model.CombinedSignal(signalA, signalB, transformer);
     });
 
     describe("value methods", function() {

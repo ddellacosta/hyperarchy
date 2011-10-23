@@ -1,10 +1,10 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.View.Builder", function() {
+  describe("OldMonarch.View.Builder", function() {
     var builder;
     before(function() {
-      builder = new Monarch.View.Builder();
+      builder = new OldMonarch.View.Builder();
     });
 
     describe("auto-generated tag methods", function() {
@@ -203,7 +203,7 @@ Screw.Unit(function(c) { with(c) {
 
       context("when a callback function is passed as an additional argument to trigger", function() {
         they("expect the event handler to return a promise and bind the callback to its success", function() {
-          var promise = new Monarch.Promise();
+          var promise = new OldMonarch.Promise();
           var clickHandler = function() {
             return promise;
           };
@@ -221,7 +221,7 @@ Screw.Unit(function(c) { with(c) {
 
       context("when a hash of callback functions is passed as an additional argument to trigger", function() {
         they("expect the event handler to return a promise and bind the callbacks with methods corresponding to their names", function() {
-          var promise = new Monarch.Promise();
+          var promise = new OldMonarch.Promise();
           var clickHandler = function() {
             return promise;
           };
@@ -264,7 +264,7 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#subview", function() {
       before(function() {
-        _.constructor("ExampleSubviewTemplate", Monarch.View.Template, {
+        _.constructor("ExampleSubviewTemplate", OldMonarch.View.Template, {
           content: function(props) { with (this.builder) {
             div({'class': "subview"}, function() {
               h1("Subview " + props.subviewNumber);
@@ -324,7 +324,7 @@ Screw.Unit(function(c) { with(c) {
 
       context("when given placeholderTag as an option", function() {
         before(function() {
-          _.constructor("ExampleSubviewTemplate", Monarch.View.Template, {
+          _.constructor("ExampleSubviewTemplate", OldMonarch.View.Template, {
             content: function(props) { with (this.builder) {
               tbody({'class': "subview"}, function() {
                 tr(function() {
@@ -367,7 +367,7 @@ Screw.Unit(function(c) { with(c) {
 
           it("returns the SelfClosingTag instruction", function() {
             var instruction = builder.tag("br")
-            expect(instruction.constructor).to(eq, Monarch.View.SelfClosingTag);
+            expect(instruction.constructor).to(eq, OldMonarch.View.SelfClosingTag);
             expect(instruction.name).to(eq, "br");
           });
         });
@@ -380,10 +380,10 @@ Screw.Unit(function(c) { with(c) {
 
           it("returns the CloseTag instruction with a reference to the OpenTag instruction", function() {
             var instruction = builder.tag("div");
-            expect(instruction.constructor).to(eq, Monarch.View.CloseTag);
+            expect(instruction.constructor).to(eq, OldMonarch.View.CloseTag);
             expect(instruction.name).to(eq, "div");
             var openTagInstruction = instruction.openTagInstruction;
-            expect(openTagInstruction.constructor).to(eq, Monarch.View.OpenTag);
+            expect(openTagInstruction.constructor).to(eq, OldMonarch.View.OpenTag);
             expect(openTagInstruction.name).to(eq, "div");
           });
         });
@@ -468,10 +468,10 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("returns the CloseTag instruction with a reference to the OpenTag instruction", function() {
-            expect(instruction.constructor).to(eq, Monarch.View.CloseTag);
+            expect(instruction.constructor).to(eq, OldMonarch.View.CloseTag);
             expect(instruction.name).to(eq, "div");
             var openTagInstruction = instruction.openTagInstruction;
-            expect(openTagInstruction.constructor).to(eq, Monarch.View.OpenTag);
+            expect(openTagInstruction.constructor).to(eq, OldMonarch.View.OpenTag);
             expect(openTagInstruction.name).to(eq, "div");
           });
         });

@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Organization.QuestionLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Organization.QuestionLi', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     li({'class': "question"}, function() {
       div(function() {
@@ -10,7 +10,7 @@ _.constructor('Views.Pages.Organization.QuestionLi', Monarch.View.Template, {
         div({'class': "body"}).ref('body')
         subview('answers', Views.Components.SortedList, {
           buildElement: function(answer, index) {
-            return Monarch.View.build(function(b) { with(b) {
+            return OldMonarch.View.build(function(b) { with(b) {
               li({'class': "answer"}, function() {
                 div({'class': "position"}, answer.position()).ref('position');
                 div({'class': "body"}, function() {

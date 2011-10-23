@@ -1,11 +1,11 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Http.AjaxFuture", function() {
+  describe("OldMonarch.Http.AjaxFuture", function() {
     var future;
 
     before(function() {
-      future = new Monarch.Http.AjaxFuture();
+      future = new OldMonarch.Http.AjaxFuture();
     });
 
     describe("#handleResponse", function() {

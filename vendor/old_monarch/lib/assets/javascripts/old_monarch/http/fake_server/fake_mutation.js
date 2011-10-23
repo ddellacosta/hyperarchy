@@ -1,4 +1,4 @@
-_.constructor("Monarch.Http.FakeServer.FakeMutation", {
+_.constructor("OldMonarch.Http.FakeServer.FakeMutation", {
   constructorInitialize: function() {
     this.idCounter = 1;
   },

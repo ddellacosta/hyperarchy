@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Queue", {
+_.constructor("OldMonarch.Queue", {
   constructorInitialize: function() {
     this.synchronous = false;
   },
@@ -23,7 +23,7 @@ _.constructor("Monarch.Queue", {
   },
 
   start: function() {
-    if (Monarch.Queue.synchronous) {
+    if (OldMonarch.Queue.synchronous) {
       this.synchronousStart();
     } else {
       this.asynchronousStart();
@@ -67,4 +67,4 @@ _.constructor("Monarch.Queue", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

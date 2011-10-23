@@ -1,19 +1,19 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Record", function() {
+  describe("OldMonarch.Model.Record", function() {
     useLocalFixtures();
 
     describe("when a subsconstructor is declared", function() {
       it("associates the subconstructor with a Table whose #globalName is the underscored subconstructor name", function() {
         var table = Blog.table;
-        expect(table.constructor).to(eq, Monarch.Model.Relations.Table);
+        expect(table.constructor).to(eq, OldMonarch.Model.Relations.Table);
         expect(table.globalName).to(eq, "blogs");
         expect(table.recordConstructor).to(eq, Blog);
       });
 
       it("automatically gives the subconstructor an 'id' Column with a type of 'string'", function() {
-        expect(Blog.id).to(beAnInstanceOf, Monarch.Model.Column);
+        expect(Blog.id).to(beAnInstanceOf, OldMonarch.Model.Column);
         expect(Blog.id.name).to(eq, "id");
         expect(Blog.id.type).to(eq, "key");
       });
@@ -26,7 +26,7 @@ Screw.Unit(function(c) { with(c) {
     describe(".column(name, type)", function() {
       before(function() {
         delete window['Blog'];
-        _.constructor("Blog", Monarch.Model.Record);
+        _.constructor("Blog", OldMonarch.Model.Record);
         Blog.column("userId", "string");
         Blog.column("name", "string");
       });
@@ -100,7 +100,7 @@ Screw.Unit(function(c) { with(c) {
           User.hasMany('blogs', { orderBy: "name desc" });
           var user = User.createFromRemote({id: "jerry"});
           var ordering = user.blogs();
-          expect(ordering.constructor).to(eq, Monarch.Model.Relations.Ordering);
+          expect(ordering.constructor).to(eq, OldMonarch.Model.Relations.Ordering);
           expect(ordering.sortSpecifications[0].column).to(eq, Blog.name_);
           expect(ordering.sortSpecifications[0].direction).to(eq, "desc");
         });
@@ -111,7 +111,7 @@ Screw.Unit(function(c) { with(c) {
           User.hasMany('blogs', { orderBy: ["name desc", "userId"]});
           var user = User.createFromRemote({id: "jerry"});
           var ordering = user.blogs();
-          expect(ordering.constructor).to(eq, Monarch.Model.Relations.Ordering);
+          expect(ordering.constructor).to(eq, OldMonarch.Model.Relations.Ordering);
           expect(ordering.sortSpecifications.length).to(eq, 3); // because sorting by id last is implicit
           expect(ordering.sortSpecifications[0].column).to(eq, Blog.name_);
           expect(ordering.sortSpecifications[0].direction).to(eq, "desc");
@@ -351,7 +351,7 @@ Screw.Unit(function(c) { with(c) {
 
         expect(Server.fetches.length).to(eq, 1);
         var fetchedRelation = Server.lastFetch.relations[0];
-        expect(fetchedRelation.constructor).to(eq, Monarch.Model.Relations.Selection);
+        expect(fetchedRelation.constructor).to(eq, OldMonarch.Model.Relations.Selection);
         expect(fetchedRelation.operand).to(eq, Blog.table);
         expect(fetchedRelation.predicate.leftOperand).to(eq, Blog.id);
         expect(fetchedRelation.predicate.rightOperand).to(eq, 'recipes');

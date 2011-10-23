@@ -1,13 +1,13 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Signal", {
+_.constructor("OldMonarch.Model.Signal", {
   initialize: function(localField, remoteField, optionalTransformer) {
     this.localField = localField;
     this.remoteField = remoteField;
     this.transformer = optionalTransformer;
 
-    this.onLocalUpdateNode = new Monarch.SubscriptionNode();
-    this.onRemoteUpdateNode = new Monarch.SubscriptionNode();
+    this.onLocalUpdateNode = new OldMonarch.SubscriptionNode();
+    this.onRemoteUpdateNode = new OldMonarch.SubscriptionNode();
 
     this.localField.onUpdate(function(newValue, oldValue) {
       if (this.transformer) {
@@ -53,8 +53,8 @@ _.constructor("Monarch.Model.Signal", {
   },
 
   combine: function(otherSignal, transformer) {
-    return new Monarch.Model.CombinedSignal(this, otherSignal, transformer);
+    return new OldMonarch.Model.CombinedSignal(this, otherSignal, transformer);
   }
 });
 
-})(Monarch);
+})(OldMonarch);

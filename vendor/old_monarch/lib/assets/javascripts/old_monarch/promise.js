@@ -1,10 +1,10 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Promise", {
+_.constructor("OldMonarch.Promise", {
   initialize: function() {
-    this.successNode = new Monarch.SubscriptionNode();
-    this.invalidNode = new Monarch.SubscriptionNode();
-    this.errorNode = new Monarch.SubscriptionNode();
+    this.successNode = new OldMonarch.SubscriptionNode();
+    this.invalidNode = new OldMonarch.SubscriptionNode();
+    this.errorNode = new OldMonarch.SubscriptionNode();
   },
 
   success: function(fn, context) {
@@ -56,4 +56,4 @@ _.constructor("Monarch.Promise", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

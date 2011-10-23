@@ -18,7 +18,7 @@ Screw.Unit(function(c) { with(c) {
       leftOperand = user.blogs();
       rightOperand = BlogPost.table;
       predicate = BlogPost.blogId.eq(Blog.id);
-      join = new Monarch.Model.Relations.InnerJoin(leftOperand, rightOperand, predicate);
+      join = new OldMonarch.Model.Relations.InnerJoin(leftOperand, rightOperand, predicate);
     });
 
     describe("#tuples", function() {
@@ -107,7 +107,7 @@ Screw.Unit(function(c) { with(c) {
               var blog = user.blogs().createFromRemote({id: 100})
               expect(insertHandler).to(haveBeenCalled, once);
 
-              var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog, blogPost);
+              var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog, blogPost);
               var sortKey = join.buildSortKey(expectedCompositeTuple);
               expect(insertHandler).to(haveBeenCalled, withArgs(expectedCompositeTuple, 3, sortKey, sortKey));
             });
@@ -129,7 +129,7 @@ Screw.Unit(function(c) { with(c) {
               var blogPost = blog1.blogPosts().createFromRemote({id: 100});
               expect(insertHandler).to(haveBeenCalled, once);
 
-              var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog1, blogPost);
+              var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog1, blogPost);
               var sortKey = join.buildSortKey(expectedCompositeTuple);
               expect(insertHandler).to(haveBeenCalled, withArgs(expectedCompositeTuple, 2, sortKey, sortKey));
             });
@@ -150,7 +150,7 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is removed from the left operand", function() {
           context("when the removal causes the removal of a composite tuple that was previously in the join", function() {
             it("triggers a remove event with the removed composite tuple", function() {
-              var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog2, blog2.blogPosts().first());
+              var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, blog2.blogPosts().first());
               var sortKey = join.buildSortKey(expectedCompositeTuple);
 
               blog2.destroy();
@@ -173,7 +173,7 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is removed from the right operand", function() {
           context("when the removal causes the removal of a composite tuple that was previously in the join", function() {
             it("triggers a remove event with the removed composite tuple", function() {
-              var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog2, post3);
+              var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, post3);
               var sortKey = join.buildSortKey(expectedCompositeTuple);
 
               post3.destroy();
@@ -203,7 +203,7 @@ Screw.Unit(function(c) { with(c) {
                 leftOperand = user.blogs().orderBy('name asc');
                 rightOperand = BlogPost.table;
                 predicate = BlogPost.blogId.eq(Blog.id);
-                join = new Monarch.Model.Relations.InnerJoin(leftOperand, rightOperand, predicate);
+                join = new OldMonarch.Model.Relations.InnerJoin(leftOperand, rightOperand, predicate);
               });
 
               it("triggers only update events with the updated containing composite tuple", function() {
@@ -214,7 +214,7 @@ Screw.Unit(function(c) { with(c) {
                 expect(updateHandler).to(haveBeenCalled, twice);
 
                 // update of first composite tuple
-                var expectedCompositeTuple1 = new Monarch.Model.CompositeTuple(blog1, post1);
+                var expectedCompositeTuple1 = new OldMonarch.Model.CompositeTuple(blog1, post1);
                 expect(updateHandler.callArgs[0]).to(equal, [
                   expectedCompositeTuple1,
                   {
@@ -227,7 +227,7 @@ Screw.Unit(function(c) { with(c) {
                 ]);
                 
                 // update of second composite tuple
-                var expectedCompositeTuple2 = new Monarch.Model.CompositeTuple(blog1, post2);
+                var expectedCompositeTuple2 = new OldMonarch.Model.CompositeTuple(blog1, post2);
                 expect(updateHandler.callArgs[1]).to(equal, [
                   expectedCompositeTuple2,
                   {
@@ -249,7 +249,7 @@ Screw.Unit(function(c) { with(c) {
               it("triggers only #onRemove handlers with the updated CompositeTuple", function() {
                 blog2.remotelyUpdated({id: 100});
 
-                var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog2, post3);
+                var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, post3);
                 expect(removeHandler).to(haveBeenCalled, withArgs(expectedCompositeTuple, 2, {'blogs.id': 100, 'blog_posts.id': 3}, {'blogs.id': 2, 'blog_posts.id': 3}));
                 expect(insertHandler).toNot(haveBeenCalled);
                 expect(updateHandler).toNot(haveBeenCalled);
@@ -268,7 +268,7 @@ Screw.Unit(function(c) { with(c) {
                 expect(updateHandler).toNot(haveBeenCalled);
                 expect(removeHandler).toNot(haveBeenCalled);
 
-                var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog, blogPost);
+                var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog, blogPost);
 
                 expect(insertHandler).to(haveBeenCalled, withArgs(
                   expectedCompositeTuple, 3,
@@ -300,7 +300,7 @@ Screw.Unit(function(c) { with(c) {
 
                 post1.remotelyUpdated({ id: 100 });
 
-                var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog1, post1);
+                var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog1, post1);
                 expect(updateHandler).to(haveBeenCalled, withArgs(
                   expectedCompositeTuple,
                   { id: { column: BlogPost.id, oldValue: 1, newValue: 100 } }, // changeset
@@ -319,7 +319,7 @@ Screw.Unit(function(c) { with(c) {
               it("triggers only #onRemove handlers with the updated CompositeTuple", function() {
                 post3.update({blogId: 100});
 
-                var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog2, post3);
+                var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, post3);
                 var sortKey = join.buildSortKey(expectedCompositeTuple);
 
                 expect(removeHandler).to(haveBeenCalled, withArgs(expectedCompositeTuple, 2, sortKey, sortKey));
@@ -340,7 +340,7 @@ Screw.Unit(function(c) { with(c) {
               it("triggers an insert event with that tuple", function() {
                 post.remotelyUpdated({blogId: blog2.id()});
 
-                var expectedCompositeTuple = new Monarch.Model.CompositeTuple(blog2, post);
+                var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, post);
                 var sortKey = join.buildSortKey(expectedCompositeTuple);
                 expect(insertHandler).to(haveBeenCalled, withArgs(expectedCompositeTuple, 3, sortKey, sortKey));
 
@@ -365,10 +365,10 @@ Screw.Unit(function(c) { with(c) {
             post1.update({blogId: blog2.id()});
 
 
-            var expectedRemovedTuple = new Monarch.Model.CompositeTuple(blog1, post1);
+            var expectedRemovedTuple = new OldMonarch.Model.CompositeTuple(blog1, post1);
             var removedSortKey = join.buildSortKey(expectedRemovedTuple);
 
-            var expectedInsertedTuple = new Monarch.Model.CompositeTuple(blog2, post1);
+            var expectedInsertedTuple = new OldMonarch.Model.CompositeTuple(blog2, post1);
             var insertedSortKey = join.buildSortKey(expectedInsertedTuple);
 
             expect(removeHandler).to(haveBeenCalled, withArgs(expectedRemovedTuple, 0, removedSortKey, removedSortKey));

@@ -1,12 +1,12 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.CombinedSignal", {
+_.constructor("OldMonarch.Model.CombinedSignal", {
   initialize: function(leftOperand, rightOperand, transformer) {
     this.leftOperand = leftOperand;
     this.rightOperand = rightOperand;
     this.transformer = transformer;
-    this.onRemoteUpdateNode = new Monarch.SubscriptionNode();
-    this.onLocalUpdateNode = new Monarch.SubscriptionNode();
+    this.onRemoteUpdateNode = new OldMonarch.SubscriptionNode();
+    this.onLocalUpdateNode = new OldMonarch.SubscriptionNode();
 
     this.leftOperand.onRemoteUpdate(function(newValue, oldValue) {
       var oldValue = this.transformer(oldValue, this.rightOperand.remoteValue());
@@ -50,4 +50,4 @@ _.constructor("Monarch.Model.CombinedSignal", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -1,20 +1,20 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Relation", {
+_.constructor("OldMonarch.Model.Relations.Relation", {
   numOperands: 1,
   _relation_: true,
 
   initializeEventsSystem: function() {
-    this.onLocalUpdateNode = new Monarch.SubscriptionNode();
-    this.onInsertNode = new Monarch.SubscriptionNode();
-    this.onUpdateNode = new Monarch.SubscriptionNode();
-    this.onRemoveNode = new Monarch.SubscriptionNode();
-    this.onDirtyNode = new Monarch.SubscriptionNode();
-    this.onCleanNode = new Monarch.SubscriptionNode();
-    this.onInvalidNode = new Monarch.SubscriptionNode();
-    this.onValidNode = new Monarch.SubscriptionNode();
+    this.onLocalUpdateNode = new OldMonarch.SubscriptionNode();
+    this.onInsertNode = new OldMonarch.SubscriptionNode();
+    this.onUpdateNode = new OldMonarch.SubscriptionNode();
+    this.onRemoveNode = new OldMonarch.SubscriptionNode();
+    this.onDirtyNode = new OldMonarch.SubscriptionNode();
+    this.onCleanNode = new OldMonarch.SubscriptionNode();
+    this.onInvalidNode = new OldMonarch.SubscriptionNode();
+    this.onValidNode = new OldMonarch.SubscriptionNode();
     if (this.numOperands > 0) {
-      this.operandsSubscriptionBundle = new Monarch.SubscriptionBundle();
+      this.operandsSubscriptionBundle = new OldMonarch.SubscriptionBundle();
       this.unsubscribeFromOperandsWhenThisNoLongerHasSubscribers();
     }
   },
@@ -27,7 +27,7 @@ _.constructor("Monarch.Model.Relations.Relation", {
     } else {
       predicate = this.predicateFromHash(predicateOrConditionsHash);
     }
-    return new Monarch.Model.Relations.Selection(this, predicate);
+    return new OldMonarch.Model.Relations.Selection(this, predicate);
   },
 
   project: function() {
@@ -43,7 +43,7 @@ _.constructor("Monarch.Model.Relations.Relation", {
       }
     }
 
-    return new Monarch.Model.Relations.TableProjection(this, table);
+    return new OldMonarch.Model.Relations.TableProjection(this, table);
   },
 
   join: function(rightOperand) {
@@ -51,7 +51,7 @@ _.constructor("Monarch.Model.Relations.Relation", {
     var leftOperand = this;
     return {
       on: function(predicate) {
-        return new Monarch.Model.Relations.InnerJoin(leftOperand, rightOperand, predicate);
+        return new OldMonarch.Model.Relations.InnerJoin(leftOperand, rightOperand, predicate);
       }
     };
   },
@@ -72,23 +72,23 @@ _.constructor("Monarch.Model.Relations.Relation", {
   orderBy: function() {
     var sortSpecifications = this.extractSortSpecsFromArguments(arguments);
 
-    return new Monarch.Model.Relations.Ordering(this, sortSpecifications);
+    return new OldMonarch.Model.Relations.Ordering(this, sortSpecifications);
   },
 
   difference: function(rightOperand) {
-    return new Monarch.Model.Relations.Difference(this, rightOperand);
+    return new OldMonarch.Model.Relations.Difference(this, rightOperand);
   },
 
   union: function(rightOperand) {
-    return new Monarch.Model.Relations.Union(this, rightOperand);
+    return new OldMonarch.Model.Relations.Union(this, rightOperand);
   },
 
   offset: function(n) {
-    return new Monarch.Model.Relations.Offset(this, n);
+    return new OldMonarch.Model.Relations.Offset(this, n);
   },
 
   limit: function(n) {
-    return new Monarch.Model.Relations.Limit(this, n);
+    return new OldMonarch.Model.Relations.Limit(this, n);
   },
 
   dirtyTuples: function() {
@@ -239,7 +239,7 @@ _.constructor("Monarch.Model.Relations.Relation", {
 
   buildSkipList: function() {
     if (!this.comparator) this.comparator = this.buildComparator();
-    return new Monarch.SkipList(this.comparator);
+    return new OldMonarch.SkipList(this.comparator);
   },
 
   buildComparator: function() {
@@ -332,9 +332,9 @@ _.constructor("Monarch.Model.Relations.Relation", {
 
   extractSortSpecsFromArguments: function(args) {
     return _.map(args, function(orderByColumn) {
-      if (orderByColumn instanceof Monarch.Model.SortSpecification) {
+      if (orderByColumn instanceof OldMonarch.Model.SortSpecification) {
         return orderByColumn;
-      } else if (orderByColumn instanceof Monarch.Model.Column) {
+      } else if (orderByColumn instanceof OldMonarch.Model.Column) {
         return orderByColumn.asc();
       } else if (typeof orderByColumn == "string") {
         var parts = orderByColumn.split(/ +/);
@@ -434,7 +434,7 @@ _.constructor("Monarch.Model.Relations.Relation", {
     if (predicates.length == 1) {
       return predicates[0];
     } else {
-      return new Monarch.Model.Predicates.And(predicates);
+      return new OldMonarch.Model.Predicates.And(predicates);
     }
   },
 
@@ -451,4 +451,4 @@ _.constructor("Monarch.Model.Relations.Relation", {
 
 });
 
-})(Monarch);
+})(OldMonarch);

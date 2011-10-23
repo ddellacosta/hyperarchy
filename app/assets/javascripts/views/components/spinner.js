@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Components.Spinner', Monarch.View.Template, {
+_.constructor('Views.Components.Spinner', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     div({'class': "spinner"}, function() {
       _.times(8, function(i) {

@@ -29,7 +29,7 @@ _.constructor('Views.Layout.OrganizationsMenu', View.Template, {
 
   viewProperties: {
     initialize: function() {
-      this.userSubscriptions = new Monarch.SubscriptionBundle();
+      this.userSubscriptions = new OldMonarch.SubscriptionBundle();
       this.dropdownMenu.showAddOrganizationForm = this.hitch('showAddOrganizationForm');
     },
 

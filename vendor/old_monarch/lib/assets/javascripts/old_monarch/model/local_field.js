@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.LocalField", Monarch.Model.ConcreteField, {
+_.constructor("OldMonarch.Model.LocalField", OldMonarch.Model.ConcreteField, {
   propertyAccessors: ['remoteField'],
 
   initialize: function(fieldset, column) {
@@ -53,7 +53,7 @@ _.constructor("Monarch.Model.LocalField", Monarch.Model.ConcreteField, {
   },
 
   signal: function(optionalTransformer) {
-    return new Monarch.Model.Signal(this, this.remoteField(), optionalTransformer);
+    return new OldMonarch.Model.Signal(this, this.remoteField(), optionalTransformer);
   },
 
   valueWireRepresentation: function() {
@@ -85,4 +85,4 @@ _.constructor("Monarch.Model.LocalField", Monarch.Model.ConcreteField, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

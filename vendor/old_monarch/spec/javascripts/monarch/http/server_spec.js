@@ -1,14 +1,14 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Http.Server", function() {
+  describe("OldMonarch.Http.Server", function() {
     mockAjax();
     useExampleDomainModel();
     var server;
 
 
     before(function() {
-      server = new Monarch.Http.Server();
+      server = new OldMonarch.Http.Server();
       server.sandboxUrl = '/sandbox';
     });
 

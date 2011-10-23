@@ -20,10 +20,10 @@
 //= require old_monarch/model/relations
 //= require old_monarch/model/predicates
 
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.module("Monarch.Model", {
+_.module("OldMonarch.Model", {
   allowStringKeys: false
 });
 
-})(Monarch);
+})(OldMonarch);

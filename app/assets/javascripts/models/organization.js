@@ -48,7 +48,7 @@ _.constructor("Organization", Model.Record, {
     if (this.fetchInProgressFuture) return this.fetchInProgressFuture;
 
     if (this.numQuestionsFetched >= this.questionCount()) {
-      var promise = new Monarch.Promise();
+      var promise = new OldMonarch.Promise();
       promise.triggerSuccess();
       return promise;
     }
@@ -101,7 +101,7 @@ _.constructor("Organization", Model.Record, {
   },
 
   ensureCurrentUserCanParticipate: function() {
-    var future = new Monarch.Http.AjaxFuture();
+    var future = new OldMonarch.Http.AjaxFuture();
     if (!this.isPublic() && !this.currentUserIsMember()) {
       Application.layout.mustBeMemberMessage.show();
       future.triggerFailure();

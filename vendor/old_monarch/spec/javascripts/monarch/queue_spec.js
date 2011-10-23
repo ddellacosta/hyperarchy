@@ -1,13 +1,13 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Queue", function() {
+  describe("OldMonarch.Queue", function() {
     var queue, fn1, fn2, fn3, context1, context2;
 
     before(function() {
-      Monarch.Queue.synchronous = false;
+      OldMonarch.Queue.synchronous = false;
       mock(window, 'setTimeout');
-      queue = new Monarch.Queue(2, 2);
+      queue = new OldMonarch.Queue(2, 2);
 
       context1 = { context: 1 };
       context2 = { context: 2 };
@@ -25,7 +25,7 @@ Screw.Unit(function(c) { with(c) {
         queue.add(fn3, context1);
       });
 
-      context("when the Monarch.Queue has not yet started", function() {
+      context("when the OldMonarch.Queue has not yet started", function() {
         it("processes each enqueued function in its appropriate context, separating segments (based on #segmentSize) with a setTimeout delay (based on #delay)", function() {
           queue.start();
           expect(queue.started).to(beTrue);
@@ -49,7 +49,7 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
-      context("when the Monarch.Queue has already been started", function() {
+      context("when the OldMonarch.Queue has already been started", function() {
         it("does not start it again", function() {
           queue.start();
           expect(queue.started).to(beTrue);
@@ -69,9 +69,9 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
-      context("when Monarch.Queue.synchronous is true", function() {
+      context("when OldMonarch.Queue.synchronous is true", function() {
         before(function() {
-          Monarch.Queue.synchronous = true;
+          OldMonarch.Queue.synchronous = true;
         });
 
         it("does not call setTimeout between segments", function() {
@@ -115,7 +115,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#addTimeCritical", function() {
-      it("causes the Monarch.Queue to yield immediately after executing the added function", function() {
+      it("causes the OldMonarch.Queue to yield immediately after executing the added function", function() {
         queue.addTimeCritical(fn1);
         queue.add(fn2);
         queue.add(fn3);

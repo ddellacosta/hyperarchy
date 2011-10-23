@@ -1,6 +1,6 @@
-(function(Monarch, jQuery) {
+(function(OldMonarch, jQuery) {
 
-_.constructor("Monarch.Model.Predicates.And", Monarch.Model.Predicates.Predicate, {
+_.constructor("OldMonarch.Model.Predicates.And", OldMonarch.Model.Predicates.Predicate, {
   initialize: function(operands) {
     this.operands = operands;
   },
@@ -34,7 +34,7 @@ _.constructor("Monarch.Model.Predicates.And", Monarch.Model.Predicates.Predicate
   },
 
   isEqual: function(other) {
-    if (other.constructor !== Monarch.Model.Predicates.And) return false;
+    if (other.constructor !== OldMonarch.Model.Predicates.And) return false;
     if (this.operands.length !== other.operands.length) return false;
 
     for (var i = 0; i < this.operands.length; i++) {
@@ -48,4 +48,4 @@ _.constructor("Monarch.Model.Predicates.And", Monarch.Model.Predicates.Predicate
   }
 });
 
-})(Monarch, jQuery);
+})(OldMonarch, jQuery);

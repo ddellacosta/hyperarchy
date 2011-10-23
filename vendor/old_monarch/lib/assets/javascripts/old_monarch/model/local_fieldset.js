@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.LocalFieldset", Monarch.Model.Fieldset, {
+_.constructor("OldMonarch.Model.LocalFieldset", OldMonarch.Model.Fieldset, {
   initialize: function(record, remote) {
     this.record = record;
     this.remote = remote;
@@ -116,8 +116,8 @@ _.constructor("Monarch.Model.LocalFieldset", Monarch.Model.Fieldset, {
   },
 
   createNewField: function(column) {
-    return new Monarch.Model.LocalField(this, column);
+    return new OldMonarch.Model.LocalField(this, column);
   }
 });
 
-})(Monarch);
+})(OldMonarch);

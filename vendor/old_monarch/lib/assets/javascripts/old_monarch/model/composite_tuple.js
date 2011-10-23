@@ -1,13 +1,13 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.CompositeTuple", {
+_.constructor("OldMonarch.Model.CompositeTuple", {
   initialize: function(leftTuple, rightTuple) {
     this.leftTuple = leftTuple;
     this.rightTuple = rightTuple;
   },
 
   evaluate: function(columnOrConstant) {
-    if (columnOrConstant instanceof Monarch.Model.Column) {
+    if (columnOrConstant instanceof OldMonarch.Model.Column) {
       return this.field(columnOrConstant).value();
     } else {
       return columnOrConstant;
@@ -32,4 +32,4 @@ _.constructor("Monarch.Model.CompositeTuple", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

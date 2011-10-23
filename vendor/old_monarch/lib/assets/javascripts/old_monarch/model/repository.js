@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Repository", {
+_.constructor("OldMonarch.Model.Repository", {
   initialize: function() {
     this.tables = {};
     this.mutationsPausedCount = 0;
@@ -105,7 +105,7 @@ _.constructor("Monarch.Model.Repository", {
   },
 
   cloneSchema: function() {
-    var clone = new Monarch.Model.Repository();
+    var clone = new OldMonarch.Model.Repository();
     _.each(this.tables, function(table) {
       clone.registerTable(table.cloneSchema());
     });
@@ -113,4 +113,4 @@ _.constructor("Monarch.Model.Repository", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.SubscriptionBundle", {
+_.constructor("OldMonarch.SubscriptionBundle", {
   initialize: function() {
     this.subscriptions = [];
   },
@@ -29,4 +29,4 @@ _.constructor("Monarch.SubscriptionBundle", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

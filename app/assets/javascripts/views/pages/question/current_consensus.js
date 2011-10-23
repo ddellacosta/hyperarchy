@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.CurrentConsensus', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.CurrentConsensus', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "current-consensus"}, function() {
       subview('list', Views.Components.SortedList, {

@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.SubscriptionNode", {
+_.constructor("OldMonarch.SubscriptionNode", {
   constructorProperties: {
     totalSubscriptions: 0
   },
@@ -13,7 +13,7 @@ _.constructor("Monarch.SubscriptionNode", {
   },
 
   subscribe: function(callback, context) {
-    var subscription = new Monarch.Subscription(this, callback, context);
+    var subscription = new OldMonarch.Subscription(this, callback, context);
     this.subscriptions.push(subscription);
     return subscription;
   },
@@ -28,7 +28,7 @@ _.constructor("Monarch.SubscriptionNode", {
   },
 
   onUnsubscribe: function(callback, context) {
-    if (!this.onUnsubscribeNode) this.onUnsubscribeNode = new Monarch.SubscriptionNode();
+    if (!this.onUnsubscribeNode) this.onUnsubscribeNode = new OldMonarch.SubscriptionNode();
     return this.onUnsubscribeNode.subscribe(callback, context);
   },
 
@@ -51,7 +51,7 @@ _.constructor("Monarch.SubscriptionNode", {
     if (this.paused) throw new Error("Not implemented for paused nodes");
     if (this.chainedNodes.length !== 0) throw new Error("Not implemented for chained nodes");
 
-    var combinedPromise = new Monarch.Promise();
+    var combinedPromise = new OldMonarch.Promise();
     var successesRemaining = 0;
 
     function attemptCombinedSuccess() {
@@ -96,4 +96,4 @@ _.constructor("Monarch.SubscriptionNode", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

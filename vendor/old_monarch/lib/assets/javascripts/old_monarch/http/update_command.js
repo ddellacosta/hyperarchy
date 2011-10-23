@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Http.UpdateCommand", Monarch.Http.Command, {
+_.constructor("OldMonarch.Http.UpdateCommand", OldMonarch.Http.Command, {
   initialize: function($super, record, server) {
     $super(record, server);
     this.version = this.record.nextPendingVersion();
@@ -22,4 +22,4 @@ _.constructor("Monarch.Http.UpdateCommand", Monarch.Http.Command, {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

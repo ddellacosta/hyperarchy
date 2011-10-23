@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.RemoteField", function() {
+  describe("OldMonarch.Model.RemoteField", function() {
     useLocalFixtures();
 
     var record, remoteField;
@@ -19,13 +19,13 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
-      context("when the type of the field is 'key' and Monarch.Model.allow_string_keys is false", function() {
+      context("when the type of the field is 'key' and OldMonarch.Model.allow_string_keys is false", function() {
         before(function() {
-          Monarch.Model.allowStringKeys = false;
+          OldMonarch.Model.allowStringKeys = false;
         });
 
         after(function() {
-          Monarch.Model.allowStringKeys = true;
+          OldMonarch.Model.allowStringKeys = true;
         });
 
         it("coerces strings to integers", function() {

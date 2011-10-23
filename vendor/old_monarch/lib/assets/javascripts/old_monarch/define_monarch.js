@@ -1,1 +1,1 @@
-var Monarch = {};
+var OldMonarch = {};

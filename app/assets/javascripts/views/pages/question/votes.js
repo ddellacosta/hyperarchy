@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.Votes', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.Votes', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "votes"}, function() {
       h2(function() {

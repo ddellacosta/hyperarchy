@@ -1,8 +1,8 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Future", {
+_.constructor("OldMonarch.Future", {
   initialize: function() {
-    this.onCompleteNode = new Monarch.SubscriptionNode();
+    this.onCompleteNode = new OldMonarch.SubscriptionNode();
   },
 
   onComplete: function(callback, context) {
@@ -30,4 +30,4 @@ _.constructor("Monarch.Future", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

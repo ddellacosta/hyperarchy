@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Components.CharsRemaining', Monarch.View.Template, {
+_.constructor('Views.Components.CharsRemaining', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     div({class: 'chars-remaining'});
   }},

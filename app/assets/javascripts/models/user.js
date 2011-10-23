@@ -46,11 +46,11 @@ _.constructor("User", Model.Record, {
 
   fetchAvatarUrl: function(size) {
     if (this.facebookId()) {
-      return new Monarch.Promise().triggerSuccess(this.facebookAvatarUrl());
+      return new OldMonarch.Promise().triggerSuccess(this.facebookAvatarUrl());
     } else if (this.twitterId()) {
       return this.fetchTwitterAvatarUrl();
     } else {
-      return new Monarch.Promise().triggerSuccess(this.gravatarUrl());
+      return new OldMonarch.Promise().triggerSuccess(this.gravatarUrl());
     }
   },
 
@@ -60,7 +60,7 @@ _.constructor("User", Model.Record, {
 
   fetchTwitterAvatarUrl: function() {
     if (this.fetchTwitterAvatarUrlPromise) return this.fetchTwitterAvatarUrlPromise;
-    var promise = new Monarch.Promise();
+    var promise = new OldMonarch.Promise();
     this.fetchTwitterAvatarUrlPromise = promise
     $.ajax({
       type: 'get',

@@ -1,6 +1,6 @@
-(function(Monarch, jQuery) {
+(function(OldMonarch, jQuery) {
 
-_.constructor("Monarch.View.Template", {
+_.constructor("OldMonarch.View.Template", {
   constructorProperties: {
     build: function(contentFn) {
       var template = new this();
@@ -28,7 +28,7 @@ _.constructor("Monarch.View.Template", {
   },
 
   toView: function(properties) {
-    var builder = new Monarch.View.Builder(this);
+    var builder = new OldMonarch.View.Builder(this);
     this.builder = builder;
     this.content(properties);
     this.builder = null;
@@ -265,4 +265,4 @@ _.constructor("Monarch.View.Template", {
   })
 });
 
-})(Monarch, jQuery);
+})(OldMonarch, jQuery);

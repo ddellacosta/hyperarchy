@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Difference", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Difference", OldMonarch.Model.Relations.Relation, {
   numOperands: 2,
 
   initialize: function(leftOperand, rightOperand) {
@@ -100,4 +100,4 @@ _.constructor("Monarch.Model.Relations.Difference", Monarch.Model.Relations.Rela
   onRightOperandValid: function() {}
 });
 
-})(Monarch);
+})(OldMonarch);

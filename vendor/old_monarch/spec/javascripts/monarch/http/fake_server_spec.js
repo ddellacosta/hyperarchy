@@ -1,13 +1,13 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Http.FakeServer", function() {
+  describe("OldMonarch.Http.FakeServer", function() {
     useExampleDomainModel();
 
     var fakeServer;
     before(function() {
       Repository.sandboxUrl = "/users/bob/sandbox"
-      fakeServer = new Monarch.Http.FakeServer(false);
+      fakeServer = new OldMonarch.Http.FakeServer(false);
       fakeServer.Repository.loadFixtures({
         users: {
           sharon: {

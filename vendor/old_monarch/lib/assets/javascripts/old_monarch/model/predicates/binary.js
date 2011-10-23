@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Predicates.Binary", Monarch.Model.Predicates.Predicate, {
+_.constructor("OldMonarch.Model.Predicates.Binary", OldMonarch.Model.Predicates.Predicate, {
   initialize: function(leftOperand, rightOperand) {
     this.leftOperand = leftOperand;
     this.rightOperand = rightOperand;
@@ -19,9 +19,9 @@ _.constructor("Monarch.Model.Predicates.Binary", Monarch.Model.Predicates.Predic
   },
 
   columnOperand: function() {
-    if (this.leftOperand instanceof Monarch.Model.Column) {
+    if (this.leftOperand instanceof OldMonarch.Model.Column) {
       return this.leftOperand;
-    } else if (this.rightOperand instanceof Monarch.Model.Column) {
+    } else if (this.rightOperand instanceof OldMonarch.Model.Column) {
       return this.rightOperand;
     } else {
       throw new Error("No operands are columns on this predicate");
@@ -29,9 +29,9 @@ _.constructor("Monarch.Model.Predicates.Binary", Monarch.Model.Predicates.Predic
   },
 
   scalarOperand: function() {
-    if (!(this.leftOperand instanceof Monarch.Model.Column)) {
+    if (!(this.leftOperand instanceof OldMonarch.Model.Column)) {
       return this.leftOperand;
-    } else if (!(this.rightOperand instanceof Monarch.Model.Column)) {
+    } else if (!(this.rightOperand instanceof OldMonarch.Model.Column)) {
       return this.rightOperand;
     } else {
       throw new Error("No operands are scalars on this predicate");
@@ -39,7 +39,7 @@ _.constructor("Monarch.Model.Predicates.Binary", Monarch.Model.Predicates.Predic
   },
 
   operandWireRepresentation: function(operand) {
-    if (operand instanceof Monarch.Model.Column) {
+    if (operand instanceof OldMonarch.Model.Column) {
       return operand.wireRepresentation();
     } else {
       return {
@@ -50,11 +50,11 @@ _.constructor("Monarch.Model.Predicates.Binary", Monarch.Model.Predicates.Predic
   },
 
   isEqual: function(other) {
-    if (!(_.isFunction(other.isA) && other.isA(Monarch.Model.Predicates.Binary))) return false;
+    if (!(_.isFunction(other.isA) && other.isA(OldMonarch.Model.Predicates.Binary))) return false;
     return this.type === other.type &&
       _.isEqual(this.leftOperand, other.leftOperand) &&
         _.isEqual(this.rightOperand, other.rightOperand);
   }
 });
 
-})(Monarch);
+})(OldMonarch);

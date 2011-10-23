@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.RankedAnswers', OldMonarch.View.Template, {
   content: function() { with(this.builder) {
     div({id: "ranked-answers"}, function() {
       ol(function() {
@@ -25,7 +25,7 @@ _.constructor('Views.Pages.Question.RankedAnswers', Monarch.View.Template, {
   viewProperties: {
     initialize: function() {
       this.separator.data('position', 0);
-      this.rankingsSubscriptions = new Monarch.SubscriptionBundle();
+      this.rankingsSubscriptions = new OldMonarch.SubscriptionBundle();
 
       var returnFalse = function() { return false; }
       this.positiveDragTarget.mousedown(returnFalse);

@@ -1,8 +1,8 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.each(Monarch, function(value, key) {
+_.each(OldMonarch, function(value, key) {
   if (key == "constructor" || key == "module") return;
   window[key] = value;
 });
 
-})(Monarch);
+})(OldMonarch);

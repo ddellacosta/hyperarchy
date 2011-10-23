@@ -1,17 +1,17 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Http.CometClient", {
+_.constructor("OldMonarch.Http.CometClient", {
   initialize: function(realTimeClientId) {
     this.realTimeClientId = realTimeClientId;
-    this.onReceiveNode = new Monarch.SubscriptionNode();
-    this.onDisconnectNode = new Monarch.SubscriptionNode();
+    this.onReceiveNode = new OldMonarch.SubscriptionNode();
+    this.onDisconnectNode = new OldMonarch.SubscriptionNode();
     this.connectionRetryAttempts = 0;
   },
 
   connect: function(delay) {
     var self = this;
     var numReceivedCharacters = 0
-    var connectFuture = new Monarch.Http.AjaxFuture();
+    var connectFuture = new OldMonarch.Http.AjaxFuture();
     if (!delay) delay = 20;
 
     _.delay(function() {
@@ -111,4 +111,4 @@ _.constructor("Monarch.Http.CometClient", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

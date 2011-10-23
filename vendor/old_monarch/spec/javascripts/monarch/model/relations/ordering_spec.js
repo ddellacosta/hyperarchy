@@ -12,7 +12,7 @@ Screw.Unit(function(c) { with(c) {
 
     before(function() {
       operand = User.table;
-      ordering = new Monarch.Model.Relations.Ordering(operand, sortSpecifications);
+      ordering = new OldMonarch.Model.Relations.Ordering(operand, sortSpecifications);
 
       // created in a strange order to ensure that has no effect on sort
       // should go  1:(1 A), 2:(2 B), 3:(2 C), 4:(3 D)

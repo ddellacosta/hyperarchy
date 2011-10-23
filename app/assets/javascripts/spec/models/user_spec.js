@@ -17,7 +17,7 @@ describe("User", function() {
       it("triggers the future with the twitter avatar url after it is fetched", function() {
         var avatarUrl;
 
-        var fetchPromise = new Monarch.Promise();
+        var fetchPromise = new OldMonarch.Promise();
         spyOn(user, 'fetchTwitterAvatarUrl').andReturn(fetchPromise);
 
         user.fetchAvatarUrl(40).success(function(url) {

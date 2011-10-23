@@ -21,10 +21,10 @@
 //= require old_monarch/model
 //= require old_monarch/promise
 
-(function(Monarch) {
+(function(OldMonarch) {
 
-Server = new Monarch.Http.Server();
-Repository = new Monarch.Model.Repository();
-History = new Monarch.View.History();
+Server = new OldMonarch.Http.Server();
+Repository = new OldMonarch.Model.Repository();
+History = new OldMonarch.View.History();
 
-})(Monarch);
+})(OldMonarch);

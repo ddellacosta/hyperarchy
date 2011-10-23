@@ -1,4 +1,4 @@
-_.constructor("Monarch.Http.FakeServer.FakeUpdate", {
+_.constructor("OldMonarch.Http.FakeServer.FakeUpdate", {
   type: 'update',
 
   initialize: function(fakeServer, record) {
@@ -6,7 +6,7 @@ _.constructor("Monarch.Http.FakeServer.FakeUpdate", {
     this.record = record;
     this.dirtyFieldValues = record.dirtyWireRepresentation();
     this.pendingVersion = record.nextPendingVersion();
-    this.promise = new Monarch.Promise();
+    this.promise = new OldMonarch.Promise();
   },
 
   simulateSuccess: function() {

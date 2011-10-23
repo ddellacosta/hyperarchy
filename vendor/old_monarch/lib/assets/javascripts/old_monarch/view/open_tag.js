@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.View.OpenTag", {
+_.constructor("OldMonarch.View.OpenTag", {
   initialize: function(name, attributes) {
     if (name === 'a') {
       if (!attributes) attributes = {};
@@ -30,4 +30,4 @@ _.constructor("Monarch.View.OpenTag", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

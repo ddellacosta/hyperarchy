@@ -24,7 +24,7 @@ describe("Views.Components.Avatar", function() {
       user = User.createFromRemote({id: 1, emailHash: "asf"});
       avatarUrl1 = "images/twitter_46.png";
       avatarUrl2 = "images/facebook_46.png";
-      avatarUrlPromise = new Monarch.Promise();
+      avatarUrlPromise = new OldMonarch.Promise();
       spyOn(user, 'fetchAvatarUrl').andReturn(avatarUrlPromise);
     });
 

@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.View.TextNode", {
+_.constructor("OldMonarch.View.TextNode", {
   initialize: function(text, raw) {
     this.text = text;
     this.raw = raw;
@@ -18,4 +18,4 @@ _.constructor("Monarch.View.TextNode", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

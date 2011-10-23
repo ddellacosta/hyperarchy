@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.ProjectedColumn", {
+_.constructor("OldMonarch.Model.ProjectedColumn", {
   initialize: function(column, columnAlias) {
     this.column = column;
     this.columnAlias = columnAlias;
@@ -11,16 +11,16 @@ _.constructor("Monarch.Model.ProjectedColumn", {
   },
 
   eq: function(rightOperand) {
-    return new Monarch.Model.Predicates.Eq(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Eq(this, rightOperand);
   },
 
   asc: function() {
-    return new Monarch.Model.SortSpecification(this, 'asc');
+    return new OldMonarch.Model.SortSpecification(this, 'asc');
   },
 
   desc: function() {
-    return new Monarch.Model.SortSpecification(this, 'desc');
+    return new OldMonarch.Model.SortSpecification(this, 'desc');
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -43,7 +43,7 @@ _.constructor("Question", Model.Record, {
     },
 
     updateScores: function() {
-      var queue = new Monarch.Queue(10);
+      var queue = new OldMonarch.Queue(10);
       this.each(function(question) {
         queue.add(question.hitch('updateScore'));
       });

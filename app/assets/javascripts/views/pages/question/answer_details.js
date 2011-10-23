@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.AnswerDetails', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.AnswerDetails', OldMonarch.View.Template, {
   content: function(params) { with(this.builder) {
     div({id: "answer-details"}, function() {
       div({'class': "non-editable"}, function() {

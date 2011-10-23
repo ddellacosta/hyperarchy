@@ -1,14 +1,14 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Predicates.And", function() {
+  describe("OldMonarch.Model.Predicates.And", function() {
     useLocalFixtures();
 
     var and, operand1, operand2, operand3, record;
     before(function() {
       operand1 = User.id.eq("jan");
       operand3 = User.age.eq(34);
-      and = new Monarch.Model.Predicates.And([operand1, operand2])
+      and = new OldMonarch.Model.Predicates.And([operand1, operand2])
       record = User.fixture("jan");
     });
 
@@ -46,7 +46,7 @@ Screw.Unit(function(c) { with(c) {
           right_operand: operand2.wireRepresentation()
         });
 
-        var tripleAnd = new Monarch.Model.Predicates.And([operand1, operand2, operand3])
+        var tripleAnd = new OldMonarch.Model.Predicates.And([operand1, operand2, operand3])
         expect(tripleAnd.wireRepresentation()).to(equal, {
           type: 'and',
           left_operand: operand1.wireRepresentation(),
@@ -81,16 +81,16 @@ Screw.Unit(function(c) { with(c) {
 
     describe("isEqual", function() {
       it("returns true if it ands together all the same operands, regardless of order", function() {
-        var and1 = new Monarch.Model.Predicates.And([operand1, operand2, operand3])
-        var and2 = new Monarch.Model.Predicates.And([operand3, operand2, operand1])
+        var and1 = new OldMonarch.Model.Predicates.And([operand1, operand2, operand3])
+        var and2 = new OldMonarch.Model.Predicates.And([operand3, operand2, operand1])
         expect(and1.isEqual(and2)).to(beTrue);
 
 
-        var and3 = new Monarch.Model.Predicates.And([operand1, operand2])
+        var and3 = new OldMonarch.Model.Predicates.And([operand1, operand2])
         expect(and3.isEqual(and1)).to(beFalse);
         expect(and1.isEqual(and3)).to(beFalse);
 
-        var and4 = new Monarch.Model.Predicates.And([operand1, operand3]);
+        var and4 = new OldMonarch.Model.Predicates.And([operand1, operand3]);
         expect(and3.isEqual(and4)).to(beFalse);
 
         expect(and4.isEqual(2)).to(beFalse);

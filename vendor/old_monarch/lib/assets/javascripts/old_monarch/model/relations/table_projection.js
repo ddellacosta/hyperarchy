@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.TableProjection", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.TableProjection", OldMonarch.Model.Relations.Relation, {
   constructorInitialize: function() {
     this.delegate('column', 'projectedTable');
   },
@@ -79,4 +79,4 @@ _.constructor("Monarch.Model.Relations.TableProjection", Monarch.Model.Relations
   }
 });
 
-})(Monarch);
+})(OldMonarch);

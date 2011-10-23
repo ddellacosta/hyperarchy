@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Column", {
+_.constructor("OldMonarch.Model.Column", {
   initialize: function(table, name, type) {
     this.table = table;
     this.name = name;
@@ -10,35 +10,35 @@ _.constructor("Monarch.Model.Column", {
   },
 
   eq: function(rightOperand) {
-    return new Monarch.Model.Predicates.Eq(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Eq(this, rightOperand);
   },
 
   neq: function(rightOperand) {
-    return new Monarch.Model.Predicates.Neq(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Neq(this, rightOperand);
   },
 
   gt: function(rightOperand) {
-    return new Monarch.Model.Predicates.Gt(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Gt(this, rightOperand);
   },
 
   gte: function(rightOperand) {
-    return new Monarch.Model.Predicates.Gte(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Gte(this, rightOperand);
   },
 
   lt: function(rightOperand) {
-    return new Monarch.Model.Predicates.Lt(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Lt(this, rightOperand);
   },
 
   lte: function(rightOperand) {
-    return new Monarch.Model.Predicates.Lte(this, rightOperand);
+    return new OldMonarch.Model.Predicates.Lte(this, rightOperand);
   },
 
   asc: function() {
-    return new Monarch.Model.SortSpecification(this, 'asc');
+    return new OldMonarch.Model.SortSpecification(this, 'asc');
   },
 
   desc: function() {
-    return new Monarch.Model.SortSpecification(this, 'desc');
+    return new OldMonarch.Model.SortSpecification(this, 'desc');
   },
 
   wireRepresentation: function() {
@@ -56,7 +56,7 @@ _.constructor("Monarch.Model.Column", {
       return parseInt(value);
     } else if (this.type == "float" && value && _.isString(value)) {
       return parseFloat(value)
-    } else if (this.type == "key" && !Monarch.Model.allowStringKeys && typeof value == "string") {
+    } else if (this.type == "key" && !OldMonarch.Model.allowStringKeys && typeof value == "string") {
       return parseInt(value);
     } else {
       return value;
@@ -72,8 +72,8 @@ _.constructor("Monarch.Model.Column", {
   },
 
   as: function(columnAlias) {
-    return new Monarch.Model.ProjectedColumn(this, columnAlias);
+    return new OldMonarch.Model.ProjectedColumn(this, columnAlias);
   }
 });
 
-})(Monarch);
+})(OldMonarch);

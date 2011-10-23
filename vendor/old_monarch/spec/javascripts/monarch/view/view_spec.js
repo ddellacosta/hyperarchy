@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Views constructed with Monarch.View.Template#toView", function() {
+  describe("Views constructed with OldMonarch.View.Template#toView", function() {
     after(function() {
       delete window['TestTemplate'];
       delete window['SampleModel'];
@@ -11,7 +11,7 @@ Screw.Unit(function(c) { with(c) {
       var view, model;
 
       before(function() {
-        _.constructor("TestTemplate", Monarch.View.Template, {
+        _.constructor("TestTemplate", OldMonarch.View.Template, {
           content: function() { with(this.builder) {
             div(function() {
               input({name: "foo", value: "Foo"}).ref('foo');
@@ -32,7 +32,7 @@ Screw.Unit(function(c) { with(c) {
         view = TestTemplate.toView();
         $('#testContent').html(view)
 
-        _.constructor("SampleModel", Monarch.Model.Record, {
+        _.constructor("SampleModel", OldMonarch.Model.Record, {
           constructorInitialize: function() {
             this.columns({
               foo: "string",
@@ -148,7 +148,7 @@ Screw.Unit(function(c) { with(c) {
       var view, viewProperties;
 
       before(function() {
-        _.constructor("TestTemplate", Monarch.View.Template, {
+        _.constructor("TestTemplate", OldMonarch.View.Template, {
           content: function() { with(this.builder) {
             div("Hello");
           }},
@@ -238,7 +238,7 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#attach", function() {
       it("calls #attach on all subviews by default", function() {
-        var parentTemplate = _.constructor(Monarch.View.Template, {
+        var parentTemplate = _.constructor(OldMonarch.View.Template, {
           content: function() { with(this.builder) {
             div(function() {
               subview('subview1', subviewTemplate)
@@ -254,7 +254,7 @@ Screw.Unit(function(c) { with(c) {
           }
         });
 
-        var subviewTemplate = _.constructor(Monarch.View.Template, {
+        var subviewTemplate = _.constructor(OldMonarch.View.Template, {
           content: function() { with(this.builder) {
             div("I am a subview");
           }},
@@ -283,7 +283,7 @@ Screw.Unit(function(c) { with(c) {
     describe("#getValidationErrors(xhr)", function() {
       var view;
       before(function() {
-        var template = _.constructor(Monarch.View.Template, {
+        var template = _.constructor(OldMonarch.View.Template, {
           content: function() { this.builder.div() }
         });
         view = template.toView();
@@ -317,15 +317,15 @@ Screw.Unit(function(c) { with(c) {
     describe("#registerInterest(object, methodNome, callback)", function() {
       var view;
       before(function() {
-        var template = _.constructor(Monarch.View.Template, {
+        var template = _.constructor(OldMonarch.View.Template, {
           content: function() { this.builder.div() }
         });
         view = template.toView();
       });
 
       it("subscribes to the given object using the specified method name, but only subscribes to this method on one object at a time and unsubscribes on destroy", function() {
-        var node1 = new Monarch.SubscriptionNode();
-        var node2 = new Monarch.SubscriptionNode();
+        var node1 = new OldMonarch.SubscriptionNode();
+        var node2 = new OldMonarch.SubscriptionNode();
 
         var callback = mockFunction("callback");
 
@@ -360,9 +360,9 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("allows a disambiguating name to be provided as a first argument, so that handlers can be registered on two different objects but the same method name", function() {
-        var node1 = new Monarch.SubscriptionNode();
-        var node2 = new Monarch.SubscriptionNode();
-        var node3 = new Monarch.SubscriptionNode();
+        var node1 = new OldMonarch.SubscriptionNode();
+        var node2 = new OldMonarch.SubscriptionNode();
+        var node3 = new OldMonarch.SubscriptionNode();
 
         var callbackA = mockFunction("callbackA");
         var callbackB = mockFunction("callbackB");

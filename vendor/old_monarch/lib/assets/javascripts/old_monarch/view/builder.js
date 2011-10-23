@@ -1,6 +1,6 @@
-(function(Monarch, jQuery) {
+(function(OldMonarch, jQuery) {
 
-_.constructor("Monarch.View.Builder", {
+_.constructor("OldMonarch.View.Builder", {
   constructorProperties: {
     initialize: function() {
       this.generateTagMethods();
@@ -119,26 +119,26 @@ _.constructor("Monarch.View.Builder", {
   },
 
   text: function(text) {
-    this.instructions.push(new Monarch.View.TextNode(text));
+    this.instructions.push(new OldMonarch.View.TextNode(text));
   },
 
   raw: function(text) {
-    this.instructions.push(new Monarch.View.TextNode(text, true));
+    this.instructions.push(new OldMonarch.View.TextNode(text, true));
   },
 
   selfClosingTag: function(tagArgs) {
     if (tagArgs.text || tagArgs.body) throw new Error("Self-closing tag " + tagArgs.name + " cannot contain text or have body content");
-    var tagInstruction = new Monarch.View.SelfClosingTag(tagArgs.name, tagArgs.attributes);
+    var tagInstruction = new OldMonarch.View.SelfClosingTag(tagArgs.name, tagArgs.attributes);
     this.instructions.push(tagInstruction);
     return tagInstruction;
   },
 
   standardTagSequence: function(tagArgs) {
-    var openTagInstruction = new Monarch.View.OpenTag(tagArgs.name, tagArgs.attributes);
+    var openTagInstruction = new OldMonarch.View.OpenTag(tagArgs.name, tagArgs.attributes);
     this.instructions.push(openTagInstruction);
-    if (tagArgs.text) this.instructions.push(new Monarch.View.TextNode(tagArgs.text));
+    if (tagArgs.text) this.instructions.push(new OldMonarch.View.TextNode(tagArgs.text));
     if (tagArgs.body) tagArgs.body();
-    var closeTagInstruction = new Monarch.View.CloseTag(tagArgs.name);
+    var closeTagInstruction = new OldMonarch.View.CloseTag(tagArgs.name);
     closeTagInstruction.openTagInstruction = openTagInstruction;
     this.instructions.push(closeTagInstruction);
     return closeTagInstruction;
@@ -184,4 +184,4 @@ _.constructor("Monarch.View.Builder", {
   }
 });
 
-})(Monarch, jQuery);
+})(OldMonarch, jQuery);

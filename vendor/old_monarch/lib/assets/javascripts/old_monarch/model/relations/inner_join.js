@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.InnerJoin", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.InnerJoin", OldMonarch.Model.Relations.Relation, {
   numOperands: 2,
 
   initialize: function(leftOperand, rightOperand, predicate) {
@@ -32,7 +32,7 @@ _.constructor("Monarch.Model.Relations.InnerJoin", Monarch.Model.Relations.Relat
   },
 
   evaluateInRepository: function(repository) {
-    return new Monarch.Model.Relations.InnerJoin(
+    return new OldMonarch.Model.Relations.InnerJoin(
       this.leftOperand.evaluateInRepository(repository),
       this.rightOperand.evaluateInRepository(repository),
       this.predicate
@@ -50,7 +50,7 @@ _.constructor("Monarch.Model.Relations.InnerJoin", Monarch.Model.Relations.Relat
     var self = this;
     this.leftOperand.each(function(leftTuple) {
       this.rightOperand.each(function(rightTuple) {
-        product.push(new Monarch.Model.CompositeTuple(leftTuple, rightTuple));
+        product.push(new OldMonarch.Model.CompositeTuple(leftTuple, rightTuple));
       }, this);
     }, this)
     return product;
@@ -58,13 +58,13 @@ _.constructor("Monarch.Model.Relations.InnerJoin", Monarch.Model.Relations.Relat
 
   onLeftOperandInsert: function(leftTuple) {
     this.rightOperand.each(function(rightTuple) {
-      this.evaluateCompositeAfterOperandInsert(new Monarch.Model.CompositeTuple(leftTuple, rightTuple));
+      this.evaluateCompositeAfterOperandInsert(new OldMonarch.Model.CompositeTuple(leftTuple, rightTuple));
     }, this);
   },
 
   onRightOperandInsert: function(rightTuple) {
     this.leftOperand.each(function(leftTuple) {
-      this.evaluateCompositeAfterOperandInsert(new Monarch.Model.CompositeTuple(leftTuple, rightTuple));
+      this.evaluateCompositeAfterOperandInsert(new OldMonarch.Model.CompositeTuple(leftTuple, rightTuple));
     }, this);
   },
 
@@ -77,13 +77,13 @@ _.constructor("Monarch.Model.Relations.InnerJoin", Monarch.Model.Relations.Relat
 
   onLeftOperandUpdate: function(leftTuple, changeset) {
     this.rightOperand.each(function(rightTuple) {
-      this.evaluateCompositeAfterOperandUpdate(new Monarch.Model.CompositeTuple(leftTuple, rightTuple), changeset);
+      this.evaluateCompositeAfterOperandUpdate(new OldMonarch.Model.CompositeTuple(leftTuple, rightTuple), changeset);
     }, this);
   },
 
   onRightOperandUpdate: function(rightTuple, changeset) {
     this.leftOperand.each(function(leftTuple) {
-      this.evaluateCompositeAfterOperandUpdate(new Monarch.Model.CompositeTuple(leftTuple, rightTuple), changeset);
+      this.evaluateCompositeAfterOperandUpdate(new OldMonarch.Model.CompositeTuple(leftTuple, rightTuple), changeset);
     }, this);
   },
 
@@ -139,4 +139,4 @@ _.constructor("Monarch.Model.Relations.InnerJoin", Monarch.Model.Relations.Relat
   onRightOperandValid: function() {}
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -176,7 +176,7 @@ Screw.Unit(function(c) { with(c) {
     var view;
 
     before(function() {
-      view = Monarch.View.build(function(b) {
+      view = OldMonarch.View.build(function(b) {
         b.div(function() {
           b.div({id: "foo"});
           b.div({id: "bar"});
@@ -201,7 +201,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     it("returns the view object associated with a DOM node", function() {
-      var view = Monarch.View.build(function(b) {
+      var view = OldMonarch.View.build(function(b) {
         b.div("testing");
       });
 
@@ -214,7 +214,7 @@ Screw.Unit(function(c) { with(c) {
   describe("jQuery.fn.fieldValues()", function() {
     var view;
     before(function() {
-      view = Monarch.View.build(function(b) { with(b) {
+      view = OldMonarch.View.build(function(b) { with(b) {
         div(function() {
           input({name: "foo", value: "Foo"}).ref('foo');
           input({name: "hidden", value: "baz", style: "display: none;"}).ref('hiddenField');
@@ -289,7 +289,7 @@ Screw.Unit(function(c) { with(c) {
     it("if the containing view is removed, destroys the subscription (but does not if it's only _detached_)", function() {
       var blog = Blog.createFromRemote({id: "blog", name: "Arcata Tent Haters"});
 
-      var view = Monarch.View.build(function(b) {
+      var view = OldMonarch.View.build(function(b) {
           b.div(function() {
             b.h1().ref("h1");
           })

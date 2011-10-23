@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.SkipList", function() {
+  describe("OldMonarch.SkipList", function() {
     describe("insertion, removal, and search", function() {
       it("correctly handles operations for a randomized dataset", function() {
         var skipList, unusedLetters, insertedLetters, removedLetters;
@@ -66,7 +66,7 @@ Screw.Unit(function(c) { with(c) {
           insertedLetters = [];
           removedLetters = [];
           for (var i = 97; i <= 122; i++) { unusedLetters.push(String.fromCharCode(i)) }
-          skipList = new Monarch.SkipList();
+          skipList = new OldMonarch.SkipList();
           _(100).times(randomAction);
         }
 

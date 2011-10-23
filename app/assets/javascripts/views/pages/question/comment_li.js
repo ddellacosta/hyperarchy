@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.CommentLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.CommentLi', OldMonarch.View.Template, {
   content: function(params) { with(this.builder) {
     li({'class': "comment"}, function() {
       subview('avatar', Views.Components.Avatar, {imageSize: params.fullScreen ? 46 : 34});

@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Limit", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Limit", OldMonarch.Model.Relations.Relation, {
 
   initialize: function(operand, count) {
     this.operand = operand;
@@ -64,4 +64,4 @@ _.constructor("Monarch.Model.Relations.Limit", Monarch.Model.Relations.Relation,
 
 });
 
-})(Monarch);
+})(OldMonarch);

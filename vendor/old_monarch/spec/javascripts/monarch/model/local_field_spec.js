@@ -1,7 +1,7 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.LocalField", function() {
+  describe("OldMonarch.Model.LocalField", function() {
     useLocalFixtures();
 
     var record, field;

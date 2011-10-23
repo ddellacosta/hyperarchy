@@ -54,7 +54,7 @@ describe("jQuery markdown extensions", function() {
     it("if the containing view is removed, destroys the subscription (but does not if it's only _detached_)", function() {
       var org = Organization.createFromRemote({id: "blog", name: "Arcata Tent Haters"});
 
-      var view = Monarch.View.build(function(b) {
+      var view = OldMonarch.View.build(function(b) {
           b.div(function() {
             b.h1().ref("h1");
           })

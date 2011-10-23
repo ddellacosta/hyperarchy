@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.Comments', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.Comments', OldMonarch.View.Template, {
   content: function(params) { with(this.builder) {
     div({'class': "comments"}, function() {
       h2("Discussion").ref('header');

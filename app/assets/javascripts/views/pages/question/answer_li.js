@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.AnswerLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.AnswerLi', OldMonarch.View.Template, {
   content: function(params) { with(this.builder) {
     li({'class': "answer"}, function() {
       div({'class': "more"}, '…').ref('ellipsis');

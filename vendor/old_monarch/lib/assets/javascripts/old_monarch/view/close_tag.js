@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.View.CloseTag", {
+_.constructor("OldMonarch.View.CloseTag", {
   constructorProperties: {
     initialize: function() {
       this.generateEventMethods();
@@ -94,7 +94,7 @@ _.constructor("Monarch.View.CloseTag", {
   },
 
   onBuild: function(callback, context) {
-    if (!this.onBuildNode) this.onBuildNode = new Monarch.SubscriptionNode();
+    if (!this.onBuildNode) this.onBuildNode = new OldMonarch.SubscriptionNode();
     return this.onBuildNode.subscribe(callback, context);
   },
 
@@ -104,4 +104,4 @@ _.constructor("Monarch.View.CloseTag", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Question.RankingLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Question.RankingLi', OldMonarch.View.Template, {
   content: function(params) { with(this.builder) {
     li({'class': "ranking"}, function() {
       subview('spinner', Views.Components.Spinner);

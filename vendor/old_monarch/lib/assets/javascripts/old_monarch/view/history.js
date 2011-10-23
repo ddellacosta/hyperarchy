@@ -1,6 +1,6 @@
-(function(Monarch, jQuery) {
+(function(OldMonarch, jQuery) {
 
-_.constructor("Monarch.View.History", {
+_.constructor("OldMonarch.View.History", {
   hashchange: function(callback) {
     jQuery(window).bind('hashchange', callback);
     callback();
@@ -16,4 +16,4 @@ _.constructor("Monarch.View.History", {
   }
 });
 
-})(Monarch, jQuery);
+})(OldMonarch, jQuery);

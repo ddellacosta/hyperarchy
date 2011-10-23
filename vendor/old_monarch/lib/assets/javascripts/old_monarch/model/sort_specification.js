@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.SortSpecification", {
+_.constructor("OldMonarch.Model.SortSpecification", {
   initialize: function(column, direction) {
     this.column = column;
     this.columnName = column.name;
@@ -15,4 +15,4 @@ _.constructor("Monarch.Model.SortSpecification", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

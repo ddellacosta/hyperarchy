@@ -1,13 +1,13 @@
 //= require monarch_spec_helper
 
 Screw.Unit(function(c) { with(c) {
-  describe("Monarch.Model.Relations.Table", function() {
+  describe("OldMonarch.Model.Relations.Table", function() {
     useExampleDomainModel();
 
     describe("column definition", function() {
       var table;
       before(function() {
-        table = new Monarch.Model.Relations.Table("programmingLanguages");
+        table = new OldMonarch.Model.Relations.Table("programmingLanguages");
       });
 
       describe("#defineColumn", function() {
@@ -18,7 +18,7 @@ Screw.Unit(function(c) { with(c) {
 
         it("adds a Column with the given name and type to #columnsByName and returns it", function() {
           expect(column).to(eq, table.columnsByName.familyId);
-          expect(column.constructor).to(eq, Monarch.Model.Column);
+          expect(column.constructor).to(eq, OldMonarch.Model.Column);
           expect(column.name).to(eq, 'familyId');
           expect(column.type).to(eq, 'string');
         });
@@ -42,7 +42,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("causes the table to order its records by the given sort specifications instead of just id", function() {
-        var recordConstructor = _.constructor("Foo", Monarch.Model.Record, {
+        var recordConstructor = _.constructor("Foo", OldMonarch.Model.Record, {
           constructorInitialize: function() {
             this.column("position", "key");
             this.defaultOrderBy("position asc");

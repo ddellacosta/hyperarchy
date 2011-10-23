@@ -15,7 +15,7 @@ Screw.Unit(function(c) {
 
 _.constructor("FakeHistory", {
   initialize: function() {
-    this.hashchangeNode = new Monarch.SubscriptionNode();
+    this.hashchangeNode = new OldMonarch.SubscriptionNode();
   },
 
   hashchange: function(callback) {

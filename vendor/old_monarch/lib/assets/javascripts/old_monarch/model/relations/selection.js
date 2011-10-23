@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Model.Relations.Selection", Monarch.Model.Relations.Relation, {
+_.constructor("OldMonarch.Model.Relations.Selection", OldMonarch.Model.Relations.Relation, {
 
   initialize: function(operand, predicate) {
     this.operand = operand;
@@ -35,11 +35,11 @@ _.constructor("Monarch.Model.Relations.Selection", Monarch.Model.Relations.Relat
   },
 
   evaluateInRepository: function(repository) {
-    return new Monarch.Model.Relations.Selection(this.operand.evaluateInRepository(repository), this.predicate);
+    return new OldMonarch.Model.Relations.Selection(this.operand.evaluateInRepository(repository), this.predicate);
   },
 
   isEqual: function(other) {
-    if (other.constructor !== Monarch.Model.Relations.Selection) return false;
+    if (other.constructor !== OldMonarch.Model.Relations.Selection) return false;
     return this.predicate.isEqual(other.predicate) &&
       this.operand.isEqual(other.operand);
   },
@@ -63,4 +63,4 @@ _.constructor("Monarch.Model.Relations.Selection", Monarch.Model.Relations.Relat
   }
 });
 
-})(Monarch);
+})(OldMonarch);

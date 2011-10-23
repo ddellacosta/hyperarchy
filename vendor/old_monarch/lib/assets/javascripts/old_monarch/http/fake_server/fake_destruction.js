@@ -1,10 +1,10 @@
-_.constructor("Monarch.Http.FakeServer.FakeDestruction", {
+_.constructor("OldMonarch.Http.FakeServer.FakeDestruction", {
   type: 'destroy',
 
   initialize: function(fakeServer, record) {
     this.fakeServer = fakeServer;
     this.record = record;
-    this.promise = new Monarch.Promise();
+    this.promise = new OldMonarch.Promise();
   },
 
   simulateSuccess: function() {

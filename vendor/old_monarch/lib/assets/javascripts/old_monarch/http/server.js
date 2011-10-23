@@ -1,6 +1,6 @@
-(function(Monarch, jQuery) {
+(function(OldMonarch, jQuery) {
 
-_.constructor("Monarch.Http.Server", {
+_.constructor("OldMonarch.Http.Server", {
   sandboxUrl: '/sandbox',
 
   fetch: function() {
@@ -8,7 +8,7 @@ _.constructor("Monarch.Http.Server", {
       return arg.wireRepresentation();
     });
 
-    var promise = new Monarch.Promise();
+    var promise = new OldMonarch.Promise();
 
     if (_.isEmpty(relationWireRepresentations)) {
       promise.triggerSuccess();
@@ -31,7 +31,7 @@ _.constructor("Monarch.Http.Server", {
   },
 
   create: function(record) {
-    var promise = new Monarch.Promise();
+    var promise = new OldMonarch.Promise();
     Repository.pauseMutations();
 
     jQuery.ajax({
@@ -62,7 +62,7 @@ _.constructor("Monarch.Http.Server", {
   },
 
   update: function(record) {
-    var promise = new Monarch.Promise();
+    var promise = new OldMonarch.Promise();
 
     var wireRepresentation = record.dirtyWireRepresentation();
     if (_.isEmpty(wireRepresentation)) {
@@ -97,7 +97,7 @@ _.constructor("Monarch.Http.Server", {
   },
 
   destroy: function(record) {
-    var promise = new Monarch.Promise();
+    var promise = new OldMonarch.Promise();
     Repository.pauseMutations();
 
     jQuery.ajax({
@@ -118,4 +118,4 @@ _.constructor("Monarch.Http.Server", {
   }
 });
 
-})(Monarch, jQuery);
+})(OldMonarch, jQuery);

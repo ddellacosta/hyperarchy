@@ -2,7 +2,7 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor('Views.Pages.Account.MembershipPreferencesLi', Monarch.View.Template, {
+_.constructor('Views.Pages.Account.MembershipPreferencesLi', OldMonarch.View.Template, {
   content: function() { with (this.builder) {
     li(function() {
       h3(function() {

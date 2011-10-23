@@ -1,10 +1,10 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.Http.Command", {
+_.constructor("OldMonarch.Http.Command", {
   initialize: function(record, server) {
     this.record = record;
     this.server = server;
-    this.future = new Monarch.Http.AjaxFuture();
+    this.future = new OldMonarch.Http.AjaxFuture();
   },
 
   perform: function() {
@@ -27,4 +27,4 @@ _.constructor("Monarch.Http.Command", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

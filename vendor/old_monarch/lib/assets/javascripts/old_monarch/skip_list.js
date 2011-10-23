@@ -1,6 +1,6 @@
-(function(Monarch) {
+(function(OldMonarch) {
 
-_.constructor("Monarch.SkipList", {
+_.constructor("OldMonarch.SkipList", {
   initialize: function(comparator) {
     this.comparator = comparator || this.defaultComparator;
     this.maxLevels = 8;
@@ -10,8 +10,8 @@ _.constructor("Monarch.SkipList", {
     this.minusInfinity = {};
     this.plusInfinity = {};
 
-    this.head = new Monarch.SkipListNode(this.maxLevels, this.minusInfinity, undefined);
-    this.nil = new Monarch.SkipListNode(this.maxLevels, this.plusInfinity, undefined);
+    this.head = new OldMonarch.SkipListNode(this.maxLevels, this.minusInfinity, undefined);
+    this.nil = new OldMonarch.SkipListNode(this.maxLevels, this.plusInfinity, undefined);
     for (var i = 0; i < this.maxLevels; i++) {
       this.head.pointer[i] = this.nil;
       this.head.distance[i] = 1;
@@ -37,7 +37,7 @@ _.constructor("Monarch.SkipList", {
       }
 
       // create a new node and insert it by updating pointers at every level
-      var newNode = new Monarch.SkipListNode(level, key, value);
+      var newNode = new OldMonarch.SkipListNode(level, key, value);
       var steps = 0;
       for (var i = 0; i <= level; i++) {
         var prevNode = next[i];
@@ -192,7 +192,7 @@ _.constructor("Monarch.SkipList", {
   }
 });
 
-_.constructor("Monarch.SkipListNode", {
+_.constructor("OldMonarch.SkipListNode", {
   initialize: function(level, key, value) {
     this.key = key;
     this.value = value;
@@ -202,4 +202,4 @@ _.constructor("Monarch.SkipListNode", {
   }
 });
 
-})(Monarch);
+})(OldMonarch);

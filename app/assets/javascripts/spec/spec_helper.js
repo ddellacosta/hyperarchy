@@ -78,7 +78,7 @@ function enableAjax() {
 
 var originalServer;
 function useFakeServer(auto) {
-  window.Server = new Monarch.Http.FakeServer();
+  window.Server = new OldMonarch.Http.FakeServer();
   window.Server.auto = auto;
 }
 
@@ -127,7 +127,7 @@ var T = {
     if (node) {
       return node;
     } else {
-      return this.subscriptionNodes[eventName] = new Monarch.SubscriptionNode();
+      return this.subscriptionNodes[eventName] = new OldMonarch.SubscriptionNode();
     }
   },
 
@@ -145,7 +145,7 @@ var twttr = {
     },
 
     bind: function(type, callback) {
-      if (!this.nodes[type]) this.nodes[type] = new Monarch.SubscriptionNode();
+      if (!this.nodes[type]) this.nodes[type] = new OldMonarch.SubscriptionNode();
       this.nodes[type].subscribe(callback);
     },
 
