@@ -5,7 +5,7 @@
 describe("User", function() {
   var user;
   beforeEach(function() {
-    user = User.createFromRemote({id: 1, emailHash: 'fake-email-hash'});
+    user = User.created({id: 1, emailHash: 'fake-email-hash'});
   });
 
   describe("#fetchAvatarUrl(size)", function() {

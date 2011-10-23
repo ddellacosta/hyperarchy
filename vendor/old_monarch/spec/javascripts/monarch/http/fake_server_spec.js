@@ -113,7 +113,7 @@ Screw.Unit(function(c) { with(c) {
 
         User.onUpdate(updateCallback);
 
-        var record = User.createFromRemote({id: 1, fullName: "John Doe", age: 34});
+        var record = User.created({id: 1, fullName: "John Doe", age: 34});
         record.localUpdate({
           fullName: "John Deere",
           age: 56
@@ -159,7 +159,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("allows multiple updates to be interleaved", function() {
-        var record = User.createFromRemote({id: 1, fullName: "John Doe", age: 34});
+        var record = User.created({id: 1, fullName: "John Doe", age: 34});
         record.localUpdate({
           fullName: "John 1",
           age: 1
@@ -203,7 +203,7 @@ Screw.Unit(function(c) { with(c) {
       it("performs the update immediately if the server is in auto-mode", function() {
         fakeServer.auto = true;
 
-        var record = User.createFromRemote({id: 1, fullName: "John Doe", age: 34});
+        var record = User.created({id: 1, fullName: "John Doe", age: 34});
         record.localUpdate({
           fullName: "John Deere",
           age: 56
@@ -222,7 +222,7 @@ Screw.Unit(function(c) { with(c) {
 
         User.onRemove(removeCallback);
 
-        var record = User.createFromRemote({id: 1, fullName: "John Doe", age: 34});
+        var record = User.created({id: 1, fullName: "John Doe", age: 34});
         fakeServer.destroy(record).success(successCallback);
         
         expect(User.find(1)).toNot(beNull);
@@ -243,7 +243,7 @@ Screw.Unit(function(c) { with(c) {
 
       it("performs the destruction immediately if the server is in auto mode", function() {
         fakeServer.auto = true;
-        var record = User.createFromRemote({id: 1});
+        var record = User.created({id: 1});
         fakeServer.destroy(record);
         expect(User.find(1)).to(beNull);
       });

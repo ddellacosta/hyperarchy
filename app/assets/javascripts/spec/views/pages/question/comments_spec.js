@@ -7,14 +7,14 @@ describe("Views.Pages.Question.Comments", function() {
 
   beforeEach(function() {
     attachLayout();
-    member = User.createFromRemote({id: 1});
+    member = User.created({id: 1});
     Application.currentUser(member);
 
-    question = Question.createFromRemote({id: 22, creatorId: 1, createdAt: 234});
-    creator1 = User.createFromRemote({id: 1, firstName: "Commento", lastName: "Santiago"});
-    creator2 = User.createFromRemote({id: 2, firstName: "Kommentor", lastName: "Brunsfeld"});
-    comment1 = question.comments().createFromRemote({id: 11, body: "I likeah the fruiloops so much", creatorId: creator1.id(), createdAt: 3245});
-    comment2 = question.comments().createFromRemote({id: 12, body: "Yez but sie koko krispies sind sehr yummy", creatorId: creator2.id(), createdAt: 3295});
+    question = Question.created({id: 22, creatorId: 1, createdAt: 234});
+    creator1 = User.created({id: 1, firstName: "Commento", lastName: "Santiago"});
+    creator2 = User.created({id: 2, firstName: "Kommentor", lastName: "Brunsfeld"});
+    comment1 = question.comments().created({id: 11, body: "I likeah the fruiloops so much", creatorId: creator1.id(), createdAt: 3245});
+    comment2 = question.comments().created({id: 12, body: "Yez but sie koko krispies sind sehr yummy", creatorId: creator2.id(), createdAt: 3295});
 
     spyOn(QuestionComment.prototype, 'editableByCurrentUser').andReturn(true);
 
@@ -91,7 +91,7 @@ describe("Views.Pages.Question.Comments", function() {
     describe("when the current user is a guest", function() {
       var guest;
       beforeEach(function() {
-        guest = User.createFromRemote({id: 2, guest: true});
+        guest = User.created({id: 2, guest: true});
         Application.currentUser(guest);
         commentsView.detach();
         $('#jasmine_content').html(Application);
@@ -140,14 +140,14 @@ describe("Views.Pages.Question.Comments", function() {
   describe("auto-scrolling", function() {
     beforeEach(function() {
       _.times(20, function(i) {
-        commentsRelation.createFromRemote({id: 100 + i, body: "This is a comment to make the thing overflow", creatorId: creator1.id(), createdAt: 12345});
+        commentsRelation.created({id: 100 + i, body: "This is a comment to make the thing overflow", creatorId: creator1.id(), createdAt: 12345});
       });
     });
 
     describe("when the user has not scrolled the comments list", function() {
       describe("when a comment is inserted/destroyed by anyone", function() {
         it("auto-scrolls to the end of the list", function() {
-          var longComment = commentsRelation.createFromRemote({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
+          var longComment = commentsRelation.created({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
           expectListScrolledToBottom();
           longComment.remotelyDestroyed();
           expectListScrolledToBottom();
@@ -175,7 +175,7 @@ describe("Views.Pages.Question.Comments", function() {
 
       describe("when a comment is inserted", function() {
         it("does not change the scroll position", function() {
-          commentsRelation.createFromRemote({id: 200, body: "Another comment", creatorId: creator1.id(), createdAt: 12345});
+          commentsRelation.created({id: 200, body: "Another comment", creatorId: creator1.id(), createdAt: 12345});
           expect(commentsView.list.scrollTop()).toBe(initialScrollTop);
         });
       });
@@ -217,7 +217,7 @@ describe("Views.Pages.Question.Comments", function() {
 
       describe("when a comment is inserted/destroyed by anyone", function() {
         it("auto-scrolls to the end of the list", function() {
-          var longComment = commentsRelation.createFromRemote({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
+          var longComment = commentsRelation.created({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
           expectListScrolledToBottom();
           longComment.remotelyDestroyed();
           expectListScrolledToBottom();
@@ -248,7 +248,7 @@ describe("Views.Pages.Question.Comments", function() {
 
   describe("when the textarea resizes", function() {
     it("adjusts the height of the list so it does not push the textarea beyond the height of the comments div", function() {
-      var longComment = commentsRelation.createFromRemote({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
+      var longComment = commentsRelation.created({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
 
       commentsView.textarea.val(longCommentBody);
       commentsView.textarea.keyup();

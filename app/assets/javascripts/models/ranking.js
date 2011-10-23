@@ -2,24 +2,20 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor("Ranking", Model.Record, {
-  constructorProperties: {
-    initialize: function() {
-      this.columns({
-        answerId: 'key',
-        questionId: 'key',
-        voteId: 'key',
-        userId: 'key',
-        position: 'float'
-      });
+Ranking = Monarch("Ranking", {
+  answerId: 'key',
+  questionId: 'key',
+  voteId: 'key',
+  userId: 'key',
+  position: 'float'
+})
+  .defaultOrderBy('position desc')
 
-      this.defaultOrderBy('position desc');
+  .belongsTo('answer')
+  .belongsTo('question')
+  .belongsTo('user')
 
-      this.belongsTo('answer');
-      this.belongsTo('question');
-      this.belongsTo('user');
-    },
-
+  .extend({
     createOrUpdate: function(user, answer, position) {
       var future = new OldMonarch.Http.AjaxFuture();
 
@@ -40,9 +36,11 @@ _.constructor("Ranking", Model.Record, {
 
       return future;
     }
-  },
+  })
 
-  mixpanelNote: function() {
-    return this.answer().body();
-  }
-});
+  .include({
+    mixpanelNote: function() {
+      return this.answer().body();
+    }
+  });
+

@@ -2,31 +2,29 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor("Membership", Model.Record, {
-  constructorInitialize: function() {
-    this.columns({
-      organizationId: "key",
-      userId: "key",
-      role: "string",
-      firstName: "string",
-      lastName: "string",
-      emailAddress: "string",
-      lastVisited: "datetime",
-      notifyOfNewQuestions: "string",
-      notifyOfNewAnswers: "string",
-      notifyOfNewCommentsOnOwnAnswers: "string",
-      notifyOfNewCommentsOnRankedAnswers: "string"
-    });
+Membership = Monarch("Membership", {
+  organizationId: "key",
+  userId: "key",
+  role: "string",
+  firstName: "string",
+  lastName: "string",
+  emailAddress: "string",
+  lastVisited: "datetime",
+  notifyOfNewQuestions: "string",
+  notifyOfNewAnswers: "string",
+  notifyOfNewCommentsOnOwnAnswers: "string",
+  notifyOfNewCommentsOnRankedAnswers: "string"
+})
+  .belongsTo("organization")
+  .belongsTo("user")
 
-    this.belongsTo("organization");
-    this.belongsTo("user");
-  },
-
-  fullName: function() {
-    if (this.firstName() && this.lastName()) {
-      return this.firstName() + " " + this.lastName();
-    } else {
-      return null;
+  .include({
+    fullName: function() {
+      if (this.firstName() && this.lastName()) {
+        return this.firstName() + " " + this.lastName();
+      } else {
+        return null;
+      }
     }
-  }
-});
+  });
+

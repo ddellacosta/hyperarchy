@@ -13,7 +13,7 @@ _.constructor("OldMonarch.Http.FakeServer.FakeCreation", {
     var lastRecord = this.record.constructor.last();
     var nextId = lastRecord ? lastRecord.id() + 1 : 1;
     var fields = _.extend({id: nextId }, this.record.dirtyWireRepresentation(), optionalFieldsFromServer);
-    this.record.remotelyCreated(fields);
+    this.record.created(fields);
     this.promise.triggerSuccess(this.record);
   }
 });

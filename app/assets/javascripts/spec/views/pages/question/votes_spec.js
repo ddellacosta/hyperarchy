@@ -9,12 +9,12 @@ describe("Views.Pages.Question.Votes", function() {
     attachLayout();
     votesView = Application.questionPage.votes;
 
-    question = Question.createFromRemote({id: 1});
-    currentUser = User.createFromRemote({id: 1});
-    otherUser = User.createFromRemote({id: 2});
+    question = Question.created({id: 1});
+    currentUser = User.created({id: 1});
+    otherUser = User.created({id: 2});
 
-    currentUserVote = currentUser.votes().createFromRemote({id: 1, questionId: question.id(), updatedAt: 1308353647242});
-    otherUserVote = otherUser.votes().createFromRemote({id: 2, questionId: question.id(), updatedAt: 1308353647242});
+    currentUserVote = currentUser.votes().created({id: 1, questionId: question.id(), updatedAt: 1308353647242});
+    otherUserVote = otherUser.votes().created({id: 2, questionId: question.id(), updatedAt: 1308353647242});
 
     votesRelation = question.votes();
   });
@@ -43,10 +43,10 @@ describe("Views.Pages.Question.Votes", function() {
       otherUserVote.remotelyDestroyed();
       expect(votesView.header.html()).toEqual('No Votes Yet');
 
-      currentUser.votes().createFromRemote({id: 1, questionId: question.id(), updatedAt: 1308353647000});
+      currentUser.votes().created({id: 1, questionId: question.id(), updatedAt: 1308353647000});
       expect(votesView.header.html()).toEqual('1 Vote');
 
-     otherUser.votes().createFromRemote({id: 2, questionId: question.id(), updatedAt: 1308353647001});
+     otherUser.votes().created({id: 2, questionId: question.id(), updatedAt: 1308353647001});
      expect(votesView.header.html()).toEqual('2 Votes');
     });
   });
@@ -54,8 +54,8 @@ describe("Views.Pages.Question.Votes", function() {
   describe("#selectedVoterId", function() {
     describe("when the votes relation has been assigned", function() {
       it("adds the .selected class to the li for the given voter", function() {
-        var thirdUser = User.createFromRemote({id: 3});
-        votesRelation.createFromRemote({userId: thirdUser.id(), updatedAt: 1308353647262});
+        var thirdUser = User.created({id: 3});
+        votesRelation.created({userId: thirdUser.id(), updatedAt: 1308353647262});
         votesView.votes(votesRelation);
 
         votesView.selectedVoterId(otherUser.id());

@@ -35,14 +35,14 @@ describe("jQuery markdown extensions", function() {
   describe("jQuery.fn.bindMarkdown(record, fieldName)", function() {
     it("assigns the html of the current jquery-wrapped element to the value of the indicated field, and keeps it updated as the field changes remotely", function() {
       var elt = $("<div></div>");
-      var org = Organization.createFromRemote({id: 1, name: "Arcata *Tent* Haters & Lovers"})
+      var org = Organization.created({id: 1, name: "Arcata *Tent* Haters & Lovers"})
       elt.bindMarkdown(org, "name");
       expect(elt.html()).toBe("<p>Arcata <em>Tent</em> Haters &amp; Lovers</p>");
 
       org.remotelyUpdated({name: "Arcata Tent *Lovers*"});
       expect(elt.html()).toBe("<p>Arcata Tent <em>Lovers</em></p>");
 
-      var org2 = Organization.createFromRemote({id: 2, name: "Arcata Naan Lovers"});
+      var org2 = Organization.created({id: 2, name: "Arcata Naan Lovers"});
       elt.bindMarkdown(org2, "name");
 
       expect(elt.html()).toBe("<p>Arcata Naan Lovers</p>");
@@ -52,7 +52,7 @@ describe("jQuery markdown extensions", function() {
     });
 
     it("if the containing view is removed, destroys the subscription (but does not if it's only _detached_)", function() {
-      var org = Organization.createFromRemote({id: "blog", name: "Arcata Tent Haters"});
+      var org = Organization.created({id: "blog", name: "Arcata Tent Haters"});
 
       var view = OldMonarch.View.build(function(b) {
           b.div(function() {

@@ -6,7 +6,7 @@ describe("Views.Layout.AccountMenu", function() {
   var accountMenu;
   beforeEach(function() {
     renderLayout();
-    Application.currentUser(User.createFromRemote({id: 1}));
+    Application.currentUser(User.created({id: 1}));
     accountMenu = Application.accountMenu;
     expect(accountMenu).toExist();
   });
@@ -15,8 +15,8 @@ describe("Views.Layout.AccountMenu", function() {
     var guest, member;
 
     beforeEach(function() {
-      guest = User.createFromRemote({id: 1, guest: true, firstName: "Guest", lastName: "User"});
-      member = User.createFromRemote({id: 2, guest: false, firstName: "Joe", lastName: "Member", emailHash: 'fake-email-hash'});
+      guest = User.created({id: 1, guest: true, firstName: "Guest", lastName: "User"});
+      member = User.created({id: 2, guest: false, firstName: "Joe", lastName: "Member", emailHash: 'fake-email-hash'});
     });
 
     it("shows the login link when the current user is a guest and the avatar / name / dropdown link otherwise", function() {
@@ -41,9 +41,9 @@ describe("Views.Layout.AccountMenu", function() {
 
   describe("showing and hiding of the facebook and twitter connect links", function() {
     it("shows the twitter and facebook connect links only for users who do not have twitter or facebook ids, respectively", function() {
-      var twitterUser = User.createFromRemote({id: 1, firstName: "Jackie", lastName: "D", twitter_id: 2345, facebook_id: null});
-      var facebookUser = User.createFromRemote({id: 2, firstName: "Marky", lastName: "Z", facebook_id: '2345', twitter_id: null});
-      var antiSocialUser = User.createFromRemote({id: 3, firstName: "Billy", lastName: "G", facebook_id: null, twitter_id: null});
+      var twitterUser = User.created({id: 1, firstName: "Jackie", lastName: "D", twitter_id: 2345, facebook_id: null});
+      var facebookUser = User.created({id: 2, firstName: "Marky", lastName: "Z", facebook_id: '2345', twitter_id: null});
+      var antiSocialUser = User.created({id: 3, firstName: "Billy", lastName: "G", facebook_id: null, twitter_id: null});
 
       Application.currentUser(twitterUser);
       expect(accountMenu.dropdownMenu).toBeVisible();
@@ -88,7 +88,7 @@ describe("Views.Layout.AccountMenu", function() {
 
     beforeEach(function() {
       spyOn(T, 'signIn');
-      userWithoutTwitterId = User.createFromRemote({id: 2, firstName: "Sad", lastName: "Facebookuser", twitter_id: null});
+      userWithoutTwitterId = User.created({id: 2, firstName: "Sad", lastName: "Facebookuser", twitter_id: null});
       Application.currentUser(userWithoutTwitterId);
       accountMenu.dropdownMenu.link.click();
       accountMenu.dropdownMenu.twitterConnectLink.click();
@@ -114,7 +114,7 @@ describe("Views.Layout.AccountMenu", function() {
 
     beforeEach(function() {
       spyOn(FB, 'login');
-      userWithoutFacebookId = User.createFromRemote({id: 2, firstName: "Serious", lastName: "Professional", facebook_id: null});
+      userWithoutFacebookId = User.created({id: 2, firstName: "Serious", lastName: "Professional", facebook_id: null});
       Application.currentUser(userWithoutFacebookId);
       accountMenu.dropdownMenu.link.click();
       accountMenu.dropdownMenu.facebookConnectLink.click();

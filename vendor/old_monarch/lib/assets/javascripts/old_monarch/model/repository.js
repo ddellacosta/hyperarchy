@@ -64,7 +64,7 @@ _.constructor("OldMonarch.Model.Repository", {
     if (additionalRecords) this.update(additionalRecords);
     var table = this.tables[tableName];
     if (table && !table.find(fieldValues.id)) {
-      var record = table.createFromRemote(fieldValues);
+      var record = table.created(fieldValues);
     }
   },
 

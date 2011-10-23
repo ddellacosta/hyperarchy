@@ -1,7 +1,5 @@
-//= require jquery-1.5.2
 //= require jquery.ba-bbq
 //= require htmlescape
-//= require underscore
 //= require json
 //= require md5
 //= require old_monarch/language_extensions

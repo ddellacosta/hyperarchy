@@ -10,11 +10,11 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
     currentConsensusView = Application.questionPage.currentConsensus;
     $('#jasmine_content').append(currentConsensusView);
 
-    question = Question.createFromRemote({id: 1});
-    answer1 = question.answers().createFromRemote({id: 1, body: "Cheese", position: 1});
-    answer2 = question.answers().createFromRemote({id: 2, body: "Goats", position: 2});
+    question = Question.created({id: 1});
+    answer1 = question.answers().created({id: 1, body: "Cheese", position: 1});
+    answer2 = question.answers().created({id: 2, body: "Goats", position: 2});
 
-    user1 = User.createFromRemote({id: 1});
+    user1 = User.created({id: 1});
     Application.currentUser(user1);
   });
 
@@ -72,12 +72,12 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
     var user2, answer3, answer1Li, answer2Li, answer3Li;
 
     beforeEach(function() {
-      answer3 = question.answers().createFromRemote({id: 3, body: "Deer", position: 3});
-      user2 = User.createFromRemote({id: 2});
-      user1.rankingsForQuestion(question).createFromRemote({answerId: answer1.id(), position: 64});
-      user1.rankingsForQuestion(question).createFromRemote({answerId: answer2.id(), position: -64});
-      user2.rankingsForQuestion(question).createFromRemote({answerId: answer2.id(), position: 64});
-      user2.rankingsForQuestion(question).createFromRemote({answerId: answer3.id(), position: -64});
+      answer3 = question.answers().created({id: 3, body: "Deer", position: 3});
+      user2 = User.created({id: 2});
+      user1.rankingsForQuestion(question).created({answerId: answer1.id(), position: 64});
+      user1.rankingsForQuestion(question).created({answerId: answer2.id(), position: -64});
+      user2.rankingsForQuestion(question).created({answerId: answer2.id(), position: 64});
+      user2.rankingsForQuestion(question).created({answerId: answer3.id(), position: -64});
 
       answer1.remotelyUpdated({commentCount: 1});
       answer2.remotelyUpdated({details: "Arcata's full of nimby cryers"});
@@ -115,7 +115,7 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
         it("listens for updates to the new user's rankings", function() {
           Application.currentUser(user2);
 
-          user2.rankings().createFromRemote({answerId: answer1.id(), position: -128});
+          user2.rankings().created({answerId: answer1.id(), position: -128});
           user2.rankings().find({answerId: answer2.id()}).remotelyDestroyed();
           user2.rankings().find({answerId: answer3.id()}).remotelyUpdated({position: 128});
 
@@ -132,7 +132,7 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
         it("updates the ranking statuses of the answers to reflect the new user's rankings", function() {
           user1.rankings().find({answerId: answer1.id()}).remotelyUpdated({position: -128});
           user1.rankings().find({answerId: answer2.id()}).remotelyDestroyed();
-          user1.rankings().createFromRemote({answerId: answer3.id(), position: 128});
+          user1.rankings().created({answerId: answer3.id(), position: 128});
 
           expect(answer1Li.status).not.toHaveClass('positive');
           expect(answer1Li.status).toHaveClass('negative');

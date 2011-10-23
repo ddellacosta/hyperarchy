@@ -21,7 +21,7 @@ describe("Views.Components.Avatar", function() {
     var user, avatarUrlPromise, avatarUrl1, avatarUrl2;
 
     beforeEach(function() {
-      user = User.createFromRemote({id: 1, emailHash: "asf"});
+      user = User.created({id: 1, emailHash: "asf"});
       avatarUrl1 = "images/twitter_46.png";
       avatarUrl2 = "images/facebook_46.png";
       avatarUrlPromise = new OldMonarch.Promise();
@@ -61,7 +61,7 @@ describe("Views.Components.Avatar", function() {
         });
 
         runs(function() {
-          avatar.user(User.createFromRemote({id: 2, emailHash: "oaneuth"}));
+          avatar.user(User.created({id: 2, emailHash: "oaneuth"}));
 
           expect(avatar.img).toBeHidden();
           expect(avatar.placeholder).toBeVisible();

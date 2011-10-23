@@ -6,14 +6,14 @@ describe("Answer", function() {
   describe("#editableByCurrentUser()", function() {
     var organization, answer, admin, owner, creator, otherUser, organization;
     beforeEach(function() {
-      organization = Organization.createFromRemote({id: 1});
-      var question = organization.questions().createFromRemote({id: 1});
-      owner = User.createFromRemote({id: 1});
-      organization.memberships().createFromRemote({userId: owner.id(), role: 'owner'});
-      admin = User.createFromRemote({id: 2, admin: true});
-      otherUser = User.createFromRemote({id: 3});
-      creator = User.createFromRemote({id: 4});
-      answer = question.answers().createFromRemote({id: 1, creatorId: creator.id()});
+      organization = Organization.created({id: 1});
+      var question = organization.questions().created({id: 1});
+      owner = User.created({id: 1});
+      organization.memberships().created({userId: owner.id(), role: 'owner'});
+      admin = User.created({id: 2, admin: true});
+      otherUser = User.created({id: 3});
+      creator = User.created({id: 4});
+      answer = question.answers().created({id: 1, creatorId: creator.id()});
 
       attachLayout();
     });
@@ -35,10 +35,10 @@ describe("Answer", function() {
 
   describe("#afterRemoteDestroy", function() {
     it("destroys any associated rankings locally, because that would have happened on the server but we may not have heard about it yet", function() {
-      var answer = Answer.createFromRemote({id: 1});
-      answer.rankings().createFromRemote({id: 1});
-      answer.rankings().createFromRemote({id: 2});
-      var ranking3 = Ranking.createFromRemote({id: 3, answerId: 99});
+      var answer = Answer.created({id: 1});
+      answer.rankings().created({id: 1});
+      answer.rankings().created({id: 2});
+      var ranking3 = Ranking.created({id: 3, answerId: 99});
 
       answer.remotelyDestroyed();
 
@@ -50,7 +50,7 @@ describe("Answer", function() {
 
   describe("#url", function() {
     it("returns the correct url", function() {
-      expect(Answer.createFromRemote({id: 11, questionId: 22, body: "Fruitloops"}).url()).toEqual('/questions/22/answers/11');
+      expect(Answer.created({id: 11, questionId: 22, body: "Fruitloops"}).url()).toEqual('/questions/22/answers/11');
     });
   });
 });

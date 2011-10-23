@@ -14,10 +14,10 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#tuples()", function() {
       it("returns all tuples from the operand that have an index < n", function() {
-        var post1 = BlogPost.createFromRemote({id: 1});
-        var post2 = BlogPost.createFromRemote({id: 2});
-        BlogPost.createFromRemote({id: 3});
-        BlogPost.createFromRemote({id: 4});
+        var post1 = BlogPost.created({id: 1});
+        var post2 = BlogPost.created({id: 2});
+        BlogPost.created({id: 3});
+        BlogPost.created({id: 4});
 
         expect(limit.tuples()).to(equal, [post1, post2]);
       });
@@ -46,10 +46,10 @@ Screw.Unit(function(c) { with(c) {
     describe("event handling", function() {
       var insertCallback, removeCallback, updateCallback, post1, post2, post3, post4;
       before(function() {
-        post1 = BlogPost.createFromRemote({id: 1});
-        post2 = BlogPost.createFromRemote({id: 2});
-        post3 = BlogPost.createFromRemote({id: 3});
-        post4 = BlogPost.createFromRemote({id: 4});
+        post1 = BlogPost.created({id: 1});
+        post2 = BlogPost.created({id: 2});
+        post3 = BlogPost.created({id: 3});
+        post4 = BlogPost.created({id: 4});
 
         insertCallback = mockFunction("insert callback", function(record) {
           expect(limit.contains(record)).to(beTrue);
@@ -75,7 +75,7 @@ Screw.Unit(function(c) { with(c) {
         describe("when the inserted record's index is < n", function() {
           describe("when the operand has n or more records", function() {
             it("triggers an insert event with the inserted record and a remove event with the record whose index is now n", function() {
-              var newPost = BlogPost.createFromRemote({id: 0});
+              var newPost = BlogPost.created({id: 0});
 
               var newSortKey = BlogPost.table.buildSortKey(newPost);
               var oldSortKey = BlogPost.table.buildSortKey(post2);
@@ -92,7 +92,7 @@ Screw.Unit(function(c) { with(c) {
 
               clearCallbackMocks();
 
-              var newPost = BlogPost.createFromRemote({id: 2});
+              var newPost = BlogPost.created({id: 2});
               var sortKey = BlogPost.table.buildSortKey(newPost);
               expect(insertCallback).to(haveBeenCalled, withArgs(newPost, 1, sortKey, sortKey));
             });
@@ -101,7 +101,7 @@ Screw.Unit(function(c) { with(c) {
 
         describe("when the inserted record's index is greater than n", function() {
           it("does not trigger an insert event", function() {
-            var newPost = BlogPost.createFromRemote({id: 100});
+            var newPost = BlogPost.created({id: 100});
             expect(insertCallback).toNot(haveBeenCalled);
           });
         });

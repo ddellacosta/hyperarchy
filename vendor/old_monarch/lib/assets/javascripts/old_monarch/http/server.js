@@ -39,7 +39,7 @@ _.constructor("OldMonarch.Http.Server", {
       type: 'post',
       data: { field_values: record.wireRepresentation() },
       success: function(fieldValues) {
-        record.remotelyCreated(fieldValues);
+        record.created(fieldValues);
         promise.triggerSuccess(record);
         Repository.resumeMutations();
       },

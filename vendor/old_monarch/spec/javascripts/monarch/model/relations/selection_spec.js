@@ -93,9 +93,9 @@ Screw.Unit(function(c) { with(c) {
 
       before(function() {
         User.clear();
-        includedRecord1 = User.createFromRemote({id: 1, age: 31});
-        includedRecord2 = User.createFromRemote({id: 2, age: 31});
-        excludedRecord = User.createFromRemote({id: 3, age: 99});
+        includedRecord1 = User.created({id: 1, age: 31});
+        includedRecord2 = User.created({id: 2, age: 31});
+        excludedRecord = User.created({id: 3, age: 99});
 
         insertCallback = mockFunction("insert callback", function(record) {
           expect(selection.contains(record)).to(beTrue);
@@ -126,7 +126,7 @@ Screw.Unit(function(c) { with(c) {
       context("when a record is inserted into the selection's operand", function() {
         context("when that record matches the predicate", function() {
           it("triggers an insert event with the record", function() {
-            var record = User.createFromRemote({id: 100, age: 31});
+            var record = User.created({id: 100, age: 31});
             var sortKey = User.table.buildSortKey(record);
 
             expect(predicate.evaluate(record)).to(beTrue);
@@ -136,7 +136,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("when that record does not match the predicate", function() {
           it("does not an trigger insert event", function() {
-            var record = User.createFromRemote({id: 100, age: 22});
+            var record = User.created({id: 100, age: 22});
             expect(predicate.evaluate(record)).to(beFalse);
             expect(insertCallback).toNot(haveBeenCalled);
           });

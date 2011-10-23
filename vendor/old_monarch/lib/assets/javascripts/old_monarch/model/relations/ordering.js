@@ -2,7 +2,7 @@
 
 _.constructor("OldMonarch.Model.Relations.Ordering", OldMonarch.Model.Relations.Relation, {
   constructorInitialize: function() {
-    this.delegate('create', 'createFromRemote', 'operand');
+    this.delegate('create', 'created', 'operand');
   },
 
   initialize: function(operand, sortSpecifications) {

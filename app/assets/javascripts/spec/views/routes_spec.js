@@ -6,8 +6,8 @@ describe("Routes", function() {
   var member, defaultGuest, defaultOrganization;
   beforeEach(function() {
     renderLayout();
-    defaultOrganization = Organization.createFromRemote({id: 23});
-    defaultGuest = User.createFromRemote({id: 1, defaultGuest: true, guest: true});
+    defaultOrganization = Organization.created({id: 23});
+    defaultGuest = User.created({id: 1, defaultGuest: true, guest: true});
     member = defaultOrganization.makeMember({id: 2});
     spyOn(defaultGuest, 'defaultOrganization').andReturn(defaultOrganization);
     spyOn(member, 'defaultOrganization').andReturn(defaultOrganization);
@@ -30,7 +30,7 @@ describe("Routes", function() {
   describe("/organizations/:id", function() {
     describe("when the organization is present in the local repository", function() {
       it("shows only the organizationPage and assigns the id on it", function() {
-        Organization.createFromRemote({id: 23});
+        Organization.created({id: 23});
         History.pushState(null, null, '/organizations/23');
 
         expect(Application.questionPage).toBeHidden();

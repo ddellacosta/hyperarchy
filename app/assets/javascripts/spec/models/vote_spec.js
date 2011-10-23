@@ -5,8 +5,8 @@
 describe("Vote", function() {
   var vote, user;
   beforeEach(function() {
-    user = User.createFromRemote({id: 1});
-    vote = user.votes().createFromRemote({id: 1, questionId: 33, updatedAt: 1308353647242});
+    user = User.created({id: 1});
+    vote = user.votes().created({id: 1, questionId: 33, updatedAt: 1308353647242});
   });
 
   describe("#formattedUpdatedAt", function() {

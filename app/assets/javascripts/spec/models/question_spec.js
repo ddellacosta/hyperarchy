@@ -5,12 +5,12 @@
 describe("Question", function() {
   var creator, question, answer1, answer2, answer3, answer4;
   beforeEach(function() {
-    creator = User.createFromRemote({id: 1, firstName: "Question", lastName: "Creator"});
-    question = creator.questions().createFromRemote({id: 22, voteCount: 0, body: "What's your favorite color?"});
-    answer1 = question.answers().createFromRemote({id: 1, body: "Red"});
-    answer2 = question.answers().createFromRemote({id: 2, body: "Green"});
-    answer3 = question.answers().createFromRemote({id: 3, body: "Blue"});
-    answer4 = question.answers().createFromRemote({id: 4, body: "Yellow"});
+    creator = User.created({id: 1, firstName: "Question", lastName: "Creator"});
+    question = creator.questions().created({id: 22, voteCount: 0, body: "What's your favorite color?"});
+    answer1 = question.answers().created({id: 1, body: "Red"});
+    answer2 = question.answers().created({id: 2, body: "Green"});
+    answer3 = question.answers().created({id: 3, body: "Blue"});
+    answer4 = question.answers().created({id: 4, body: "Yellow"});
 
     Question.SCORE_EXTRA_VOTES = 1;
     Question.SCORE_EXTRA_HOURS = 2;
@@ -26,7 +26,7 @@ describe("Question", function() {
       spyOn(FB, 'ui');
       spyOn(Application, 'randomString').andReturn('sharecode');
 
-      currentUser = User.createFromRemote({id: 1, firstName: "John", lastName: "Smith"});
+      currentUser = User.created({id: 1, firstName: "John", lastName: "Smith"});
       Application.currentUser(currentUser);
     });
     
@@ -47,7 +47,7 @@ describe("Question", function() {
     
     describe("if the current user has 1 positive ranking for this question ", function() {
       it("opens the share dialog with question and the appropriate plurality on the caption", function() {
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer1.id(), position: 64});
+        question.rankingsForCurrentUser().created({answerId: answer1.id(), position: 64});
 
         question.shareOnFacebook();
 
@@ -66,10 +66,10 @@ describe("Question", function() {
     
     describe("if the current user has more than 3 positive rankings for this question", function() {
       it("opens the share dialog, only including the first 3 answers in the descriptions", function() {
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer1.id(), position: 300});
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer2.id(), position: 200});
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer3.id(), position: 100});
-        question.rankingsForCurrentUser().createFromRemote({answerId: answer4.id(), position: 50});
+        question.rankingsForCurrentUser().created({answerId: answer1.id(), position: 300});
+        question.rankingsForCurrentUser().created({answerId: answer2.id(), position: 200});
+        question.rankingsForCurrentUser().created({answerId: answer3.id(), position: 100});
+        question.rankingsForCurrentUser().created({answerId: answer4.id(), position: 50});
 
         question.shareOnFacebook();
         expect(FB.ui).toHaveBeenCalled()

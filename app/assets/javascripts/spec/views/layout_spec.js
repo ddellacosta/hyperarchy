@@ -65,7 +65,7 @@ describe("Views.Layout", function() {
     var organization, user1, user2
 
     beforeEach(function() {
-      organization = Organization.createFromRemote({id: 1});
+      organization = Organization.created({id: 1});
       user1 = organization.makeMember({id: 1});
       user2 = organization.makeMember({id: 2});
     });
@@ -109,12 +109,12 @@ describe("Views.Layout", function() {
     var organization1, organization2, member, guest, membership;
 
     beforeEach(function() {
-      organization1 = Organization.createFromRemote({id: 1, name: "Fujimoto's", privacy: "private"});
-      organization2 = Organization.createFromRemote({id: 2, name: "Hey Ya", privacy: "public"});
-      guest = User.createFromRemote({id: 11, guest: true});
-      member = User.createFromRemote({id: 12, guest: false});
-      membership = member.memberships().createFromRemote({id: 9, organizationId: organization1.id()});
-      guest.memberships().createFromRemote({id: 9, organizationId: organization2.id()});
+      organization1 = Organization.created({id: 1, name: "Fujimoto's", privacy: "private"});
+      organization2 = Organization.created({id: 2, name: "Hey Ya", privacy: "public"});
+      guest = User.created({id: 11, guest: true});
+      member = User.created({id: 12, guest: false});
+      membership = member.memberships().created({id: 9, organizationId: organization1.id()});
+      guest.memberships().created({id: 9, organizationId: organization2.id()});
       Application.currentUser(guest);
     });
 
@@ -159,7 +159,7 @@ describe("Views.Layout", function() {
 
     describe("#currentOrganization", function() {
       it("it changes the organization name or hides it when viewing social", function() {
-        var social = Organization.createFromRemote({id: 3, name: "Hyperarchy Social", social: true, privacy: "public"});
+        var social = Organization.created({id: 3, name: "Hyperarchy Social", social: true, privacy: "public"});
 
         $('#jasmine_content').html(Application);
 
@@ -207,7 +207,7 @@ describe("Views.Layout", function() {
   describe("when the socket client is disconnected", function() {
     beforeEach(function() {
       $("#jasmine_content").html(Application);
-      Application.currentOrganization(Organization.createFromRemote({id: 1}));
+      Application.currentOrganization(Organization.created({id: 1}));
 
       expect(Application.disconnectDialog).toBeHidden();
       expect(Application.darkenedBackground).toBeHidden();
@@ -256,7 +256,7 @@ describe("Views.Layout", function() {
   describe("when the logo is clicked", function() {
     it("navigates to the current org", function() {
       spyOn(Application, 'showPage');
-      var org = Organization.createFromRemote({id: 1, name: "Boboland"});
+      var org = Organization.created({id: 1, name: "Boboland"});
       Application.currentOrganization(org);
 
       Application.logoAndTitle.click()
@@ -275,8 +275,8 @@ describe("Views.Layout", function() {
   describe("the invite link", function() {
     it("shows the invite link only for private organizations, and shows the invite box with the org's secret url when it is clicked", function() {
       $('#jasmine_content').html(Application);
-      var privateOrg = Organization.createFromRemote({id: 1, name: "Private Eyes", privacy: "private"});
-      var publicOrg = Organization.createFromRemote({id: 2, name: "Public Enemies", privacy: "public"});
+      var privateOrg = Organization.created({id: 1, name: "Private Eyes", privacy: "private"});
+      var publicOrg = Organization.created({id: 2, name: "Public Enemies", privacy: "public"});
       var user = privateOrg.makeMember({id: 1});
       spyOn(privateOrg, 'secretUrl').andReturn('/this_is_so_secret');
       Application.currentUser(user);
@@ -309,7 +309,7 @@ describe("Views.Layout", function() {
     describe("when facebook login succeeds", function() {
       describe("when the facebook uid matches that of the current user", function() {
         it("triggers the success promise immediately", function() {
-          Application.currentUser(User.createFromRemote({id: 1, facebookId: '123'}));
+          Application.currentUser(User.created({id: 1, facebookId: '123'}));
           var promise = Application.facebookLogin();
 
           expect(FB.login).toHaveBeenCalled();
@@ -322,8 +322,8 @@ describe("Views.Layout", function() {
 
       describe("when the facebook uid does not match that of the current user", function() {
         it("triggers the success promise after posting to /facebook_sessions and switching the current user", function() {
-          var otherUser = User.createFromRemote({id: 2, facebookId: '123'});
-          Application.currentUser(User.createFromRemote({id: 1, facebookId: 'xxx'}));
+          var otherUser = User.created({id: 2, facebookId: '123'});
+          Application.currentUser(User.created({id: 1, facebookId: 'xxx'}));
           var promise = Application.facebookLogin();
 
           expect(FB.login).toHaveBeenCalled();
@@ -363,7 +363,7 @@ describe("Views.Layout", function() {
     describe("when the twitter login succeeds", function() {
       describe("when the twitter id matches that of the current user", function() {
         it("triggers the success promise immediately", function() {
-          Application.currentUser(User.createFromRemote({id: 1, twitterId: 123}));
+          Application.currentUser(User.created({id: 1, twitterId: 123}));
           var promise = Application.twitterLogin()
 
           expect(T.signIn).toHaveBeenCalled();
@@ -375,8 +375,8 @@ describe("Views.Layout", function() {
 
       describe("when the twitter_id does not match that of the current user", function() {
         it("triggers the success promise after posting to /facebook_sessions and switching the current user", function() {
-          var otherUser = User.createFromRemote({id: 2, twitterId: '123'});
-          Application.currentUser(User.createFromRemote({id: 1, twitterId: '456'}));
+          var otherUser = User.created({id: 2, twitterId: '123'});
+          Application.currentUser(User.created({id: 1, twitterId: '456'}));
           var promise = Application.twitterLogin()
 
           expect(T.signIn).toHaveBeenCalled();
@@ -404,7 +404,7 @@ describe("Views.Layout", function() {
       var organization, member, guest;
 
       beforeEach(function() {
-        organization = Organization.createFromRemote({id: 1, name: "Data Miners"});
+        organization = Organization.created({id: 1, name: "Data Miners"});
         member = organization.makeMember({guest: false, firstName: "Phillip", lastName: "Seymour", id: 1});
         guest  = organization.makeMember({guest: true, id: 2});
       });
@@ -440,7 +440,7 @@ describe("Views.Layout", function() {
 
       describe("when the facebook uid matches that of the current user", function() {
         it("does not send events to mixpanel", function() {
-          Application.currentUser(User.createFromRemote({id: 1, facebookId: '123'}));
+          Application.currentUser(User.created({id: 1, facebookId: '123'}));
           mpq = [];
           Application.facebookLogin();
           var callback = FB.login.mostRecentCall.args[0];
@@ -452,8 +452,8 @@ describe("Views.Layout", function() {
 
       describe("when the facebook uid does not match that of the current user", function() {
         it("pushes a 'Facebook Login' event to the mixpanel queue", function() {
-          var otherUser = User.createFromRemote({id: 2, facebookId: '123'});
-          Application.currentUser(User.createFromRemote({id: 1, facebookId: 'xxx'}));
+          var otherUser = User.created({id: 2, facebookId: '123'});
+          Application.currentUser(User.created({id: 1, facebookId: 'xxx'}));
           mpq = [];
           Application.facebookLogin();
           var callback = FB.login.mostRecentCall.args[0];

@@ -10,11 +10,11 @@ describe("Views.Pages.Question.AnswerDetails", function() {
     Application.height(1000);
 
     answerDetails = Application.questionPage.answerDetails;
-    organization = Organization.createFromRemote({id: 42});
+    organization = Organization.created({id: 42});
     creator = organization.makeMember({id: 999, emailHash: 'blas', firstName: "Mr.", lastName: "Creator"});
     Application.currentUser(creator);
-    question = organization.questions().createFromRemote({id: 1, creatorId: 999, createdAt: 12});
-    answer = creator.answers().createFromRemote({id: 1, questionId: 1, body: "Mustard.", details: "Pardon me. Do you have any Gray Poupon?", createdAt: 1308352736162});
+    question = organization.questions().created({id: 1, creatorId: 999, createdAt: 12});
+    answer = creator.answers().created({id: 1, questionId: 1, body: "Mustard.", details: "Pardon me. Do you have any Gray Poupon?", createdAt: 1308352736162});
 
     Application.questionPage.show();
     Application.questionPage.showAnswerDetails();
@@ -35,7 +35,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
     });
 
     it("removes subscriptions to the previous answer", function() {
-      var answer2 = Answer.createFromRemote({id: 57, body: "soup.", questionId: question.id(), createdAt: 1111, creatorId: creator.id()});
+      var answer2 = Answer.created({id: 57, body: "soup.", questionId: question.id(), createdAt: 1111, creatorId: creator.id()});
       var subscriptionsBefore = answer.onDestroyNode.size();
 
       answerDetails.answer(answer2);
@@ -76,7 +76,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
     describe("on answer assignment", function() {
       it("shows the edit link only if the current user can edit", function() {
-        var otherAnswer = question.answers().createFromRemote({id: 100, creatorId: creator.id(), createdAt: 234234});
+        var otherAnswer = question.answers().created({id: 100, creatorId: creator.id(), createdAt: 234234});
 
         currentUserCanEdit = false;
         answerDetails.answer(otherAnswer);
@@ -95,7 +95,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
     describe("on user switch", function() {
       it("shows the edit button only when the current user is the creator of the answer, an owner of the organization, or an admin", function() {
-        var otherUser = User.createFromRemote({id: 123});
+        var otherUser = User.created({id: 123});
 
         currentUserCanEdit = false;
         Application.currentUser(otherUser);
@@ -116,7 +116,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
     beforeEach(function() {
       _.times(100, function() { longDetails += "so " });
       longDetails += "good.";
-      longAnswer = creator.answers().createFromRemote({id: 1, questionId: 1, body: "Sourkraut", details: longDetails, createdAt: 1308352736162});
+      longAnswer = creator.answers().created({id: 1, questionId: 1, body: "Sourkraut", details: longDetails, createdAt: 1308352736162});
     });
 
     describe("when an answer is assigned or updated", function() {

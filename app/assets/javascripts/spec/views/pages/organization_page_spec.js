@@ -13,8 +13,8 @@ describe("Views.Pages.Organization", function() {
   describe("when the params are assigned", function() {
     var organization;
     beforeEach(function() {
-      Organization.createFromRemote({id: 1, social: true, name: "Hyperarchy Social"});
-      organization = Organization.createFromRemote({id: 100, name: "Watergate"});
+      Organization.created({id: 1, social: true, name: "Hyperarchy Social"});
+      organization = Organization.created({id: 100, name: "Watergate"});
     });
 
     describe("when the organization exists in the local repository", function() {
@@ -38,8 +38,8 @@ describe("Views.Pages.Organization", function() {
       beforeEach(function() {
         $("#jasmine_content").html(organizationPage);
         organizationPage.show();
-        organization1 = Organization.createFromRemote({id: 101, name: "Big Spenders"});
-        organization2 = Organization.createFromRemote({id: 102, name: "Number Theorists"});
+        organization1 = Organization.created({id: 101, name: "Big Spenders"});
+        organization2 = Organization.created({id: 102, name: "Number Theorists"});
         organizationPage.params({organizationId: organization1.id()});
         previousScrollTop = 400;
         spyOn(Application, 'scrollTop').andReturn(previousScrollTop)
@@ -152,7 +152,7 @@ describe("Views.Pages.Organization", function() {
   describe("when the new question button is clicked", function() {
     it("navigates to the new question form for the current organization", function() {
       $("#jasmine_content").html(Application);
-      var organization = Organization.createFromRemote({id: 34});
+      var organization = Organization.created({id: 34});
       organizationPage.organization(organization);
       organizationPage.newQuestionButton.click();
       expect(Application.newQuestion).toBeVisible();
@@ -163,7 +163,7 @@ describe("Views.Pages.Organization", function() {
     var organization;
 
     beforeEach(function() {
-      organization = Organization.createFromRemote({id: 1, name: "Whales"});
+      organization = Organization.created({id: 1, name: "Whales"});
     });
 
     describe("when the organization changes", function() {

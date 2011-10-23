@@ -453,11 +453,11 @@ describe("Views.Pages.Question", function() {
     var headlineTextWhenAdjustColumnTopWasCalled;
 
     beforeEach(function() {
-      creator = User.createFromRemote({id: 1, firstName: "animal", lastName: "eater"});
-      organization = Organization.createFromRemote({id: 1, name: "Neurotic designers", privacy: "public"});
-      question = creator.questions().createFromRemote({id: 1, body: "What's a body?", details: "aoeu!", createdAt: 91234, organizationId: organization.id()});
-      answer1 = question.answers().createFromRemote({id: 1, body: "Answer 1", position: 1, creatorId: creator.id(), createdAt: 2345});
-      question2 = creator.questions().createFromRemote({id: 2, body: 'short body', details: "woo!", organizationId: organization.id(), createdAt: 91234});
+      creator = User.created({id: 1, firstName: "animal", lastName: "eater"});
+      organization = Organization.created({id: 1, name: "Neurotic designers", privacy: "public"});
+      question = creator.questions().created({id: 1, body: "What's a body?", details: "aoeu!", createdAt: 91234, organizationId: organization.id()});
+      answer1 = question.answers().created({id: 1, body: "Answer 1", position: 1, creatorId: creator.id(), createdAt: 2345});
+      question2 = creator.questions().created({id: 2, body: 'short body', details: "woo!", organizationId: organization.id(), createdAt: 91234});
       currentUser = organization.makeMember({id: 1, firstName: "John", lastName: "Five"});
       Application.currentUser(currentUser);
       useFakeServer();
@@ -522,8 +522,8 @@ describe("Views.Pages.Question", function() {
     describe("showing and hiding of the edit and destroy buttons", function() {
       describe("when the current user changes", function() {
         it("only shows the edit and destroy buttons if the current user can edit", function() {
-          var user1 = User.createFromRemote({id: 101});
-          var user2 = User.createFromRemote({id: 102});
+          var user1 = User.created({id: 101});
+          var user2 = User.created({id: 102});
 
           editableByCurrentUser = false;
           Application.currentUser(user1);
@@ -727,9 +727,9 @@ describe("Views.Pages.Question", function() {
       var privateOrg, privateOrgQuestion;
 
       beforeEach(function() {
-        privateOrg = Organization.createFromRemote({id: 2, name: "Private Org", privacy: "private"});
+        privateOrg = Organization.created({id: 2, name: "Private Org", privacy: "private"});
         var member = privateOrg.makeMember({id: 3});
-        privateOrgQuestion = privateOrg.questions().createFromRemote({id: 3, body: "Nobody knows", createdAt: 932, creatorId: member.id()});
+        privateOrgQuestion = privateOrg.questions().created({id: 3, body: "Nobody knows", createdAt: 932, creatorId: member.id()});
       });
 
       it("hides the facebook and twitter buttons if the current org is private, and shows it otherwise", function() {
@@ -860,7 +860,7 @@ describe("Views.Pages.Question", function() {
       var answer1Li, answer2Li;
 
       beforeEach(function() {
-        question.answers().createFromRemote({id: 2, body: "Answer 2", position: 2, creatorId: creator.id(), createdAt: 2345});
+        question.answers().created({id: 2, body: "Answer 2", position: 2, creatorId: creator.id(), createdAt: 2345});
         answer1Li = questionPage.find('li.answer:contains("Answer 1")');
         answer2Li = questionPage.find('li.answer:contains("Answer 2")');
         expect(answer1Li).toExist();
@@ -952,8 +952,8 @@ describe("Views.Pages.Question", function() {
     var creator, question;
 
     beforeEach(function() {
-      creator = User.createFromRemote({id: 1});
-      question = creator.questions().createFromRemote({id: 1, body: "What's the best kind of mate?", createdAt: 1234, organizationId: Organization.findSocial().id()});
+      creator = User.created({id: 1});
+      question = creator.questions().created({id: 1, body: "What's the best kind of mate?", createdAt: 1234, organizationId: Organization.findSocial().id()});
     });
 
     describe("when the question changes", function() {

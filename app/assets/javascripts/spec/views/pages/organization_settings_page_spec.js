@@ -8,7 +8,7 @@ describe("Views.Pages.OrganizationSettings", function() {
   beforeEach(function() {
     renderLayout();
     settingsPage = Application.organizationSettingsPage.show();
-    org = Organization.createFromRemote({id: 2, name: "ProPublica", privacy: "public"});
+    org = Organization.created({id: 2, name: "ProPublica", privacy: "public"});
     member1 = org.makeMember({id: 1, guest: false});
     member2 = org.makeMember({id: 2, guest: false});
     org.makeMember({id: 3, guest: true});

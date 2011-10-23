@@ -7,10 +7,10 @@ describe("Views.Pages.Question.AnswerLi", function() {
 
   beforeEach(function() {
     attachLayout();
-    Application.currentUser(User.createFromRemote({id: 1}));
+    Application.currentUser(User.created({id: 1}));
 
-    question = Question.createFromRemote({id: 22, creatorId: 1, createdAt: 234});
-    answer = question.answers().createFromRemote({id: 11, body: "Fruitloops"});
+    question = Question.created({id: 22, creatorId: 1, createdAt: 234});
+    answer = question.answers().created({id: 11, body: "Fruitloops"});
     answerLi = Views.Pages.Question.AnswerLi.toView({answer: answer});
   });
 

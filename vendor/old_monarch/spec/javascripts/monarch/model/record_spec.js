@@ -41,7 +41,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("generates a method on .prototype that accesses the field corresponding to the prototype", function() {
-        var record = Blog.createFromRemote({id: 1});
+        var record = Blog.created({id: 1});
 
         var field = record.field('userId');
         expect(field.value()).to(beUndefined);
@@ -89,7 +89,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("is updated correctly if the id of the record changes after the relation is instantiated", function() {
-        var user = User.createFromRemote({name: "Burt Smith"});
+        var user = User.created({name: "Burt Smith"});
         expect(user.blogs().predicate.rightOperand).to(beNull);
         user.save();
         expect(user.blogs().predicate.rightOperand).to(eq, user.id());
@@ -98,7 +98,7 @@ Screw.Unit(function(c) { with(c) {
       context("if a single 'orderBy' column is supplied in the options", function() {
         it("constructs an ordered hasMany relation ordered by that one column", function() {
           User.hasMany('blogs', { orderBy: "name desc" });
-          var user = User.createFromRemote({id: "jerry"});
+          var user = User.created({id: "jerry"});
           var ordering = user.blogs();
           expect(ordering.constructor).to(eq, OldMonarch.Model.Relations.Ordering);
           expect(ordering.sortSpecifications[0].column).to(eq, Blog.name_);
@@ -109,7 +109,7 @@ Screw.Unit(function(c) { with(c) {
       context("if multiple 'orderBy' columns are supplied in the options", function() {
         it("constructs an ordered hasMany relation ordered by those columns", function() {
           User.hasMany('blogs', { orderBy: ["name desc", "userId"]});
-          var user = User.createFromRemote({id: "jerry"});
+          var user = User.created({id: "jerry"});
           var ordering = user.blogs();
           expect(ordering.constructor).to(eq, OldMonarch.Model.Relations.Ordering);
           expect(ordering.sortSpecifications.length).to(eq, 3); // because sorting by id last is implicit
@@ -123,9 +123,9 @@ Screw.Unit(function(c) { with(c) {
       context("if a conditions hash is supplied in the options", function() {
         it("constrains the generated relation by the conditions", function() {
           User.hasMany('blogs', { conditions: { name: "My Blog" }});
-          var user = User.createFromRemote({id: 'jake'});
+          var user = User.created({id: 'jake'});
           expect(user.blogs().empty()).to(beTrue);
-          user.blogs().createFromRemote();
+          user.blogs().created();
           expect(user.blogs().size()).to(eq, 1);
           expect(user.blogs().first().name()).to(eq, "My Blog");
         });
@@ -134,8 +134,8 @@ Screw.Unit(function(c) { with(c) {
       context("if a 'constructorName' option is provided", function() {
         it("uses the table associated with that constructor instead of trying to infer it from the name of the relation", function() {
           User.hasMany('blogsORama', { constructorName: 'Blog' });
-          var user = User.createFromRemote({id: 'jake'});
-          user.blogsORama().createFromRemote();
+          var user = User.created({id: 'jake'});
+          user.blogsORama().created();
           expect(user.blogsORama().empty()).to(beFalse);
         });
       });
@@ -143,8 +143,8 @@ Screw.Unit(function(c) { with(c) {
       context("if a 'key' option is provided", function() {
         it("uses the named foreign key instead of trying to infer it from the name of the model on which the relation is being defined", function() {
           User.hasMany('blogs', { key: 'ownerId' });
-          var user = User.createFromRemote({id: 'jake'});
-          var blog = user.blogs().createFromRemote();
+          var user = User.created({id: 'jake'});
+          var blog = user.blogs().created();
           expect(blog.ownerId()).to(eq, 'jake');
         });
       });
@@ -156,7 +156,7 @@ Screw.Unit(function(c) { with(c) {
               return "foo";
             }
           });
-          var user = User.createFromRemote({id: 'jake'});
+          var user = User.created({id: 'jake'});
           expect(user.blogs().foo()).to(equal, "foo");
         });
       });
@@ -425,9 +425,9 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#isEqual", function() {
       it("returns true if the objects have the same type and id", function() {
-        expect(Blog.createFromRemote({id: 1}).isEqual(Blog.createFromRemote({id: 1}))).to(beTrue);
-        expect(Blog.createFromRemote({id: 1}).isEqual(Blog.createFromRemote({id: 2}))).to(beFalse);
-        expect(Blog.createFromRemote({id: 1}).isEqual(User.createFromRemote({id: 1}))).to(beFalse);
+        expect(Blog.created({id: 1}).isEqual(Blog.created({id: 1}))).to(beTrue);
+        expect(Blog.created({id: 1}).isEqual(Blog.created({id: 2}))).to(beFalse);
+        expect(Blog.created({id: 1}).isEqual(User.created({id: 1}))).to(beFalse);
       });
     });
   });

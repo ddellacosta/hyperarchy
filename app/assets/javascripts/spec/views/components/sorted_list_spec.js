@@ -12,17 +12,17 @@ describe("Views.Components.SortedList", function() {
       }
     });
 
-    var question = Question.createFromRemote({id: 1, body: "What's your favorite color?"});
+    var question = Question.created({id: 1, body: "What's your favorite color?"});
     relation = question.answers();
-    relation.createFromRemote({id: 1, body: "Red", position: 1});
-    relation.createFromRemote({id: 2, body: "Green", position: 3});
-    relation.createFromRemote({id: 3, body: "Blue", position: 5});
+    relation.created({id: 1, body: "Red", position: 1});
+    relation.created({id: 2, body: "Green", position: 3});
+    relation.created({id: 3, body: "Blue", position: 5});
 
-    var question2 = Question.createFromRemote({id: 2, body: "What's your favorite type of car?"});
+    var question2 = Question.created({id: 2, body: "What's your favorite type of car?"});
     relation2 = question2.answers();
-    relation2.createFromRemote({id: 4, body: "Audi", position: 1});
-    relation2.createFromRemote({id: 5, body: "Volvo", position: 3});
-    relation2.createFromRemote({id: 6, body: "Mercedes", position: 5});
+    relation2.created({id: 4, body: "Audi", position: 1});
+    relation2.created({id: 5, body: "Volvo", position: 3});
+    relation2.created({id: 6, body: "Mercedes", position: 5});
 
     view.relation(relation);
   });
@@ -61,7 +61,7 @@ describe("Views.Components.SortedList", function() {
 
   describe("when a record is inserted into the relation", function() {
     it("inserts an li for the record at the appropriate index", function() {
-      relation.createFromRemote({id: "yellow", body: "Yellow", position: 4});
+      relation.created({id: "yellow", body: "Yellow", position: 4});
       expect(view.find("li:eq(2)").html()).toBe("Yellow");
       expect(view.find("li:eq(3)").html()).toBe("Blue");
     });

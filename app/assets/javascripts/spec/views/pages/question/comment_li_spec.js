@@ -8,12 +8,12 @@ describe("Views.Pages.Question.CommentLi", function() {
 
   beforeEach(function() {
     attachLayout();
-    currentUser = User.createFromRemote({id: 1});
+    currentUser = User.created({id: 1});
     Application.currentUser(currentUser);
 
-    question = Question.createFromRemote({id: 22, creatorId: 1, createdAt: 234});
-    creator = User.createFromRemote({id: 2, firstName: "Commento", lastName: "Santiago"});
-    comment = question.comments().createFromRemote({id: 11, body: "I likeah the fruiloops so much", creatorId: creator.id(), createdAt: 3245});
+    question = Question.created({id: 22, creatorId: 1, createdAt: 234});
+    creator = User.created({id: 2, firstName: "Commento", lastName: "Santiago"});
+    comment = question.comments().created({id: 11, body: "I likeah the fruiloops so much", creatorId: creator.id(), createdAt: 3245});
     spyOn(comment, 'editableByCurrentUser').andCallFake(function() {
       return commentEditableByCurrentUser;
     });

@@ -6,7 +6,7 @@ describe("Views.Lightboxes.NewQuestion", function() {
   var newQuestionForm, organization, member, guest;
   beforeEach(function() {
     renderLayout();
-    organization = Organization.createFromRemote({id: 1, privacy: "public"});
+    organization = Organization.created({id: 1, privacy: "public"});
     member = organization.makeMember({id: 1});
     guest =  organization.makeMember({id: 2, guest: true});
     Application.currentUser(member);

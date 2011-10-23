@@ -25,6 +25,7 @@ gem 'compass', '0.12.alpha'
 gem 'uglifier', :path => 'vendor/uglifier'
 gem 'jquery-rails'
 gem 'old_monarch', :path => 'vendor/old_monarch'
+gem 'monarch', :path => 'vendor/monarch'
 gem 'fb_graph'
 
 

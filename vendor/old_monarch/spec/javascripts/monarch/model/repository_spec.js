@@ -272,7 +272,7 @@ Screw.Unit(function(c) { with(c) {
 
         // but different data stores
         var numUsersInOriginalRepository = repository.tables.users.tuples().length;
-        clone.tables.users.createFromRemote({fullName: "Wil Bierbaum"});
+        clone.tables.users.created({fullName: "Wil Bierbaum"});
         expect(repository.tables.users.tuples().length).to(eq, numUsersInOriginalRepository);
       });
     });

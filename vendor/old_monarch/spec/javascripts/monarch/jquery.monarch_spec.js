@@ -49,7 +49,7 @@ Screw.Unit(function(c) { with(c) {
           expect(Blog.find(2).name()).to(eq, "Blog 2");
         });
 
-        User.createFromRemote({id: 99});
+        User.created({id: 99});
 
         jQuery.ajax({
           url: '/resource',
@@ -134,7 +134,7 @@ Screw.Unit(function(c) { with(c) {
           expect(Blog.find(2).name()).to(eq, "Blog 2");
         });
 
-        User.createFromRemote({id: 99});
+        User.created({id: 99});
 
         jQuery.ajax({
           url: '/resource',
@@ -270,14 +270,14 @@ Screw.Unit(function(c) { with(c) {
 
     it("assigns the html of the current jquery-wrapped element to the value of the indicated field, and keeps it updated as the field changes remotely", function() {
       var elt = $("<div></div>");
-      var blog = Blog.createFromRemote({id: "blog", name: "Arcata Tent Haters & Lovers"})
+      var blog = Blog.created({id: "blog", name: "Arcata Tent Haters & Lovers"})
       elt.bindText(blog, "name");
       expect(elt.html()).to(eq, "Arcata Tent Haters &amp; Lovers");
 
       blog.remotelyUpdated({name: "Arcata Tent Lovers"});
       expect(elt.html()).to(eq, "Arcata Tent Lovers");
 
-      var blog2 = Blog.createFromRemote({id: "blog", name: "Arcata Naan <Lovers>"});
+      var blog2 = Blog.created({id: "blog", name: "Arcata Naan <Lovers>"});
       elt.bindText(blog2, "name");
 
       expect(elt.html()).to(eq, "Arcata Naan &lt;Lovers&gt;");
@@ -287,7 +287,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     it("if the containing view is removed, destroys the subscription (but does not if it's only _detached_)", function() {
-      var blog = Blog.createFromRemote({id: "blog", name: "Arcata Tent Haters"});
+      var blog = Blog.created({id: "blog", name: "Arcata Tent Haters"});
 
       var view = OldMonarch.View.build(function(b) {
           b.div(function() {

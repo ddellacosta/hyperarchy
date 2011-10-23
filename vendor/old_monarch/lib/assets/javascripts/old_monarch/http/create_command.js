@@ -13,7 +13,7 @@ _.constructor("OldMonarch.Http.CreateCommand", OldMonarch.Http.Command, {
   },
 
   complete: function(fieldValuesFromServer) {
-    this.record.remotelyCreated(fieldValuesFromServer);
+    this.record.created(fieldValuesFromServer);
   },
 
   handleFailure: function(errorsByFieldName) {

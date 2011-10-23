@@ -5,9 +5,9 @@
 describe("Views.Pages.Question.VoteLi", function() {
   var voteLi, vote, user, question;
   beforeEach(function() {
-    user = User.createFromRemote({id: 1, firstName: 'joe', lastName: 'henderson'});
-    question = Question.createFromRemote({id: 1, creatorId: 1, createdAt: 234234});
-    vote = user.votes().createFromRemote({questionId: question.id(), updatedAt: 1308352736162});
+    user = User.created({id: 1, firstName: 'joe', lastName: 'henderson'});
+    question = Question.created({id: 1, creatorId: 1, createdAt: 234234});
+    vote = user.votes().created({questionId: question.id(), updatedAt: 1308352736162});
     voteLi = Views.Pages.Question.VoteLi.toView({vote: vote});
   });
 

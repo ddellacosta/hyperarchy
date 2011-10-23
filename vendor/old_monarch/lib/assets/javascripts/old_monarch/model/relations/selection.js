@@ -22,8 +22,8 @@ _.constructor("OldMonarch.Model.Relations.Selection", OldMonarch.Model.Relations
     return this.operand.create(this.predicate.forceMatchingFieldValues(fieldValues));
   },
 
-  createFromRemote: function(fieldValues) {
-    return this.operand.createFromRemote(this.predicate.forceMatchingFieldValues(fieldValues));
+  created: function(fieldValues) {
+    return this.operand.created(this.predicate.forceMatchingFieldValues(fieldValues));
   },
 
   wireRepresentation: function() {

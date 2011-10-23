@@ -4,7 +4,7 @@
       this.delegateConstructorMethods('find', 'fetch', 'findOrFetch', 'tuples', 'first', 'last', 'each', 'onEach', 'map', 'any',
                                       'onInsert', 'onUpdate', 'onRemove', 'onDirty', 'onClean', 'onInvalid', 'defaultOrderBy',
                                       'onValid', 'where', 'offset', 'contains', 'orderBy', 'project', 'union', 'difference',
-                                      'empty', 'build', 'create', 'createFromRemote', 'fixture', 'clear', 'wireRepresentation',
+                                      'empty', 'build', 'create', 'created', 'fixture', 'clear', 'wireRepresentation',
                                       'size', 'table');
     },
 
@@ -156,7 +156,7 @@
     return Server.destroy(this);
   },
 
-  remotelyCreated: function(fieldValues) {
+  created: function(fieldValues) {
     this.remote.update(_.camelizeKeys(fieldValues));
     this.isRemotelyCreated = true;
     this.remote.updateEventsEnabled = true;

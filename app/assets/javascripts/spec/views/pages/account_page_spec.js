@@ -7,9 +7,9 @@ describe("Views.Pages.Account", function() {
 
   beforeEach(function() {
     renderLayout();
-    organization = Organization.createFromRemote({id: 1, name: "Bad Bob's"});
-    currentUser = User.createFromRemote({id: 1, firstName: "First", lastName: "Last", emailAddress: "email@example.com", emailEnabled: true});
-    membership = currentUser.memberships().createFromRemote({id: 1, organizationId: organization.id()});
+    organization = Organization.created({id: 1, name: "Bad Bob's"});
+    currentUser = User.created({id: 1, firstName: "First", lastName: "Last", emailAddress: "email@example.com", emailEnabled: true});
+    membership = currentUser.memberships().created({id: 1, organizationId: organization.id()});
     Application.showPage('account', {userId: 1})
     accountPage = Application.accountPage;
   });

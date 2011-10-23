@@ -14,11 +14,11 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#tuples", function() {
       it("returns the union tuples in the left operand and right operand", function() {
-        var user1 = User.createFromRemote({id: 1, age: 22, fullName: "Mackrel"});
-        var user2 = User.createFromRemote({id: 2, age: 32, fullName: "Jonie"});
-        var user3 = User.createFromRemote({id: 3, age: 32, fullName: "John"});
-        var user4 = User.createFromRemote({id: 4, fullName: "John"});
-        var user5 = User.createFromRemote({id: 5, fullName: "Mark"});
+        var user1 = User.created({id: 1, age: 22, fullName: "Mackrel"});
+        var user2 = User.created({id: 2, age: 32, fullName: "Jonie"});
+        var user3 = User.created({id: 3, age: 32, fullName: "John"});
+        var user4 = User.created({id: 4, fullName: "John"});
+        var user5 = User.created({id: 5, fullName: "Mark"});
 
         var tuples = union.tuples();
         expect(tuples.length).to(eq, 3);
@@ -32,8 +32,8 @@ Screw.Unit(function(c) { with(c) {
       var user, blog, union, insertCallback, updateCallback, removeCallback;
 
       before(function() {
-        user = User.createFromRemote({id: 1});
-        blog = user.blogs().createFromRemote({id: 1});
+        user = User.created({id: 1});
+        blog = user.blogs().created({id: 1});
 
         var leftOperand = user.blogPosts();
         var rightOperand = user.favoriteBlogPosts();
@@ -62,7 +62,7 @@ Screw.Unit(function(c) { with(c) {
       describe("when a record is inserted in the left operand", function() {
         context("if the record is not present in the right operand", function() {
           it("triggers an insert event with the record", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
+            var record = BlogPost.created({id: 1, blogId: 1});
             var sortKey = union.buildSortKey(record);
 
             expect(insertCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
@@ -73,8 +73,8 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the right operand", function() {
           it("does not trigger an insert event", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 2});
-            user.favoritings().createFromRemote({blogPostId: 1});
+            var record = BlogPost.created({id: 1, blogId: 2});
+            user.favoritings().created({blogPostId: 1});
 
             clearCallbackMocks();
 
@@ -92,10 +92,10 @@ Screw.Unit(function(c) { with(c) {
       describe("when a record is inserted in the right operand", function() {
         context("if the record is not present in the left operand", function() {
           it("triggers an insert event with the record", function() {
-            var record = BlogPost.createFromRemote({id: 1});
+            var record = BlogPost.created({id: 1});
             var sortKey = union.buildSortKey(record);
 
-            user.favoritings().createFromRemote({blogPostId: 1});
+            user.favoritings().created({blogPostId: 1});
             expect(insertCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
             expect(updateCallback).toNot(haveBeenCalled);
             expect(removeCallback).toNot(haveBeenCalled);
@@ -104,10 +104,10 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the left operand", function() {
           it("does not trigger any callbacks", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
+            var record = BlogPost.created({id: 1, blogId: 1});
             clearCallbackMocks();
             
-            user.favoritings().createFromRemote({blogPostId: 1});
+            user.favoritings().created({blogPostId: 1});
             expectNoCallbacksToHaveBeenCalled();
           });
         });
@@ -116,7 +116,7 @@ Screw.Unit(function(c) { with(c) {
       describe("when a record is updated in the left operand", function() {
         context("if the record is not present in the right operand", function() {
           it("triggers an update event with the record", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
+            var record = BlogPost.created({id: 1, blogId: 1});
             var sortKey = union.buildSortKey(record);
 
             clearCallbackMocks();
@@ -137,8 +137,8 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the right operand", function() {
           it("triggers an update event with the record, but not twice", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
-            user.favoritings().createFromRemote({blogPostId: 1})
+            var record = BlogPost.created({id: 1, blogId: 1});
+            user.favoritings().created({blogPostId: 1})
             clearCallbackMocks();
 
             record.update({name: "New Name"});
@@ -150,7 +150,7 @@ Screw.Unit(function(c) { with(c) {
       describe("when a record is removed from the left operand", function() {
         context("if the record is not present in the right operand", function() {
           it("triggers a remove event with the record", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
+            var record = BlogPost.created({id: 1, blogId: 1});
             var sortKey = union.buildSortKey(record);
             clearCallbackMocks();
 
@@ -161,8 +161,8 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the right operand", function() {
           it("does not trigger a remove event", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
-            user.favoritings().createFromRemote({blogPostId: 1})
+            var record = BlogPost.created({id: 1, blogId: 1});
+            user.favoritings().created({blogPostId: 1})
             clearCallbackMocks();
 
             record.remotelyUpdated({blogId: 100});
@@ -174,9 +174,9 @@ Screw.Unit(function(c) { with(c) {
       describe("when a record is removed from the right operand", function() {
         context("if the record is not present in the left operand", function() {
           it("triggers remove callbacks with the record", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 100});
+            var record = BlogPost.created({id: 1, blogId: 100});
             var sortKey = union.buildSortKey(record);
-            var favoriting =  user.favoritings().createFromRemote({blogPostId: 1})
+            var favoriting =  user.favoritings().created({blogPostId: 1})
             clearCallbackMocks();
 
             favoriting.destroy();
@@ -186,8 +186,8 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the left operand", function() {
           it("does not trigger a remove event", function() {
-            var record = BlogPost.createFromRemote({id: 1, blogId: 1});
-            var favoriting = user.favoritings().createFromRemote({blogPostId: 1})
+            var record = BlogPost.created({id: 1, blogId: 1});
+            var favoriting = user.favoritings().created({blogPostId: 1})
             clearCallbackMocks();
 
             favoriting.remotelyDestroyed();

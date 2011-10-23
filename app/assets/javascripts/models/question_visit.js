@@ -2,15 +2,11 @@
 //  licensed under the Affero General Public License version 3 or later.  See
 //  the COPYRIGHT file.
 
-_.constructor("QuestionVisit", Model.Record, {
-  constructorInitialize: function() {
-    this.columns({
-      userId: 'key',
-      questionId: 'key',
-      updatedAt: 'datetime'
-    });
+QuestionVisit = Monarch("QuestionVisit", {
+  userId: 'key',
+  questionId: 'key',
+  updatedAt: 'datetime'
+})
+  .belongsTo('question')
+  .belongsTo('user');
 
-    this.belongsTo('question');
-    this.belongsTo('user');
-  }
-});

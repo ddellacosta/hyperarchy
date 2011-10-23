@@ -48,8 +48,8 @@ Screw.Unit(function(c) { with(c) {
             this.defaultOrderBy("position asc");
           }
         });
-        var record1 = recordConstructor.createFromRemote({id: 1, position: 2});
-        var record2 = recordConstructor.createFromRemote({id: 2, position: 1});
+        var record1 = recordConstructor.created({id: 1, position: 2});
+        var record2 = recordConstructor.created({id: 2, position: 1});
 
         expect(recordConstructor.tuples()).to(equal, [record2, record1]);
       });
@@ -82,7 +82,7 @@ Screw.Unit(function(c) { with(c) {
 
       it("looks for a record in with the given id, and fetches it and any additional relations if it is not found, invoking the callback with the record and a boolean value indicating whether a fetch occurred", function() {
         // case where a record with given id is in the repo
-        var extantRecord = Blog.createFromRemote({id: 1});
+        var extantRecord = Blog.created({id: 1});
 
         var successCallback = mockFunction("successCallback");
         Blog.findOrFetch(1).success(successCallback);
@@ -126,7 +126,7 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#clear", function() {
       it("removes tuples data from the table and its index", function() {
-        User.createFromRemote({id: 1});
+        User.created({id: 1});
         expect(User.find(1)).toNot(beNull);
         User.table.clear();
         expect(User.table.empty()).to(beTrue);
@@ -175,11 +175,11 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("triggers insert, update, and remove events on the table at the appropriate times", function() {
-        var record = User.createFromRemote({id: 1, fullName: "Emma Cunningham"});
+        var record = User.created({id: 1, fullName: "Emma Cunningham"});
         expect(insertCallback).to(haveBeenCalled, withArgs(record, 0, {'users.id': 1}, {'users.id': 1})); // record, index, new key, old key
 
         // higher index
-        var record2 = User.createFromRemote({id: 2, fullName: "Caitlin Brickman"});
+        var record2 = User.created({id: 2, fullName: "Caitlin Brickman"});
         expect(insertCallback).to(haveBeenCalled, withArgs(record2, 1, {'users.id': 2}, {'users.id': 2}));
 
         record.remotelyUpdated({id: 3, fullName: "Emma T. Scheme"});
@@ -201,7 +201,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("triggers dirty and clean events at the appropriate times", function() {
-        var record = User.createFromRemote({id: 1, fullName: "Nathan Sobo"})
+        var record = User.created({id: 1, fullName: "Nathan Sobo"})
         var sortKey = User.table.buildSortKey(record);
 
 
@@ -213,7 +213,7 @@ Screw.Unit(function(c) { with(c) {
       });
       
       it("triggers invalid and valid events at the appropriate times", function() {
-        var record = User.createFromRemote({id: 1, fullName: "Nathan Sobo"})
+        var record = User.created({id: 1, fullName: "Nathan Sobo"})
         record.assignValidationErrors({fullName: ["some error"]});
 
         var sortKey = User.table.buildSortKey(record)
@@ -238,7 +238,7 @@ Screw.Unit(function(c) { with(c) {
 
         User.table.pauseEvents();
 
-        var record = User.createFromRemote({id: 1, fullName: "Jake Frautschi"});
+        var record = User.created({id: 1, fullName: "Jake Frautschi"});
 
         record.remotelyUpdated({ fullName: "Jacob Frautschi" });
         record.remotelyDestroyed();
@@ -264,7 +264,7 @@ Screw.Unit(function(c) { with(c) {
         updateCallback.clear();
         removeCallback.clear();
 
-        var record2 = User.createFromRemote({id: 2, fullName: "Nathan Sobo"});
+        var record2 = User.created({id: 2, fullName: "Nathan Sobo"});
         expect(insertCallback).to(haveBeenCalled, once);
 
         record2.remote.update({fullName: "Nate Sobo"});

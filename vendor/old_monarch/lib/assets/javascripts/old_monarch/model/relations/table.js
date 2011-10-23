@@ -40,9 +40,9 @@ _.constructor("OldMonarch.Model.Relations.Table", OldMonarch.Model.Relations.Rel
     return Server.create(this.build(fieldValues));
   },
 
-  createFromRemote: function(fieldValues) {
+  created: function(fieldValues) {
     var record = new this.recordConstructor(null, this);
-    record.remotelyCreated(fieldValues);
+    record.created(fieldValues);
     return record;
   },
 
@@ -142,7 +142,7 @@ _.constructor("OldMonarch.Model.Relations.Table", OldMonarch.Model.Relations.Rel
       if (extantRecord) {
         extantRecord.remotelyUpdated(fieldValues);
       } else {
-        this.createFromRemote(fieldValues)
+        this.created(fieldValues)
       }
     }, this);
   },
@@ -159,7 +159,7 @@ _.constructor("OldMonarch.Model.Relations.Table", OldMonarch.Model.Relations.Rel
   loadFixtures: function(fixtureDefinitions) {
     _.each(fixtureDefinitions, function(properties, id) {
       var fieldValues = _.extend({id: id}, properties)
-      this.createFromRemote(fieldValues);
+      this.created(fieldValues);
     }, this);
   },
 

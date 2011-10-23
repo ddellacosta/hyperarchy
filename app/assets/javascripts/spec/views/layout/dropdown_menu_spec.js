@@ -6,7 +6,7 @@ describe("Views.Layout.DropdownMenu", function() {
   var dropdownMenu;
   beforeEach(function() {
     renderLayout();
-    Application.currentUser(User.createFromRemote({id: 1, firstName: "Some", lastName: "Guy"}));
+    Application.currentUser(User.created({id: 1, firstName: "Some", lastName: "Guy"}));
     dropdownMenu = Application.accountMenu.dropdownMenu
   });
 

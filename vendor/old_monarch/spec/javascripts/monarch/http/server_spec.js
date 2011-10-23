@@ -216,7 +216,7 @@ Screw.Unit(function(c) { with(c) {
       var record, tableUpdateCallback, recordUpdateCallback, successCallback, invalidCallback, errorCallback;
 
       before(function() {
-        record = User.createFromRemote({ id: 1, fullName: "Jesus Chang", age: 22, signedUpAt: 1302070303036 });
+        record = User.created({ id: 1, fullName: "Jesus Chang", age: 22, signedUpAt: 1302070303036 });
 
         var expectUserUpdated = function() {
           expect(record.fullName()).toNot(eq, "Jesus Chang");
@@ -421,7 +421,7 @@ Screw.Unit(function(c) { with(c) {
 
       context("if no fields are dirty at the time of the update", function() {
         it("does not make a request and triggers success on the returned promise with the record and an empty changeset", function() {
-          record = User.createFromRemote({ id: 1, fullName: "Jesus Chang", age: 22, signedUpAt: 1302070303036 });
+          record = User.created({ id: 1, fullName: "Jesus Chang", age: 22, signedUpAt: 1302070303036 });
 
           var promise = server.update(record);
 
@@ -438,7 +438,7 @@ Screw.Unit(function(c) { with(c) {
       var record, removeCallback, destroyCallback, successCallback, errorCallback;
 
       before(function() {
-        record = User.createFromRemote({ id: 1, fullName: "Jesus Chang", age: 22, signedUpAt: 1302070303036 });
+        record = User.created({ id: 1, fullName: "Jesus Chang", age: 22, signedUpAt: 1302070303036 });
 
         var expectUserRemovedFromRepository = function() {
           expect(User.find(1)).to(beNull);

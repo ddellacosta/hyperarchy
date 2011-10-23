@@ -9,13 +9,13 @@ describe("Views.Lightboxes.FullScreenAnswer", function() {
     renderLayout();
     fullScreenAnswer = Application.fullScreenAnswer.show();
 
-    organization = Organization.createFromRemote({id: 42});
+    organization = Organization.created({id: 42});
     creator = organization.makeMember({id: 999, emailHash: 'blas', firstName: "Mr.", lastName: "Creator"});
     Application.currentUser(creator);
-    question = organization.questions().createFromRemote({id: 1, creatorId: 999, createdAt: 12});
-    answer1 = creator.answers().createFromRemote({id: 1, position: 1, questionId: 1, body: "meetingmapper.us", createdAt: 123});
-    answer2 = creator.answers().createFromRemote({id: 2, position: 2, questionId: 1, body: "actionitems.us", createdAt: 124});
-    answer3 = creator.answers().createFromRemote({id: 3, position: 3, questionId: 1, body: "agileplanner.co", createdAt: 125});
+    question = organization.questions().created({id: 1, creatorId: 999, createdAt: 12});
+    answer1 = creator.answers().created({id: 1, position: 1, questionId: 1, body: "meetingmapper.us", createdAt: 123});
+    answer2 = creator.answers().created({id: 2, position: 2, questionId: 1, body: "actionitems.us", createdAt: 124});
+    answer3 = creator.answers().created({id: 3, position: 3, questionId: 1, body: "agileplanner.co", createdAt: 125});
 
     fullScreenAnswer.answer(answer2);
   });

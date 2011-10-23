@@ -7,8 +7,8 @@ describe("Views.Pages.Question.RankingLi", function() {
 
   beforeEach(function() {
     attachLayout();
-    answer = Answer.createFromRemote({id: 11, questionId: 22, body: "Fruitloops"});
-    ranking = Ranking.createFromRemote({answerId: answer.id()});
+    answer = Answer.created({id: 11, questionId: 22, body: "Fruitloops"});
+    ranking = Ranking.created({answerId: answer.id()});
   });
 
   describe("initialize", function() {

@@ -6,8 +6,8 @@ describe("Views.Pages.Account.MembershipPreferencesLi", function() {
   var membership, organization, preferencesLi;
 
   beforeEach(function() {
-    organization = Organization.createFromRemote({id: 1, name: "Crazy Eddie's"});
-    membership = Membership.createFromRemote({
+    organization = Organization.created({id: 1, name: "Crazy Eddie's"});
+    membership = Membership.created({
       id: 1,
       organizationId: organization.id(),
       notifyOfNewQuestions: "daily",

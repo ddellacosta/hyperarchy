@@ -8,12 +8,12 @@ Screw.Unit(function(c) { with(c) {
     var join, leftOperand, rightOperand, predicate;
 
     init(function() {
-      user = User.createFromRemote({id: 1, fullName: "Salt Peter"});
-      blog1 = user.blogs().createFromRemote({id: 1, name: "A"});
-      blog2 = user.blogs().createFromRemote({id: 2, name: "B"});
-      post1 = blog1.blogPosts().createFromRemote({id: 1, body: "this is post 1"});
-      post2 = blog1.blogPosts().createFromRemote({id: 2, body: "this is post 2"});
-      post3 = blog2.blogPosts().createFromRemote({id: 3, body: "this is post 3"});
+      user = User.created({id: 1, fullName: "Salt Peter"});
+      blog1 = user.blogs().created({id: 1, name: "A"});
+      blog2 = user.blogs().created({id: 2, name: "B"});
+      post1 = blog1.blogPosts().created({id: 1, body: "this is post 1"});
+      post2 = blog1.blogPosts().created({id: 2, body: "this is post 2"});
+      post3 = blog2.blogPosts().created({id: 3, body: "this is post 3"});
 
       leftOperand = user.blogs();
       rightOperand = BlogPost.table;
@@ -102,9 +102,9 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is inserted into the left operand", function() {
           context("when the insertion causes the cartesian product to contain a new composite tuple that matches the predicate", function() {
             it("triggers an insert event with the composite tuple", function() {
-              var blogPost = BlogPost.createFromRemote({ id: 100, blogId: 100});
+              var blogPost = BlogPost.created({ id: 100, blogId: 100});
 
-              var blog = user.blogs().createFromRemote({id: 100})
+              var blog = user.blogs().created({id: 100})
               expect(insertHandler).to(haveBeenCalled, once);
 
               var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog, blogPost);
@@ -116,7 +116,7 @@ Screw.Unit(function(c) { with(c) {
           context("when the insertion does NOT cause the cartesean product to contain a new composite tuple that matches the predicate", function() {
             it("does not trigger insert events handlers or modify the stored contents of the join", function() {
               var sizeBeforeBlogCreate = join.size();
-              user.blogs().createFromRemote();
+              user.blogs().created();
               expect(insertHandler).toNot(haveBeenCalled);
               expect(join.size()).to(eq, sizeBeforeBlogCreate);
             });
@@ -126,7 +126,7 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is inserted into the right operand", function() {
           context("when the insertion causes the cartesean product to contain a new composite tuple that matches the predicate", function() {
             it("triggers insert events with the new composite tuple", function() {
-              var blogPost = blog1.blogPosts().createFromRemote({id: 100});
+              var blogPost = blog1.blogPosts().created({id: 100});
               expect(insertHandler).to(haveBeenCalled, once);
 
               var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog1, blogPost);
@@ -162,7 +162,7 @@ Screw.Unit(function(c) { with(c) {
           context("when the removal does not cause the removal of any composite tuples that were previously in the join", function() {
             it("does not trigger remove events or modify the contents of the relation", function() {
               var sizeBefore = join.size();
-              var emptyBlog = user.blogs().createFromRemote();
+              var emptyBlog = user.blogs().created();
               emptyBlog.destroy();
               expect(removeHandler).toNot(haveBeenCalled);
               expect(join.size()).to(eq, sizeBefore);
@@ -185,7 +185,7 @@ Screw.Unit(function(c) { with(c) {
           context("when the removal does not cause the removal of any composite tuples that were previously in the join", function() {
             it("does not trigger remove events or modify the contents of the relation", function() {
               var sizeBefore = join.size();
-              var orphanPost = BlogPost.createFromRemote({id: 100});
+              var orphanPost = BlogPost.created({id: 100});
               orphanPost.destroy();
               expect(removeHandler).toNot(haveBeenCalled);
               expect(join.size()).to(eq, sizeBefore);
@@ -260,8 +260,8 @@ Screw.Unit(function(c) { with(c) {
           context("when the updated tuple is not part of a composite tuple that was a in the join before the update", function() {
             context("when the update causes join to to contain a new composite tuple", function() {
               it("triggers an insert event with the new composite tuple", function() {
-                var blog = user.blogs().createFromRemote({id: 100});
-                var blogPost = BlogPost.createFromRemote({id: 100, blogId: 101});
+                var blog = user.blogs().created({id: 100});
+                var blogPost = BlogPost.created({id: 100, blogId: 101});
 
                 blog.update({id: 101});
                 expect(insertHandler).to(haveBeenCalled, once);
@@ -280,7 +280,7 @@ Screw.Unit(function(c) { with(c) {
 
             context("when the update does not cause #carteseanProduct to contain a CompositeTuple that matches #predicate", function() {
               it("does not trigger any event handlers", function() {
-                var blog = user.blogs().createFromRemote({name: "Junkfood Diet"});
+                var blog = user.blogs().created({name: "Junkfood Diet"});
                 blog.save();
                 blog.update({name: "Healthfood Diet"});
 
@@ -333,7 +333,7 @@ Screw.Unit(function(c) { with(c) {
             var post;
 
             before(function() {
-              post = BlogPost.createFromRemote({ id: 100, blogId: 100 });
+              post = BlogPost.created({ id: 100, blogId: 100 });
             });
 
             context("when the update causes the join to contain a new composite tuple", function() {

@@ -6,13 +6,13 @@ describe("Organization", function() {
   var organization;
 
   beforeEach(function() {
-    organization = Organization.createFromRemote({id: 22, questionCount: 32});
+    organization = Organization.created({id: 22, questionCount: 32});
   });
 
   describe(".findSocial", function() {
     it("returns the social organization", function() {
-      var nonSocial = Organization.createFromRemote({id: 1, social: false});
-      var social = Organization.createFromRemote({id: 2, social: true});
+      var nonSocial = Organization.created({id: 1, social: false});
+      var social = Organization.created({id: 2, social: true});
       expect(Organization.findSocial()).toBe(social);
     });
   });

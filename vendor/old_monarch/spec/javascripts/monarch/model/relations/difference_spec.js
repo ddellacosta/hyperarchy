@@ -7,10 +7,10 @@ Screw.Unit(function(c) { with(c) {
     describe("#tuples()", function() {
       var difference, user3, user4;
       before(function() {
-        User.createFromRemote({id: 1, age: 28});
-        User.createFromRemote({id: 2, age: 28});
-        user3 = User.createFromRemote({id: 3, age: 29});
-        user4 = User.createFromRemote({id: 4, age: 30});
+        User.created({id: 1, age: 28});
+        User.created({id: 2, age: 28});
+        user3 = User.created({id: 3, age: 29});
+        user4 = User.created({id: 4, age: 30});
         difference = User.difference(User.where({age: 28}));
       });
 
@@ -51,7 +51,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is not present in the right operand", function() {
           it("triggers insert callbacks with the record", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 2});
+            var record = Blog.created({id: 1, userId: 2});
             var sortKey = difference.buildSortKey(record);
             expect(insertCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
           });
@@ -59,7 +59,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the right operand", function() {
           it("does not trigger any callbacks", function() {
-            Blog.createFromRemote({id: 1, userId: 1});
+            Blog.created({id: 1, userId: 1});
             expectNoCallbacksToHaveBeenCalled();
           });
         });
@@ -72,7 +72,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("does not trigger any callbacks", function() {
-            rightOperand.createFromRemote({id: 1, userId: 2});
+            rightOperand.created({id: 1, userId: 2});
             expectNoCallbacksToHaveBeenCalled();
           });
         });
@@ -83,7 +83,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("triggers remove callbacks with the record", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 2})
+            var record = Blog.created({id: 1, userId: 2})
             expect(leftOperand.contains(record)).to(beTrue);
             expect(rightOperand.contains(record)).to(beFalse);
 
@@ -105,7 +105,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is not present in the right operand", function() {
           it("triggers update callbacks with the record", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 2});
+            var record = Blog.created({id: 1, userId: 2});
             expect(rightOperand.contains(record)).to(beFalse);
 
 
@@ -122,7 +122,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the right operand", function() {
           it("does not trigger any callbacks", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 1});
+            var record = Blog.created({id: 1, userId: 1});
             record.update({name: "Tarot Route"});
             expectNoCallbacksToHaveBeenCalled();
           });
@@ -136,7 +136,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("triggers remove callbacks with the record", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 2});
+            var record = Blog.created({id: 1, userId: 2});
             var sortKey = difference.buildSortKey(record);
             record.destroy();
             expect(removeCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
@@ -145,7 +145,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("if the record is present in the right operand", function() {
           it("does not trigger any callbacks", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 1});
+            var record = Blog.created({id: 1, userId: 1});
             record.destroy();
             expectNoCallbacksToHaveBeenCalled();
           });
@@ -159,7 +159,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("does not trigger any callbacks", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 2});
+            var record = Blog.created({id: 1, userId: 2});
             record.destroy();
             expectNoCallbacksToHaveBeenCalled();
           });
@@ -171,7 +171,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("triggers insert callbacks with the record", function() {
-            var record = Blog.createFromRemote({id: 1, userId: 1});
+            var record = Blog.created({id: 1, userId: 1});
             var sortKey = difference.buildSortKey(record);
             record.remotelyUpdated({userId: 2})
             expect(insertCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));

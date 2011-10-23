@@ -4,7 +4,7 @@ require "old_monarch/version"
 
 Gem::Specification.new do |s|
   s.name        = "old_monarch"
-  s.version     = Monarch::VERSION
+  s.version     = OldMonarch::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nathan Sobo", "Max Brunsfeld"]
   s.email       = ["nathan@hyperarchy.com", "max@hyperarchi.com"]

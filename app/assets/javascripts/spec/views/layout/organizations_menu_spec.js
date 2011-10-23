@@ -13,14 +13,14 @@ describe("Views.Layout.OrganizationsMenu", function() {
     var singleMembershipUser, multiMembershipUser, org1, org2;
 
     beforeEach(function() {
-      singleMembershipUser = User.createFromRemote({id: 1, guest: false, firstName: "Joe", lastName: "Member", emailHash: 'fake-email-hash'});
-      multiMembershipUser = User.createFromRemote({id: 2, guest: false, firstName: "Joe", lastName: "Member", emailHash: 'fake-email-hash'});
+      singleMembershipUser = User.created({id: 1, guest: false, firstName: "Joe", lastName: "Member", emailHash: 'fake-email-hash'});
+      multiMembershipUser = User.created({id: 2, guest: false, firstName: "Joe", lastName: "Member", emailHash: 'fake-email-hash'});
 
-      org1 = Organization.createFromRemote({id: 1});
-      org2 = Organization.createFromRemote({id: 2});
-      singleMembershipUser.memberships().createFromRemote({organizationId: org1.id()});
-      multiMembershipUser.memberships().createFromRemote({organizationId: org1.id()});
-      multiMembershipUser.memberships().createFromRemote({organizationId: org2.id()});
+      org1 = Organization.created({id: 1});
+      org2 = Organization.created({id: 2});
+      singleMembershipUser.memberships().created({organizationId: org1.id()});
+      multiMembershipUser.memberships().created({organizationId: org1.id()});
+      multiMembershipUser.memberships().created({organizationId: org2.id()});
 
       expect(singleMembershipUser.organizations().size()).toEqual(1);
       
@@ -50,7 +50,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
       expect(organizationsMenu.addOrganizationLink).toBeVisible();
       expect(organizationsMenu.dropdownMenu).toBeHidden();
 
-      var membership2 = singleMembershipUser.memberships().createFromRemote({organizationId: org2.id()});
+      var membership2 = singleMembershipUser.memberships().created({organizationId: org2.id()});
 
       expect(organizationsMenu.addOrganizationLink).toBeHidden();
       expect(organizationsMenu.dropdownMenu).toBeVisible();
@@ -68,7 +68,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
   describe("when the Add Organization link is clicked", function() {
     describe("when the current user is a guest", function() {
       beforeEach(function() {
-        Application.currentUser(User.createFromRemote({id: 1, guest: true}));
+        Application.currentUser(User.created({id: 1, guest: true}));
       });
 
       it("shows the signup form with the organization name field visible and a relevant title", function() {
@@ -82,7 +82,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
 
     describe("when the current user is a member", function() {
       beforeEach(function() {
-        Application.currentUser(User.createFromRemote({id: 1, guest: false}));
+        Application.currentUser(User.created({id: 1, guest: false}));
       });
 
       it("shows the add organization form", function() {
@@ -95,7 +95,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
 
   describe("when the add organization link is clicked inside the dropdown", function() {
     beforeEach(function() {
-      Application.currentUser(User.createFromRemote({id: 1, guest: false}));
+      Application.currentUser(User.created({id: 1, guest: false}));
     });
 
     it("shows the add organization form", function() {
@@ -109,13 +109,13 @@ describe("Views.Layout.OrganizationsMenu", function() {
     var u1m1, u2m1, u2m2, org1, org2, user1, user2;
 
     beforeEach(function() {
-      org1 = Organization.createFromRemote({id: 1, name: "org1"});
-      user1 = User.createFromRemote({id: 1});
-      user2 = User.createFromRemote({id: 2});
-      org2 = Organization.createFromRemote({id: 2, name: "org2"});
-      u1m1 = user1.memberships().createFromRemote({id: 1, organizationId: org1.id()});
-      u2m1 = user2.memberships().createFromRemote({id: 2, organizationId: org1.id(), role: "owner"});
-      u2m2 = user2.memberships().createFromRemote({id: 3, organizationId: org2.id()});
+      org1 = Organization.created({id: 1, name: "org1"});
+      user1 = User.created({id: 1});
+      user2 = User.created({id: 2});
+      org2 = Organization.created({id: 2, name: "org2"});
+      u1m1 = user1.memberships().created({id: 1, organizationId: org1.id()});
+      u2m1 = user2.memberships().created({id: 2, organizationId: org1.id(), role: "owner"});
+      u2m2 = user2.memberships().created({id: 3, organizationId: org2.id()});
     });
 
     it("always contains the current user's organizations", function() {
@@ -131,7 +131,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
 
       expect(organizationsMenu.dropdownMenu).not.toContain(":contains('org2')");
 
-      user2.memberships().createFromRemote({id: 4, organizationId: 2});
+      user2.memberships().created({id: 4, organizationId: 2});
 
       expect(organizationsMenu.dropdownMenu).toContain(":contains('org2')");
     });

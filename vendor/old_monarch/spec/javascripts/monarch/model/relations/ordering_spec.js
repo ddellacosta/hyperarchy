@@ -17,10 +17,10 @@ Screw.Unit(function(c) { with(c) {
       // created in a strange order to ensure that has no effect on sort
       // should go  1:(1 A), 2:(2 B), 3:(2 C), 4:(3 D)
 
-      user4 = User.createFromRemote({id: 4, age: 3, fullName: "D"});
-      user1 = User.createFromRemote({id: 1, age: 1, fullName: "A"});
-      user3 = User.createFromRemote({id: 3, age: 2, fullName: "C"});
-      user2 = User.createFromRemote({id: 2, age: 2, fullName: "B"});
+      user4 = User.created({id: 4, age: 3, fullName: "D"});
+      user1 = User.created({id: 1, age: 1, fullName: "A"});
+      user3 = User.created({id: 3, age: 2, fullName: "C"});
+      user2 = User.created({id: 2, age: 2, fullName: "B"});
     });
 
     describe("#tuples", function() {
@@ -62,7 +62,7 @@ Screw.Unit(function(c) { with(c) {
 
       describe("when a tuple is inserted into the operand", function() {
         it("triggers #onInsert callbacks with the inserted tuple and its index", function() {
-          var record = User.createFromRemote({id: 5, age: 2, fullName: "D"});
+          var record = User.created({id: 5, age: 2, fullName: "D"});
           var sortKey = ordering.buildSortKey(record);
 
           expect(insertCallback).to(haveBeenCalled, withArgs(record, 3, sortKey, sortKey));

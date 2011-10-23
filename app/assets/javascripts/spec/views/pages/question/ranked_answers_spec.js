@@ -6,14 +6,14 @@ describe("Views.Pages.Question.RankedAnswers", function() {
   var organization, questionPage, rankedAnswers, currentUser, question, answer1, answer2, answer3, ranking1, ranking2, rankingsRelation, lastCreateOrUpdatePromise;
   
   beforeEach(function() {
-    organization = Organization.createFromRemote({id: 1})
+    organization = Organization.created({id: 1})
     currentUser = organization.makeMember({id: 2, emailAddress: "foo@example.com"});
-    question = Question.createFromRemote({id: 1, creatorId: 2, createdAt: 234234234, organizationId: organization.id()});
-    answer1 = question.answers().createFromRemote({id: 1, body: "Answer 1", createdAt: 1308352736162, creatorId: 2});
-    answer2 = question.answers().createFromRemote({id: 2, body: "Answer 2", createdAt: 1308352736162, creatorId: 2});
-    answer3 = question.answers().createFromRemote({id: 3, body: "Answer 3", createdAt: 1308352736162, creatorId: 2});
-    ranking1 = currentUser.rankings().createFromRemote({id: 1, questionId: question.id(), answerId: answer1.id(), position: 64});
-    ranking2 = currentUser.rankings().createFromRemote({id: 2, questionId: question.id(), answerId: answer2.id(), position: -64});
+    question = Question.created({id: 1, creatorId: 2, createdAt: 234234234, organizationId: organization.id()});
+    answer1 = question.answers().created({id: 1, body: "Answer 1", createdAt: 1308352736162, creatorId: 2});
+    answer2 = question.answers().created({id: 2, body: "Answer 2", createdAt: 1308352736162, creatorId: 2});
+    answer3 = question.answers().created({id: 3, body: "Answer 3", createdAt: 1308352736162, creatorId: 2});
+    ranking1 = currentUser.rankings().created({id: 1, questionId: question.id(), answerId: answer1.id(), position: 64});
+    ranking2 = currentUser.rankings().created({id: 2, questionId: question.id(), answerId: answer2.id(), position: -64});
     rankingsRelation = currentUser.rankingsForQuestion(question);
     renderLayout();
     spyOn(Application, 'showPage');
@@ -47,17 +47,17 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
       expect(rankedAnswers.list.find('li').eq(2).view().ranking).toBe(ranking2);
 
-      questionB = Question.createFromRemote({id: 100});
-      var answerB = question.answers().createFromRemote({id: 100, body: "Answer B"});
+      questionB = Question.created({id: 100});
+      var answerB = question.answers().created({id: 100, body: "Answer B"});
       var otherRankingsRelation = currentUser.rankingsForQuestion(questionB);
-      var rankingB = otherRankingsRelation.createFromRemote({id: 1, answerId: answerB.id(), position: 64});
+      var rankingB = otherRankingsRelation.created({id: 1, answerId: answerB.id(), position: 64});
 
       rankedAnswers.rankings(otherRankingsRelation);
 
       expect(rankedAnswers.list.find('.ranking').size()).toBe(1);
       expect(rankedAnswers.list.find('.ranking').eq(0).view().ranking).toBe(rankingB);
 
-      rankingsRelation.createFromRemote({answerId: answer3.id(), position: 128});
+      rankingsRelation.created({answerId: answer3.id(), position: 128});
 
       expect(rankedAnswers.list.find('.ranking').size()).toBe(1);
 
@@ -94,7 +94,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       beforeEach(function() {
         ranking2.remotelyUpdated({position: 32});
-        ranking3 = currentUser.rankings().createFromRemote({id: 3, questionId: question.id(), answerId: answer3.id(), position: -64});
+        ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: -64});
         rankedAnswers.rankings(rankingsRelation);
 
         ranking1Li = rankedAnswers.list.find('li:eq(0)').view();
@@ -208,7 +208,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       describe("when displaying another user's ranking", function() {
         beforeEach(function() {
           var otherUser = organization.makeMember({id: 99});
-          otherUser.rankings().createFromRemote({questionId: question.id(), answerId: answer1.id(), position: 64});
+          otherUser.rankings().created({questionId: question.id(), answerId: answer1.id(), position: 64});
           rankedAnswers.rankings(otherUser.rankings());
         });
 
@@ -268,7 +268,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
             expect(Ranking.createOrUpdate).toHaveBeenCalledWith(currentUser, answer3, 128);
 
             // simulate creation of ranking on server
-            var ranking3 = Ranking.createFromRemote({id: 3, userId: currentUser.id(), answerId: answer3.id(), questionId: question.id(), position: 128});
+            var ranking3 = Ranking.created({id: 3, userId: currentUser.id(), answerId: answer3.id(), questionId: question.id(), position: 128});
             lastCreateOrUpdatePromise.triggerSuccess(ranking3);
 
             expect(rankedAnswers.list.find('li').size()).toBe(4);
@@ -594,7 +594,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
           expect(rankedAnswers.separator.prevAll('.ranking').size()).toBe(2);
 
           // now the simulate creation of a ranking on server
-          var ranking3 = Ranking.createFromRemote({id: 3, userId: currentUser.id(), answerId: answer3.id(), questionId: question.id(), position: 128});
+          var ranking3 = Ranking.created({id: 3, userId: currentUser.id(), answerId: answer3.id(), questionId: question.id(), position: 128});
           lastCreateOrUpdatePromise.triggerSuccess(ranking3);
 
           expect(rankedAnswers.list.find('li').size()).toBe(4);
@@ -721,8 +721,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     describe("when a ranking is inserted", function() {
       it("responds to a ranking inserted in the last positive position", function() {
         rankedAnswers.rankings(rankingsRelation);
-        answer3 = question.answers().createFromRemote({id: 3, body: "Answer 3"});
-        ranking3 = currentUser.rankings().createFromRemote({id: 3, questionId: question.id(), answerId: answer3.id(), position: 8});
+        answer3 = question.answers().created({id: 3, body: "Answer 3"});
+        ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: 8});
 
         expect(rankedAnswers.list.find('li').size()).toBe(4);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking1);
@@ -733,8 +733,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("responds to a ranking inserted in a positive position other than the last", function() {
         rankedAnswers.rankings(rankingsRelation);
-        answer3 = question.answers().createFromRemote({id: 3, body: "Answer 3"});
-        ranking3 = currentUser.rankings().createFromRemote({id: 3, questionId: question.id(), answerId: answer3.id(), position: 128});
+        answer3 = question.answers().created({id: 3, body: "Answer 3"});
+        ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: 128});
 
         expect(rankedAnswers.list.find('li').size()).toBe(4);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking3);
@@ -745,8 +745,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("responds to a ranking inserted in the last negative position", function() {
         rankedAnswers.rankings(rankingsRelation);
-        answer3 = question.answers().createFromRemote({id: 3, body: "Answer 3"});
-        ranking3 = currentUser.rankings().createFromRemote({id: 3, questionId: question.id(), answerId: answer3.id(), position: -128});
+        answer3 = question.answers().created({id: 3, body: "Answer 3"});
+        ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: -128});
 
         expect(rankedAnswers.list.find('li').size()).toBe(4);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking1);
@@ -757,8 +757,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("responds to a ranking inserted in a negative position other than the last", function() {
         rankedAnswers.rankings(rankingsRelation);
-        answer3 = question.answers().createFromRemote({id: 3, body: "Answer 3"});
-        ranking3 = currentUser.rankings().createFromRemote({id: 3, questionId: question.id(), answerId: answer3.id(), position: -32});
+        answer3 = question.answers().created({id: 3, body: "Answer 3"});
+        ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: -32});
 
         expect(rankedAnswers.list.find('li').size()).toBe(4);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking1);
@@ -926,10 +926,10 @@ describe("Views.Pages.Question.RankedAnswers", function() {
         expect(rankedAnswers.positiveDragTarget).toBeVisible();
         expect(rankedAnswers.negativeDragTarget).toBeVisible();
 
-        rankingsRelation.createFromRemote({answerId: 1, position: 64});
+        rankingsRelation.created({answerId: 1, position: 64});
         expect(rankedAnswers.positiveDragTarget).toBeHidden();
 
-        rankingsRelation.createFromRemote({answerId: 2, position: -64});
+        rankingsRelation.created({answerId: 2, position: -64});
         expect(rankedAnswers.negativeDragTarget).toBeHidden();
       });
     });
@@ -1010,7 +1010,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     beforeEach(function() {
       questionPage.params({questionId: question.id()});
       ranking2.remotelyUpdated({position: 32});
-      ranking3 = currentUser.rankings().createFromRemote({id: 3, questionId: question.id(), answerId: answer3.id(), position: -64});
+      ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: -64});
       rankedAnswers.rankings(rankingsRelation);
 
       ranking1Li = rankedAnswers.list.find('li:eq(0)').view();
@@ -1037,7 +1037,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
         var answer3Li = questionPage.currentConsensus.find('li:contains("Answer 3")');
         expect(answer3Li).toExist();
         answer3Li.dragAbove(rankedAnswers.separator);
-        var ranking4 = Application.currentUser().rankings().createFromRemote({answerId: answer3.id(), position: 8});
+        var ranking4 = Application.currentUser().rankings().created({answerId: answer3.id(), position: 8});
 
         lastCreateOrUpdatePromise.triggerSuccess(ranking4);
         var createEvent = mpq.pop();
