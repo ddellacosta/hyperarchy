@@ -11,7 +11,7 @@ QuestionComment = Monarch("QuestionComment", {
 })
 
   .belongsTo('question')
-  .belongsTo('creator', {constructorName: "User"})
+  .belongsTo('creator', {className: "User"})
 
   .include({
     belongsToCurrentUser: function() {

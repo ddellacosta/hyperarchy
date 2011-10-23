@@ -37,10 +37,10 @@ describe("Views.Pages.Question.Votes", function() {
       votesView.votes(votesRelation);
       expect(votesView.header.html()).toEqual('2 Votes');
 
-      currentUserVote.remotelyDestroyed();
+      currentUserVote.destroyed();
       expect(votesView.header.html()).toEqual('1 Vote');
 
-      otherUserVote.remotelyDestroyed();
+      otherUserVote.destroyed();
       expect(votesView.header.html()).toEqual('No Votes Yet');
 
       currentUser.votes().created({id: 1, questionId: question.id(), updatedAt: 1308353647000});

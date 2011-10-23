@@ -19,11 +19,13 @@ Organization = Monarch("Organization", {
   .hasMany("memberships", {orderBy: ["firstName asc", "emailAddress asc"]})
   .relatesTo("members", {through: "memberships", className: "User"})
 
-  .include({
+  .extend({
     findSocial: function() {
       return this.find({social: true});
-    },
+    }
+  })
 
+  .include({
     afterInitialize: function() {
       this.numQuestionsFetched = 0;
     },

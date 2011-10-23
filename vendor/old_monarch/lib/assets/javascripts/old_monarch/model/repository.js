@@ -73,7 +73,7 @@ _.constructor("OldMonarch.Model.Repository", {
     var table = this.tables[tableName];
     if (!table) return;
     var record = table.find(id);
-    if (record) record.remotelyUpdated(fieldValues);
+    if (record) record.updated(fieldValues);
   },
 
   performDestroyCommand: function(tableName, id, additionalRecords) {
@@ -81,7 +81,7 @@ _.constructor("OldMonarch.Model.Repository", {
     var table = this.tables[tableName];
     if (!table) return;
     var record = table.find(id);
-    if (record) record.remotelyDestroyed();
+    if (record) record.destroyed();
   },
 
   registerTable: function(table) {

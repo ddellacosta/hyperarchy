@@ -274,7 +274,7 @@ Screw.Unit(function(c) { with(c) {
       elt.bindText(blog, "name");
       expect(elt.html()).to(eq, "Arcata Tent Haters &amp; Lovers");
 
-      blog.remotelyUpdated({name: "Arcata Tent Lovers"});
+      blog.updated({name: "Arcata Tent Lovers"});
       expect(elt.html()).to(eq, "Arcata Tent Lovers");
 
       var blog2 = Blog.created({id: "blog", name: "Arcata Naan <Lovers>"});
@@ -300,11 +300,11 @@ Screw.Unit(function(c) { with(c) {
       expect(view.h1.html()).to(eq, "Arcata Tent Haters");
 
       view.detach();
-      blog.remotelyUpdated({name: "Arcata Goat Haters. NIMBY."});
+      blog.updated({name: "Arcata Goat Haters. NIMBY."});
       expect(view.h1.html()).to(eq, "Arcata Goat Haters. NIMBY.");
 
       view.remove();
-      blog.remotelyUpdated({name: "Arcata Goat Lovers"});
+      blog.updated({name: "Arcata Goat Lovers"});
       expect(view.h1.html()).to(eq, "Arcata Goat Haters. NIMBY.");
     });
   });

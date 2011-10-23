@@ -26,7 +26,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
     it("populates the body, details, and avatar", function() {
       expect(answerDetails.body.html()).toEqual($.markdown(answer.body()));
       expect(answerDetails.details.html()).toEqual($.markdown(answer.details()));
-      answer.remotelyUpdated({body: "Catsup", details: "37 flavors"});
+      answer.updated({body: "Catsup", details: "37 flavors"});
       expect(answerDetails.body.html()).toEqual($.markdown(answer.body()));
       expect(answerDetails.details.html()).toEqual($.markdown(answer.details()));
       expect(answerDetails.avatar.user()).toBe(answer.creator());
@@ -43,7 +43,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
       expect(answer.onDestroyNode.size()).toBe(subscriptionsBefore - 1);
 
       spyOn(History, 'pushState');
-      answer.remotelyDestroyed();
+      answer.destroyed();
       expect(History.pushState).not.toHaveBeenCalled();
     });
 
@@ -132,7 +132,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
         expect(answerDetails.details.text()).toContain("…");
 
         // update answer w/ short details
-        longAnswer.remotelyUpdated({details: "I like it."});
+        longAnswer.updated({details: "I like it."});
 
         expect(answerDetails.moreLink).toBeHidden();
         expect(answerDetails.details.text()).toContain(longAnswer.details());
@@ -142,7 +142,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
         longDetails = "I just ";
         _.times(100, function() { longDetails += "really " });
         longDetails += "love it.";
-        longAnswer.remotelyUpdated({details: longDetails});
+        longAnswer.updated({details: longDetails});
 
         expect(answerDetails.moreLink).toBeVisible();
         expect(answerDetails.details.text()).toContain(longAnswer.details().substring(0, 100));
@@ -197,7 +197,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
         // when you contract after the answer gets shorter in background while expanded, the expand button is hidden
         answerDetails.moreLink.click();
-        longAnswer.remotelyUpdated({details: "I like it."});
+        longAnswer.updated({details: "I like it."});
         answerDetails.lessLink.click();
         expect(answerDetails.moreLink).toBeHidden();
         expect(answerDetails.lessLink).toBeHidden();
@@ -505,7 +505,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
   describe("when the answer is destroyed", function() {
     it("navigates to the question url", function() {
-      answer.remotelyDestroyed();
+      answer.destroyed();
       expect(Path.routes.current).toBe(question.url());
     });
   });
@@ -523,10 +523,10 @@ describe("Views.Pages.Question.AnswerDetails", function() {
         Application.questionPage.showAnswerDetails();
         expectCommentsToHaveFullHeight();
 
-        answer.remotelyUpdated({body: longText});
+        answer.updated({body: longText});
         expectCommentsToHaveFullHeight();
 
-        answer.remotelyUpdated({details: longText});
+        answer.updated({details: longText});
         expectCommentsToHaveFullHeight();
       });
     });
@@ -534,7 +534,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
     describe("when the window is resized", function() {
       it("adjusts the comments to fill the remaining available height", function() {
         Application.questionPage.width(1200);
-        answer.remotelyUpdated({details: longText});
+        answer.updated({details: longText});
 
         Application.questionPage.width(800);
         $(window).resize();
@@ -551,7 +551,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
   describe("showing and hiding of the details clearing div", function() {
     it("only shows the clearing div if there are details", function() {
       expect(answerDetails.detailsClearDiv).toBeVisible();
-      answer.remotelyUpdated({details: ""});
+      answer.updated({details: ""});
       expect(answerDetails.detailsClearDiv).toBeHidden();
     });
   });

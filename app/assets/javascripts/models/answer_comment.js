@@ -10,7 +10,7 @@ AnswerComment = Monarch("AnswerComment", {
   createdAt: 'datetime'
 })
   .belongsTo('answer')
-  .belongsTo('creator', {constructorName: "User"})
+  .belongsTo('creator', {className: "User"})
 
   .include({
     belongsToCurrentUser: function() {

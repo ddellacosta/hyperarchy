@@ -79,7 +79,7 @@ Screw.Unit(function(c) { with(c) {
             clearCallbackMocks();
 
             // update causes an insert into the user's blog post selection, but its already a favorite so no event
-            record.remotelyUpdated({blogId: 1});
+            record.updated({blogId: 1});
 
             expect(insertCallback).toNot(haveBeenCalled);
             // update callback gets called as an artifact of how we insert into the left operand
@@ -121,7 +121,7 @@ Screw.Unit(function(c) { with(c) {
 
             clearCallbackMocks();
 
-            record.remotelyUpdated({name: "New Name"});
+            record.updated({name: "New Name"});
             expect(updateCallback).to(haveBeenCalled, once);
             expect(updateCallback.mostRecentArgs[0]).to(eq, record);
             // skip verification of changeset because it's a pain
@@ -154,7 +154,7 @@ Screw.Unit(function(c) { with(c) {
             var sortKey = union.buildSortKey(record);
             clearCallbackMocks();
 
-            record.remotelyDestroyed();
+            record.destroyed();
             expect(removeCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
           });
         });
@@ -165,7 +165,7 @@ Screw.Unit(function(c) { with(c) {
             user.favoritings().created({blogPostId: 1})
             clearCallbackMocks();
 
-            record.remotelyUpdated({blogId: 100});
+            record.updated({blogId: 100});
             expect(removeCallback).toNot(haveBeenCalled);
           });
         });
@@ -190,7 +190,7 @@ Screw.Unit(function(c) { with(c) {
             var favoriting = user.favoritings().created({blogPostId: 1})
             clearCallbackMocks();
 
-            favoriting.remotelyDestroyed();
+            favoriting.destroyed();
             expect(removeCallback).toNot(haveBeenCalled);
           });
         });

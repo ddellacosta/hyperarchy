@@ -58,7 +58,7 @@ describe("User", function() {
 
   describe("twitter functionality", function() {
     beforeEach(function() {
-      user.remotelyUpdated({twitterId: 1234});
+      user.updated({twitterId: 1234});
     });
 
     describe("#fetchTwitterAvatarUrl", function() {

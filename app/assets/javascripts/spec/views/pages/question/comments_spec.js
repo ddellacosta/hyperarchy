@@ -149,7 +149,7 @@ describe("Views.Pages.Question.Comments", function() {
         it("auto-scrolls to the end of the list", function() {
           var longComment = commentsRelation.created({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
           expectListScrolledToBottom();
-          longComment.remotelyDestroyed();
+          longComment.destroyed();
           expectListScrolledToBottom();
         });
       });
@@ -219,7 +219,7 @@ describe("Views.Pages.Question.Comments", function() {
         it("auto-scrolls to the end of the list", function() {
           var longComment = commentsRelation.created({id: 13, body: longCommentBody, creatorId: creator1.id(), createdAt: 2345234})
           expectListScrolledToBottom();
-          longComment.remotelyDestroyed();
+          longComment.destroyed();
           expectListScrolledToBottom();
         });
       });

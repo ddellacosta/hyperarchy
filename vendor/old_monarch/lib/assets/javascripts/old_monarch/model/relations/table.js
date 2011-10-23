@@ -140,7 +140,7 @@ _.constructor("OldMonarch.Model.Relations.Table", OldMonarch.Model.Relations.Rel
     _.each(dataset, function(fieldValues, id) {
       var extantRecord = this.find(id);
       if (extantRecord) {
-        extantRecord.remotelyUpdated(fieldValues);
+        extantRecord.updated(fieldValues);
       } else {
         this.created(fieldValues)
       }
@@ -150,7 +150,7 @@ _.constructor("OldMonarch.Model.Relations.Table", OldMonarch.Model.Relations.Rel
   deltaContents: function(dataset) {
     this.each(function(record) {
       if (!dataset[record.id()]) {
-        record.remotelyDestroyed();
+        record.destroyed();
       }
     });
     this.updateContents(dataset);

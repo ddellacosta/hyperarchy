@@ -69,8 +69,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     describe("#sortingEnabled(boolean)", function() {
       it("shows and hides the drag target explanation", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking1.remotelyDestroyed();
-        ranking2.remotelyDestroyed();
+        ranking1.destroyed();
+        ranking2.destroyed();
 
         expect(rankedAnswers.positiveDragExplanation).toBeVisible();
         expect(rankedAnswers.negativeDragExplanation).toBeVisible();
@@ -93,7 +93,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       var ranking3, ranking1Li, ranking2Li, ranking3Li;
 
       beforeEach(function() {
-        ranking2.remotelyUpdated({position: 32});
+        ranking2.updated({position: 32});
         ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: -64});
         rankedAnswers.rankings(rankingsRelation);
 
@@ -129,8 +129,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
         describe("when an li is dragged to the first and only positive position", function() {
           it("calls Ranking.createOrUpdate with the appropriate answer and position", function() {
-            ranking1.remotelyDestroyed();
-            ranking2.remotelyDestroyed();
+            ranking1.destroyed();
+            ranking2.destroyed();
 
             ranking3Li.dragAbove(rankedAnswers.positiveDragTarget);
 
@@ -141,7 +141,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       describe("dragging into the negative ranking region", function() {
         beforeEach(function() {
-          ranking2.remotelyUpdated({position: -32});
+          ranking2.updated({position: -32});
         });
 
         describe("when an li is dragged between existing negatively ranked lis", function() {
@@ -170,8 +170,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
         describe("when an li is dragged to the first and only negative position", function() {
           it("calls Ranking.createOrUpdate with the appropriate answer and position", function() {
-            ranking2.remotelyDestroyed();
-            ranking3.remotelyDestroyed();
+            ranking2.destroyed();
+            ranking3.destroyed();
 
             ranking1Li.dragBelow(rankedAnswers.negativeDragTarget);
 
@@ -190,9 +190,9 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       describe("the drag target explanations", function() {
         it("does not allow them to be dragged", function() {
-          ranking1.remotelyDestroyed();
-          ranking2.remotelyDestroyed();
-          ranking3.remotelyDestroyed();
+          ranking1.destroyed();
+          ranking2.destroyed();
+          ranking3.destroyed();
 
           expect(rankedAnswers.positiveDragTarget).toBeVisible();
           expect(rankedAnswers.negativeDragTarget).toBeVisible();
@@ -273,7 +273,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
             expect(rankedAnswers.list.find('li').size()).toBe(4);
 
-            ranking3.remotelyUpdated({position: -128});
+            ranking3.updated({position: -128});
 
             expect(rankedAnswers.list.find('li').eq(3).data('position')).toBe(-128);
             expect(rankedAnswers.list.find('li').eq(3).view().ranking).toBe(ranking3);
@@ -314,7 +314,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
 
             // simulate creation of ranking on server
-            ranking2.remotelyUpdated({position: 128});
+            ranking2.updated({position: 128});
             lastCreateOrUpdatePromise.triggerSuccess(ranking2);
 
             expect(ranking2.onUpdateNode.size()).toBe(numUpdateSubscriptionsBefore);
@@ -324,7 +324,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
         describe("when receiving a answer in the positive region above the drag target", function() {
           it("computes the position correctly", function() {
             var answer3Li = questionPage.currentConsensus.find('li:contains("Answer 3")');
-            ranking1.remotelyDestroyed();
+            ranking1.destroyed();
             answer3Li.dragAbove(rankedAnswers.positiveDragTarget);
             expect(Ranking.createOrUpdate).toHaveBeenCalledWith(currentUser, answer3, 64);
           });
@@ -600,7 +600,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
           expect(rankedAnswers.list.find('li').size()).toBe(4);
 
           // still responds to remote events
-          ranking3.remotelyUpdated({position: -128});
+          ranking3.updated({position: -128});
 
           expect(rankedAnswers.list.find('li').eq(3).data('position')).toBe(-128);
           expect(rankedAnswers.list.find('li').eq(3).view().ranking).toBe(ranking3);
@@ -613,7 +613,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     describe("when a ranking crosses the separator", function() {
       it("responds to a positive ranking becoming the last negative ranking", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking1.remotelyUpdated({position: -128});
+        ranking1.updated({position: -128});
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(2);
         expect(rankedAnswers.list.find('li').eq(0)).toMatchSelector('#positive-drag-target');
         expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
@@ -622,10 +622,10 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       });
 
       it("responds to a positive ranking becoming the only negative ranking", function() {
-        ranking2.remotelyDestroyed();
+        ranking2.destroyed();
 
         rankedAnswers.rankings(rankingsRelation);
-        ranking1.remotelyUpdated({position: -64});
+        ranking1.updated({position: -64});
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(1);
         expect(rankedAnswers.list.find('li').eq(0)).toMatchSelector('#positive-drag-target');
         expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
@@ -634,7 +634,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("responds to a positive ranking a negative ranking other than the last", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking1.remotelyUpdated({position: -32});
+        ranking1.updated({position: -32});
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(2);
         expect(rankedAnswers.list.find('li').eq(0)).toMatchSelector('#positive-drag-target');
         expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
@@ -644,7 +644,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("responds to a negative ranking becoming a positive ranking other than the last", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking2.remotelyUpdated({position: 128});
+        ranking2.updated({position: 128});
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(2);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking2);
         expect(rankedAnswers.list.find('li').eq(1).view().ranking).toBe(ranking1);
@@ -654,7 +654,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("responds to a negative ranking becoming the last positive ranking", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking2.remotelyUpdated({position: 32});
+        ranking2.updated({position: 32});
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(2);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking1);
         expect(rankedAnswers.list.find('li').eq(1).view().ranking).toBe(ranking2);
@@ -663,10 +663,10 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       });
 
       it("responds to a negative ranking becoming the only positive ranking", function() {
-        ranking1.remotelyDestroyed();
+        ranking1.destroyed();
 
         rankedAnswers.rankings(rankingsRelation);
-        ranking2.remotelyUpdated({position: 64});
+        ranking2.updated({position: 64});
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(1);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking2);
         expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
@@ -676,30 +676,30 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
     describe("when a ranking is updated without crossing the separator", function() {
       it("responds to a positive ranking becoming the last positive ranking", function() {
-        ranking2.remotelyUpdated({position: 32});
+        ranking2.updated({position: 32});
         rankedAnswers.rankings(rankingsRelation);
 
-        ranking1.remotelyUpdated({position: 16});
+        ranking1.updated({position: 16});
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking2);
         expect(rankedAnswers.list.find('li').eq(1).view().ranking).toBe(ranking1);
         expect(rankedAnswers.list.find('li').eq(2)).toMatchSelector('#separator');
       });
 
       it("responds to a positive ranking moving to a position other than the last", function() {
-        ranking2.remotelyUpdated({position: 32});
+        ranking2.updated({position: 32});
         rankedAnswers.rankings(rankingsRelation);
 
-        ranking2.remotelyUpdated({position: 128});
+        ranking2.updated({position: 128});
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking2);
         expect(rankedAnswers.list.find('li').eq(1).view().ranking).toBe(ranking1);
         expect(rankedAnswers.list.find('li').eq(2)).toMatchSelector('#separator');
       });
 
       it("responds to a negative ranking becoming the last negative ranking", function() {
-        ranking1.remotelyUpdated({position: -32});
+        ranking1.updated({position: -32});
         rankedAnswers.rankings(rankingsRelation);
 
-        ranking1.remotelyUpdated({position: -128});
+        ranking1.updated({position: -128});
         expect(rankedAnswers.list.find('li').eq(0)).toMatchSelector('#positive-drag-target');
         expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
         expect(rankedAnswers.list.find('li').eq(2).view().ranking).toBe(ranking2);
@@ -707,10 +707,10 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       });
 
       it("responds to a negative ranking moving to a position other than the last", function() {
-        ranking1.remotelyUpdated({position: -32});
+        ranking1.updated({position: -32});
         rankedAnswers.rankings(rankingsRelation);
 
-        ranking2.remotelyUpdated({position: -16});
+        ranking2.updated({position: -16});
         expect(rankedAnswers.list.find('li').eq(0)).toMatchSelector('#positive-drag-target');
         expect(rankedAnswers.list.find('li').eq(1)).toMatchSelector('#separator');
         expect(rankedAnswers.list.find('li').eq(2).view().ranking).toBe(ranking2);
@@ -771,7 +771,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     describe("when a ranking is removed", function() {
       it("removes positive rankings from the list", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking1.remotelyDestroyed();
+        ranking1.destroyed();
 
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(1);
         expect(rankedAnswers.list.find('li').eq(0)).toMatchSelector('#positive-drag-target');
@@ -783,7 +783,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       it("removes negative rankings from the list", function() {
         rankedAnswers.rankings(rankingsRelation);
-        ranking2.remotelyDestroyed();
+        ranking2.destroyed();
 
         expect(rankedAnswers.list.find('li.ranking').size()).toBe(1);
         expect(rankedAnswers.list.find('li').eq(0).view().ranking).toBe(ranking1);
@@ -809,13 +809,13 @@ describe("Views.Pages.Question.RankedAnswers", function() {
         var secondRequestPromise = lastCreateOrUpdatePromise;
 
         // simulate completion of first request
-        ranking2.remotelyUpdated({position: 128});
+        ranking2.updated({position: 128});
         firstRequestPromise.triggerSuccess(ranking2);
 
         expect(ranking2Li.loading()).toBeTruthy();
         expect(ranking2Li.prev('#separator')).toExist();
 
-        ranking2.remotelyUpdated({position: -64});
+        ranking2.updated({position: -64});
         secondRequestPromise.triggerSuccess(ranking2);
         expect(ranking2Li.loading()).toBeFalsy();
       });
@@ -826,7 +826,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     it("updates it in the list", function() {
       rankedAnswers.rankings(rankingsRelation);
       var ranking1Li = rankedAnswers.list.find('li:contains("Answer 1")').view();
-      answer1.remotelyUpdated({body: "*New* Answer 1"});
+      answer1.updated({body: "*New* Answer 1"});
       expect(ranking1Li.body.html()).toBe("<p><em>New</em> Answer 1</p>");
     });
   });
@@ -835,8 +835,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     describe("when the rankings relation is initially assigned", function() {
       describe("when there are no rankings", function() {
         it("shows both the positive and negative explanations", function() {
-          ranking1.remotelyDestroyed();
-          ranking2.remotelyDestroyed();
+          ranking1.destroyed();
+          ranking2.destroyed();
 
           rankedAnswers.rankings(rankingsRelation);
 
@@ -851,7 +851,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       describe("when there are no positive rankings, but there are negative ones", function() {
         it("shows only the positive explanation", function() {
-          ranking1.remotelyDestroyed();
+          ranking1.destroyed();
 
           rankedAnswers.rankings(rankingsRelation);
 
@@ -866,7 +866,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
       describe("when there are no negative rankings, but there are positive ones", function() {
         it("shows only the negative explanation", function() {
-          ranking2.remotelyDestroyed();
+          ranking2.destroyed();
 
           rankedAnswers.rankings(rankingsRelation);
 
@@ -902,27 +902,27 @@ describe("Views.Pages.Question.RankedAnswers", function() {
         expect(rankedAnswers.positiveDragTarget).toBeHidden();
         expect(rankedAnswers.negativeDragTarget).toBeHidden();
 
-        ranking1.remotelyUpdated({position: -128});
+        ranking1.updated({position: -128});
         expect(rankedAnswers.positiveDragTarget).toBeVisible();
         expect(rankedAnswers.negativeDragTarget).toBeHidden();
 
-        ranking1.remotelyUpdated({position: 64});
+        ranking1.updated({position: 64});
         expect(rankedAnswers.positiveDragTarget).toBeHidden();
         expect(rankedAnswers.negativeDragTarget).toBeHidden();
 
-        ranking2.remotelyUpdated({position: 128});
+        ranking2.updated({position: 128});
         expect(rankedAnswers.positiveDragTarget).toBeHidden();
         expect(rankedAnswers.negativeDragTarget).toBeVisible();
 
-        ranking2.remotelyUpdated({position: -64});
+        ranking2.updated({position: -64});
         expect(rankedAnswers.positiveDragTarget).toBeHidden();
         expect(rankedAnswers.negativeDragTarget).toBeHidden();
 
-        ranking1.remotelyDestroyed();
+        ranking1.destroyed();
         expect(rankedAnswers.positiveDragTarget).toBeVisible();
         expect(rankedAnswers.negativeDragTarget).toBeHidden();
 
-        ranking2.remotelyDestroyed();
+        ranking2.destroyed();
         expect(rankedAnswers.positiveDragTarget).toBeVisible();
         expect(rankedAnswers.negativeDragTarget).toBeVisible();
 
@@ -942,7 +942,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
         describe("when positive ranking lis are received from the current consensus", function() {
           it("shows the positive targets when there are positive and negative rankings, and hides them otherwise", function() {
-            ranking1.remotelyDestroyed();
+            ranking1.destroyed();
             expect(rankedAnswers.positiveDragTarget).toBeVisible();
 
             var answer3Li = questionPage.currentConsensus.find('li:contains("Answer 3")');
@@ -954,7 +954,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
         describe("when negative ranking lis are received from the current consensus", function() {
           it("shows negative drag targets when there are positive and negative rankings, and hides them otherwise", function() {
-            ranking2.remotelyDestroyed();
+            ranking2.destroyed();
             expect(rankedAnswers.negativeDragTarget).toBeVisible();
 
             var answer3Li = questionPage.currentConsensus.find('li:contains("Answer 3")');
@@ -1009,7 +1009,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
 
     beforeEach(function() {
       questionPage.params({questionId: question.id()});
-      ranking2.remotelyUpdated({position: 32});
+      ranking2.updated({position: 32});
       ranking3 = currentUser.rankings().created({id: 3, questionId: question.id(), answerId: answer3.id(), position: -64});
       rankedAnswers.rankings(rankingsRelation);
 
@@ -1033,7 +1033,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     
     describe("when a ranking is created", function() {
       it("pushes an event to the mixpanel queue", function() {
-        ranking3.remotelyDestroyed();
+        ranking3.destroyed();
         var answer3Li = questionPage.currentConsensus.find('li:contains("Answer 3")');
         expect(answer3Li).toExist();
         answer3Li.dragAbove(rankedAnswers.separator);

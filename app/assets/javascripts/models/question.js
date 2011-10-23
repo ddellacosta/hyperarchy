@@ -16,7 +16,7 @@ Question = Monarch("Question", {
 
   .hasMany('answers')
   .hasMany('votes', {orderBy: 'updatedAt desc'})
-  .hasMany('comments', {constructorName: 'QuestionComment'})
+  .hasMany('comments', {className: 'QuestionComment'})
   .relatesTo('commenters', function() {
     return this.comments().join(User, {creatorId: 'User.id'});
   })
@@ -24,7 +24,7 @@ Question = Monarch("Question", {
   .hasMany('voters', {through: 'votes', className: 'User'})
   .hasMany('rankings', {orderBy: 'position desc'})
   .belongsTo('organization')
-  .belongsTo('creator', {constructorName: 'User'})
+  .belongsTo('creator', {className: 'User'})
 
   .extend({
     scoreUpdateInterval: 60000,
@@ -108,7 +108,7 @@ Question = Monarch("Question", {
     },
 
     updateScore: function() {
-      this.remotelyUpdated({score: this.computeScore()});
+      this.updated({score: this.computeScore()});
     },
 
     computeScore: function() {

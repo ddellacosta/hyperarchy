@@ -148,7 +148,7 @@ Screw.Unit(function(c) { with(c) {
           it("triggers a remove event with the record", function() {
             var record = selection.first();
             var sortKey = selection.buildSortKey(record);
-            record.remotelyDestroyed();
+            record.destroyed();
             expect(removeCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
           });
         });
@@ -156,7 +156,7 @@ Screw.Unit(function(c) { with(c) {
         context("when that record does not match the predicate", function() {
           it("does not trigger #onRemove callbacks and continues to not #contain the removed record", function() {
             expect(predicate.evaluate(excludedRecord)).to(beFalse);
-            excludedRecord.remotelyDestroyed();
+            excludedRecord.destroyed();
             expect(removeCallback).toNot(haveBeenCalled);
           });
         });
@@ -173,7 +173,7 @@ Screw.Unit(function(c) { with(c) {
               var oldId = record.id();
 
               expect(selection.contains(record)).to(beTrue);
-              record.remotelyUpdated({id: 100});
+              record.updated({id: 100});
               expect(selection.contains(record)).to(beTrue);
 
               // fired with record, changeset, new index, old index, new sort key, old sort key
@@ -194,7 +194,7 @@ Screw.Unit(function(c) { with(c) {
             it("triggers a remove event with the updated record", function() {
               // change the id to ensure we locate the record correctly with the old sort key
               var oldId = includedRecord2.id();
-              includedRecord2.remotelyUpdated({age: 34, id: 100});
+              includedRecord2.updated({age: 34, id: 100});
               expect(predicate.evaluate(includedRecord2)).to(beFalse);
               expect(selection.contains(includedRecord2)).to(beFalse);
               expect(removeCallback).to(haveBeenCalled, withArgs(includedRecord2), 1, {'users.id': 100}, {'users.id': oldId});

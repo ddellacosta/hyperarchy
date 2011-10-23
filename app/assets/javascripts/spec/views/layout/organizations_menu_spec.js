@@ -55,7 +55,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
       expect(organizationsMenu.addOrganizationLink).toBeHidden();
       expect(organizationsMenu.dropdownMenu).toBeVisible();
 
-      membership2.remotelyDestroyed();
+      membership2.destroyed();
 
       expect(organizationsMenu.addOrganizationLink).toBeVisible();
       expect(organizationsMenu.dropdownMenu).toBeHidden();
@@ -127,7 +127,7 @@ describe("Views.Layout.OrganizationsMenu", function() {
       expect(organizationsMenu.dropdownMenu).toContain(":contains('org1')");
       expect(organizationsMenu.dropdownMenu).toContain(":contains('org2')");
 
-      u2m2.remotelyDestroyed();
+      u2m2.destroyed();
 
       expect(organizationsMenu.dropdownMenu).not.toContain(":contains('org2')");
 
@@ -153,8 +153,8 @@ describe("Views.Layout.OrganizationsMenu", function() {
       expect(org1Li.adminLink).toBeVisible();
       expect(org2Li.adminLink).toBeHidden();
 
-      u2m1.remotelyUpdated({role: "member"});
-      u2m2.remotelyUpdated({role: "owner"});
+      u2m1.updated({role: "member"});
+      u2m2.updated({role: "owner"});
 
       expect(org1Li.adminLink).toBeHidden();
       expect(org2Li.adminLink).toBeVisible();

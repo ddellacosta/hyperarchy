@@ -33,7 +33,7 @@ describe("Views.Pages.Question.VoteLi", function() {
         });
 
         it("fetches the user and populates the li with their name", function() {
-          user.remotelyDestroyed();
+          user.destroyed();
           voteLi = Views.Pages.Question.VoteLi.toView({vote: vote});
           $('#jasmine_content').html(voteLi);
 
@@ -51,14 +51,14 @@ describe("Views.Pages.Question.VoteLi", function() {
 
     describe("when the user changes their name", function() {
       it("updates the text of the li", function() {
-        user.remotelyUpdated({firstName: "john"});
+        user.updated({firstName: "john"});
         expect(voteLi.name.text()).toBe(user.fullName());
       });
     });
 
     describe("when the vote's updatedAt field changes", function() {
       it("changes the time in the li", function() {
-        vote.remotelyUpdated({updatedAt: vote.updatedAt().getTime() + 20000});
+        vote.updated({updatedAt: vote.updatedAt().getTime() + 20000});
         expect(voteLi.date.text()).toBe(vote.formattedUpdatedAt());
       });
     });

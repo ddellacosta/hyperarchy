@@ -215,14 +215,14 @@ describe("Views.Lightboxes.NewQuestion", function() {
       expect(newQuestionForm.shareOnFacebook).toBeVisible();
       newQuestionForm.close();
 
-      organization.remotelyUpdated({privacy: "private"});
+      organization.updated({privacy: "private"});
       newQuestionForm.show();
 
       expect(newQuestionForm.shareOnFacebook.attr('checked')).toBeFalsy();
       expect(newQuestionForm.shareOnFacebook).toBeHidden();
       newQuestionForm.close();
 
-      organization.remotelyUpdated({privacy: "public"});
+      organization.updated({privacy: "public"});
       newQuestionForm.show();
       expect(newQuestionForm.shareOnFacebook.attr('checked')).toBeTruthy();
     });

@@ -87,7 +87,7 @@ Screw.Unit(function(c) { with(c) {
             expect(leftOperand.contains(record)).to(beTrue);
             expect(rightOperand.contains(record)).to(beFalse);
 
-            record.remotelyUpdated({userId: 1});
+            record.updated({userId: 1});
             expect(leftOperand.contains(record)).to(beTrue);
             expect(rightOperand.contains(record)).to(beTrue);
 
@@ -109,7 +109,7 @@ Screw.Unit(function(c) { with(c) {
             expect(rightOperand.contains(record)).to(beFalse);
 
 
-            record.remotelyUpdated({userId: 100});
+            record.updated({userId: 100});
             var sortKey = difference.buildSortKey(record);
 
             expect(updateCallback).to(haveBeenCalled, withArgs(
@@ -173,7 +173,7 @@ Screw.Unit(function(c) { with(c) {
           it("triggers insert callbacks with the record", function() {
             var record = Blog.created({id: 1, userId: 1});
             var sortKey = difference.buildSortKey(record);
-            record.remotelyUpdated({userId: 2})
+            record.updated({userId: 2})
             expect(insertCallback).to(haveBeenCalled, withArgs(record, 0, sortKey, sortKey));
           });
         });

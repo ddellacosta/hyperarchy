@@ -120,7 +120,7 @@ describe("Question", function() {
   describe("#updateScore", function() {
     it("decreases the score as time passes and increases it as votes are added", function() {
       freezeTime();
-      question.remotelyUpdated({createdAt: new Date()});
+      question.updated({createdAt: new Date()});
       question.updateScore();
 
       var score1 = question.score();
@@ -130,7 +130,7 @@ describe("Question", function() {
       var score2 = question.score();
       expect(score2).toBeLessThan(score1);
 
-      question.remotelyUpdated({voteCount: 5});
+      question.updated({voteCount: 5});
       question.updateScore();
       var score3 = question.score();
       expect(score3).toBeGreaterThan(score2);

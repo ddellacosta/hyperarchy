@@ -165,11 +165,11 @@
     this.onCreateNode.publish(this);
   },
 
-  remotelyUpdated: function(fieldValues, version) {
+  updated: function(fieldValues, version) {
     return this.remote.update(_.camelizeKeys(fieldValues), version);
   },
 
-  remotelyDestroyed: function() {
+  destroyed: function() {
     this.table.remove(this);
     this.onDestroyNode.publish(this);
   },

@@ -119,7 +119,7 @@ Screw.Unit(function(c) { with(c) {
       describe("when a tuple is removed from the operand", function() {
         it("triggers #onRemove callbacks with the removed tuple and its former index", function() {
           var sortKey = ordering.buildSortKey(user2);
-          user2.remotelyDestroyed();
+          user2.destroyed();
           expect(removeCallback).to(haveBeenCalled, withArgs(user2, 1, sortKey, sortKey));
         });
       });

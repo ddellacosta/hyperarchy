@@ -40,7 +40,7 @@ describe("Answer", function() {
       answer.rankings().created({id: 2});
       var ranking3 = Ranking.created({id: 3, answerId: 99});
 
-      answer.remotelyDestroyed();
+      answer.destroyed();
 
       expect(Ranking.find(1)).toBeUndefined();
       expect(Ranking.find(2)).toBeUndefined();

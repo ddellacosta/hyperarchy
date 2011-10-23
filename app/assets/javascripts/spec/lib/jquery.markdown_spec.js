@@ -39,7 +39,7 @@ describe("jQuery markdown extensions", function() {
       elt.bindMarkdown(org, "name");
       expect(elt.html()).toBe("<p>Arcata <em>Tent</em> Haters &amp; Lovers</p>");
 
-      org.remotelyUpdated({name: "Arcata Tent *Lovers*"});
+      org.updated({name: "Arcata Tent *Lovers*"});
       expect(elt.html()).toBe("<p>Arcata Tent <em>Lovers</em></p>");
 
       var org2 = Organization.created({id: 2, name: "Arcata Naan Lovers"});
@@ -65,11 +65,11 @@ describe("jQuery markdown extensions", function() {
       expect(view.h1.html()).toBe("<p>Arcata Tent Haters</p>");
 
       view.detach();
-      org.remotelyUpdated({name: "Arcata Goat Haters. NIMBY."});
+      org.updated({name: "Arcata Goat Haters. NIMBY."});
       expect(view.h1.html()).toBe("<p>Arcata Goat Haters. NIMBY.</p>");
 
       view.remove();
-      org.remotelyUpdated({name: "Arcata Goat Lovers"});
+      org.updated({name: "Arcata Goat Lovers"});
       expect(view.h1.html()).toBe("<p>Arcata Goat Haters. NIMBY.</p>");
     });
   });

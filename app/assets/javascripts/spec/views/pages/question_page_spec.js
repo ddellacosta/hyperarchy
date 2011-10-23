@@ -482,7 +482,7 @@ describe("Views.Pages.Question", function() {
       it("assigns the question's body, details, avatar, and comments relation, and keeps the body and details up to date when they change", function() {
         expect(questionPage.body.html()).toEqual($.markdown(question.body()));
         expect(questionPage.details.html()).toEqual($.markdown(question.details()));
-        question.remotelyUpdated({body: "what would satan & damien do?", details: "Isdf"});
+        question.updated({body: "what would satan & damien do?", details: "Isdf"});
         expect(questionPage.body.html()).toEqual($.markdown(question.body()));
         expect(questionPage.details.html()).toEqual($.markdown(question.details()));
         expect(questionPage.avatar.user()).toBe(question.creator());
@@ -494,7 +494,7 @@ describe("Views.Pages.Question", function() {
         expect(questionPage.body.text()).toEqual(question2.body());
         expect(questionPage.details.text()).toEqual(question2.details());
 
-        question.remotelyUpdated({body: "what would you do for a klondike bar?", details: "jhjyg"});
+        question.updated({body: "what would you do for a klondike bar?", details: "jhjyg"});
         expect(questionPage.body.text()).toEqual(question2.body());
         expect(questionPage.details.text()).toEqual(question2.details());
       });
@@ -512,7 +512,7 @@ describe("Views.Pages.Question", function() {
         expect(questionPage.twitterShareCode).toBe("sharecode1");
 
         mockedRandomString = "sharecode2";
-        question.remotelyUpdated({body: "Hello???"});
+        question.updated({body: "Hello???"});
         expect(questionPage.twitterButton.attr('href')).toBe(question.twitterIntentsUrlAndCode()[0]);
         expect(questionPage.twitterShareCode).toBe("sharecode2");
       });
@@ -556,7 +556,7 @@ describe("Views.Pages.Question", function() {
       it("shows the fields populates their vals, and focuses the body when the edit button is clicked and hides the fields when the cancel button is clicked", function() {
         expectFieldsHidden();
 
-        question.remotelyUpdated({details: "and sometimes Y"});
+        question.updated({details: "and sometimes Y"});
 
         questionPage.editButton.click();
         expectFieldsVisible();
@@ -583,7 +583,7 @@ describe("Views.Pages.Question", function() {
     describe("showing and hiding of the details", function() {
       describe("when an question is assigned", function() {
         it("shows the details if they aren't blank and hides them otherwise", function() {
-          question2.remotelyUpdated({details: ""});
+          question2.updated({details: ""});
 
           questionPage.question(question2);
 
@@ -692,7 +692,7 @@ describe("Views.Pages.Question", function() {
       describe("when the question page is visible", function() {
         it("navigates back to the current organization page", function() {
           spyOn(Application, 'showPage');
-          questionPage.question().remotelyDestroyed();
+          questionPage.question().destroyed();
           expect(Path.routes.current).toBe(Application.currentOrganization().url());
         });
       });
@@ -701,7 +701,7 @@ describe("Views.Pages.Question", function() {
         it("does not change the url", function() {
           questionPage.hide();
           spyOn(Application, 'showPage');
-          questionPage.question().remotelyDestroyed();
+          questionPage.question().destroyed();
           expect(Application.showPage).not.toHaveBeenCalled();
         });
       });
@@ -773,7 +773,7 @@ describe("Views.Pages.Question", function() {
 
       describe("when the question body changes", function() {
         it("adjusts the top position of the columns after assigning it to the body div", function() {
-          question.remotelyUpdated({body: "this is a longer body?"});
+          question.updated({body: "this is a longer body?"});
           expectColumnTopCorrectlyAdjusted();
         });
       });
@@ -791,7 +791,7 @@ describe("Views.Pages.Question", function() {
       describe("after the page is shown", function() {
         it("adjusts the top position of the columns in case it was mis-adjusted while the question was hidden", function() {
           questionPage.hide();
-          question.remotelyUpdated({body: "this is a longer body?"});
+          question.updated({body: "this is a longer body?"});
           questionPage.show();
           expectColumnTopCorrectlyAdjusted();
         });
@@ -808,7 +808,7 @@ describe("Views.Pages.Question", function() {
       describe("when the details and creator div are populated or when the details change", function() {
         it("adjusts comments to fill remaining vertical space", function() {
           expectCommentsToHaveFullHeight();
-          question.remotelyUpdated({details: longDetails});
+          question.updated({details: longDetails});
           expectCommentsToHaveFullHeight();
         });
       });
@@ -816,7 +816,7 @@ describe("Views.Pages.Question", function() {
       describe("when the window is resized", function() {
         it("adjusts comments to fill remaining vertical space", function() {
           Application.width(1000);
-          question.remotelyUpdated({details: longDetails});
+          question.updated({details: longDetails});
 
           Application.width(700);
           $(window).resize();

@@ -9,7 +9,7 @@ _.constructor("OldMonarch.Http.FakeServer.FakeDestruction", {
 
   simulateSuccess: function() {
     this.fakeServer.removeRequest(this);
-    this.record.remotelyDestroyed();
+    this.record.destroyed();
     this.promise.triggerSuccess(this.record);
   }
 });

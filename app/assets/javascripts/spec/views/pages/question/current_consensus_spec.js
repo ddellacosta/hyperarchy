@@ -47,8 +47,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
         expect(answer1Li.position.text()).toBe("1");
         expect(answer2Li.position.text()).toBe("2");
 
-        answer1.remotelyUpdated({position: 2});
-        answer2.remotelyUpdated({position: 1});
+        answer1.updated({position: 2});
+        answer2.updated({position: 1});
 
         expect(answer1Li.position.text()).toBe("2");
         expect(answer2Li.position.text()).toBe("1");
@@ -61,7 +61,7 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
 
         expect(answer1Li.body.html()).toBe($.markdown(answer1.body()));
 
-        answer1.remotelyUpdated({body: 'rockets!'});
+        answer1.updated({body: 'rockets!'});
 
         expect(answer1Li.body.html()).toBe($.markdown(answer1.body()));
       });
@@ -79,8 +79,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
       user2.rankingsForQuestion(question).created({answerId: answer2.id(), position: 64});
       user2.rankingsForQuestion(question).created({answerId: answer3.id(), position: -64});
 
-      answer1.remotelyUpdated({commentCount: 1});
-      answer2.remotelyUpdated({details: "Arcata's full of nimby cryers"});
+      answer1.updated({commentCount: 1});
+      answer2.updated({details: "Arcata's full of nimby cryers"});
 
       currentConsensusView.answers(question.answers());
       answer1Li = currentConsensusView.list.elementForRecord(answer1);
@@ -116,8 +116,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
           Application.currentUser(user2);
 
           user2.rankings().created({answerId: answer1.id(), position: -128});
-          user2.rankings().find({answerId: answer2.id()}).remotelyDestroyed();
-          user2.rankings().find({answerId: answer3.id()}).remotelyUpdated({position: 128});
+          user2.rankings().find({answerId: answer2.id()}).destroyed();
+          user2.rankings().find({answerId: answer3.id()}).updated({position: 128});
 
           expect(answer1Li.status).not.toHaveClass('positive');
           expect(answer1Li.status).toHaveClass('negative');
@@ -130,8 +130,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
 
       describe("when the current user creates, updates or destroys rankings for these answers", function() {
         it("updates the ranking statuses of the answers to reflect the new user's rankings", function() {
-          user1.rankings().find({answerId: answer1.id()}).remotelyUpdated({position: -128});
-          user1.rankings().find({answerId: answer2.id()}).remotelyDestroyed();
+          user1.rankings().find({answerId: answer1.id()}).updated({position: -128});
+          user1.rankings().find({answerId: answer2.id()}).destroyed();
           user1.rankings().created({answerId: answer3.id(), position: 128});
 
           expect(answer1Li.status).not.toHaveClass('positive');
@@ -146,8 +146,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
       describe("when a ranking is destroyed *AFTER* its answer is destroyed", function() {
         it("does not raise an exception trying to access the missing answer", function() {
           var ranking = user1.rankings().first();
-          ranking.answer().remotelyDestroyed();
-          ranking.remotelyDestroyed();
+          ranking.answer().destroyed();
+          ranking.destroyed();
         });
       });
     });
@@ -163,8 +163,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
 
       describe("when answers' details are updated", function() {
         it("shows the ellipsis for only those answers that have details or comments", function() {
-          answer2.remotelyUpdated({details: ""});
-          answer3.remotelyUpdated({details: "Deer always die in car accidents."});
+          answer2.updated({details: ""});
+          answer3.updated({details: "Deer always die in car accidents."});
 
           expect(answer1Li.ellipsis).toBeVisible();
           expect(answer2Li.ellipsis).not.toBeVisible();
@@ -174,8 +174,8 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
 
       describe("when answer comments are created or removed", function() {
         it("shows the ellipsis for only those answers that have details or comments", function() {
-          answer1.remotelyUpdated({commentCount: 0});
-          answer3.remotelyUpdated({commentCount: 1});
+          answer1.updated({commentCount: 0});
+          answer3.updated({commentCount: 1});
 
           expect(answer1Li.ellipsis).not.toBeVisible();
           expect(answer2Li.ellipsis).toBeVisible();

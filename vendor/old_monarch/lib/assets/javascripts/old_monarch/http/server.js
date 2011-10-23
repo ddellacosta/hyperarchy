@@ -78,7 +78,7 @@ _.constructor("OldMonarch.Http.Server", {
       type: 'put',
       data: { field_values: wireRepresentation },
       success: function(fieldValues) {
-        var changeset = record.remotelyUpdated(fieldValues, pendingVersion);
+        var changeset = record.updated(fieldValues, pendingVersion);
         promise.triggerSuccess(record, changeset);
         Repository.resumeMutations();
       },
@@ -104,7 +104,7 @@ _.constructor("OldMonarch.Http.Server", {
       url: this.sandboxUrl + '/' + record.table.globalName + '/' + record.id(),
       type: 'delete',
       success: function() {
-        var changeset = record.remotelyDestroyed();
+        var changeset = record.destroyed();
         promise.triggerSuccess(record);
         Repository.resumeMutations();
       },

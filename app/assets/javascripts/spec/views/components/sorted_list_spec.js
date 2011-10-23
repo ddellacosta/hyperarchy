@@ -70,7 +70,7 @@ describe("Views.Components.SortedList", function() {
   describe("when a record is removed from the relation", function() {
     it("removes the li corresponding to the record and removes it from the elementsById hash", function() {
       var record = relation.first();
-      record.remotelyDestroyed();
+      record.destroyed();
       expect(view.find('li').length).toBe(2);
       expect(view).not.toContain("li:contains('Red')");
       expect(view.elementsById[record.id()]).toBeUndefined();
@@ -80,10 +80,10 @@ describe("Views.Components.SortedList", function() {
   describe("when the position of a record is updated in the relation", function() {
     it("moves the li corresponding to the record to the appropriate location", function() {
       var record = relation.first();
-      record.remotelyUpdated({position: 4});
+      record.updated({position: 4});
       expect(view.find("li").length).toBe(3);
       expect(view.find("li:eq(1)").html()).toBe("Red");
-      record.remotelyUpdated({position: 6});
+      record.updated({position: 6});
       expect(view.find("li:eq(2)").html()).toBe("Red");
     });
   });

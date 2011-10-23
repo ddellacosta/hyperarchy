@@ -11,7 +11,7 @@ _.constructor("OldMonarch.Http.FakeServer.FakeUpdate", {
 
   simulateSuccess: function() {
     this.fakeServer.removeRequest(this);
-    var changeset = this.record.remotelyUpdated(this.dirtyFieldValues, this.pendingVersion);
+    var changeset = this.record.updated(this.dirtyFieldValues, this.pendingVersion);
     this.promise.triggerSuccess(this.record, changeset);
   }
 });

@@ -14,7 +14,7 @@ _.constructor("OldMonarch.Http.UpdateCommand", OldMonarch.Http.Command, {
   },
 
   complete: function(fieldValuesFromServer) {
-    this.record.remotelyUpdated(fieldValuesFromServer, this.version);
+    this.record.updated(fieldValuesFromServer, this.version);
   },
 
   handleFailure: function(errorsByFieldName) {

@@ -92,7 +92,7 @@ Screw.Unit(function(c) { with(c) {
 
         // case where a record with that id is not in the local repo
         successCallback.clear();
-        extantRecord.remotelyDestroyed();
+        extantRecord.destroyed();
 
         var additionalRelation = BlogPost.where({blogId: 1});
         Blog.findOrFetch(1, [additionalRelation]).success(successCallback);
@@ -182,7 +182,7 @@ Screw.Unit(function(c) { with(c) {
         var record2 = User.created({id: 2, fullName: "Caitlin Brickman"});
         expect(insertCallback).to(haveBeenCalled, withArgs(record2, 1, {'users.id': 2}, {'users.id': 2}));
 
-        record.remotelyUpdated({id: 3, fullName: "Emma T. Scheme"});
+        record.updated({id: 3, fullName: "Emma T. Scheme"});
         expect(updateCallback).to(haveBeenCalled, withArgs(record, { // record, changeset, new index, old index, new key, old key
           fullName: {
             column: User.fullName,
@@ -196,7 +196,7 @@ Screw.Unit(function(c) { with(c) {
           }
         }, 1, 0 ,{'users.id': 3}, {'users.id': 1}));
 
-        record.remotelyDestroyed();
+        record.destroyed();
         expect(removeCallback).to(haveBeenCalled, withArgs(record, 1, {'users.id': 3}, {'users.id': 3})); // record, index, new key, old key
       });
 
@@ -240,8 +240,8 @@ Screw.Unit(function(c) { with(c) {
 
         var record = User.created({id: 1, fullName: "Jake Frautschi"});
 
-        record.remotelyUpdated({ fullName: "Jacob Frautschi" });
-        record.remotelyDestroyed();
+        record.updated({ fullName: "Jacob Frautschi" });
+        record.destroyed();
 
         expect(insertCallback).toNot(haveBeenCalled);
         expect(updateCallback).toNot(haveBeenCalled);
@@ -270,7 +270,7 @@ Screw.Unit(function(c) { with(c) {
         record2.remote.update({fullName: "Nate Sobo"});
         expect(updateCallback).to(haveBeenCalled, once);
 
-        record2.remotelyDestroyed();
+        record2.destroyed();
         expect(removeCallback).to(haveBeenCalled, once);
       });
     });

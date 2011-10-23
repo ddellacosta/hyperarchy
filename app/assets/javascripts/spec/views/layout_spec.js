@@ -293,10 +293,10 @@ describe("Views.Layout", function() {
       expect(inviteBox.secretUrl.val()).toBe(privateOrg.secretUrl());
       expect(inviteBox.secretUrl).toHaveFocus();
 
-      privateOrg.remotelyUpdated({privacy: "public"});
+      privateOrg.updated({privacy: "public"});
       expect(Application.inviteLink).not.toBeVisible();
 
-      privateOrg.remotelyUpdated({privacy: "private"});
+      privateOrg.updated({privacy: "private"});
       expect(Application.inviteLink).toBeVisible();
     });
   });

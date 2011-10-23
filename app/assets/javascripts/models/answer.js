@@ -14,9 +14,9 @@ Answer = Monarch("Answer", {
   .defaultOrderBy('position asc')
 
   .hasMany('rankings')
-  .hasMany('comments', {constructorName: "AnswerComment"})
+  .hasMany('comments', {className: "AnswerComment"})
   .belongsTo('question')
-  .belongsTo('creator', {constructorName: "User"})
+  .belongsTo('creator', {className: "User"})
   .relatesTo('commenters', function() {
     return this.comments().join(User, {creatorId: 'User.id'});
   })
@@ -28,7 +28,7 @@ Answer = Monarch("Answer", {
 
     afterRemoteDestroy: function() {
       this.rankings().each(function(ranking) {
-        ranking.remotelyDestroyed();
+        ranking.destroyed();
       });
     },
 

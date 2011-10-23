@@ -57,19 +57,19 @@ describe("Views.Layout.AccountMenu", function() {
       expect(accountMenu.dropdownMenu.twitterConnectLink).toBeVisible();
       expect(accountMenu.dropdownMenu.facebookConnectLink).toBeVisible();
 
-      antiSocialUser.remotelyUpdated({twitterId: 4355});
+      antiSocialUser.updated({twitterId: 4355});
       expect(accountMenu.dropdownMenu.twitterConnectLink).toBeHidden();
       expect(accountMenu.dropdownMenu.facebookConnectLink).toBeVisible();
 
-      antiSocialUser.remotelyUpdated({twitterId: 0}); // twitter id got jacked by another user record
+      antiSocialUser.updated({twitterId: 0}); // twitter id got jacked by another user record
       expect(accountMenu.dropdownMenu.twitterConnectLink).toBeVisible();
       expect(accountMenu.dropdownMenu.facebookConnectLink).toBeVisible();
 
-      antiSocialUser.remotelyUpdated({facebookId: 4355});
+      antiSocialUser.updated({facebookId: 4355});
       expect(accountMenu.dropdownMenu.twitterConnectLink).toBeVisible();
       expect(accountMenu.dropdownMenu.facebookConnectLink).toBeHidden();
 
-      antiSocialUser.remotelyUpdated({facebookId: 0}); // facebook id got jacked by another user record
+      antiSocialUser.updated({facebookId: 0}); // facebook id got jacked by another user record
       expect(accountMenu.dropdownMenu.twitterConnectLink).toBeVisible();
       expect(accountMenu.dropdownMenu.facebookConnectLink).toBeVisible();
 

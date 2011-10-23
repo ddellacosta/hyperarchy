@@ -209,7 +209,7 @@ Screw.Unit(function(c) { with(c) {
               it("triggers only update events with the updated containing composite tuple", function() {
                 var sizeBefore = join.size();
 
-                blog1.remotelyUpdated({name: 'C'});
+                blog1.updated({name: 'C'});
                 
                 expect(updateHandler).to(haveBeenCalled, twice);
 
@@ -247,7 +247,7 @@ Screw.Unit(function(c) { with(c) {
 
             context("when the CompositeTuple no longer matches #predicate after the update", function() {
               it("triggers only #onRemove handlers with the updated CompositeTuple", function() {
-                blog2.remotelyUpdated({id: 100});
+                blog2.updated({id: 100});
 
                 var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, post3);
                 expect(removeHandler).to(haveBeenCalled, withArgs(expectedCompositeTuple, 2, {'blogs.id': 100, 'blog_posts.id': 3}, {'blogs.id': 2, 'blog_posts.id': 3}));
@@ -298,7 +298,7 @@ Screw.Unit(function(c) { with(c) {
               it("triggers an update event with the updated CompositeTuple and does not modify the contents of the relation", function() {
                 var sizeBefore = join.size();
 
-                post1.remotelyUpdated({ id: 100 });
+                post1.updated({ id: 100 });
 
                 var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog1, post1);
                 expect(updateHandler).to(haveBeenCalled, withArgs(
@@ -338,7 +338,7 @@ Screw.Unit(function(c) { with(c) {
 
             context("when the update causes the join to contain a new composite tuple", function() {
               it("triggers an insert event with that tuple", function() {
-                post.remotelyUpdated({blogId: blog2.id()});
+                post.updated({blogId: blog2.id()});
 
                 var expectedCompositeTuple = new OldMonarch.Model.CompositeTuple(blog2, post);
                 var sortKey = join.buildSortKey(expectedCompositeTuple);

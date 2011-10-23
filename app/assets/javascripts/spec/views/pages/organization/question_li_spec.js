@@ -32,8 +32,8 @@ describe("Views.Pages.Organization.QuestionLi", function() {
       expect(answer1Li.position.text()).toBe('1');
       expect(answer2Li.position.text()).toBe('2');
 
-      answer1.remotelyUpdated({position: 2});
-      answer2.remotelyUpdated({position: 1});
+      answer1.updated({position: 2});
+      answer2.updated({position: 1});
 
       expect(answer2Li.position.text()).toBe('1');
       expect(answer1Li.position.text()).toBe('2');
@@ -42,7 +42,7 @@ describe("Views.Pages.Organization.QuestionLi", function() {
 
   describe("when the bodies of answers change", function() {
     it("updates the body on the answer li", function() {
-      answer1.remotelyUpdated({body: "**Black**"});
+      answer1.updated({body: "**Black**"});
       expect(answer1Li.body.html()).toBe($.markdown(answer1.body()));
     });
   });

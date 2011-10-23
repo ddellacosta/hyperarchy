@@ -1,26 +1,5 @@
 (function(OldMonarch, jQuery) {
 
-$.ajaxSetup({
-  converters: {
-    "json records": function(json) {
-      Repository.update(json);
-    },
-    "json records!": function(json) {
-      Repository.clear();
-      Repository.update(json);
-    },
-    "json data+records": function(json) {
-      Repository.update(json.records);
-      return json.data;
-    },
-    "json data+records!": function(json) {
-      Repository.clear();
-      Repository.update(json.records);
-      return json.data;
-    }
-  }
-});
-
 jQuery.fn.extend({
   appendView: function(contentFn) {
     this.append(OldMonarch.View.build(contentFn));
@@ -54,11 +33,11 @@ jQuery.fn.extend({
   bindText: function(record, fieldName) {
     var subscription = this.data('bindTextSubscription');
     if (subscription) subscription.destroy();
-    var field = record.remote.field(fieldName);
+    var field = record.getRemoteField(fieldName);
     if (!field) throw new Error("No field named " + fieldName + " found.");
-    this.text(field.value());
+    this.text(field.getValue());
 
-    var subscription = field.onUpdate(function(newValue) {
+    var subscription = field.onChange(function(newValue) {
       this.text(newValue);
     }, this);
     this.data('bindTextSubscription', subscription);

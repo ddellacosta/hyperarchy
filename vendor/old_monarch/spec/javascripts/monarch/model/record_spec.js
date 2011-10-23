@@ -282,12 +282,12 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
-    describe("#remotelyDestroyed", function() {
+    describe("#destroyed", function() {
       it("removes the Record from its Table and calls #afterRemoteDestroy if it is defined", function() {
         var record = User.fixture('jan');
         record.afterRemoteDestroy = mockFunction('after destroy hook');
 
-        record.remotelyDestroyed();
+        record.destroyed();
         expect(User.find('jan')).to(beNull);
 
         expect(record.afterRemoteDestroy).to(haveBeenCalled);
@@ -407,7 +407,7 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
-    describe("#remotelyUpdated", function() {
+    describe("#updated", function() {
       it("does not cause a record to become valid unless the updated field values cause invalid local fields to become clean", function() {
         var record = Blog.fixture('recipes');
         record.name("Sharon's Sad Laptop");
@@ -415,10 +415,10 @@ Screw.Unit(function(c) { with(c) {
 
         expect(record.valid()).to(beFalse);
 
-        record.remotelyUpdated({ userId: 'sharon' });
+        record.updated({ userId: 'sharon' });
         expect(record.valid()).to(beFalse);
 
-        record.remotelyUpdated({ name: "Sharon's Brand New Laptop" });
+        record.updated({ name: "Sharon's Brand New Laptop" });
         expect(record.valid()).to(beTrue);
       });
     });
