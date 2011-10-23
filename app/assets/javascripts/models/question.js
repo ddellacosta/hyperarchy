@@ -52,7 +52,7 @@ Question = Monarch("Question", {
     rankingsForUser: function(user) {
       var userId = user.id();
       if (this.rankingsByUserId[userId]) return this.rankingsByUserId[userId];
-      return this.rankingsByUserId[userId] = this.rankings().where({userId: userId}).orderBy(Ranking.position.desc());
+      return this.rankingsByUserId[userId] = this.rankings().where({userId: userId}).orderBy('Ranking.position desc');
     },
 
     rankingsForCurrentUser: function() {
@@ -60,7 +60,7 @@ Question = Monarch("Question", {
     },
 
     positiveRankingsForCurrentUser: function() {
-      return this.rankingsForCurrentUser().where(Ranking.position.gt(0));
+      return this.rankingsForCurrentUser().where({'Ranking.position >': 0});
     },
 
     rankedAnswersForUser: function(user) {

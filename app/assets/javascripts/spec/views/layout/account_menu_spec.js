@@ -41,9 +41,9 @@ describe("Views.Layout.AccountMenu", function() {
 
   describe("showing and hiding of the facebook and twitter connect links", function() {
     it("shows the twitter and facebook connect links only for users who do not have twitter or facebook ids, respectively", function() {
-      var twitterUser = User.created({id: 1, firstName: "Jackie", lastName: "D", twitter_id: 2345, facebook_id: null});
-      var facebookUser = User.created({id: 2, firstName: "Marky", lastName: "Z", facebook_id: '2345', twitter_id: null});
-      var antiSocialUser = User.created({id: 3, firstName: "Billy", lastName: "G", facebook_id: null, twitter_id: null});
+      var twitterUser = User.created({id: 1, firstName: "Jackie", lastName: "D", twitterId: 2345, facebookId: null});
+      var facebookUser = User.created({id: 2, firstName: "Marky", lastName: "Z", facebookId: '2345', twitterId: null});
+      var antiSocialUser = User.created({id: 3, firstName: "Billy", lastName: "G", facebookId: null, twitterId: null});
 
       Application.currentUser(twitterUser);
       expect(accountMenu.dropdownMenu).toBeVisible();
@@ -88,7 +88,7 @@ describe("Views.Layout.AccountMenu", function() {
 
     beforeEach(function() {
       spyOn(T, 'signIn');
-      userWithoutTwitterId = User.created({id: 2, firstName: "Sad", lastName: "Facebookuser", twitter_id: null});
+      userWithoutTwitterId = User.created({id: 2, firstName: "Sad", lastName: "Facebookuser", twitterId: null});
       Application.currentUser(userWithoutTwitterId);
       accountMenu.dropdownMenu.link.click();
       accountMenu.dropdownMenu.twitterConnectLink.click();
@@ -114,7 +114,7 @@ describe("Views.Layout.AccountMenu", function() {
 
     beforeEach(function() {
       spyOn(FB, 'login');
-      userWithoutFacebookId = User.created({id: 2, firstName: "Serious", lastName: "Professional", facebook_id: null});
+      userWithoutFacebookId = User.created({id: 2, firstName: "Serious", lastName: "Professional", facebookId: null});
       Application.currentUser(userWithoutFacebookId);
       accountMenu.dropdownMenu.link.click();
       accountMenu.dropdownMenu.facebookConnectLink.click();

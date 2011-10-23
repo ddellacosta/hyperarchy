@@ -26,7 +26,7 @@ Answer = Monarch("Answer", {
       this.rankingsByUsers = {};
     },
 
-    afterRemoteDestroy: function() {
+    afterDestroy: function() {
       this.rankings().each(function(ranking) {
         ranking.destroyed();
       });

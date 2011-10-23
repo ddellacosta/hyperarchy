@@ -7,7 +7,6 @@ class Organization < Prequel::Record
   column :name, :string
   column :description, :string, :default => ""
   column :members_can_invite, :boolean, :default => false
-  column :dismissed_welcome_guide, :boolean, :default => false
   column :use_ssl, :boolean, :default => true
   column :question_count, :integer, :default => 0
   column :created_at, :datetime

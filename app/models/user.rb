@@ -10,8 +10,6 @@ class User < Prequel::Record
   column :encrypted_password, :string
   column :email_enabled, :boolean, :default => true
   column :admin, :boolean
-  column :dismissed_welcome_blurb, :boolean, :default => false
-  column :dismissed_welcome_guide, :boolean, :default => false
   column :password_reset_token, :string
   column :password_reset_token_generated_at, :datetime
   column :guest, :boolean, :default => false

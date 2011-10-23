@@ -22,8 +22,8 @@ User = Monarch("User", {
 
   .hasMany('votes')
   .hasMany('rankings')
-  .hasMany('answers', {key: 'creatorId'})
-  .hasMany('questions', {key: 'creatorId'})
+  .hasMany('answers', {foreignKey: 'creatorId'})
+  .hasMany('questions', {foreignKey: 'creatorId'})
   .hasMany('memberships')
   .hasMany('questionVisits')
   .hasMany('organizations', {through: 'memberships'})
