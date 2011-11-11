@@ -10,7 +10,6 @@ jQuery.ajax = function() {
   return jqXhr;
 };
 
-var originalServer = window.Server;
 
 Views.Pages.Question.AnswerLi.prototype.viewProperties.dragDelay = null;
 
@@ -23,6 +22,7 @@ beforeEach(function() {
   window.History.reset();
   Monarch.Repository.clear();
   stubAjax();
+  Monarch.useFakeServer();
   spyOn(Question, 'updateScoresPeriodically');
   mpq = []
   _gaq = [];
@@ -31,10 +31,6 @@ beforeEach(function() {
 });
 
 afterEach(function() {
-  if (window.Application) {
-    window.Application.remove();
-  }
-
   _.each(ajaxRequests, function(xhr) {
     xhr.abort();
   });
@@ -75,7 +71,7 @@ function stubAjax() {
 }
 
 function enableAjax() {
-  window.Server = originalServer;
+  Monarch.restoreOriginalServer();
   jQuery.ajax = jQuery.ajax.originalValue;
   clearServerTables();
 }
@@ -83,7 +79,6 @@ function enableAjax() {
 var originalServer;
 function useFakeServer(auto) {
   Monarch.useFakeServer()
-  window.Server = new OldMonarch.Http.FakeServer();
   window.Server.auto = auto;
 }
 
