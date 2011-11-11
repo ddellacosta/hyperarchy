@@ -43,6 +43,10 @@ _.constructor('Views.Layout.OrganizationsMenu', View.Template, {
       }, this);
     },
 
+    beforeRemove: function() {
+      if (this.userSubscriptions) this.userSubscriptions.destroy();
+    },
+
     showOrHideDropdownLink: function() {
       if (Application.currentUser().organizations().size() > 1) {
         this.dropdownMenu.show();

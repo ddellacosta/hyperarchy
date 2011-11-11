@@ -40,6 +40,7 @@ jQuery.fn.extend({
     var subscription = field.onChange(function(newValue) {
       this.text(newValue);
     }, this);
+    if (!subscription) throw new Error("No subscription returned");
     this.data('bindTextSubscription', subscription);
 
     this.attr('textIsBound', true);

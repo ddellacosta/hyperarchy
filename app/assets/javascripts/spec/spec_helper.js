@@ -1,6 +1,6 @@
 //= require application
 //= require_directory ./support
-//= require old_monarch/http/fake_server
+//= require monarch_test_support
 
 var ajaxRequests;
 var originalAjax = jQuery.ajax;
@@ -21,7 +21,7 @@ beforeEach(function() {
   ajaxRequests = [];
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
   window.History.reset();
-  Repository.clear();
+  Monarch.Repository.clear();
   stubAjax();
   spyOn(Question, 'updateScoresPeriodically');
   mpq = []
@@ -31,11 +31,15 @@ beforeEach(function() {
 });
 
 afterEach(function() {
+  if (window.Application) {
+    window.Application.remove();
+  }
+
   _.each(ajaxRequests, function(xhr) {
     xhr.abort();
   });
   ajaxRequests = [];
-  window.Server = originalServer;
+  Monarch.restoreOriginalServer();
 //  $('#jasmine_content').empty();
 });
 
@@ -78,6 +82,7 @@ function enableAjax() {
 
 var originalServer;
 function useFakeServer(auto) {
+  Monarch.useFakeServer()
   window.Server = new OldMonarch.Http.FakeServer();
   window.Server.auto = auto;
 }

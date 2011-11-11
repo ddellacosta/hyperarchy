@@ -19,7 +19,7 @@ _.constructor("Views.Layout", View.Template, {
             a({id: "blog-link", href: "http://blog.hyperarchy.com"}, "Blog / About");
             a({id: "feedback-link"}, "Feedback").ref('feedbackLink').click('showFeedbackForm');
             a({id: "invite-link"}, "Invite Your Team").ref('inviteLink').click('showInviteBox');
-            
+
             div({id: "organization-and-account"}, function() {
               subview('organizationsMenu', Views.Layout.OrganizationsMenu);
               subview('accountMenu', Views.Layout.AccountMenu);
@@ -74,7 +74,7 @@ _.constructor("Views.Layout", View.Template, {
     attach: function($super) {
       $super();
       if (window.FB) this.facebookInitialized();
-   },
+    },
 
     currentUserEstablished: function(promise, data) {
       this.loginForm.hide();
@@ -187,7 +187,7 @@ _.constructor("Views.Layout", View.Template, {
     },
 
     onCurrentUserChange: function(callback, context) {
-      this.currentUserChangeNode.subscribe(callback, context);
+      return this.currentUserChangeNode.subscribe(callback, context);
     },
 
     currentOrganizationId: {

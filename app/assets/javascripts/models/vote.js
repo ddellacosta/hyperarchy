@@ -9,7 +9,11 @@ Vote = Monarch("Vote", {
 })
   .syntheticColumn('formattedUpdatedAt', function() {
     return this.signal('updatedAt', function(updatedAt) {
-      return $.PHPDate("M j, Y @ g:ia", updatedAt);
+      if (updatedAt) {
+        return $.PHPDate("M j, Y @ g:ia", updatedAt);
+      } else {
+        return null;
+      }
     });
   })
 

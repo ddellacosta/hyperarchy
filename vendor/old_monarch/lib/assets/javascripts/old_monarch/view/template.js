@@ -105,12 +105,20 @@ _.constructor("OldMonarch.View.Template", {
     remove: function($super, selector, keepData) {
       if (!keepData) {
         if (this.beforeRemove) this.beforeRemove();
+        this.removeSubviews();
         this.cleanUpbindTextSubscriptions();
         this.unregisterAllInterest();
       }
       var result = $super(selector, keepData);
       if (!keepData && this.afterRemove) this.afterRemove();
       return result;
+    },
+
+    removeSubviews: function() {
+      if (!this.subviews) return;
+      _.each(this.subviews, function(subview) {
+        subview.remove();
+      });
     },
 
     attach: function() {
@@ -122,7 +130,9 @@ _.constructor("OldMonarch.View.Template", {
 
     cleanUpbindTextSubscriptions: function() {
       this.find("*[textIsBound=true]").each(function() {
-        $(this).data('bindTextSubscription').destroy();
+        var sub = $(this).data('bindTextSubscription')
+        if (!sub) console.log("warning: tried to clean up null bound text subscription for " + this.toString());
+        if (sub) sub.destroy();
       });
     },
 
@@ -250,16 +260,21 @@ _.constructor("OldMonarch.View.Template", {
       if (!this._interestSubscriptions) this._interestSubscriptions = {};
       if (!this._interestSubscriptions[subscriptionName]) this._interestSubscriptions[subscriptionName] = {};
       if (this._interestSubscriptions[subscriptionName][methodName]) this._interestSubscriptions[subscriptionName][methodName].destroy();
-      this._interestSubscriptions[subscriptionName][methodName] = object[methodName](callback, this);
+      var subscription = object[methodName](callback, this);
+      if (!subscription) {
+        throw new Error("Method " + methodName + " did not return a subscription object");
+      }
+      this._interestSubscriptions[subscriptionName][methodName] = subscription;
     },
 
     unregisterAllInterest: function() {
       if (this._interestSubscriptions) {
         _.each(this._interestSubscriptions, function(subscriptionsByName) {
           _.each(subscriptionsByName, function(subscription) {
+            if (!subscription) debugger;
             subscription.destroy();
-          });
-        });
+          }, this);
+        }, this);
       }
     }
   })

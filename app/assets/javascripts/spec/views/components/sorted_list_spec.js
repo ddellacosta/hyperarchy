@@ -20,6 +20,9 @@ describe("Views.Components.SortedList", function() {
 
     var question2 = Question.created({id: 2, body: "What's your favorite type of car?"});
     relation2 = question2.answers();
+
+    console.log(relation2.predicate);
+
     relation2.created({id: 4, body: "Audi", position: 1});
     relation2.created({id: 5, body: "Volvo", position: 3});
     relation2.created({id: 6, body: "Mercedes", position: 5});
@@ -29,16 +32,19 @@ describe("Views.Components.SortedList", function() {
 
   describe("when a relation is assigned", function() {
     it("unsubscribes from any previous relation and populates the list with elements based on the new relation", function() {
+      console.log(relation.map(function(r) { return r.fieldValues() }));
+      expect(relation.size()).toBe(3);
+
       expect(view.find('li').length).toBe(3);
       expect(view.find("li:eq(0)").html()).toBe("Red");
       expect(view.find("li:eq(1)").html()).toBe("Green");
       expect(view.find("li:eq(2)").html()).toBe("Blue");
 
-      expect(relation2.hasSubscribers()).toBeFalsy();
+      expect(relation2.hasSubscriptions()).toBeFalsy();
       view.relation(relation2);
 
-      expect(relation.hasSubscribers()).toBeFalsy();
-      expect(relation2.hasSubscribers()).toBeTruthy();
+      expect(relation.hasSubscriptions()).toBeFalsy();
+      expect(relation2.hasSubscriptions()).toBeTruthy();
 
       expect(view.find('li').length).toBe(3);
       expect(view.find("li:eq(0)").html()).toBe("Audi");
@@ -50,12 +56,12 @@ describe("Views.Components.SortedList", function() {
   describe("when a null relation is assigned", function() {
     it("unsubscribes from a previous relation and empties the list", function() {
       expect(view.find('li').length).toBe(3);
-      expect(relation.hasSubscribers()).toBeTruthy();
+      expect(relation.hasSubscriptions()).toBeTruthy();
 
       view.relation(null);
 
       expect(view.find('li')).not.toExist();
-      expect(relation.hasSubscribers()).toBeFalsy();
+      expect(relation.hasSubscriptions()).toBeFalsy();
     });
   });
 
@@ -98,10 +104,10 @@ describe("Views.Components.SortedList", function() {
     });
 
     it("unsubscribes from the relation after removing itself from the dom", function() {
-      expect(relation.hasSubscribers()).toBeTruthy();
+      expect(relation.hasSubscriptions()).toBeTruthy();
       view.remove();
       expect($("#testContent")).not.toContain('ol');
-      expect(relation.hasSubscribers()).toBeFalsy();
+      expect(relation.hasSubscriptions()).toBeFalsy();
     });
   });
 });
