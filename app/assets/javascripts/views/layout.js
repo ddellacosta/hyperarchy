@@ -263,9 +263,8 @@ _.constructor("Views.Layout", View.Template, {
       }));
 
       socket.on('message', function(m) {
-        Repository.mutate(JSON.parse(m));
+        Monarch.Repository.update(JSON.parse(m));
       });
-
 
       socket.on('disconnect', this.bind(function() {
         this.reconnectTimeout = this.delay(function() {
