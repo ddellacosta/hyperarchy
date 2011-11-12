@@ -264,7 +264,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           expect(Server.creates.length).toBe(1);
 
           expect(Server.lastCreate.record.dirtyWireRepresentation()).toEqual(_.extend(fieldValues, {question_id: question.id()}));
-          Server.lastCreate.simulateSuccess({creatorId: Application.currentUser().id()});
+          Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
         });
@@ -315,7 +315,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           expect($.ajax).toHaveBeenCalled();
 
           $.ajax.mostRecentCall.args[0].success({ current_user_id: member.id() });
-          Server.lastFetch.simulateSuccess(); // fetch member's rankings
+          Server.lastFetch.succeed(); // fetch member's rankings
 
           expect(Server.creates.length).toBe(1);
 
@@ -325,7 +325,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           expect(createdAnswer.body()).toBe(fieldValues.body);
           expect(createdAnswer.details()).toBe(fieldValues.details);
 
-          Server.lastCreate.simulateSuccess({creatorId: Application.currentUser().id()});
+          Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
         });
@@ -345,7 +345,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           Application.loginForm.form.submit();
           expect($.ajax).toHaveBeenCalled();
           $.ajax.mostRecentCall.args[0].success({ current_user_id: member.id() });
-          Server.lastFetch.simulateSuccess(); // fetch new user rankings
+          Server.lastFetch.succeed(); // fetch new user rankings
 
           expect(Server.creates.length).toBe(1);
 
@@ -355,7 +355,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           expect(createdAnswer.body()).toBe(fieldValues.body);
           expect(createdAnswer.details()).toBe(fieldValues.details);
 
-          Server.lastCreate.simulateSuccess({creatorId: Application.currentUser().id()});
+          Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
         });
@@ -439,8 +439,8 @@ describe("Views.Pages.Question.AnswerDetails", function() {
   
       expect(Server.updates.length).toBe(1);
 
-      expect(Server.lastUpdate.dirtyFieldValues).toEqual(fieldValues);
-      Server.lastUpdate.simulateSuccess();
+      expect(Server.lastUpdate().dirtyFieldValues).toEqual(fieldValues);
+      Server.lastUpdate().succeed();
 
       expect(answerDetails.form).toBeHidden();
       expect(answerDetails.nonEditableContent).toBeVisible();
@@ -596,7 +596,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
       it("pushes a 'create answer' event to the mixpanel queue", function() {
         answerDetails.createButton.click();
-        Server.lastCreate.simulateSuccess({creatorId: Application.currentUser().id()});
+        Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
 
         expect(mpq.length).toBe(1);
         var event = mpq.pop();
@@ -610,7 +610,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
         answerDetails.editButton.click();
         answerDetails.editableBody.val("i have changed my mind.");
         answerDetails.updateButton.click();
-        Server.lastUpdate.simulateSuccess();
+        Server.lastUpdate().succeed();
 
         expect(mpq.length).toBe(1);
         var event = mpq.pop();

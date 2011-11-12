@@ -78,15 +78,15 @@ describe("Views.Layout", function() {
       Application.currentUser(user1);
       var user1Membership = organization.membershipForUser(user1);
       expect(Server.updates.length).toBe(1);
-      expect(Server.lastUpdate.record).toBe(user1Membership);
-      Server.lastUpdate.simulateSuccess();
+      expect(Server.lastUpdate().record).toBe(user1Membership);
+      Server.lastUpdate().succeed();
       expect(user1Membership.lastVisited()).toBe(new Date());
 
       Application.currentUser(user2);
       var user2Membership = organization.membershipForUser(user2);
       expect(Server.updates.length).toBe(1);
-      expect(Server.lastUpdate.record).toBe(user2Membership);
-      Server.lastUpdate.simulateSuccess();
+      expect(Server.lastUpdate().record).toBe(user2Membership);
+      Server.lastUpdate().succeed();
       expect(user2Membership.lastVisited()).toBe(new Date());
     });
 
@@ -186,8 +186,8 @@ describe("Views.Layout", function() {
         Application.currentOrganization(organization1);
 
         expect(Server.updates.length).toBe(1);
-        expect(Server.lastUpdate.record).toBe(membership);
-        Server.lastUpdate.simulateSuccess();
+        expect(Server.lastUpdate().record).toBe(membership);
+        Server.lastUpdate().succeed();
         expect(membership.lastVisited()).toBe(new Date());
 
         Application.currentUser(guest);

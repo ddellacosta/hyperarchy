@@ -23,6 +23,7 @@ beforeEach(function() {
   Monarch.Repository.clear();
   stubAjax();
   Monarch.useFakeServer();
+  window.Server = Monarch.Remote.Server;
   spyOn(Question, 'updateScoresPeriodically');
   mpq = []
   _gaq = [];

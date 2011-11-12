@@ -34,7 +34,7 @@ describe("Views.Pages.Account.MembershipPreferencesLi", function() {
       useFakeServer();
       preferencesLi.find("[name='notifyOfNewQuestions']").val("weekly").change();
       expect(Server.updates.length).toBe(1);
-      Server.lastUpdate.simulateSuccess();
+      Server.lastUpdate().succeed();
       expect(membership.notifyOfNewQuestions()).toBe("weekly");
     });
   });

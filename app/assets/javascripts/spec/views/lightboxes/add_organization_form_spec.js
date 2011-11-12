@@ -10,7 +10,6 @@ describe("Views.Lightboxes.AddOrganizationForm", function() {
 
     enableAjax();
     login();
-
   });
 
   describe("when the form is submitted", function() {

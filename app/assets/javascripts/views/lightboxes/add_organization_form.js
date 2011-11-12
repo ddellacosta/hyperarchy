@@ -17,9 +17,9 @@ _.constructor('Views.Lightboxes.AddOrganizationForm', Views.Lightboxes.Lightbox,
     create: function(e) {
       e.preventDefault();
       if ($.trim(this.name.val()) === "") return false;
-      return Organization.create({name: this.name.val()}).success(function(organization) {
+      return Organization.create({name: this.name.val()}).onSuccess(function(organization) {
         organization.trackCreate();
-        organization.memberships({userId: Application.currentUserId()}).fetch().success(function() {
+        organization.memberships({userId: Application.currentUserId()}).fetch().onSuccess(function() {
           History.pushState(null, null, organization.url());
           this.close();
         }, this);

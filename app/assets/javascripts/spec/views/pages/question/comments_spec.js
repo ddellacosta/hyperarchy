@@ -198,7 +198,7 @@ describe("Views.Pages.Question.Comments", function() {
 
           expectListScrolledToBottom();
 
-          Server.lastCreate.simulateSuccess({creatorId: creator1.id(), createdAt: 12345});
+          Server.lastCreate.succeed({creatorId: creator1.id(), createdAt: 12345});
 
           expectListScrolledToBottom();
         });
@@ -299,7 +299,7 @@ describe("Views.Pages.Question.Comments", function() {
         spyOn(Server.lastCreate.record, 'creator').andReturn(creator1);
         spyOn(Server.lastCreate.record, 'createdAt').andReturn(new Date());
 
-        Server.lastCreate.simulateSuccess();
+        Server.lastCreate.succeed();
 
         expect(mpq.length).toBe(1);
         var event = mpq.pop();

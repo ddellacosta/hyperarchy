@@ -195,7 +195,7 @@ describe("Views.Pages.Question", function() {
             questionPage.newAnswerLink.click();
             expect(Server.creates.length).toBe(1);
             expect(Server.lastCreate.record.body()).toBe("Answer Body");
-            Server.lastCreate.simulateSuccess({creatorId: Application.currentUser().id()});
+            Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
 
             expect(Path.routes.current).toBe(question.url());
           });
@@ -473,9 +473,9 @@ describe("Views.Pages.Question", function() {
       });
 
       questionPage.params({questionId: question.id()});
-      expect(Server.lastUpdate.record).toBe(organization.membershipForCurrentUser());
-      Server.lastUpdate.simulateSuccess();
-      Server.lastFetch.simulateSuccess();
+      expect(Server.lastUpdate().record).toBe(organization.membershipForCurrentUser());
+      Server.lastUpdate().succeed();
+      Server.lastFetch.succeed();
     });
 
     describe("when a question is assigned", function() {
@@ -601,12 +601,12 @@ describe("Views.Pages.Question", function() {
           questionPage.editableBody.val("aoeu");
           questionPage.editableDetails.val("");
           questionPage.updateButton.click();
-          Server.lastUpdate.simulateSuccess();
+          Server.lastUpdate().succeed();
           expect(questionPage.details).toBeHidden();
 
           questionPage.editableDetails.val("aoeuaoeu");
           questionPage.updateButton.click();
-          Server.lastUpdate.simulateSuccess();
+          Server.lastUpdate().succeed();
           expect(questionPage.details).toBeVisible();
         });
       });
@@ -632,8 +632,8 @@ describe("Views.Pages.Question", function() {
 
           expect(Server.updates.length).toBe(1);
 
-          expect(Server.lastUpdate.dirtyFieldValues).toEqual(updates);
-          Server.lastUpdate.simulateSuccess();
+          expect(Server.lastUpdate().dirtyFieldValues).toEqual(updates);
+          Server.lastUpdate().succeed();
 
           expectFieldsHidden();
 
@@ -977,7 +977,7 @@ describe("Views.Pages.Question", function() {
 
       it("pushes an 'update question' event to the mixpanel queue", function() {
         questionPage.updateButton.click();
-        Server.lastUpdate.simulateSuccess();
+        Server.lastUpdate().succeed();
         expect(mpq.length).toBe(1);
         var event = mpq.pop();
         expect(event[0]).toBe('track');

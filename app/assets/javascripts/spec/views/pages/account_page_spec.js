@@ -68,7 +68,7 @@ describe("Views.Pages.Account", function() {
       accountPage.updateButton.click();
 
       expect(Server.updates.length).toBe(1);
-      Server.lastUpdate.simulateSuccess();
+      Server.lastUpdate().succeed();
 
       expect(currentUser.firstName()).toBe("Newfirst");
       expect(currentUser.lastName()).toBe("Newlast");
@@ -83,7 +83,7 @@ describe("Views.Pages.Account", function() {
 
       accountPage.emailEnabled.click();
       expect(Server.updates.length).toBe(1);
-      Server.lastUpdate.simulateSuccess();
+      Server.lastUpdate().succeed();
 
       expect(currentUser.emailEnabled()).toBeFalsy();
       expect(accountPage.membershipPreferences).toHaveClass('disabled');
@@ -91,7 +91,7 @@ describe("Views.Pages.Account", function() {
 
       accountPage.emailEnabled.click();
       expect(Server.updates.length).toBe(1);
-      Server.lastUpdate.simulateSuccess();
+      Server.lastUpdate().succeed();
 
       expect(currentUser.emailEnabled()).toBeTruthy();
       expect(accountPage.membershipPreferences).not.toHaveClass('disabled');

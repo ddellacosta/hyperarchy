@@ -42,7 +42,7 @@ describe("Views.Pages.OrganizationSettings", function() {
     beforeEach(function() {
       useFakeServer();
       settingsPage.params({organizationId: org.id()});
-      Server.lastFetch.simulateSuccess();
+      Server.lastFetch.succeed();
     });
 
     describe("#params", function() {
@@ -96,7 +96,7 @@ describe("Views.Pages.OrganizationSettings", function() {
         settingsPage.updateButton.click();
 
         expect(Server.updates.length).toBe(1);
-        Server.lastUpdate.simulateSuccess();
+        Server.lastUpdate().succeed();
 
         expect(org.name()).toBe("Private Eyes");
         expect(org.privacy()).toBe('private');
@@ -118,7 +118,7 @@ describe("Views.Pages.OrganizationSettings", function() {
           membership1Li.role.val("owner");
           membership1Li.role.change();
           expect(Server.updates.length).toBe(1);
-          Server.lastUpdate.simulateSuccess();
+          Server.lastUpdate().succeed();
           expect(membership1.role()).toBe("owner");
         });
       });

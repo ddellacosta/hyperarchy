@@ -21,8 +21,6 @@ describe("Views.Components.SortedList", function() {
     var question2 = Question.created({id: 2, body: "What's your favorite type of car?"});
     relation2 = question2.answers();
 
-    console.log(relation2.predicate);
-
     relation2.created({id: 4, body: "Audi", position: 1});
     relation2.created({id: 5, body: "Volvo", position: 3});
     relation2.created({id: 6, body: "Mercedes", position: 5});
@@ -32,7 +30,6 @@ describe("Views.Components.SortedList", function() {
 
   describe("when a relation is assigned", function() {
     it("unsubscribes from any previous relation and populates the list with elements based on the new relation", function() {
-      console.log(relation.map(function(r) { return r.fieldValues() }));
       expect(relation.size()).toBe(3);
 
       expect(view.find('li').length).toBe(3);
