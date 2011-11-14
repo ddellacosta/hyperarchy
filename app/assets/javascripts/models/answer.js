@@ -72,11 +72,11 @@ Answer = Monarch("Answer", {
     },
 
     previous: function() {
-      return this.question().answers().where(Answer.position.lt(this.position())).last();
+      return this.question().answers().where({"position <": this.position()}).last();
     },
 
     next: function() {
-      return this.question().answers().where(Answer.position.gt(this.position())).first();
+      return this.question().answers().where({"position >": this.position()}).first();
     }
   });
 

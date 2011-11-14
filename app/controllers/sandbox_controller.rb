@@ -8,7 +8,7 @@ class SandboxController < ApplicationController
   end
 
   def create
-    status, response = sandbox.create(params[:relation], params[:field_values])
+    status, response = sandbox.create(params[:relation], params[:field_values] || {})
     render :status => status, :json => response.to_json
   end
 

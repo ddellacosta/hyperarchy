@@ -200,11 +200,11 @@ _.constructor('Views.Pages.Question', OldMonarch.View.Template, {
       var relationsToFetch = [];
 
       if (!oldParams || params.questionId !== oldParams.questionId) {
-        if (!Question.find(params.questionId)) relationsToFetch.push(Question.where({id: params.questionId}).join(User).on(User.id.eq(Question.creatorId))); // question
-        relationsToFetch.push(Answer.where({questionId: params.questionId}).join(User).on(Answer.creatorId.eq(User.id))); // answers
-        relationsToFetch.push(Vote.where({questionId: params.questionId}).joinTo(User)); // votes
+        if (!Question.find(params.questionId)) relationsToFetch.push(Question.where({id: params.questionId}).join(User, { creatorId: 'User.id' })); // question
+        relationsToFetch.push(Answer.where({questionId: params.questionId}).join(User, { creatorId: 'User.id' })); // answers
+        relationsToFetch.push(Vote.where({questionId: params.questionId}).join(User)); // votes
         relationsToFetch.push(Application.currentUser().rankings().where({questionId: params.questionId})); // current user's rankings
-        relationsToFetch.push(QuestionComment.where({questionId: params.questionId}).join(User).on(QuestionComment.creatorId.eq(User.id))); // question comments and commenters
+        relationsToFetch.push(QuestionComment.where({questionId: params.questionId}).join(User, { creatorId: 'User.id' })); // question comments and commenters
 
         this.comments.loading(true);
         this.votes.loading(true);
@@ -215,7 +215,7 @@ _.constructor('Views.Pages.Question', OldMonarch.View.Template, {
       }
 
       if (params.answerId && params.answerId !== "new") {
-        relationsToFetch.push(AnswerComment.where({answerId: params.answerId}).join(User).on(AnswerComment.creatorId.eq(User.id))); // answer comments and commenters
+        relationsToFetch.push(AnswerComment.where({answerId: params.answerId}).join(User, { creatorId: 'User.id' })); // answer comments and commenters
         this.answerDetails.loading(true);
       } else {
         this.rankedAnswers.loading(true);

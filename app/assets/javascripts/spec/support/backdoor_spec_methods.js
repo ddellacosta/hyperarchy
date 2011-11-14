@@ -54,10 +54,10 @@ function uploadRepository() {
 
 function usingBackdoor(callback) {
   synchronously(function() {
-    var previousSandboxUrl = Server.sandboxUrl;
-    Server.sandboxUrl = '/backdoor';
+    var previousSandboxUrl = Monarch.sandboxUrl;
+    Monarch.sandboxUrl = '/backdoor';
     callback();
-    Server.sandboxUrl = previousSandboxUrl;
+    Monarch.sandboxUrl = previousSandboxUrl;
   });
 }
 

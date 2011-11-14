@@ -53,7 +53,7 @@ describe("Views.Lightboxes.LoginForm", function() {
       enableAjax();
       usingBackdoor(function() {
         user = User.create();
-        user.memberships().joinTo(Organization).fetch();
+        user.memberships().join(Organization).fetch();
         History.pushState(null, null, user.defaultOrganization().url());
         Repository.clear();
       });

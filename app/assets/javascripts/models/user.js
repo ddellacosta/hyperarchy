@@ -75,7 +75,7 @@ User = Monarch("User", {
     },
 
     defaultOrganization: function() {
-      return this.memberships().orderBy(Membership.lastVisited.desc()).first().organization();
+      return this.memberships().orderBy('lastVisited desc').first().organization();
     },
 
     rankingsForQuestion: function(question) {
