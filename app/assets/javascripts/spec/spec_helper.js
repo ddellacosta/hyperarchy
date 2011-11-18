@@ -73,14 +73,15 @@ function stubAjax() {
 
 function enableAjax() {
   Monarch.restoreOriginalServer();
+  window.Server = Monarch.Remote.Server;
   jQuery.ajax = jQuery.ajax.originalValue;
   clearServerTables();
 }
 
 var originalServer;
 function useFakeServer(auto) {
-  Monarch.useFakeServer()
-  window.Server.auto = auto;
+  Monarch.useFakeServer(auto)
+  window.Server = Monarch.Remote.Server;
 }
 
 function unspy(object, methodName) {

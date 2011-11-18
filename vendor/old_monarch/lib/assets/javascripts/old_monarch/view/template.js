@@ -79,9 +79,9 @@ _.constructor("OldMonarch.View.Template", {
     fieldValuesMatchModel: function() {
       var model = this.model();
       return _.every(this.fieldValues(), function(value, fieldName) {
-        var field = model.field(fieldName);
+        var field = model.getField(fieldName);
         if (field) {
-          return field.valueIsEqual(value);
+          return _.isEqual(field.getValue(), value);
         } else {
           return true;
         }
@@ -160,8 +160,8 @@ _.constructor("OldMonarch.View.Template", {
     handleModelFieldUpdate: function(fieldName, changes) {
       var element = this.find("[name='" + fieldName + "']");
       if (!element) return;
-      if (this.model().field(fieldName).dirty()) return;
-      
+      if (this.model().getField(fieldName).isDirty()) return;
+
       if (element.attr('type') == "checkbox") {
         this.populateCheckboxField(element, changes.newValue);
       } else {

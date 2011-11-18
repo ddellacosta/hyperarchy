@@ -40,10 +40,10 @@ describe("Views.Lightboxes.NewQuestion", function() {
           callback({session: {}});
 
           expect(Server.creates.length).toBe(1);
-          var question = Server.lastCreate.record;
+          var question = Server.lastCreate().record;
           spyOn(question, 'shareOnFacebook');
 
-          Server.lastCreate.succeed({creatorId: Application.currentUserId()});
+          Server.lastCreate().succeed({creatorId: Application.currentUserId()});
           expect(question.shareOnFacebook).toHaveBeenCalled();
         });
       });
@@ -70,10 +70,10 @@ describe("Views.Lightboxes.NewQuestion", function() {
             Application.signupForm.trigger('success');
 
             expect(Server.creates.length).toBe(1);
-            var record = Server.lastCreate.record;
+            var record = Server.lastCreate().record;
             expect(record.body()).toBe("Should I use facebook or diaspora?");
 
-            Server.lastCreate.succeed({creatorId: Application.currentUserId()});
+            Server.lastCreate().succeed({creatorId: Application.currentUserId()});
             expect(Path.routes.current).toBe(record.url());
           });
         });
@@ -88,11 +88,11 @@ describe("Views.Lightboxes.NewQuestion", function() {
             callback({session: null});
 
             expect(Server.creates.length).toBe(1);
-            var record = Server.lastCreate.record;
+            var record = Server.lastCreate().record;
             expect(record.body()).toBe("Should I use facebook or diaspora?");
             spyOn(record, 'shareOnFacebook')
 
-            Server.lastCreate.succeed({creatorId: Application.currentUserId()});
+            Server.lastCreate().succeed({creatorId: Application.currentUserId()});
             expect(record.shareOnFacebook).not.toHaveBeenCalled();
             expect(Path.routes.current).toBe(record.url());
           });
@@ -111,12 +111,12 @@ describe("Views.Lightboxes.NewQuestion", function() {
 
             expect(Server.creates.length).toBe(1);
 
-            var createdQuestion = Server.lastCreate.record;
+            var createdQuestion = Server.lastCreate().record;
             expect(createdQuestion.organization()).toBe(organization);
             expect(createdQuestion.body()).toBe("What are you doing saturday night?");
             expect(createdQuestion.details()).toBe("I am very lonely.");
 
-            Server.lastCreate.succeed({creatorId: Application.currentUserId()});
+            Server.lastCreate().succeed({creatorId: Application.currentUserId()});
 
             expect(newQuestionForm).toBeHidden();
             expect(Path.routes.current).toBe(createdQuestion.url());
@@ -169,10 +169,10 @@ describe("Views.Lightboxes.NewQuestion", function() {
             $.ajax.mostRecentCall.args[0].success({ current_user_id: member.id() });
 
             expect(Server.creates.length).toBe(1);
-            var createdRecord = Server.lastCreate.record
+            var createdRecord = Server.lastCreate().record
             expect(createdRecord.body()).toBe("What is your favorite vegatable?");
 
-            Server.lastCreate.succeed({creatorId: Application.currentUserId()});
+            Server.lastCreate().succeed({creatorId: Application.currentUserId()});
             expect(Path.routes.current).toBe(createdRecord.url());
           });
         });
@@ -257,7 +257,7 @@ describe("Views.Lightboxes.NewQuestion", function() {
         newQuestionForm.body.val("What are you doing saturday night?");
         newQuestionForm.details.val("I am very lonely.");
         newQuestionForm.form.submit();
-        Server.lastCreate.succeed({creatorId: Application.currentUserId()});
+        Server.lastCreate().succeed({creatorId: Application.currentUserId()});
 
         expect(mpq.length).toBe(1);
         var event = mpq.pop();

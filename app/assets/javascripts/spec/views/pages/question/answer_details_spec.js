@@ -263,8 +263,8 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
           expect(Server.creates.length).toBe(1);
 
-          expect(Server.lastCreate.record.dirtyWireRepresentation()).toEqual(_.extend(fieldValues, {question_id: question.id()}));
-          Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
+          expect(Server.lastCreate().record.dirtyWireRepresentation()).toEqual(_.extend(fieldValues, {question_id: question.id()}));
+          Server.lastCreate().succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
         });
@@ -319,13 +319,13 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
           expect(Server.creates.length).toBe(1);
 
-          var createdAnswer = Server.lastCreate.record;
+          var createdAnswer = Server.lastCreate().record;
 
           expect(createdAnswer.question()).toBe(question);
           expect(createdAnswer.body()).toBe(fieldValues.body);
           expect(createdAnswer.details()).toBe(fieldValues.details);
 
-          Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
+          Server.lastCreate().succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
         });
@@ -349,13 +349,13 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
           expect(Server.creates.length).toBe(1);
 
-          var createdAnswer = Server.lastCreate.record;
+          var createdAnswer = Server.lastCreate().record;
 
           expect(createdAnswer.question()).toBe(question);
           expect(createdAnswer.body()).toBe(fieldValues.body);
           expect(createdAnswer.details()).toBe(fieldValues.details);
 
-          Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
+          Server.lastCreate().succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
         });
@@ -596,7 +596,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
       it("pushes a 'create answer' event to the mixpanel queue", function() {
         answerDetails.createButton.click();
-        Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
+        Server.lastCreate().succeed({creatorId: Application.currentUser().id()});
 
         expect(mpq.length).toBe(1);
         var event = mpq.pop();

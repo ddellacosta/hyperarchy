@@ -194,8 +194,8 @@ describe("Views.Pages.Question", function() {
 
             questionPage.newAnswerLink.click();
             expect(Server.creates.length).toBe(1);
-            expect(Server.lastCreate.record.body()).toBe("Answer Body");
-            Server.lastCreate.succeed({creatorId: Application.currentUser().id()});
+            expect(Server.lastCreate().record.body()).toBe("Answer Body");
+            Server.lastCreate().succeed({creatorId: Application.currentUser().id()});
 
             expect(Path.routes.current).toBe(question.url());
           });

@@ -60,7 +60,7 @@ describe("Views.Pages.Question.Comments", function() {
 
           expect(Server.creates.length).toBe(1);
 
-          var createdRecord = Server.lastCreate.record;
+          var createdRecord = Server.lastCreate().record;
 
           expect(createdRecord.body()).toBe(longCommentBody);
           expect(createdRecord.questionId()).toBe(question.id());
@@ -74,7 +74,7 @@ describe("Views.Pages.Question.Comments", function() {
           expect(commentsView.textarea.val()).toBe('');
           expect(Server.creates.length).toBe(1);
 
-          var createdRecord = Server.lastCreate.record;
+          var createdRecord = Server.lastCreate().record;
 
           expect(createdRecord.body()).toBe("I like to eat stamps!");
           expect(createdRecord.questionId()).toBe(question.id());
@@ -115,7 +115,7 @@ describe("Views.Pages.Question.Comments", function() {
 
           expect(commentsView.textarea.val()).toBe('');
           expect(Server.creates.length).toBe(1);
-          var createdRecord = Server.lastCreate.record;
+          var createdRecord = Server.lastCreate().record;
           expect(createdRecord.body()).toBe("I like to eat stamps!");
           expect(createdRecord.questionId()).toBe(question.id());
         });
@@ -198,7 +198,7 @@ describe("Views.Pages.Question.Comments", function() {
 
           expectListScrolledToBottom();
 
-          Server.lastCreate.succeed({creatorId: creator1.id(), createdAt: 12345});
+          Server.lastCreate().succeed({creatorId: creator1.id(), createdAt: 12345});
 
           expectListScrolledToBottom();
         });
@@ -296,10 +296,10 @@ describe("Views.Pages.Question.Comments", function() {
       it("pushes a 'create comment' event to the mixpanel queue", function() {
         commentsView.textarea.val("wicked data, bro.");
         commentsView.createButton.click();
-        spyOn(Server.lastCreate.record, 'creator').andReturn(creator1);
-        spyOn(Server.lastCreate.record, 'createdAt').andReturn(new Date());
+        spyOn(Server.lastCreate().record, 'creator').andReturn(creator1);
+        spyOn(Server.lastCreate().record, 'createdAt').andReturn(new Date());
 
-        Server.lastCreate.succeed();
+        Server.lastCreate().succeed();
 
         expect(mpq.length).toBe(1);
         var event = mpq.pop();
