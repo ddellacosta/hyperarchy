@@ -55,8 +55,8 @@ _.constructor('Views.Pages.OrganizationSettings', OldMonarch.View.Template, {
         Application.currentOrganization(organization);
         this.model(organization);
         this.enableOrDisableUpdateButton();
-        return organization.memberships().joinTo(User).fetch().success(function() {
-          this.memberships.relation(organization.memberships().joinTo(User).where({guest: false}).project(Membership));
+        return organization.memberships().join(User).fetch().success(function() {
+          this.memberships.relation(organization.memberships().join(User).where({guest: false}).project(Membership));
         }, this);
       }
     },

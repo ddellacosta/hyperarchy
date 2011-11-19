@@ -32,7 +32,7 @@ describe("Views.Pages.OrganizationSettings", function() {
         runs(function() {
           expect(User.size()).toBe(3);
           expect(Membership.size()).toBeGreaterThan(owner.memberships().size());
-          expect(settingsPage.memberships.relation().tuples()).toEqual(org.memberships().joinTo(User.where({guest: false})).project(Membership).tuples());
+          expect(settingsPage.memberships.relation().all()).toEqual(org.memberships().join(User.where({guest: false})).project(Membership).all());
         });
       });
     });
@@ -42,7 +42,7 @@ describe("Views.Pages.OrganizationSettings", function() {
     beforeEach(function() {
       useFakeServer();
       settingsPage.params({organizationId: org.id()});
-      Server.lastFetch.succeed();
+      Server.lastFetch().succeed();
     });
 
     describe("#params", function() {
@@ -57,7 +57,7 @@ describe("Views.Pages.OrganizationSettings", function() {
       });
 
       it("does not include guests in the members list", function() {
-        expect(settingsPage.memberships.relation().joinTo(User).where({guest: true}).size()).toBe(0);
+        expect(settingsPage.memberships.relation().join(User).where({guest: true}).size()).toBe(0);
       });
     });
 

@@ -19,7 +19,7 @@ describe("Views.Pages.Organization.QuestionLi", function() {
     it("assigns the body, answers, answer positions, and creator avatar", function() {
       expect(questionLi.avatar.user()).toBe(creator);
       expect(questionLi.body.html()).toBe($.markdown(question.body()));
-      expect(questionLi.answers.relation().tuples()).toEqual(question.answers().tuples());
+      expect(questionLi.answers.relation().all()).toEqual(question.answers().all());
       expect(answer1Li.position.text()).toBe('1');
       expect(answer1Li.body.html()).toBe($.markdown(answer1.body()));
       expect(answer2Li.position.text()).toBe('2');

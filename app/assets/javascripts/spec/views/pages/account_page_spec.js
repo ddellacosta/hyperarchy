@@ -48,11 +48,11 @@ describe("Views.Pages.Account", function() {
       accountPage.emailAddress.keyup();
       expect(accountPage.updateButton.attr('disabled')).toBeTruthy();
 
-      accountPage.emailAddress.val(currentUser.remote.emailAddress());
+      accountPage.emailAddress.val(currentUser.getRemoteField('emailAddress').getValue());
       accountPage.emailAddress.keyup();
       expect(accountPage.updateButton.attr('disabled')).toBeFalsy();
 
-      accountPage.firstName.val(currentUser.remote.firstName());
+      accountPage.firstName.val(currentUser.getRemoteField('firstName').getValue());
       accountPage.firstName.keyup();
       expect(accountPage.updateButton.attr('disabled')).toBeTruthy();
     });
