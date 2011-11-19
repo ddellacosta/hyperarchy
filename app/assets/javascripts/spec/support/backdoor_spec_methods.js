@@ -35,10 +35,10 @@ function fetchInitialRepositoryContents() {
 
 function uploadRepository() {
   var wireRepresentation = {};
-  _.each(Repository.tables, function(table, tableName) {
+  _.each(Monarch.Repository.tables, function(table, tableName) {
     wireRepresentation[tableName] = {};
     table.each(function(record) {
-      wireRepresentation[tableName][record.id()] = record.wireRepresentation();
+      wireRepresentation[tableName][record.id()] = record.wireRepresentation(true);
     });
   });
 
