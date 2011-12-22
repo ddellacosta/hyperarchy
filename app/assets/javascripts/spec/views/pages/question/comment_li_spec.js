@@ -47,7 +47,7 @@ describe("Views.Pages.Question.CommentLi", function() {
           useFakeServer();
           commentLi.destroyButton.click();
           expect(Server.destroys.length).toBe(1);
-          expect(Server.lastDestroy.record).toBe(comment);
+          expect(Server.lastDestroy().record).toBe(comment);
         });
       });
     });

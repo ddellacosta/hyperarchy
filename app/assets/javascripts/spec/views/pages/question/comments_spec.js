@@ -35,7 +35,7 @@ describe("Views.Pages.Question.Comments", function() {
 
   describe("when the comments relation is assigned", function() {
     it("assigns the relation on its list", function() {
-      expect(commentsView.list.relation().tuples()).toEqual(commentsRelation.tuples());
+      expect(commentsView.list.relation().all()).toEqual(commentsRelation.all());
     });
   });
 

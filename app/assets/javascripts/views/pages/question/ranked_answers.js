@@ -254,11 +254,11 @@ _.constructor('Views.Pages.Question.RankedAnswers', OldMonarch.View.Template, {
     },
 
     positiveRankings: function() {
-      return this.rankings().where(Ranking.position.gt(0))
+      return this.rankings().where({ 'position >': 0 });
     },
 
     negativeRankings: function() {
-      return this.rankings().where(Ranking.position.lt(0))
+      return this.rankings().where({ 'position <': 0 });
     },
 
     positiveLis: function() {
@@ -276,7 +276,7 @@ _.constructor('Views.Pages.Question.RankedAnswers', OldMonarch.View.Template, {
     },
 
     appendRankings: function(rankings, dragTargetIfEmpty) {
-      if (rankings.empty()) this.list.append(dragTargetIfEmpty);
+      if (rankings.isEmpty()) this.list.append(dragTargetIfEmpty);
 
       rankings.each(function(ranking) {
         this.list.append(this.findOrCreateLi(ranking));

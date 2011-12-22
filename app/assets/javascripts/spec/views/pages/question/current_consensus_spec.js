@@ -74,10 +74,10 @@ describe("Views.Pages.Question.CurrentConsensus", function() {
     beforeEach(function() {
       answer3 = question.answers().created({id: 3, body: "Deer", position: 3});
       user2 = User.created({id: 2});
-      user1.rankingsForQuestion(question).created({answerId: answer1.id(), position: 64});
-      user1.rankingsForQuestion(question).created({answerId: answer2.id(), position: -64});
-      user2.rankingsForQuestion(question).created({answerId: answer2.id(), position: 64});
-      user2.rankingsForQuestion(question).created({answerId: answer3.id(), position: -64});
+      user1.rankingsForQuestion(question).created({id: 1, answerId: answer1.id(), position: 64});
+      user1.rankingsForQuestion(question).created({id: 2, answerId: answer2.id(), position: -64});
+      user2.rankingsForQuestion(question).created({id: 3, answerId: answer2.id(), position: 64});
+      user2.rankingsForQuestion(question).created({id: 4, answerId: answer3.id(), position: -64});
 
       answer1.updated({commentCount: 1});
       answer2.updated({details: "Arcata's full of nimby cryers"});

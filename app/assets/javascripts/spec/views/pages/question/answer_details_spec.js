@@ -263,7 +263,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
 
           expect(Server.creates.length).toBe(1);
 
-          expect(Server.lastCreate().record.dirtyWireRepresentation()).toEqual(_.extend(fieldValues, {question_id: question.id()}));
+          expect(Server.lastCreate().record.wireRepresentation()).toEqual(_.extend(fieldValues, {question_id: question.id()}));
           Server.lastCreate().succeed({creatorId: Application.currentUser().id()});
 
           expect(Path.routes.current).toBe(question.url());
@@ -315,7 +315,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           expect($.ajax).toHaveBeenCalled();
 
           $.ajax.mostRecentCall.args[0].success({ current_user_id: member.id() });
-          Server.lastFetch.succeed(); // fetch member's rankings
+          Server.lastFetch().succeed(); // fetch member's rankings
 
           expect(Server.creates.length).toBe(1);
 
@@ -345,7 +345,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
           Application.loginForm.form.submit();
           expect($.ajax).toHaveBeenCalled();
           $.ajax.mostRecentCall.args[0].success({ current_user_id: member.id() });
-          Server.lastFetch.succeed(); // fetch new user rankings
+          Server.lastFetch().succeed(); // fetch new user rankings
 
           expect(Server.creates.length).toBe(1);
 
@@ -439,7 +439,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
   
       expect(Server.updates.length).toBe(1);
 
-      expect(Server.lastUpdate().dirtyFieldValues).toEqual(fieldValues);
+      expect(Server.lastUpdate().fieldValues).toEqual(fieldValues);
       Server.lastUpdate().succeed();
 
       expect(answerDetails.form).toBeHidden();
@@ -488,7 +488,7 @@ describe("Views.Pages.Question.AnswerDetails", function() {
         answerDetails.destroyButton.click();
 
         expect(Server.destroys.length).toBe(1);
-        expect(Server.lastDestroy.record).toBe(answer);
+        expect(Server.lastDestroy().record).toBe(answer);
       });
     });
 

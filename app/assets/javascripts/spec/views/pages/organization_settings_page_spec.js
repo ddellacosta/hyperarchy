@@ -127,7 +127,7 @@ describe("Views.Pages.OrganizationSettings", function() {
         it("destroys the membership", function() {
           membership1Li.destroyButton.click();
           expect(Server.destroys.length).toBe(1);
-          expect(Server.lastDestroy.record).toBe(membership1);
+          expect(Server.lastDestroy().record).toBe(membership1);
         });
       });
     });

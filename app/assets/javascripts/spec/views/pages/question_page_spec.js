@@ -475,7 +475,7 @@ describe("Views.Pages.Question", function() {
       questionPage.params({questionId: question.id()});
       expect(Server.lastUpdate().record).toBe(organization.membershipForCurrentUser());
       Server.lastUpdate().succeed();
-      Server.lastFetch.succeed();
+      Server.lastFetch().succeed();
     });
 
     describe("when a question is assigned", function() {
@@ -684,7 +684,7 @@ describe("Views.Pages.Question", function() {
 
         expect(window.confirm).toHaveBeenCalled();
         expect(Server.destroys.length).toBe(1);
-        expect(Server.lastDestroy.record).toBe(questionPage.question());
+        expect(Server.lastDestroy().record).toBe(questionPage.question());
       });
     });
 

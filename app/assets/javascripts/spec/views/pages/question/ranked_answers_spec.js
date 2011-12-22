@@ -62,7 +62,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
       expect(rankedAnswers.list.find('.ranking').size()).toBe(1);
 
       rankingsRelation.each(function(ranking) {
-        expect(ranking.onUpdateNode.size()).toBe(1); // records subscribe to their own update, but that should be all
+        expect(ranking.onUpdateNode.size()).toBe(0);
       });
     });
 
