@@ -30,15 +30,16 @@ describe("Views.Lightboxes.NewQuestion", function() {
       });
 
       describe("when the user successfully logs into facebook", function() {
-        it("creates the question and posts it to the user's facebook feed", function() {
+        beforeEach(function() {
           newQuestionForm.body.val("Should I use facebook or diaspora?");
           newQuestionForm.submit.click();
 
           expect(FB.login).toHaveBeenCalled();
-          expect(FB.login.mostRecentCall.args[1].perms).toContain("email");
           var callback = FB.login.mostRecentCall.args[0];
           callback({session: {}});
+        });
 
+        it("creates the question and posts it to the user's facebook feed", function() {
           expect(Server.creates.length).toBe(1);
           var question = Server.lastCreate().record;
           spyOn(question, 'shareOnFacebook');
