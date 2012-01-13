@@ -387,7 +387,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
               });
 
               waitsFor("ranking to be createed", function() {
-                return !Application.currentUser().rankings().empty()
+                return !Application.currentUser().rankings().isEmpty()
               });
 
               runs(function() {
