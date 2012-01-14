@@ -1,13 +1,15 @@
 jasmine.StringPrettyPrinter.prototype.emitObject = function(obj) {
   var self = this;
-  if (typeof obj.inspect === 'function') {
-    return self.format(obj.inspect());
-  }
+
+  var inspectMethodNames = ['inspect', 'toString', 'toJSON'];
+  var methodName = _.find(inspectMethodNames, function(methodName) { return _.isFunction(obj[methodName]); });
+  if (methodName) { return self.format(obj[methodName]()); }
 
   this.append('{ ');
   var first = true;
 
   this.iterateObject(obj, function(property, isGetter) {
+    if (!obj.hasOwnProperty(property)) return;
     if (first) {
       first = false;
     } else {
