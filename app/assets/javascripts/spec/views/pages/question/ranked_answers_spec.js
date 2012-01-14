@@ -4,7 +4,7 @@
 
 describe("Views.Pages.Question.RankedAnswers", function() {
   var organization, questionPage, rankedAnswers, currentUser, question, answer1, answer2, answer3, ranking1, ranking2, rankingsRelation, lastCreateOrUpdatePromise;
-  
+
   beforeEach(function() {
     organization = Organization.created({id: 1})
     currentUser = organization.makeMember({id: 2, emailAddress: "foo@example.com"});
@@ -250,7 +250,6 @@ describe("Views.Pages.Question.RankedAnswers", function() {
     });
 
     describe("receiving new rankings from the current consensus", function() {
-
       describe("when the current user is a member", function() {
         beforeEach(function() {
           questionPage.params({questionId: question.id()});
@@ -386,7 +385,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
                 expect(rankingLi.data('position')).toBe(64);
               });
 
-              waitsFor("ranking to be createed", function() {
+              waitsFor("ranking to be created", function() {
                 return !Application.currentUser().rankings().isEmpty()
               });
 
@@ -433,7 +432,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
           });
         });
 
-        describe("when the user drags a answer below the separator", function() {
+        describe("when the user drags an answer below the separator", function() {
           beforeEach(function() {
             answer3Li.dragAbove(rankedAnswers.negativeDragTarget);
             expect(Ranking.createOrUpdate).not.toHaveBeenCalled();
@@ -461,7 +460,7 @@ describe("Views.Pages.Question.RankedAnswers", function() {
               });
 
               waitsFor("ranking to be created", function() {
-                return !Application.currentUser().rankings().empty()
+                return !Application.currentUser().rankings().isEmpty();
               });
 
               runs(function() {
