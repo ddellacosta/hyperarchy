@@ -500,7 +500,7 @@ describe("Views.Pages.Question", function() {
       });
 
       it("does not leave dangling subscriptions on the previous question when another one is assigned", function() {
-        var subCountBefore = question2.onUpdateNode.size();
+        var subCountBefore = question2.onUpdateNode ? question2.onUpdateNode.size() : 0;
         questionPage.question(question2);
         expect(question2.onUpdateNode.size()).toBeGreaterThan(subCountBefore);
         questionPage.question(question);
@@ -632,7 +632,7 @@ describe("Views.Pages.Question", function() {
 
           expect(Server.updates.length).toBe(1);
 
-          expect(Server.lastUpdate().dirtyFieldValues).toEqual(updates);
+          expect(Server.lastUpdate().fieldValues).toEqual(updates);
           Server.lastUpdate().succeed();
 
           expectFieldsHidden();
