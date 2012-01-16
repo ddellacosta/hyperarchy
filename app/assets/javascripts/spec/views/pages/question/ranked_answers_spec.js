@@ -344,6 +344,8 @@ describe("Views.Pages.Question.RankedAnswers", function() {
           expect(Application.currentUserId()).toBeDefined();
           expect(Application.currentUser()).toBeDefined();
           expect(Application.currentUser().defaultGuest()).toBeTruthy();
+
+          organization = Organization.find(organization.id());
           expect(organization.social()).toBeTruthy();
           expect(organization.isPublic()).toBeTruthy();
 

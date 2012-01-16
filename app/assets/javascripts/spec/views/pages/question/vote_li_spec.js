@@ -39,7 +39,7 @@ describe("Views.Pages.Question.VoteLi", function() {
 
           expect(voteLi).toBeHidden();
           expect(Server.fetches.length).toBe(1);
-          Server.lastFetch().succeed({users: {1: user.wireRepresentation()}});
+          Server.lastFetch().succeed({users: {1: user.wireRepresentation(true)}});
 
           expect(voteLi).toBeVisible();
           expect(voteLi.name.text()).toBe(user.fullName());
