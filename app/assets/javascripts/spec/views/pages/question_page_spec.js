@@ -51,7 +51,7 @@ describe("Views.Pages.Question", function() {
         expect(Question.find(question.id())).toEqual(question);
         expect(question.creator()).toBeDefined();
         expect(question.answers().size()).toBe(2);
-        expect(question.answers().join(User).on(User.id.eq(Answer.creatorId)).size()).toBe(2);
+        expect(question.answers().join(User, {'User.id': 'Answer.creatorId'}).size()).toBe(2);
         expect(question.rankings().size()).toBeGreaterThan(0);
         expect(question.votes().size()).toBeGreaterThan(0);
         expect(question.voters().size()).toBe(question.votes().size());
@@ -63,8 +63,8 @@ describe("Views.Pages.Question", function() {
         expect(Application.currentOrganizationId()).toBe(question.organizationId());
         expect(questionPage.question()).toEqual(question);
         expect(questionPage.currentConsensus.answers()).toEqual(question.answers());
-        expect(questionPage.votes.votes().tuples()).toEqual(question.votes().tuples());
-        expect(questionPage.comments.comments().tuples()).toEqual(question.comments().tuples());
+        expect(questionPage.votes.votes().all()).toEqual(question.votes().all());
+        expect(questionPage.comments.comments().all()).toEqual(question.comments().all());
       }
 
       describe("if no voterId or answerId is specified", function() {
@@ -86,7 +86,7 @@ describe("Views.Pages.Question", function() {
             expect(questionPage.columns).toBeVisible();
             expect(questionPage.spinner).toBeHidden();
 
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(question.rankings().where({userId: currentUser.id()}).tuples());
+            expect(questionPage.rankedAnswers.rankings().all()).toEqual(question.rankings().where({userId: currentUser.id()}).all());
             expect(questionPage.rankedAnswers).toBeVisible();
             expect(questionPage.answerDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toBe(Application.currentUserId());
@@ -111,7 +111,7 @@ describe("Views.Pages.Question", function() {
 
             expect(question.rankingsForUser(otherUser).size()).toBeGreaterThan(0);
 
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(question.rankingsForUser(otherUser).tuples());
+            expect(questionPage.rankedAnswers.rankings().all()).toEqual(question.rankingsForUser(otherUser).all());
             expect(questionPage.rankedAnswersHeader.text()).toBe(otherUser.fullName() + "'s Ranking");
             expect(questionPage.rankedAnswers).toBeVisible();
             expect(questionPage.answerDetails).not.toHaveClass('active');
@@ -250,7 +250,7 @@ describe("Views.Pages.Question", function() {
             questionPage.params({questionId: question.id()}).success(complete);
             expect(Application.currentOrganizationId()).toBe(question.organizationId());
             expect(questionPage.question()).toEqual(question);
-            expect(questionPage.currentConsensus.answers().tuples()).toEqual(question.answers().tuples());
+            expect(questionPage.currentConsensus.answers().all()).toEqual(question.answers().all());
             expect(questionPage.rankedAnswers.loading()).toBeTruthy();
             expect(questionPage.votes.loading()).toBeTruthy();
             expect(questionPage.comments.loading()).toBeTruthy();
@@ -296,7 +296,7 @@ describe("Views.Pages.Question", function() {
 
             expect(questionPage.answerDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toBe(Application.currentUserId());
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(currentUser.rankingsForQuestion(question).tuples());
+            expect(questionPage.rankedAnswers.rankings().all()).toEqual(currentUser.rankingsForQuestion(question).all());
             expect(questionPage.currentConsensus.selectedAnswer()).toBeFalsy();
             expect(questionPage.rankedAnswers.sortingEnabled()).toBeTruthy();
             expect(questionPage.rankedAnswersHeader.text()).toBe("Your Ranking");
@@ -326,7 +326,7 @@ describe("Views.Pages.Question", function() {
             expect(questionPage.rankedAnswers.loading()).toBeFalsy();
 
             expect(currentUser.rankings().size()).toBeGreaterThan(0);
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(otherUser.rankingsForQuestion(question).tuples());
+            expect(questionPage.rankedAnswers.rankings().all()).toEqual(otherUser.rankingsForQuestion(question).all());
             expect(questionPage.rankedAnswers).toBeVisible();
             expect(questionPage.answerDetails).not.toHaveClass('active');
             expect(questionPage.votes.selectedVoterId()).toEqual(otherUser.id());
@@ -366,7 +366,7 @@ describe("Views.Pages.Question", function() {
 
               expect(answer1.comments().size()).toBeGreaterThan(0);
               expect(answer1.commenters().size()).toBe(answer1.comments().size());
-              expect(questionPage.answerDetails.comments.comments().tuples()).toEqual(answer1.comments().tuples());
+              expect(questionPage.answerDetails.comments.comments().all()).toEqual(answer1.comments().all());
               expect(questionPage.backLink).toBeVisible();
             });
           });
@@ -409,7 +409,7 @@ describe("Views.Pages.Question", function() {
 
           runs(function() {
             expect(otherUser.rankings().size()).toBeGreaterThan(0);
-            expect(questionPage.rankedAnswers.rankings().tuples()).toEqual(otherUser.rankings().tuples());
+            expect(questionPage.rankedAnswers.rankings().all()).toEqual(otherUser.rankings().all());
           });
         });
       });
