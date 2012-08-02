@@ -27,6 +27,8 @@ gem 'jquery-rails'
 gem 'monarch', :path => 'vendor/monarch'
 gem 'fb_graph'
 
+#gem 'sequel'
+gem 'talentbox-sequel-rails'
 
 group :development, :test, :jasmine do
   gem 'rspec', '2.6.0'

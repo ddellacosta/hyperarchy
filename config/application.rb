@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'action_controller/railtie'
+require 'sequel-rails/railtie'
 require 'action_mailer/railtie'
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -63,9 +64,14 @@ As individuals change their rankings, Hyperarchy computes and broadcasts the evo
 
 SOCKET_SERVER_HOST = 'localhost:8082'
 
-api_keys = YAML.load_file(Rails.root.join('config/api_keys.yml'))
+#api_keys = YAML.load_file(Rails.root.join('config/api_keys.yml'))
 
-FB_ID = api_keys['facebook']['id']
-FB_SECRET = api_keys['facebook']['secret']
-TWITTER_ID = api_keys['twitter']['id']
-TWITTER_SECRET = api_keys['twitter']['secret']
+# FB_ID = api_keys['facebook']['id']
+# FB_SECRET = api_keys['facebook']['secret']
+# TWITTER_ID = api_keys['twitter']['id']
+# TWITTER_SECRET = api_keys['twitter']['secret']
+
+FB_ID = 1
+FB_SECRET = 2
+TWITTER_ID = 3
+TWITTER_SECRET = 4

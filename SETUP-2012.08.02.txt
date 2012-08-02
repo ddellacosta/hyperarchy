@@ -1,0 +1,35 @@
+------------------------------------------
+Things Michael needs to do to get this going.
+
+- use Dave's fork at: https://github.com/ddellacosta/hyperarchy
+
+    $ git clone https://github.com/ddellacosta/hyperarchy
+
+- get Facebook and Twitter applications set up, written into config/application.rb (will work without this for now, but won't let you log in with Facebook/Twitter oauth)
+
+- get Postgres installed.  http://www.postgresql.org/download/windows/
+
+- set up a postgres user (role) called 'hyperarchy'.  For development, you'll need to create a datab ase called hyperarchy_development as well.  Reference the file config/database.yml for a list of the databases used by the system.
+
+- install redis
+
+- run the migration:
+
+    $ bundle exec rake db:migrate  # This won't tell you a lot, don't worry.
+
+- now you should be able to run it:
+
+    $ bundle exec rails s
+
+------------------------------------------
+Some useful commands:
+
+# this shows you all the Rake tasks available.  This includes stuff like running tests, migrating the db, as well as seeing the routes...
+
+    $ bundle exec rake -T
+
+# very handy task to show you all the routes available in your application, which are configured in the file config/routes.rb
+
+    $ bundle exec rake routes
+
+Check this out for more context on Bundler: http://gembundler.com/
